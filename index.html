@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>가톨릭 순례길</title>
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=07f7989e29fdfb425fff924f36fb3ec0"></script>
+<style>
+:root {
+  --brand:    #8B1C2A;
+  --brand-bg: #fdf5f5;
+  --local:    #1a5f8b;
+  --surface:  #ffffff;
+  --surface2: #f2f2f2;
+  --border:   #e2d8d8;
+  --text:     #1a1a1a;
+  --text-sub: #5a5a5a;
+  --text-dim: #999;
+  --radius:   14px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  background: var(--brand-bg);
+  display: flex; flex-direction: column;
+  height: 100%; overflow: hidden;
+}
+@media (min-width: 600px) {
+  body { align-items: center; background: #d8d0d0; }
+  .sr-wrap { max-width: 480px; box-shadow: 0 0 40px rgba(0,0,0,0.2); }
+}
+
+.sr-wrap {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  overflow: hidden; background: var(--brand-bg);
+}
+
+/* ── 탭 헤더 ── */
+.sr-tabs {
+  display: flex;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-bottom: 2px solid var(--border);
+  z-index: 20;
+}
+.sr-tab {
+  flex: 1;
+  padding: 14px 0;
+  border: none; background: transparent;
+  font-size: 15px; font-weight: 700;
+  color: var(--text-dim);
+  cursor: pointer; font-family: inherit;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  position: relative;
+  transition: color 0.15s;
+}
+.sr-tab::after {
+  content: '';
+  position: absolute; bottom: -2px; left: 0; right: 0;
+  height: 3px; background: var(--brand);
+  transform: scaleX(0); transition: transform 0.18s;
+  border-radius: 2px 2px 0 0;
+}
+.sr-tab.active { color: var(--brand); }
+.sr-tab.active::after { transform: scaleX(1); }
+.sr-tab-icon { font-size: 18px; }
+
+/* ── 지도 패널 ── */
+.sr-map-panel { flex: 1; position: relative; min-height: 0; }
+#srKakaoMap { width: 100%; height: 100%; }
+
+.sr-locate-btn {
+  position: absolute; bottom: 18px; right: 12px;
+  background: var(--surface);
+  border-radius: 22px;
+  box-shadow: 0 3px 14px rgba(0,0,0,0.2);
+  border: 1.5px solid var(--border);
+  display: flex; align-items: center; gap: 5px;
+  padding: 9px 15px;
+  cursor: pointer; z-index: 5;
+  font-size: 13px; font-weight: 700; color: var(--brand);
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+.sr-locate-btn .ico { font-size: 16px; }
+
+/* ── 목록 패널 ── */
+.sr-list-panel {
+  flex: 1; overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 12px 13px 60px;
+  display: flex; flex-direction: column; gap: 10px;
+  min-height: 0;
+}
+.sr-list-panel::-webkit-scrollbar { display: none; }
+
+/* 패널 토글 */
+.sr-list-panel.hidden, .sr-map-panel.hidden { display: none; }
+
+/* ── 카드 ── */
+.sr-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.12s;
+}
+.sr-card:active { transform: scale(0.982); }
+
+/* 카드 상단 — 교구명이 제일 위 */
+.sr-card-top {
+  display: flex; align-items: center; gap: 6px;
+  padding: 10px 13px 0;
+}
+.sr-card-op-label {
+  font-size: 12px; font-weight: 800;
+  padding: 3px 9px; border-radius: 5px;
+  color: #fff; white-space: nowrap;
+}
+.sr-card-op-label.diocese { background: var(--brand); }
+.sr-card-op-label.local   { background: var(--local); }
+.sr-card-region { font-size: 11.5px; color: var(--text-sub); }
+
+/* 카드 본문 */
+.sr-card-body {
+  padding: 7px 13px 10px;
+  display: flex; align-items: center; gap: 10px;
+}
+.sr-card-icon {
+  width: 38px; height: 38px; border-radius: 9px;
+  background: var(--brand-bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.sr-card-info { flex: 1; min-width: 0; }
+.sr-card-name {
+  font-size: 15px; font-weight: 700; color: var(--text);
+  word-break: keep-all; white-space: normal; line-height: 1.35;
+}
+
+/* 카드 푸터 */
+.sr-card-footer {
+  border-top: 1px solid #f0e8e8;
+  padding: 8px 13px;
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 8px;
+  background: #fafafa;
+}
+.sr-card-url {
+  font-size: 10.5px; color: var(--brand);
+  overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; flex: 1; min-width: 0;
+}
+.sr-card-mapbtn {
+  flex-shrink: 0; font-size: 12px; font-weight: 700;
+  color: var(--brand); background: var(--brand-bg);
+  border: 1.5px solid #dbbfbf; border-radius: 7px;
+  padding: 5px 11px; cursor: pointer; font-family: inherit;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── 인포윈도우 ── */
+.sr-iw {
+  background: #fff;
+  border-radius: 13px;
+  padding: 13px 14px 12px;
+  box-shadow: 0 6px 28px rgba(0,0,0,0.2);
+  min-width: 185px; max-width: 245px;
+  position: relative;
+  border: 1px solid #e0d4d4;
+  font-family: 'Apple SD Gothic Neo','Noto Sans KR',sans-serif;
+}
+/* 교구명이 제일 위 */
+.sr-iw-top {
+  display: flex; align-items: center; gap: 6px;
+  margin-bottom: 7px;
+}
+.sr-iw-op-label {
+  font-size: 12px; font-weight: 800;
+  padding: 3px 9px; border-radius: 5px;
+  color: #fff; white-space: nowrap;
+}
+.sr-iw-op-label.diocese { background: var(--brand); }
+.sr-iw-op-label.local   { background: var(--local); }
+.sr-iw-region { font-size: 11.5px; color: #666; }
+
+.sr-iw-name {
+  font-size: 14px; font-weight: 800; color: #111;
+  margin-bottom: 2px; line-height: 1.35; word-break: keep-all;
+}
+.sr-iw-sub { font-size: 11px; color: #aaa; margin-bottom: 10px; }
+
+/* 버튼: 교구=빨강, 지자체=파랑 */
+.sr-iw-btn {
+  display: block; width: 100%; padding: 9px;
+  border: none; border-radius: 8px;
+  font-size: 13px; font-weight: 700; color: #fff;
+  cursor: pointer; text-align: center; font-family: inherit;
+  letter-spacing: -0.2px;
+  -webkit-tap-highlight-color: transparent;
+}
+.sr-iw-btn.diocese { background: var(--brand); }
+.sr-iw-btn.local   { background: var(--local); }
+
+.sr-iw-tail {
+  position: absolute; bottom: -10px; left: 50%;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #fff;
+  filter: drop-shadow(0 3px 2px rgba(0,0,0,0.07));
+}
+
+/* 내 위치 마커 */
+.sr-my-loc {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #4285f4;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 3px rgba(66,133,244,0.3);
+}
+</style>
+</head>
+<body>
+
+<script>
+/* 카카오톡 인앱브라우저 감지 → 외부 브라우저 유도 */
+(function() {
+  if (!/KAKAOTALK/i.test(navigator.userAgent || '')) return;
+  if (/iPhone|iPad/i.test(navigator.userAgent)) {
+    document.write('<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;padding:36px;text-align:center;gap:18px;background:#fdf5f5;font-family:sans-serif"><div style="font-size:44px">🌐</div><div style="font-size:17px;font-weight:800;color:#8B1C2A">Safari에서 열어주세요</div><div style="font-size:14px;color:#666;line-height:1.8">하단 <b>···</b> 버튼 → <b>Safari로 열기</b></div></div>');
+    return;
+  }
+  location.href = 'intent://' + location.href.replace(/https?:\/\//, '')
+    + '#Intent;scheme=https;package=com.sec.android.app.sbrowser;end';
+})();
+</script>
+
+<div class="sr-wrap">
+
+  <!-- 탭 -->
+  <div class="sr-tabs">
+    <button class="sr-tab active" id="tabMap" onclick="switchView('map')">
+      <span class="sr-tab-icon">🗺</span> 지도
+    </button>
+    <button class="sr-tab" id="tabList" onclick="switchView('list')">
+      <span class="sr-tab-icon">☰</span> 목록
+    </button>
+  </div>
+
+  <!-- 지도 -->
+  <div class="sr-map-panel" id="srMapPanel">
+    <div id="srKakaoMap"></div>
+    <button class="sr-locate-btn" onclick="moveToMyLocation()">
+      <span class="ico">📍</span> 내 위치
+    </button>
+  </div>
+
+  <!-- 목록 -->
+  <div class="sr-list-panel hidden" id="srListPanel"></div>
+
+</div>
+
+<script>
+/* ── 전역 링크 열기 함수 (onclick 속성에서 호출) ── */
+/* index 기반으로 URL 참조 → CSP / 인코딩 이슈 없음 */
+function srGo(idx) {
+  const url = window._srData[idx].url;
+  /* 1) location.href 시도 (대부분 환경에서 가장 안정적) */
+  try { window.open(url, '_blank', 'noopener,noreferrer'); } catch(e) {}
+  /* 2) 위가 차단되면 location.href로 폴백 */
+  setTimeout(function() {
+    try { location.href = url; } catch(e) {}
+  }, 300);
+}
+
+/* ── 데이터 ── */
+const SUNRAEGIL_DATA = [
+  { name:"천주교 서울 순례길",        operator:"서울대교구",            type:"diocese", region:"서울시",          lat:37.5644, lng:127.0104, icon:"✝️",  url:"https://martyrs.or.kr/_web/mpilgrims/about.html" },
+  { name:"성지순례길 '디딤길'",       operator:"수원교구",              type:"diocese", region:"수원시",          lat:37.2832, lng:127.0170, icon:"🙏",  url:"https://www.casuwon.or.kr/holyland/pilgrimage" },
+  { name:"순례길 '님의 길'",          operator:"원주교구",              type:"diocese", region:"원주·횡성·제천",   lat:37.3420, lng:127.9200, icon:"🌿",  url:"https://sunraegil.seoji.net/course/all" },
+  { name:"한티가는길",                operator:"대구대교구",            type:"diocese", region:"칠곡·대구팔공산",  lat:36.0168, lng:128.6299, icon:"⛰️", url:"https://hantigil.or.kr/index" },
+  { name:"광주대교구 순례길",         operator:"광주대교구",            type:"diocese", region:"나주·영광",         lat:35.0369, lng:126.7152, icon:"🕊️", url:"https://www.gjcatholic.or.kr/holyland/pilgrimage/noan_naju" },
+  { name:"천주교제주순례길",          operator:"제주교구",              type:"diocese", region:"제주",             lat:33.4463, lng:126.3027, icon:"🌊",  url:"http://santoviaggio.com/course/10?sca=%EC%A0%84%EC%B2%B4%EC%BD%94%EC%8A%A4&id=0301" },
+  { name:"사제와 함께하는 도보순례",  operator:"안동교구",              type:"diocese", region:"문경·상주",          lat:36.8001, lng:128.2113, icon:"👣",  url:"https://www.acatholic.or.kr/sub4/sub2.asp" },
+  { name:"요안루갈다길 외",           operator:"전주교구",              type:"diocese", region:"전주·완주",          lat:35.8031, lng:127.1677, icon:"🌾",  url:"https://www.jcatholic.or.kr/theme/main/pages/pilgrimage01.html" },
+  { name:"보령 갈매못 성지순례길",    operator:"보령시",                type:"local",   region:"보령",             lat:36.4280, lng:126.5075, icon:"🌅",  url:"https://www.brcn.go.kr/tour/sub02_02_02.do" },
+  { name:"내포 천주교 순례길",        operator:"사단법인 내포문화숲길", type:"local",   region:"예산·서산",           lat:36.7127, lng:126.5380, icon:"🌲",  url:"https://naepotrail.org/course/catholic" },
+  { name:"버그내순례길",              operator:"당진시청",              type:"local",   region:"당진",             lat:36.8199, lng:126.7848, icon:"🏞️", url:"https://beogeunae.dangjin.go.kr/pil1.html" }
+];
+window._srData = SUNRAEGIL_DATA;
+
+let map, markers = [], overlay = null, myLocOverlay = null;
+
+/* ── 지도 초기화 ── */
+function initMap() {
+  map = new kakao.maps.Map(document.getElementById('srKakaoMap'), {
+    center: new kakao.maps.LatLng(36.2, 127.9),
+    level: 13
+  });
+  map.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
+  renderMarkers();
+  renderList();
+  kakao.maps.event.addListener(map, 'click', closeOverlay);
+}
+
+/* ── 마커 SVG ── */
+function makeMarkerSVG(color, emoji) {
+  const s = `<svg xmlns="http://www.w3.org/2000/svg" width="44" height="54" viewBox="0 0 44 54">
+    <ellipse cx="22" cy="51" rx="10" ry="3.5" fill="rgba(0,0,0,0.14)"/>
+    <path d="M22 2C12 2 4 10 4 22c0 13 18 30 18 30S40 35 40 22C40 10 32 2 22 2Z"
+          fill="${color}" stroke="white" stroke-width="2.5"/>
+    <text x="22" y="28" text-anchor="middle" font-size="18">${emoji}</text>
+  </svg>`;
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(s);
+}
+
+function closeOverlay() {
+  if (overlay) { overlay.setMap(null); overlay = null; }
+}
+
+/* ── 마커 렌더 ── */
+function renderMarkers() {
+  markers.forEach(m => m.setMap(null));
+  markers = [];
+  closeOverlay();
+
+  SUNRAEGIL_DATA.forEach(function(d, i) {
+    var color = d.type === 'diocese' ? '#8B1C2A' : '#1a5f8b';
+    var marker = new kakao.maps.Marker({
+      position: new kakao.maps.LatLng(d.lat, d.lng),
+      map: map,
+      image: new kakao.maps.MarkerImage(
+        makeMarkerSVG(color, d.icon),
+        new kakao.maps.Size(44, 54),
+        { offset: new kakao.maps.Point(22, 54) }
+      ),
+      title: d.name
+    });
+
+    kakao.maps.event.addListener(marker, 'click', function() {
+      closeOverlay();
+      var bc  = d.type === 'diocese' ? 'diocese' : 'local';
+      var btn_color = bc; /* 버튼 색 클래스도 동일 */
+
+      /* onclick="srGo(i)" — 전역 함수 + 인덱스 방식 (가장 안정적) */
+      var html =
+        '<div class="sr-iw">' +
+          '<div class="sr-iw-top">' +
+            '<span class="sr-iw-op-label ' + bc + '">' + d.operator + '</span>' +
+            '<span class="sr-iw-region">📍 ' + d.region + '</span>' +
+          '</div>' +
+          '<div class="sr-iw-name">' + d.icon + ' ' + d.name + '</div>' +
+          '<div class="sr-iw-sub">' + d.url.replace(/https?:\/\//, '').split('/')[0] + '</div>' +
+          '<button class="sr-iw-btn ' + btn_color + '" onclick="srGo(' + i + ')">홈페이지 방문 →</button>' +
+          '<div class="sr-iw-tail"></div>' +
+        '</div>';
+
+      overlay = new kakao.maps.CustomOverlay({
+        content: html,
+        zIndex: 10,
+        position: new kakao.maps.LatLng(d.lat, d.lng),
+        yAnchor: 1.65
+      });
+      overlay.setMap(map);
+      map.panTo(new kakao.maps.LatLng(d.lat, d.lng));
+    });
+
+    markers.push(marker);
+  });
+}
+
+/* ── 목록 렌더 ── */
+function renderList() {
+  var panel = document.getElementById('srListPanel');
+  panel.innerHTML = '';
+
+  SUNRAEGIL_DATA.forEach(function(d, i) {
+    var bc = d.type === 'diocese' ? 'diocese' : 'local';
+    var card = document.createElement('div');
+    card.className = 'sr-card';
+    card.innerHTML =
+      '<div class="sr-card-top">' +
+        '<span class="sr-card-op-label ' + bc + '">' + d.operator + '</span>' +
+        '<span class="sr-card-region">📍 ' + d.region + '</span>' +
+      '</div>' +
+      '<div class="sr-card-body">' +
+        '<div class="sr-card-icon">' + d.icon + '</div>' +
+        '<div class="sr-card-info">' +
+          '<div class="sr-card-name">' + d.name + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="sr-card-footer">' +
+        '<span class="sr-card-url">' + d.url.replace(/https?:\/\//, '') + '</span>' +
+        '<button class="sr-card-mapbtn">지도 보기</button>' +
+      '</div>';
+
+    /* 지도 보기 버튼 */
+    card.querySelector('.sr-card-mapbtn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      switchView('map');
+      setTimeout(function() {
+        map.setLevel(8);
+        map.panTo(new kakao.maps.LatLng(d.lat, d.lng));
+        if (markers[i]) kakao.maps.event.trigger(markers[i], 'click');
+      }, 60);
+    });
+
+    /* 카드 전체 클릭 → 홈페이지 */
+    card.addEventListener('click', function() { srGo(i); });
+
+    panel.appendChild(card);
+  });
+}
+
+/* ── 뷰 전환 ── */
+function switchView(view) {
+  var mp = document.getElementById('srMapPanel');
+  var lp = document.getElementById('srListPanel');
+  var tm = document.getElementById('tabMap');
+  var tl = document.getElementById('tabList');
+  if (view === 'map') {
+    mp.classList.remove('hidden'); lp.classList.add('hidden');
+    tm.classList.add('active');   tl.classList.remove('active');
+    if (map) setTimeout(function() { kakao.maps.event.trigger(map, 'resize'); }, 10);
+  } else {
+    mp.classList.add('hidden');   lp.classList.remove('hidden');
+    tm.classList.remove('active'); tl.classList.add('active');
+  }
+}
+
+/* ── 내 위치 ── */
+function moveToMyLocation() {
+  if (!navigator.geolocation) { alert('위치 서비스를 지원하지 않습니다.'); return; }
+  navigator.geolocation.getCurrentPosition(
+    function(pos) {
+      var latlng = new kakao.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+      map.panTo(latlng);
+      map.setLevel(7);
+
+      /* 기존 내 위치 오버레이 제거 후 새로 표시 */
+      if (myLocOverlay) myLocOverlay.setMap(null);
+      var dot = document.createElement('div');
+      dot.className = 'sr-my-loc';
+      myLocOverlay = new kakao.maps.CustomOverlay({
+        content: dot,
+        position: latlng,
+        yAnchor: 0.5,
+        zIndex: 20
+      });
+      myLocOverlay.setMap(map);
+    },
+    function(err) {
+      var msg = err.code === 1
+        ? '위치 접근 권한이 거부되었습니다.\n브라우저 설정에서 위치 권한을 허용해 주세요.'
+        : '위치 정보를 가져올 수 없습니다.';
+      alert(msg);
+    },
+    { enableHighAccuracy: true, timeout: 8000 }
+  );
+}
+
+kakao.maps.load(function() { initMap(); });
+</script>
+</body>
+</html>
