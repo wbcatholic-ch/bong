@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>가톨릭 순례길</title>
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=07f7989e29fdfb425fff924f36fb3ec0"></script>
+<style>
+/* ══ COLOR ══
+   Diocese → 빨강 #C42B2B  (이미지 마커 색)
+   Local   → 초록 #2A8040  (이미지 마커 색)
+   Seoul stop → 파랑 (이미지 번호 원 색)
+*/
+:root {
+  --d:    #C42B2B;   --d-lt: #FDF0F0;
+  --l:    #2A8040;   --l-lt: #EEF7F1;
+  --bg:   #F5F3EE;   --card: #FEFEFE;
+  --bdr:  #E4DDD6;   --tx:   #252018;
+  --sub:  #706858;   --dim:  #B8ADA0;
+  --r: 13px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#C0B8B0;display:flex;align-items:center;justify-content:center;}
+.app{width:100%;height:100%;max-width:520px;display:flex;flex-direction:column;background:var(--bg);overflow:hidden;position:relative;}
+
+/* ── 탭: 활성=--d 배경 흰글씨 / 비활성=연한배경 ── */
+.tabs{display:flex;flex-shrink:0;height:50px;background:var(--card);border-bottom:1px solid var(--bdr);z-index:30;}
+.tab{flex:1;border:none;cursor:pointer;font-family:inherit;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .17s,color .17s;background:#EDE8E2;color:#C0B0A4;}
+.tab:first-child{border-right:1px solid var(--bdr);}
+.tab.on{background:var(--d);color:#fff;}
+
+/* ── 지도 ── */
+.map-wrap{flex:1;position:relative;min-height:0;display:flex;flex-direction:column;}
+#kmap{flex:1;width:100%;}
+
+/* ── 서울 경로 패널 ── */
+.seoul-bar{position:absolute;top:10px;left:10px;right:10px;z-index:15;background:rgba(254,254,254,.97);border-radius:13px;border:1px solid var(--bdr);box-shadow:0 3px 16px rgba(0,0,0,.14);padding:11px 13px;display:none;}
+.seoul-bar.show{display:block;}
+.seoul-bar-head{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+.seoul-back{padding:5px 11px;border-radius:7px;background:var(--bg);border:1px solid var(--bdr);font-size:12px;font-weight:700;color:var(--sub);cursor:pointer;white-space:nowrap;}
+.seoul-ttl{font-size:13px;font-weight:800;color:var(--tx);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.route-pills{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+.route-pills::-webkit-scrollbar{display:none;}
+.rpill{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;border:2px solid;font-size:11.5px;font-weight:700;cursor:pointer;background:#FEFEFE;color:var(--tx);transition:background .14s,color .14s;white-space:nowrap;}
+.rpill .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.rpill .km{font-size:10px;font-weight:600;color:var(--sub);}
+.rpill.on{color:#fff!important;}
+.rpill.on .km{color:rgba(255,255,255,.75)!important;}
+
+/* ── 내 위치 ── */
+.loc-btn{position:absolute;bottom:20px;right:14px;z-index:15;background:var(--card);border:1.5px solid var(--bdr);border-radius:22px;box-shadow:0 2px 12px rgba(0,0,0,.15);padding:9px 16px;display:flex;align-items:center;gap:6px;font-family:inherit;font-size:13px;font-weight:700;color:var(--d);cursor:pointer;}
+
+/* ── 바텀시트 ── */
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:20;background:var(--card);border-radius:20px 20px 0 0;border-top:1px solid var(--bdr);box-shadow:0 -4px 24px rgba(0,0,0,.12);padding:8px 18px 28px;transform:translateY(110%);transition:transform .25s cubic-bezier(.4,0,.2,1);pointer-events:none;}
+.sheet.open{transform:translateY(0);pointer-events:all;}
+.sh-handle{width:34px;height:4px;border-radius:2px;background:var(--bdr);margin:8px auto 14px;}
+.sh-close{position:absolute;top:14px;right:16px;width:26px;height:26px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;font-size:13px;color:var(--sub);display:flex;align-items:center;justify-content:center;}
+.sh-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.sh-bdg{font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:6px;color:#fff;white-space:nowrap;}
+.sh-bdg.d{background:var(--d);}
+.sh-bdg.l{background:var(--l);}
+.sh-region{font-size:12px;color:var(--sub);}
+.sh-name{font-size:16px;font-weight:800;color:var(--tx);line-height:1.45;word-break:keep-all;margin-bottom:14px;}
+.sh-go{display:block;width:100%;padding:13px;border:none;border-radius:11px;font-size:14px;font-weight:800;color:#fff;cursor:pointer;font-family:inherit;text-align:center;}
+.sh-go.d{background:var(--d);}
+.sh-go.l{background:var(--l);}
+
+/* ── 목록 ── */
+.list-wrap{flex:1;min-height:0;overflow-y:scroll;-webkit-overflow-scrolling:touch;padding:14px 13px 60px;display:flex;flex-direction:column;gap:11px;}
+.list-wrap::-webkit-scrollbar{display:none;}
+.hidden{display:none!important;}
+
+/* ── 카드 ── */
+.card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);box-shadow:0 1px 8px rgba(0,0,0,.06);flex-shrink:0;}
+.cr1{display:flex;align-items:center;gap:8px;padding:13px 14px 7px;}
+.cbdg{font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:6px;color:#fff;white-space:nowrap;flex-shrink:0;}
+.cbdg.d{background:var(--d);}
+.cbdg.l{background:var(--l);}
+.creg{font-size:12px;color:var(--sub);}
+.cr2{display:flex;align-items:center;gap:12px;padding:0 14px 11px;}
+.cico{width:46px;height:46px;flex-shrink:0;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:23px;}
+.cico.d{background:var(--d-lt);}
+.cico.l{background:var(--l-lt);}
+.cnm{font-size:15.5px;font-weight:700;color:var(--tx);word-break:keep-all;line-height:1.4;}
+.cr3{display:flex;gap:8px;padding:0 14px 13px;}
+.cbtn{flex:1;padding:11px 0;border:none;border-radius:9px;font-size:13.5px;font-weight:800;color:#fff;cursor:pointer;font-family:inherit;text-align:center;}
+.cbtn.go.d{background:var(--d);}
+.cbtn.go.l{background:var(--l);}
+.cbtn.mp{background:var(--bg);color:var(--sub)!important;border:1.5px solid var(--bdr);font-weight:700;}
+
+/* 내 위치 점 */
+.myloc{width:16px;height:16px;border-radius:50%;background:#2255CC;border:2.5px solid #fff;box-shadow:0 0 0 4px rgba(34,85,204,.22);}
+</style>
+</head>
+<body>
+
+<script>
+(function(){
+  var ua=navigator.userAgent||'';
+  if(!/KAKAOTALK/i.test(ua)) return;
+  if(/iPhone|iPad/i.test(ua)){
+    document.write('<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;padding:40px;text-align:center;gap:20px;background:#F5F3EE;font-family:sans-serif"><div style="font-size:44px">🌐</div><div style="font-size:17px;font-weight:800;color:#C42B2B">Safari에서 열어주세요</div><div style="font-size:13px;color:#888;line-height:1.9">하단 <b>···</b> → <b>Safari로 열기</b></div></div>');
+    return;
+  }
+  location.href='intent://'+location.href.replace(/https?:\/\//,'')+'#Intent;scheme=https;package=com.sec.android.app.sbrowser;end';
+})();
+</script>
+
+<div class="app">
+  <div class="tabs">
+    <button class="tab on" id="tabMap"  onclick="setView('map')">🗺 지도</button>
+    <button class="tab"    id="tabList" onclick="setView('list')">☰ 목록</button>
+  </div>
+
+  <div class="map-wrap" id="viewMap">
+    <div id="kmap"></div>
+
+    <div class="seoul-bar" id="seoulBar">
+      <div class="seoul-bar-head">
+        <button class="seoul-back" onclick="exitSeoul()">← 전국</button>
+        <div class="seoul-ttl">✝️ 천주교 서울 순례길</div>
+      </div>
+      <div class="route-pills" id="routePills"></div>
+    </div>
+
+    <div class="sheet" id="sheet">
+      <button class="sh-close" onclick="closeSheet()">✕</button>
+      <div class="sh-handle"></div>
+      <div class="sh-top">
+        <span class="sh-bdg" id="shBdg"></span>
+        <span class="sh-region" id="shReg"></span>
+      </div>
+      <div class="sh-name" id="shNm"></div>
+      <button class="sh-go" id="shGo">홈페이지 방문 →</button>
+    </div>
+
+    <button class="loc-btn" onclick="myLoc()">📍 내 위치</button>
+  </div>
+
+  <div class="list-wrap hidden" id="viewList"></div>
+</div>
+
+<script>
+var D=[
+  {n:"천주교 서울 순례길",        op:"서울대교구",            t:"d",r:"서울시",         lat:37.5644,lng:127.0104,ico:"✝️", url:"https://martyrs.or.kr/_web/mpilgrims/about.html", seoul:true},
+  {n:"성지순례길 '디딤길'",       op:"수원교구",              t:"d",r:"수원시",         lat:37.2832,lng:127.0170,ico:"🙏", url:"https://www.casuwon.or.kr/holyland/pilgrimage"},
+  {n:"순례길 '님의 길'",          op:"원주교구",              t:"d",r:"원주·횡성·제천",  lat:37.3420,lng:127.9200,ico:"🌿", url:"https://sunraegil.seoji.net/course/all"},
+  {n:"한티가는길",                op:"대구대교구",            t:"d",r:"칠곡·대구팔공산", lat:36.0168,lng:128.6299,ico:"⛰️",url:"https://hantigil.or.kr/index"},
+  {n:"광주대교구 순례길",         op:"광주대교구",            t:"d",r:"나주·영광",        lat:35.0369,lng:126.7152,ico:"🕊️",url:"https://www.gjcatholic.or.kr/holyland/pilgrimage/noan_naju"},
+  {n:"천주교제주순례길",          op:"제주교구",              t:"d",r:"제주",            lat:33.4463,lng:126.3027,ico:"🌊", url:"http://santoviaggio.com/course/10?sca=%EC%A0%84%EC%B2%B4%EC%BD%94%EC%8A%A4&id=0301"},
+  {n:"사제와 함께하는 도보순례",  op:"안동교구",              t:"d",r:"문경·상주",         lat:36.8001,lng:128.2113,ico:"👣", url:"https://www.acatholic.or.kr/sub4/sub2.asp"},
+  {n:"요안루갈다길 외",           op:"전주교구",              t:"d",r:"전주·완주",         lat:35.8031,lng:127.1677,ico:"🌾", url:"https://www.jcatholic.or.kr/theme/main/pages/pilgrimage01.html"},
+  {n:"보령 갈매못 성지순례길",    op:"보령시",                t:"l",r:"보령",            lat:36.4280,lng:126.5075,ico:"🌅", url:"https://www.brcn.go.kr/tour/sub02_02_02.do"},
+  {n:"내포 천주교 순례길",        op:"사단법인 내포문화숲길", t:"l",r:"예산·서산",          lat:36.7127,lng:126.5380,ico:"🌲", url:"https://naepotrail.org/course/catholic"},
+  {n:"버그내순례길",              op:"당진시청",              t:"l",r:"당진",            lat:36.8199,lng:126.7848,ico:"🏞️",url:"https://beogeunae.dangjin.go.kr/pil1.html"}
+];
+
+var RT=[
+  {name:"말씀의 길",              dist:"8.7km",     c:"#D4881A",
+   pts:[{n:"명동성당",lat:37.563185,lng:126.987356},{n:"장악원터",lat:37.565566,lng:126.984919},
+        {n:"이벽의 집터",lat:37.568420,lng:126.989382},{n:"좌포도청터",lat:37.571096,lng:126.992282},
+        {n:"종로성당",lat:37.571232,lng:126.996663},{n:"광희문성지",lat:37.564384,lng:127.010436},
+        {n:"가톨릭대학교 성신교정",lat:37.586336,lng:127.004579},{n:"석정보름우물",lat:37.582198,lng:126.986908},
+        {n:"가회동성당",lat:37.582057,lng:126.984567}]},
+  {name:"생명의 길",              dist:"5.9km",     c:"#2255CC",
+   pts:[{n:"가회동성당",lat:37.582057,lng:126.984567},{n:"한국 천주교 순교자 124위 시복 터",lat:37.574877,lng:126.976870},
+        {n:"형조 터",lat:37.572819,lng:126.976541},{n:"의금부 터",lat:37.570384,lng:126.982364},
+        {n:"전옥서 터",lat:37.569978,lng:126.982466},{n:"우포도청 터",lat:37.569841,lng:126.978098},
+        {n:"경기 감영 터",lat:37.566344,lng:126.966598},{n:"서소문 밖 네거리 순교 성지",lat:37.560568,lng:126.968867},
+        {n:"중림동약현성당",lat:37.559108,lng:126.967479}]},
+  {name:"일치의 길",              dist:"29.5km",    c:"#9050B8",
+   pts:[{n:"중림동약현성당",lat:37.559108,lng:126.967479},{n:"당고개순교성지",lat:37.535652,lng:126.967012},
+        {n:"새남터순교지",lat:37.524974,lng:126.956840},{n:"천주교 절두산 순교성지",lat:37.544130,lng:126.911847},
+        {n:"노고산성지",lat:37.551818,lng:126.938642},{n:"원효로 예수성심성당",lat:37.534238,lng:126.954176},
+        {n:"왜고개성지",lat:37.529472,lng:126.971658},{n:"천주교 삼성산 성지",lat:37.456848,lng:126.929111}]},
+  {name:"김대건 신부 치명 순교길", dist:"약 12.7km", c:"#1A9888",
+   pts:[{n:"우포도청 터",lat:37.569841,lng:126.978098},{n:"서소문 밖 네거리 순교 성지",lat:37.560568,lng:126.968867},
+        {n:"당고개순교성지",lat:37.535652,lng:126.967012},{n:"새남터순교지",lat:37.524974,lng:126.956840},
+        {n:"천주교 절두산 순교성지",lat:37.544130,lng:126.911847}]}
+];
+
+/* 마커 색 */
+var DC={d:'#C42B2B', l:'#2A8040'};
+
+var map, MK=[], sel=-1, myOv=null;
+var seoulMode=false, sPL=[], sMK=[], actRoute=-1;
+
+/* ══ 마커 SVG: 이미지와 동일한 십자가 핀 ══
+   - 물방울 테두리 핀
+   - 내부에 흰 기독교 십자가 (세로 길게)
+   - big=true 시 선택 강조 (크기↑, 흰 테두리 링)
+*/
+function mkSVG(color, big){
+  var w=big?54:42, h=big?66:52;
+  // viewBox 고정 100x124, scale로 크기 조절
+  var s='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'" viewBox="0 0 100 124">';
+  // 그림자
+  s+='<ellipse cx="50" cy="121" rx="'+(big?24:20)+'" ry="'+(big?8:6)+'" fill="rgba(0,0,0,'+(big?.2:.12)+')" />';
+  // 선택 시 흰 후광 링
+  if(big) s+='<path d="M50 1C27 1 8 19 8 41 8 70 50 121 50 121 50 121 92 70 92 41 92 19 73 1 50 1Z" fill="white" opacity="0.3"/>';
+  // 핀 몸체
+  s+='<path d="M50 5C29.5 5 13 21.5 13 42 13 69 50 119 50 119 50 119 87 69 87 42 87 21.5 70.5 5 50 5Z"';
+  s+=' fill="'+color+'" stroke="white" stroke-width="'+(big?5:3.5)+'"/>';
+  // 흰 십자가 — 세로 기둥
+  s+='<rect x="44" y="17" width="12" height="48" rx="3" fill="white"/>';
+  // 흰 십자가 — 가로 기둥 (상단 1/3 위치)
+  s+='<rect x="29" y="30" width="42" height="12" rx="3" fill="white"/>';
+  s+='</svg>';
+  return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s);
+}
+
+/* 서울 경유지 번호 원형 마커 (이미지의 파란 번호 스타일) */
+function stopSVG(color, num){
+  var s='<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">'
+    +'<circle cx="14" cy="14" r="12" fill="'+color+'" stroke="white" stroke-width="2.5"/>'
+    +'<text x="14" y="14" text-anchor="middle" dominant-baseline="middle"'
+    +' font-family="Arial,sans-serif" font-size="'+(num>9?9:11)+'" font-weight="900" fill="white">'+num+'</text>'
+    +'</svg>';
+  return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s);
+}
+
+/* ══ 지도 초기화 ══ */
+kakao.maps.load(function(){
+  map=new kakao.maps.Map(document.getElementById('kmap'),{
+    center:new kakao.maps.LatLng(36.2,127.9), level:13
+  });
+  map.addControl(new kakao.maps.ZoomControl(),kakao.maps.ControlPosition.RIGHT);
+
+  D.forEach(function(d,i){
+    var c=DC[d.t];
+    var mk=new kakao.maps.Marker({
+      position:new kakao.maps.LatLng(d.lat,d.lng), map:map,
+      image:new kakao.maps.MarkerImage(mkSVG(c,false),
+        new kakao.maps.Size(42,52),{offset:new kakao.maps.Point(21,52)}),
+      title:d.n, zIndex:1
+    });
+    (function(d,i){
+      kakao.maps.event.addListener(mk,'click',function(){ selMk(i); openSheet(i); });
+    })(d,i);
+    MK.push(mk);
+  });
+
+  kakao.maps.event.addListener(map,'click',closeSheet);
+  buildPills();
+  buildList();
+});
+
+/* ══ 마커 선택 강조 ══ */
+function selMk(i){
+  if(sel>=0){
+    MK[sel].setImage(new kakao.maps.MarkerImage(mkSVG(DC[D[sel].t],false),
+      new kakao.maps.Size(42,52),{offset:new kakao.maps.Point(21,52)}));
+    MK[sel].setZIndex(1);
+  }
+  sel=i;
+  MK[i].setImage(new kakao.maps.MarkerImage(mkSVG(DC[D[i].t],true),
+    new kakao.maps.Size(54,66),{offset:new kakao.maps.Point(27,66)}));
+  MK[i].setZIndex(999);
+}
+
+/* ══ 바텀시트 ══ */
+function openSheet(i){
+  var d=D[i];
+  document.getElementById('shBdg').textContent=d.op;
+  document.getElementById('shBdg').className='sh-bdg '+d.t;
+  document.getElementById('shBdg').style.background='';
+  document.getElementById('shReg').textContent='📍 '+d.r;
+  document.getElementById('shNm').textContent=d.n;
+  var btn=document.getElementById('shGo');
+  btn.style.display='block';
+  btn.className='sh-go '+d.t;
+  btn.onclick=function(){ location.href=d.url; };
+  document.getElementById('sheet').classList.add('open');
+  map.panTo(new kakao.maps.LatLng(d.lat,d.lng));
+}
+
+function openStopSheet(stop,rc,rname,num){
+  document.getElementById('shBdg').textContent=rname;
+  document.getElementById('shBdg').className='sh-bdg';
+  document.getElementById('shBdg').style.background=rc;
+  document.getElementById('shReg').textContent=num+'번 경유지';
+  document.getElementById('shNm').textContent=stop.n;
+  document.getElementById('shGo').style.display='none';
+  document.getElementById('sheet').classList.add('open');
+  map.panTo(new kakao.maps.LatLng(stop.lat,stop.lng));
+}
+
+function closeSheet(){
+  document.getElementById('sheet').classList.remove('open');
+  document.getElementById('shBdg').style.background='';
+  if(!seoulMode&&sel>=0){
+    MK[sel].setImage(new kakao.maps.MarkerImage(mkSVG(DC[D[sel].t],false),
+      new kakao.maps.Size(42,52),{offset:new kakao.maps.Point(21,52)}));
+    MK[sel].setZIndex(1); sel=-1;
+  }
+}
+
+/* ══ 서울 경로 ══ */
+function buildPills(){
+  var wrap=document.getElementById('routePills');
+  RT.forEach(function(rt,i){
+    var p=document.createElement('button');
+    p.className='rpill'; p.id='pill'+i;
+    p.style.borderColor=rt.c;
+    p.innerHTML='<span class="dot" style="background:'+rt.c+'"></span>'+rt.name+'<span class="km">'+rt.dist+'</span>';
+    (function(i){p.addEventListener('click',function(){toggleRoute(i);});})(i);
+    wrap.appendChild(p);
+  });
+}
+
+function enterSeoul(){
+  seoulMode=true;
+  MK.forEach(function(mk){mk.setMap(null);});
+  closeSheet();
+  document.getElementById('seoulBar').classList.add('show');
+  actRoute=-1;
+  drawAll();
+  map.setLevel(8);
+  map.setCenter(new kakao.maps.LatLng(37.555,126.975));
+}
+
+function exitSeoul(){
+  seoulMode=false; actRoute=-1;
+  clearSeoul();
+  RT.forEach(function(_,i){setPill(i,false);});
+  document.getElementById('seoulBar').classList.remove('show');
+  MK.forEach(function(mk){mk.setMap(map);});
+  closeSheet();
+  map.setLevel(13);
+  map.setCenter(new kakao.maps.LatLng(36.2,127.9));
+}
+
+function clearSeoul(){
+  sPL.forEach(function(p){p.setMap(null);}); sPL=[];
+  sMK.forEach(function(m){m.setMap(null);}); sMK=[];
+}
+
+function setPill(i,on){
+  var p=document.getElementById('pill'+i); if(!p) return;
+  if(on){p.classList.add('on');p.style.background=RT[i].c;p.style.color='#fff';}
+  else  {p.classList.remove('on');p.style.background='#FEFEFE';p.style.color='#252018';}
+}
+
+function drawAll(){
+  clearSeoul();
+  RT.forEach(function(rt){
+    var path=rt.pts.map(function(p){return new kakao.maps.LatLng(p.lat,p.lng);});
+    sPL.push(new kakao.maps.Polyline({path:path,map:map,strokeWeight:4,strokeColor:rt.c,strokeOpacity:.72,strokeStyle:'solid'}));
+  });
+}
+
+function toggleRoute(i){
+  if(actRoute===i){actRoute=-1;RT.forEach(function(_,j){setPill(j,false);});drawAll();closeSheet();}
+  else{actRoute=i;RT.forEach(function(_,j){setPill(j,j===i);});drawRoute(i);closeSheet();}
+}
+
+function drawRoute(i){
+  clearSeoul();
+  var rt=RT[i];
+  RT.forEach(function(r,j){
+    if(j===i) return;
+    var path=r.pts.map(function(p){return new kakao.maps.LatLng(p.lat,p.lng);});
+    sPL.push(new kakao.maps.Polyline({path:path,map:map,strokeWeight:2,strokeColor:r.c,strokeOpacity:.2,strokeStyle:'solid'}));
+  });
+  var path=rt.pts.map(function(p){return new kakao.maps.LatLng(p.lat,p.lng);});
+  sPL.push(new kakao.maps.Polyline({path:path,map:map,strokeWeight:5,strokeColor:rt.c,strokeOpacity:1,strokeStyle:'solid'}));
+  rt.pts.forEach(function(p,pi){
+    var mk=new kakao.maps.Marker({
+      position:new kakao.maps.LatLng(p.lat,p.lng),map:map,
+      image:new kakao.maps.MarkerImage(stopSVG(rt.c,pi+1),
+        new kakao.maps.Size(28,28),{offset:new kakao.maps.Point(14,14)}),
+      title:p.n,zIndex:5
+    });
+    (function(p,pi,rt){
+      kakao.maps.event.addListener(mk,'click',function(){openStopSheet(p,rt.c,rt.name,pi+1);});
+    })(p,pi,rt);
+    sMK.push(mk);
+  });
+  var bds=new kakao.maps.LatLngBounds();
+  rt.pts.forEach(function(p){bds.extend(new kakao.maps.LatLng(p.lat,p.lng));});
+  map.setBounds(bds,60);
+}
+
+/* ══ 목록 ══ */
+function buildList(){
+  var wrap=document.getElementById('viewList'); wrap.innerHTML='';
+  D.forEach(function(d,i){
+    var card=document.createElement('div'); card.className='card';
+    var r1=document.createElement('div'); r1.className='cr1';
+    var b=document.createElement('span'); b.className='cbdg '+d.t; b.textContent=d.op;
+    var rg=document.createElement('span'); rg.className='creg'; rg.textContent='📍 '+d.r;
+    r1.appendChild(b); r1.appendChild(rg);
+    var r2=document.createElement('div'); r2.className='cr2';
+    var ico=document.createElement('div'); ico.className='cico '+d.t; ico.textContent=d.ico;
+    var nm=document.createElement('div'); nm.className='cnm'; nm.textContent=d.n;
+    r2.appendChild(ico); r2.appendChild(nm);
+    var r3=document.createElement('div'); r3.className='cr3';
+    var gB=document.createElement('button'); gB.className='cbtn go '+d.t; gB.textContent='🔗 홈페이지';
+    gB.addEventListener('click',(function(url){return function(e){e.stopPropagation();location.href=url;};})(d.url));
+    var mB=document.createElement('button'); mB.className='cbtn mp'; mB.textContent='🗺 지도';
+    mB.addEventListener('click',(function(d,i){return function(e){
+      e.stopPropagation(); setView('map');
+      setTimeout(function(){
+        if(d.seoul){enterSeoul();}
+        else{map.setLevel(8);map.panTo(new kakao.maps.LatLng(d.lat,d.lng));selMk(i);openSheet(i);}
+      },80);
+    };})(d,i));
+    r3.appendChild(gB); r3.appendChild(mB);
+    card.appendChild(r1); card.appendChild(r2); card.appendChild(r3);
+    wrap.appendChild(card);
+  });
+}
+
+/* ══ 뷰 전환 ══ */
+function setView(v){
+  var vm=document.getElementById('viewMap'),vl=document.getElementById('viewList');
+  var tm=document.getElementById('tabMap'),tl=document.getElementById('tabList');
+  if(v==='map'){
+    vm.classList.remove('hidden');vl.classList.add('hidden');
+    tm.classList.add('on');tl.classList.remove('on');
+    if(map) setTimeout(function(){kakao.maps.event.trigger(map,'resize');},10);
+  } else {
+    vm.classList.add('hidden');vl.classList.remove('hidden');
+    tm.classList.remove('on');tl.classList.add('on');
+  }
+}
+
+/* ══ 내 위치 ══ */
+function myLoc(){
+  if(!navigator.geolocation){alert('위치 서비스 미지원');return;}
+  function show(pos){
+    var ll=new kakao.maps.LatLng(pos.coords.latitude,pos.coords.longitude);
+    map.panTo(ll);map.setLevel(7);
+    if(myOv) myOv.setMap(null);
+    var dot=document.createElement('div'); dot.className='myloc';
+    myOv=new kakao.maps.CustomOverlay({content:dot,position:ll,yAnchor:.5,zIndex:100});
+    myOv.setMap(map);
+  }
+  navigator.geolocation.getCurrentPosition(show,
+    function(e){alert(e.code===1?'위치 권한을 허용해 주세요.':'위치를 가져올 수 없습니다.');},
+    {enableHighAccuracy:false,timeout:5000,maximumAge:60000});
+  navigator.geolocation.getCurrentPosition(show,function(){},
+    {enableHighAccuracy:true,timeout:12000,maximumAge:0});
+}
+</script>
+</body>
+</html>
