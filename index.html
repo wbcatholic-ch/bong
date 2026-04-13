@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>매일미사 테스트</title>
+<title>매일미사</title>
 
 <style>
 body{
@@ -34,14 +34,24 @@ body{
 
 <script>
 window.onload = function () {
-    location.replace("https://missa.cbck.or.kr/");
+    const today = new Date();
+
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+
+    const dateStr = `${yyyy}${mm}${dd}`;
+
+    const url = `https://missa.cbck.or.kr/DailyMissa/${dateStr}`;
+
+    location.replace(url);
 };
 </script>
 </head>
 <body>
 
 <div class="spinner"></div>
-<div>매일미사로 이동 중...</div>
+<div>오늘의 매일미사 불러오는 중...</div>
 
 </body>
 </html>
