@@ -19,7 +19,7 @@ header{flex-shrink:0;background:var(--card);border-bottom:1px solid var(--bdr);p
 .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
 .hd-left{display:flex;align-items:center;gap:7px;}
 .hd h1{font-size:17px;font-weight:800;color:var(--d);letter-spacing:-.3px;}
-.hd-count{font-size:11px;font-weight:700;background:var(--d-lt);color:var(--d);padding:3px 9px;border-radius:10px;border:1px solid #c8d9f8;}
+.hd-count{font-size:11px;font-weight:700;background:var(--d-lt);color:var(--d);padding:3px 9px;border-radius:10px;border:1px solid #e8c8c8;}
 /* ── 탭 ── */
 .tabs{display:flex;gap:6px;padding-bottom:12px;}
 .tab{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:6px 16px;border-radius:20px;border:1.5px solid var(--bdr);background:var(--card);color:var(--sub);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s,color .15s,border-color .15s;white-space:nowrap;}
@@ -30,7 +30,7 @@ header{flex-shrink:0;background:var(--card);border-bottom:1px solid var(--bdr);p
 #map-svg{width:100%;height:100%;cursor:grab;display:block;touch-action:none;}
 #map-svg:active{cursor:grabbing;}
 .dp{cursor:pointer;}
-
+ 
 /* 인포카드 - 순례길 카드 스타일 */
 #card{position:absolute;top:10px;right:10px;width:220px;background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);box-shadow:0 3px 16px rgba(0,0,0,.14);display:none;z-index:100;overflow:hidden;cursor:pointer;}
 #card.on{display:block;}
@@ -48,7 +48,7 @@ header{flex-shrink:0;background:var(--card);border-bottom:1px solid var(--bdr);p
 .c-foot-url{font-size:11px;color:var(--d);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;}
 .c-foot-arr{font-size:16px;color:var(--sub);flex-shrink:0;}
 .c-foot-none{font-size:11px;color:#ccc;text-align:center;padding:2px 0;}
-
+ 
 /* 관구 버튼 */
 #gw-bar{position:absolute;top:10px;left:10px;display:flex;flex-direction:column;gap:5px;z-index:50;}
 .gb{padding:6px 14px;border-radius:20px;border:2px solid;font-size:12px;font-weight:700;
@@ -56,13 +56,13 @@ header{flex-shrink:0;background:var(--card);border-bottom:1px solid var(--bdr);p
 .gb.on{color:white!important;}
 .gb-all{color:#555!important;border-color:#bbb!important;font-weight:500;}
 .gb-all.on{background:#555!important;color:white!important;}
-
+ 
 #ctrl{position:absolute;bottom:14px;left:12px;display:flex;flex-direction:column;gap:4px;}
 .cb{width:28px;height:28px;background:white;border:.5px solid #ddd;border-radius:7px;
   font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;
   box-shadow:0 2px 4px rgba(0,0,0,0.08);}
 .cb:hover{background:#f0f0f0;}
-
+ 
 #search-view{flex:1;overflow-y:auto;padding:18px 16px;display:none;background:var(--bg);}
 #search-view.on{display:block;}
 .ss{position:sticky;top:0;background:var(--bg);padding-bottom:12px;z-index:10;}
@@ -87,7 +87,7 @@ header{flex-shrink:0;background:var(--card);border-bottom:1px solid var(--bdr);p
 .sog{margin-bottom:10px;}
 .sod{font-size:13px;font-weight:700;margin-bottom:4px;}
 .sodd{font-size:12px;color:#555;line-height:1.7;}
-
+ 
 #list-view{flex:1;overflow-y:auto;padding:14px 13px 40px;display:none;background:var(--bg);}
 #list-view.on{display:block;}
 .lv-gw{margin-bottom:20px;}
@@ -186,14 +186,14 @@ header{flex-shrink:0;background:var(--card);border-bottom:1px solid var(--bdr);p
         </g>
       </g>
     </svg>
-
+ 
     <div id="gw-bar">
       <button class="gb on gb-all" data-gw="" onclick="filterGw(this)">전체 보기</button>
       <button class="gb" data-gw="서울관구" style="color:#1a6bb5;border-color:#1a6bb5" onclick="filterGw(this)">서울관구</button>
       <button class="gb" data-gw="대구관구" style="color:#c05a00;border-color:#c05a00" onclick="filterGw(this)">대구관구</button>
       <button class="gb" data-gw="광주관구" style="color:#7a1fa2;border-color:#7a1fa2" onclick="filterGw(this)">광주관구</button>
     </div>
-
+ 
     <div id="card">
       <button class="c-x" onclick="hideCard(event)">✕</button>
       <!-- cr1: 관구 뱃지 + 지역 -->
@@ -217,14 +217,14 @@ header{flex-shrink:0;background:var(--card);border-bottom:1px solid var(--bdr);p
         <span class="c-foot-arr">›</span>
       </div>
     </div>
-
+ 
     <div id="ctrl">
       <button class="cb" onclick="zoom(1.4)">+</button>
       <button class="cb" onclick="zoom(0.71)">−</button>
       <button class="cb" onclick="resetZoom()">⌂</button>
     </div>
   </div>
-
+ 
   <div id="search-view">
     <div class="ss">
       <div class="sr">
@@ -239,7 +239,7 @@ header{flex-shrink:0;background:var(--card);border-bottom:1px solid var(--bdr);p
     <div id="list-content"></div>
   </div>
 </div>
-
+ 
 <script>
 function buildListView(){
   const gws=[
@@ -247,42 +247,48 @@ function buildListView(){
     {key:'대구관구',col:'#c05a00',dioceses:['대구대교구','청주교구','안동교구','마산교구','부산교구']},
     {key:'광주관구',col:'#7a1fa2',dioceses:['광주대교구','전주교구','제주교구']},
   ];
-  let h='';
+  const wrap=document.getElementById('list-content');wrap.innerHTML='';
   gws.forEach(function(g){
-    h+='<div class="lv-gw"><div class="lv-gw-title" style="background:'+g.col+'">'+g.key+'</div>';
-    g.dioceses.forEach(function(d){
-      const m=DIOCESE_META[d];if(!m)return;
-      const uid='lv-dt-'+d.replace(/[^a-zA-Z0-9]/g,'');
-      const detHTML=(m.detail||[]).map(function(x){return '<div class="lv-dd">'+x+'</div>';}).join('');
-      const urlBtn=m.url?'<a class="lv-url" href="'+m.url+'" target="_blank" style="border-color:'+m.color+';color:'+m.color+'">↗ 홈페이지</a>':'';
-      h+='<div class="lv-row">'
-        +'<div class="lv-dot" style="background:'+m.color+'"></div>'
-        +'<div class="lv-info">'
-          +'<div class="lv-name">'+d+'</div>'
-          +'<div class="lv-region">'+m.region+'</div>'
-          +'<div class="lv-actions">'
-            +'<button class="lv-dtbtn" data-uid="'+uid+'">▶ 상세 지역</button>'
-            +urlBtn
-          +'</div>'
-          +'<div class="lv-dtbox" id="'+uid+'">'+detHTML+'</div>'
-        +'</div>'
-        +'<div class="lv-parishes">'+m.parishes+'<span>본당</span></div>'
-        +'</div>';
+    const gwDiv=document.createElement('div');gwDiv.className='lv-gw';
+    const gwTtl=document.createElement('div');gwTtl.className='lv-gw-title';
+    gwTtl.style.background=g.col;gwTtl.textContent=g.key;
+    gwDiv.appendChild(gwTtl);
+    g.dioceses.forEach(function(dName){
+      const m=DIOCESE_META[dName];if(!m)return;
+      const dets=(m.detail||[]).filter(function(x){return x.trim()!==m.region.trim();});
+      const detTxt=dets.join(' / ');
+      const card=document.createElement('div');card.className='lv-card';
+      // row1: 뱃지 + 지역
+      const r1=document.createElement('div');r1.className='lv-cr1';
+      const bdg=document.createElement('span');bdg.className='lv-bdg';bdg.style.background=m.color;bdg.textContent=g.key;
+      const reg=document.createElement('span');reg.className='lv-creg';reg.textContent=m.region;
+      r1.appendChild(bdg);r1.appendChild(reg);
+      // row2: 아이콘 + 정보 + 본당수
+      const r2=document.createElement('div');r2.className='lv-cr2';
+      const ico=document.createElement('div');ico.className='lv-ico';ico.style.background=m.color;ico.textContent='✝';
+      const inf=document.createElement('div');inf.className='lv-info';
+      const nm=document.createElement('div');nm.className='lv-name';nm.textContent=dName;inf.appendChild(nm);
+      if(detTxt){const dt=document.createElement('div');dt.className='lv-detail';dt.textContent=detTxt;inf.appendChild(dt);}
+      const pw=document.createElement('div');pw.className='lv-parishes-wrap';
+      const pn=document.createElement('div');pn.className='lv-parishes';
+      const ps=document.createElement('span');ps.textContent='본당';
+      pn.textContent=m.parishes;pn.appendChild(ps);pw.appendChild(pn);
+      r2.appendChild(ico);r2.appendChild(inf);r2.appendChild(pw);
+      // row3: 푸터
+      const ft=document.createElement('div');ft.className='lv-cfoot';
+      const cu=document.createElement('span');cu.className='lv-curl';
+      cu.textContent=m.url?m.url.replace(/^https?:\/\//,'').replace(/\/$/,''):'홈페이지 없음';
+      const ca=document.createElement('span');ca.className='lv-carr';ca.textContent='›';
+      ft.appendChild(cu);ft.appendChild(ca);
+      card.appendChild(r1);card.appendChild(r2);card.appendChild(ft);
+      if(m.url){card.addEventListener('click',(function(u){return function(){location.href=u;};})(m.url));}
+      gwDiv.appendChild(card);
     });
-    h+='</div>';
-  });
-  document.getElementById('list-content').innerHTML=h;
-  document.querySelectorAll('.lv-dtbtn').forEach(function(btn){
-    btn.addEventListener('click',function(){
-      var uid=this.dataset.uid;
-      var el=document.getElementById(uid);
-      var open=el.classList.toggle('on');
-      this.textContent=open?'▼ 접기':'▶ 상세 지역';
-    });
+    wrap.appendChild(gwDiv);
   });
 }
-
-
+ 
+ 
 document.querySelectorAll('.tab').forEach(function(t){
   t.addEventListener('click',function(){
     document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on');});
@@ -311,7 +317,7 @@ document.querySelectorAll('.tab').forEach(function(t){
     hideCard();
   });
 });
-
+ 
 let vx=55,vy=130,vw=380,vh=600,dragging=false,px=0,py=0;
 const svg=document.getElementById('map-svg');
 function setVB(){svg.setAttribute('viewBox',`${vx} ${vy} ${vw} ${vh}`);}
@@ -359,9 +365,9 @@ svg.addEventListener('touchmove',e=>{
     vw=Math.max(80,Math.min(1800,t1.vw*f));vh=Math.max(100,Math.min(2250,t1.vh*f));setVB();
   }
 },{passive:false});
-
+ 
 const GW_COL={'서울관구':'#1a6bb5','대구관구':'#c05a00','광주관구':'#7a1fa2'};
-
+ 
 function animateVB(tx,ty,tw,th,dur=420){
   const sx=vx,sy=vy,sw=vw,sh=vh,s=performance.now();
   function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
@@ -373,14 +379,14 @@ function animateVB(tx,ty,tw,th,dur=420){
   }
   requestAnimationFrame(step);
 }
-
+ 
 const GW_BOUNDS={
   '서울관구':{x1:55,y1:130,x2:410,y2:420},
   '대구관구':{x1:206,y1:256,x2:430,y2:548},
   '광주관구':{x1: 90,y1:389,x2:259,y2:691},
 };
 const PADDING=18;
-
+ 
 function filterGw(btn){
   const gw=btn.dataset.gw;
   document.querySelectorAll('.gb').forEach(b=>{
@@ -389,13 +395,13 @@ function filterGw(btn){
     else if(on)b.style.background='#555';
     else b.style.background='white';
   });
-
+ 
   function lightenHex(hex,amt=0.82){
     const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
     const lr=Math.round(r+(255-r)*amt),lg=Math.round(g+(255-g)*amt),lb=Math.round(b+(255-b)*amt);
     return `#${lr.toString(16).padStart(2,'0')}${lg.toString(16).padStart(2,'0')}${lb.toString(16).padStart(2,'0')}`;
   }
-
+ 
   if(!gw){
     document.querySelectorAll('.dp').forEach(p=>{
       const fc=p.getAttribute('data-color')||p.getAttribute('fill');
@@ -436,10 +442,10 @@ function filterGw(btn){
     });
     // 위치 이동 없이 색상 강조만
   }
-
+ 
   hideCard();
 }
-
+ 
 function showCard(el){
   const c=el.dataset.color,t=darkText(c)?'rgba(0,0,0,.82)':'white';
   document.getElementById('c-hd').style.background=c;
@@ -473,20 +479,20 @@ function showCard(el){
   card.classList.add('on');
 }
 function hideCard(){document.getElementById('card').classList.remove('on');}
-
+ 
 function darkText(hex){
   const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
   return(r*.299+g*.587+b*.114)>155;
 }
 document.getElementById('map-svg').addEventListener('click',e=>{if(!e.target.classList.contains('dp'))hideCard();});
-document.getElementById('card').addEventListener('click',function(e){if(e.target.closest('.c-x'))return;if(_cardUrl)window.open(_cardUrl,'_blank');});
-
+document.getElementById('card').addEventListener('click',function(e){if(e.target.closest('.c-x'))return;if(_cardUrl)location.href=_cardUrl;});
+ 
 const SEARCH_DB=[{"k":"서울","display":"서울특별시","d":"서울대교구","g":"서울관구","aliases":["서울","서울시","서울특별시"]},{"k":"인천","display":"인천광역시","d":"인천교구","g":"서울관구","aliases":["인천"]},{"k":"경기 김포","display":"경기 김포","d":"인천교구","g":"서울관구","aliases":["경기 김포"]},{"k":"경기 부천","display":"경기 부천","d":"인천교구","g":"서울관구","aliases":["경기 부천"]},{"k":"경기 시흥","display":"경기 시흥","d":"인천교구","g":"서울관구","aliases":["경기 시흥"]},{"k":"경기 안산","display":"경기 안산","d":"인천교구","g":"서울관구","aliases":["경기 안산"]},{"k":"경기 수원","display":"경기 수원","d":"수원교구","g":"서울관구","aliases":["경기 수원","수원","경기수원","경기도수원","경기도 수원"]},{"k":"경기 광주","display":"광주광역시","d":"수원교구","g":"서울관구","aliases":["경기 광주","경기광주","경기도광주","경기도 광주"]},{"k":"경기 과천","display":"경기 과천","d":"수원교구","g":"서울관구","aliases":["경기 과천","과천","경기과천","경기도과천","경기도 과천"]},{"k":"경기 광명","display":"경기 광명","d":"수원교구","g":"서울관구","aliases":["경기 광명","광명","경기광명","경기도광명","경기도 광명"]},{"k":"경기 군포","display":"경기 군포","d":"수원교구","g":"서울관구","aliases":["경기 군포","군포","경기군포","경기도군포","경기도 군포"]},{"k":"경기 성남","display":"경기 성남","d":"수원교구","g":"서울관구","aliases":["경기 성남","성남","경기성남","경기도성남","경기도 성남"]},{"k":"경기 시흥","display":"경기 시흥","d":"수원교구","g":"서울관구","aliases":["경기 시흥","시흥","경기시흥","경기도시흥","경기도 시흥"]},{"k":"경기 안산","display":"경기 안산","d":"수원교구","g":"서울관구","aliases":["경기 안산","안산","경기안산","경기도안산","경기도 안산"]},{"k":"경기 안성","display":"경기 안성","d":"수원교구","g":"서울관구","aliases":["경기 안성","안성","경기안성","경기도안성","경기도 안성"]},{"k":"경기 안양","display":"경기 안양","d":"수원교구","g":"서울관구","aliases":["경기 안양","안양","경기안양","경기도안양","경기도 안양"]},{"k":"경기 양평","display":"경기 양평","d":"수원교구","g":"서울관구","aliases":["경기 양평","양평","경기양평","경기도양평","경기도 양평"]},{"k":"경기 여주","display":"경기 여주","d":"수원교구","g":"서울관구","aliases":["경기 여주","여주","경기여주","경기도여주","경기도 여주"]},{"k":"경기 오산","display":"경기 오산","d":"수원교구","g":"서울관구","aliases":["경기 오산","오산","경기오산","경기도오산","경기도 오산"]},{"k":"경기 용인","display":"경기 용인","d":"수원교구","g":"서울관구","aliases":["경기 용인","용인","경기용인","경기도용인","경기도 용인"]},{"k":"경기 의왕","display":"경기 의왕","d":"수원교구","g":"서울관구","aliases":["경기 의왕","의왕","경기의왕","경기도의왕","경기도 의왕"]},{"k":"경기 이천","display":"경기 이천","d":"수원교구","g":"서울관구","aliases":["경기 이천","이천","경기이천","경기도이천","경기도 이천"]},{"k":"경기 평택","display":"경기 평택","d":"수원교구","g":"서울관구","aliases":["경기 평택","평택","경기평택","경기도평택","경기도 평택"]},{"k":"경기 하남","display":"경기 하남","d":"수원교구","g":"서울관구","aliases":["경기 하남","하남","경기하남","경기도하남","경기도 하남"]},{"k":"경기 화성","display":"경기 화성","d":"수원교구","g":"서울관구","aliases":["경기 화성","화성","경기화성","경기도화성","경기도 화성"]},{"k":"관할동","display":"관할동","d":"수원교구","g":"서울관구","aliases":["관할동"]},{"k":"경기 의정부","display":"경기 의정부","d":"의정부교구","g":"서울관구","aliases":["경기 의정부","의정부","경기의정부","경기도의정부","경기도 의정부"]},{"k":"경기 고양","display":"경기 고양","d":"의정부교구","g":"서울관구","aliases":["경기 고양","고양","경기고양","경기도고양","경기도 고양"]},{"k":"경기 구리","display":"경기 구리","d":"의정부교구","g":"서울관구","aliases":["경기 구리","구리","경기구리","경기도구리","경기도 구리"]},{"k":"경기 남양주","display":"경기 남양주","d":"의정부교구","g":"서울관구","aliases":["경기 남양주","남양주","경기남양주","경기도남양주","경기도 남양주"]},{"k":"경기 동두천","display":"경기 동두천","d":"의정부교구","g":"서울관구","aliases":["경기 동두천","동두천","경기동두천","경기도동두천","경기도 동두천"]},{"k":"경기 양주","display":"경기 양주","d":"의정부교구","g":"서울관구","aliases":["경기 양주","양주","경기양주","경기도양주","경기도 양주"]},{"k":"경기 연천","display":"경기 연천","d":"의정부교구","g":"서울관구","aliases":["경기 연천","연천","경기연천","경기도연천","경기도 연천"]},{"k":"경기 파주","display":"경기 파주","d":"의정부교구","g":"서울관구","aliases":["경기 파주","파주","경기파주","경기도파주","경기도 파주"]},{"k":"강원 원주","display":"강원 원주","d":"원주교구","g":"서울관구","aliases":["강원 원주","원주","강원원주","강원도원주","강원도 원주"]},{"k":"강원 동해","display":"강원 동해","d":"원주교구","g":"서울관구","aliases":["강원 동해","동해","강원동해","강원도동해","강원도 동해"]},{"k":"강원 삼척","display":"강원 삼척","d":"원주교구","g":"서울관구","aliases":["강원 삼척","삼척","강원삼척","강원도삼척","강원도 삼척"]},{"k":"강원 영월","display":"강원 영월","d":"원주교구","g":"서울관구","aliases":["강원 영월","영월","강원영월","강원도영월","강원도 영월"]},{"k":"강원 정선","display":"강원 정선","d":"원주교구","g":"서울관구","aliases":["강원 정선","정선","강원정선","강원도정선","강원도 정선"]},{"k":"강원 태백","display":"강원 태백","d":"원주교구","g":"서울관구","aliases":["강원 태백","태백","강원태백","강원도태백","강원도 태백"]},{"k":"강원 평창","display":"강원 평창","d":"원주교구","g":"서울관구","aliases":["강원 평창","평창","강원평창","강원도평창","강원도 평창"]},{"k":"강원 횡성","display":"강원 횡성","d":"원주교구","g":"서울관구","aliases":["강원 횡성","횡성","강원횡성","강원도횡성","강원도 횡성"]},{"k":"충북 단양","display":"충북 단양","d":"원주교구","g":"서울관구","aliases":["충북 단양","단양","충북단양","충청북도단양","충청북도 단양"]},{"k":"충북 제천","display":"충북 제천","d":"원주교구","g":"서울관구","aliases":["충북 제천","제천","충북제천","충청북도제천","충청북도 제천"]},{"k":"강원 춘천","display":"강원 춘천","d":"춘천교구","g":"서울관구","aliases":["강원 춘천","춘천","강원춘천","강원도춘천","강원도 춘천"]},{"k":"강원 강릉","display":"강원 강릉","d":"춘천교구","g":"서울관구","aliases":["강원 강릉","강릉","강원강릉","강원도강릉","강원도 강릉"]},{"k":"강원 고성","display":"강원 고성","d":"춘천교구","g":"서울관구","aliases":["강원 고성","고성","강원고성","강원도고성","강원도 고성"]},{"k":"강원 동해","display":"강원 동해","d":"춘천교구","g":"서울관구","aliases":["강원 동해","동해","강원동해","강원도동해","강원도 동해"]},{"k":"강원 속초","display":"강원 속초","d":"춘천교구","g":"서울관구","aliases":["강원 속초","속초","강원속초","강원도속초","강원도 속초"]},{"k":"강원 양구","display":"강원 양구","d":"춘천교구","g":"서울관구","aliases":["강원 양구","양구","강원양구","강원도양구","강원도 양구"]},{"k":"강원 양양","display":"강원 양양","d":"춘천교구","g":"서울관구","aliases":["강원 양양","양양","강원양양","강원도양양","강원도 양양"]},{"k":"강원 인제","display":"강원 인제","d":"춘천교구","g":"서울관구","aliases":["강원 인제","인제","강원인제","강원도인제","강원도 인제"]},{"k":"강원 철원","display":"강원 철원","d":"춘천교구","g":"서울관구","aliases":["강원 철원","철원","강원철원","강원도철원","강원도 철원"]},{"k":"강원 평창","display":"강원 평창","d":"춘천교구","g":"서울관구","aliases":["강원 평창","평창","강원평창","강원도평창","강원도 평창"]},{"k":"강원 홍천","display":"강원 홍천","d":"춘천교구","g":"서울관구","aliases":["강원 홍천","홍천","강원홍천","강원도홍천","강원도 홍천"]},{"k":"강원 화천","display":"강원 화천","d":"춘천교구","g":"서울관구","aliases":["강원 화천","화천","강원화천","강원도화천","강원도 화천"]},{"k":"경기 가평","display":"경기 가평","d":"춘천교구","g":"서울관구","aliases":["경기 가평","가평","경기가평","경기도가평","경기도 가평"]},{"k":"경기 포천","display":"경기 포천","d":"춘천교구","g":"서울관구","aliases":["경기 포천","포천","경기포천","경기도포천","경기도 포천"]},{"k":"대전","display":"대전광역시","d":"대전교구","g":"서울관구","aliases":["대전"]},{"k":"세종","display":"세종특별자치시","d":"대전교구","g":"서울관구","aliases":["세종"]},{"k":"충남 계룡","display":"충남 계룡","d":"대전교구","g":"서울관구","aliases":["충남 계룡","계룡","충남계룡","충청남도계룡","충청남도 계룡"]},{"k":"충남 공주","display":"충남 공주","d":"대전교구","g":"서울관구","aliases":["충남 공주","공주","충남공주","충청남도공주","충청남도 공주"]},{"k":"충남 금산","display":"충남 금산","d":"대전교구","g":"서울관구","aliases":["충남 금산","금산","충남금산","충청남도금산","충청남도 금산"]},{"k":"충남 논산","display":"충남 논산","d":"대전교구","g":"서울관구","aliases":["충남 논산","논산","충남논산","충청남도논산","충청남도 논산"]},{"k":"충남 당진","display":"충남 당진","d":"대전교구","g":"서울관구","aliases":["충남 당진","당진","충남당진","충청남도당진","충청남도 당진"]},{"k":"충남 보령","display":"충남 보령","d":"대전교구","g":"서울관구","aliases":["충남 보령","보령","충남보령","충청남도보령","충청남도 보령"]},{"k":"충남 부여","display":"충남 부여","d":"대전교구","g":"서울관구","aliases":["충남 부여","부여","충남부여","충청남도부여","충청남도 부여"]},{"k":"충남 서산","display":"충남 서산","d":"대전교구","g":"서울관구","aliases":["충남 서산","서산","충남서산","충청남도서산","충청남도 서산"]},{"k":"충남 서천","display":"충남 서천","d":"대전교구","g":"서울관구","aliases":["충남 서천","서천","충남서천","충청남도서천","충청남도 서천"]},{"k":"충남 아산","display":"충남 아산","d":"대전교구","g":"서울관구","aliases":["충남 아산","아산","충남아산","충청남도아산","충청남도 아산"]},{"k":"충남 예산","display":"충남 예산","d":"대전교구","g":"서울관구","aliases":["충남 예산","예산","충남예산","충청남도예산","충청남도 예산"]},{"k":"충남 천안","display":"충남 천안","d":"대전교구","g":"서울관구","aliases":["충남 천안","천안","충남천안","충청남도천안","충청남도 천안"]},{"k":"충남 청양","display":"충남 청양","d":"대전교구","g":"서울관구","aliases":["충남 청양","청양","충남청양","충청남도청양","충청남도 청양"]},{"k":"충남 태안","display":"충남 태안","d":"대전교구","g":"서울관구","aliases":["충남 태안","태안","충남태안","충청남도태안","충청남도 태안"]},{"k":"충남 홍성","display":"충남 홍성","d":"대전교구","g":"서울관구","aliases":["충남 홍성","홍성","충남홍성","충청남도홍성","충청남도 홍성"]},{"k":"대구","display":"대구광역시","d":"대구대교구","g":"대구관구","aliases":["대구"]},{"k":"경북 칠곡","display":"경북 칠곡","d":"대구대교구","g":"대구관구","aliases":["경북 칠곡","칠곡","경북칠곡","경상북도칠곡","경상북도 칠곡"]},{"k":"경북 성주","display":"경북 성주","d":"대구대교구","g":"대구관구","aliases":["경북 성주","성주","경북성주","경상북도성주","경상북도 성주"]},{"k":"경북 경주","display":"경북 경주","d":"대구대교구","g":"대구관구","aliases":["경북 경주","경주","경북경주","경상북도경주","경상북도 경주"]},{"k":"경북 경산","display":"경북 경산","d":"대구대교구","g":"대구관구","aliases":["경북 경산","경산","경북경산","경상북도경산","경상북도 경산"]},{"k":"경북 고령","display":"경북 고령","d":"대구대교구","g":"대구관구","aliases":["경북 고령","고령","경북고령","경상북도고령","경상북도 고령"]},{"k":"경북 구미","display":"경북 구미","d":"대구대교구","g":"대구관구","aliases":["경북 구미","구미","경북구미","경상북도구미","경상북도 구미"]},{"k":"경북 포항","display":"경북 포항","d":"대구대교구","g":"대구관구","aliases":["경북 포항","포항","경북포항","경상북도포항","경상북도 포항"]},{"k":"경북 영천","display":"경북 영천","d":"대구대교구","g":"대구관구","aliases":["경북 영천","영천","경북영천","경상북도영천","경상북도 영천"]},{"k":"경북 김천","display":"경북 김천","d":"대구대교구","g":"대구관구","aliases":["경북 김천","김천","경북김천","경상북도김천","경상북도 김천"]},{"k":"경북 울릉","display":"경북 울릉","d":"대구대교구","g":"대구관구","aliases":["경북 울릉","울릉","경북울릉","경상북도울릉","경상북도 울릉"]},{"k":"경북 청도","display":"경북 청도","d":"대구대교구","g":"대구관구","aliases":["경북 청도","청도","경북청도","경상북도청도","경상북도 청도"]},{"k":"군위","display":"군위","d":"대구대교구","g":"대구관구","aliases":["군위"]},{"k":"대구군위","display":"대구군위","d":"대구대교구","g":"대구관구","aliases":["대구군위"]},{"k":"대구 군위","display":"대구 군위","d":"대구대교구","g":"대구관구","aliases":["대구 군위"]},{"k":"충북 청주","display":"충북 청주","d":"청주교구","g":"대구관구","aliases":["충북 청주","청주","충북청주","충청북도청주","충청북도 청주"]},{"k":"충북 충주","display":"충북 충주","d":"청주교구","g":"대구관구","aliases":["충북 충주","충주","충북충주","충청북도충주","충청북도 충주"]},{"k":"충북 진천","display":"충북 진천","d":"청주교구","g":"대구관구","aliases":["충북 진천","진천","충북진천","충청북도진천","충청북도 진천"]},{"k":"충북 증평","display":"충북 증평","d":"청주교구","g":"대구관구","aliases":["충북 증평","증평","충북증평","충청북도증평","충청북도 증평"]},{"k":"충북 음성","display":"충북 음성","d":"청주교구","g":"대구관구","aliases":["충북 음성","음성","충북음성","충청북도음성","충청북도 음성"]},{"k":"충북 옥천","display":"충북 옥천","d":"청주교구","g":"대구관구","aliases":["충북 옥천","옥천","충북옥천","충청북도옥천","충청북도 옥천"]},{"k":"충북 영동","display":"충북 영동","d":"청주교구","g":"대구관구","aliases":["충북 영동","영동","충북영동","충청북도영동","충청북도 영동"]},{"k":"충북 괴산","display":"충북 괴산","d":"청주교구","g":"대구관구","aliases":["충북 괴산","괴산","충북괴산","충청북도괴산","충청북도 괴산"]},{"k":"충북 보은","display":"충북 보은","d":"청주교구","g":"대구관구","aliases":["충북 보은","보은","충북보은","충청북도보은","충청북도 보은"]},{"k":"세종","display":"세종특별자치시","d":"청주교구","g":"대구관구","aliases":["세종"]},{"k":"경북 안동","display":"경북 안동","d":"안동교구","g":"대구관구","aliases":["경북 안동","안동","경북안동","경상북도안동","경상북도 안동"]},{"k":"경북 영덕","display":"경북 영덕","d":"안동교구","g":"대구관구","aliases":["경북 영덕","영덕","경북영덕","경상북도영덕","경상북도 영덕"]},{"k":"경북 울진","display":"경북 울진","d":"안동교구","g":"대구관구","aliases":["경북 울진","울진","경북울진","경상북도울진","경상북도 울진"]},{"k":"경북 영양","display":"경북 영양","d":"안동교구","g":"대구관구","aliases":["경북 영양","영양","경북영양","경상북도영양","경상북도 영양"]},{"k":"경북 청송","display":"경북 청송","d":"안동교구","g":"대구관구","aliases":["경북 청송","청송","경북청송","경상북도청송","경상북도 청송"]},{"k":"경북 문경","display":"경북 문경","d":"안동교구","g":"대구관구","aliases":["경북 문경","문경","경북문경","경상북도문경","경상북도 문경"]},{"k":"경북 상주","display":"경북 상주","d":"안동교구","g":"대구관구","aliases":["경북 상주","상주","경북상주","경상북도상주","경상북도 상주"]},{"k":"경북 영주","display":"경북 영주","d":"안동교구","g":"대구관구","aliases":["경북 영주","영주","경북영주","경상북도영주","경상북도 영주"]},{"k":"경북 봉화","display":"경북 봉화","d":"안동교구","g":"대구관구","aliases":["경북 봉화","봉화","경북봉화","경상북도봉화","경상북도 봉화"]},{"k":"경북 예천","display":"경북 예천","d":"안동교구","g":"대구관구","aliases":["경북 예천","예천","경북예천","경상북도예천","경상북도 예천"]},{"k":"경북 의성","display":"경북 의성","d":"안동교구","g":"대구관구","aliases":["경북 의성","의성","경북의성","경상북도의성","경상북도 의성"]},{"k":"경남 창원","display":"경남 창원","d":"마산교구","g":"대구관구","aliases":["경남 창원","창원","경남창원","경상남도창원","경상남도 창원"]},{"k":"경남 창녕","display":"경남 창녕","d":"마산교구","g":"대구관구","aliases":["경남 창녕","창녕","경남창녕","경상남도창녕","경상남도 창녕"]},{"k":"경남 함안","display":"경남 함안","d":"마산교구","g":"대구관구","aliases":["경남 함안","함안","경남함안","경상남도함안","경상남도 함안"]},{"k":"경남 의령","display":"경남 의령","d":"마산교구","g":"대구관구","aliases":["경남 의령","의령","경남의령","경상남도의령","경상남도 의령"]},{"k":"경남 밀양","display":"경남 밀양","d":"마산교구","g":"대구관구","aliases":["경남 밀양","밀양","경남밀양","경상남도밀양","경상남도 밀양"]},{"k":"경남 김해","display":"경남 김해","d":"마산교구","g":"대구관구","aliases":["경남 김해","김해","경남김해","경상남도김해","경상남도 김해"]},{"k":"경남 진주","display":"경남 진주","d":"마산교구","g":"대구관구","aliases":["경남 진주","진주","경남진주","경상남도진주","경상남도 진주"]},{"k":"경남 거창","display":"경남 거창","d":"마산교구","g":"대구관구","aliases":["경남 거창","거창","경남거창","경상남도거창","경상남도 거창"]},{"k":"경남 산청","display":"경남 산청","d":"마산교구","g":"대구관구","aliases":["경남 산청","산청","경남산청","경상남도산청","경상남도 산청"]},{"k":"경남 함양","display":"경남 함양","d":"마산교구","g":"대구관구","aliases":["경남 함양","함양","경남함양","경상남도함양","경상남도 함양"]},{"k":"경남 합천","display":"경남 합천","d":"마산교구","g":"대구관구","aliases":["경남 합천","합천","경남합천","경상남도합천","경상남도 합천"]},{"k":"경남 남해","display":"경남 남해","d":"마산교구","g":"대구관구","aliases":["경남 남해","남해","경남남해","경상남도남해","경상남도 남해"]},{"k":"경남 사천","display":"경남 사천","d":"마산교구","g":"대구관구","aliases":["경남 사천","사천","경남사천","경상남도사천","경상남도 사천"]},{"k":"경남 하동","display":"경남 하동","d":"마산교구","g":"대구관구","aliases":["경남 하동","하동","경남하동","경상남도하동","경상남도 하동"]},{"k":"경남 고성","display":"경남 고성","d":"마산교구","g":"대구관구","aliases":["경남 고성","고성","경남고성","경상남도고성","경상남도 고성"]},{"k":"경남 통영","display":"경남 통영","d":"마산교구","g":"대구관구","aliases":["경남 통영","통영","경남통영","경상남도통영","경상남도 통영"]},{"k":"경남 거제","display":"경남 거제","d":"마산교구","g":"대구관구","aliases":["경남 거제","거제","경남거제","경상남도거제","경상남도 거제"]},{"k":"부산","display":"부산광역시","d":"부산교구","g":"대구관구","aliases":["부산"]},{"k":"울산","display":"울산광역시","d":"부산교구","g":"대구관구","aliases":["울산"]},{"k":"경남 김해","display":"경남 김해","d":"부산교구","g":"대구관구","aliases":["경남 김해","김해","경남김해","경상남도김해","경상남도 김해"]},{"k":"경남 밀양","display":"경남 밀양","d":"부산교구","g":"대구관구","aliases":["경남 밀양","밀양","경남밀양","경상남도밀양","경상남도 밀양"]},{"k":"경남 양산","display":"경남 양산","d":"부산교구","g":"대구관구","aliases":["경남 양산","양산","경남양산","경상남도양산","경상남도 양산"]},{"k":"전남 목포","display":"전남 목포","d":"광주대교구","g":"광주관구","aliases":["전남 목포","목포","전남목포","전라남도목포","전라남도 목포"]},{"k":"전남 여수","display":"전남 여수","d":"광주대교구","g":"광주관구","aliases":["전남 여수","여수","전남여수","전라남도여수","전라남도 여수"]},{"k":"전남 순천","display":"전남 순천","d":"광주대교구","g":"광주관구","aliases":["전남 순천","순천","전남순천","전라남도순천","전라남도 순천"]},{"k":"전남 나주","display":"전남 나주","d":"광주대교구","g":"광주관구","aliases":["전남 나주","나주","전남나주","전라남도나주","전라남도 나주"]},{"k":"전남 광양","display":"전남 광양","d":"광주대교구","g":"광주관구","aliases":["전남 광양","광양","전남광양","전라남도광양","전라남도 광양"]},{"k":"전남 담양","display":"전남 담양","d":"광주대교구","g":"광주관구","aliases":["전남 담양","담양","전남담양","전라남도담양","전라남도 담양"]},{"k":"전남 곡성","display":"전남 곡성","d":"광주대교구","g":"광주관구","aliases":["전남 곡성","곡성","전남곡성","전라남도곡성","전라남도 곡성"]},{"k":"전남 구례","display":"전남 구례","d":"광주대교구","g":"광주관구","aliases":["전남 구례","구례","전남구례","전라남도구례","전라남도 구례"]},{"k":"전남 고흥","display":"전남 고흥","d":"광주대교구","g":"광주관구","aliases":["전남 고흥","고흥","전남고흥","전라남도고흥","전라남도 고흥"]},{"k":"전남 보성","display":"전남 보성","d":"광주대교구","g":"광주관구","aliases":["전남 보성","보성","전남보성","전라남도보성","전라남도 보성"]},{"k":"전남 화순","display":"전남 화순","d":"광주대교구","g":"광주관구","aliases":["전남 화순","화순","전남화순","전라남도화순","전라남도 화순"]},{"k":"전남 장흥","display":"전남 장흥","d":"광주대교구","g":"광주관구","aliases":["전남 장흥","장흥","전남장흥","전라남도장흥","전라남도 장흥"]},{"k":"전남 강진","display":"전남 강진","d":"광주대교구","g":"광주관구","aliases":["전남 강진","강진","전남강진","전라남도강진","전라남도 강진"]},{"k":"전남 해남","display":"전남 해남","d":"광주대교구","g":"광주관구","aliases":["전남 해남","해남","전남해남","전라남도해남","전라남도 해남"]},{"k":"전남 영암","display":"전남 영암","d":"광주대교구","g":"광주관구","aliases":["전남 영암","영암","전남영암","전라남도영암","전라남도 영암"]},{"k":"전남 무안","display":"전남 무안","d":"광주대교구","g":"광주관구","aliases":["전남 무안","무안","전남무안","전라남도무안","전라남도 무안"]},{"k":"전남 함평","display":"전남 함평","d":"광주대교구","g":"광주관구","aliases":["전남 함평","함평","전남함평","전라남도함평","전라남도 함평"]},{"k":"전북 전주","display":"전북 전주","d":"전주교구","g":"광주관구","aliases":["전북 전주","전주","전북전주","전라북도전주","전라북도 전주"]},{"k":"전북 익산","display":"전북 익산","d":"전주교구","g":"광주관구","aliases":["전북 익산","익산","전북익산","전라북도익산","전라북도 익산"]},{"k":"전북 군산","display":"전북 군산","d":"전주교구","g":"광주관구","aliases":["전북 군산","군산","전북군산","전라북도군산","전라북도 군산"]},{"k":"전북 정읍","display":"전북 정읍","d":"전주교구","g":"광주관구","aliases":["전북 정읍","정읍","전북정읍","전라북도정읍","전라북도 정읍"]},{"k":"전북 남원","display":"전북 남원","d":"전주교구","g":"광주관구","aliases":["전북 남원","남원","전북남원","전라북도남원","전라북도 남원"]},{"k":"전북 김제","display":"전북 김제","d":"전주교구","g":"광주관구","aliases":["전북 김제","김제","전북김제","전라북도김제","전라북도 김제"]},{"k":"전북 무주","display":"전북 무주","d":"전주교구","g":"광주관구","aliases":["전북 무주","무주","전북무주","전라북도무주","전라북도 무주"]},{"k":"전북 완주","display":"전북 완주","d":"전주교구","g":"광주관구","aliases":["전북 완주","완주","전북완주","전라북도완주","전라북도 완주"]},{"k":"전북 부안","display":"전북 부안","d":"전주교구","g":"광주관구","aliases":["전북 부안","부안","전북부안","전라북도부안","전라북도 부안"]},{"k":"전북 고창","display":"전북 고창","d":"전주교구","g":"광주관구","aliases":["전북 고창","고창","전북고창","전라북도고창","전라북도 고창"]},{"k":"전북 임실","display":"전북 임실","d":"전주교구","g":"광주관구","aliases":["전북 임실","임실","전북임실","전라북도임실","전라북도 임실"]},{"k":"전북 순창","display":"전북 순창","d":"전주교구","g":"광주관구","aliases":["전북 순창","순창","전북순창","전라북도순창","전라북도 순창"]},{"k":"전북 진안","display":"전북 진안","d":"전주교구","g":"광주관구","aliases":["전북 진안","진안","전북진안","전라북도진안","전라북도 진안"]},{"k":"전북 장수","display":"전북 장수","d":"전주교구","g":"광주관구","aliases":["전북 장수","장수","전북장수","전라북도장수","전라북도 장수"]},{"k":"제주","display":"제주특별자치도","d":"제주교구","g":"광주관구","aliases":["제주"]},{"k":"제주 서귀포","display":"제주 서귀포","d":"제주교구","g":"광주관구","aliases":["제주 서귀포"]},{"k":"서귀포","display":"서귀포","d":"제주교구","g":"광주관구","aliases":["서귀포"]},{"k":"제주서귀포","display":"제주서귀포","d":"제주교구","g":"광주관구","aliases":["제주서귀포"]},{"k":"제주도서귀포","display":"제주도서귀포","d":"제주교구","g":"광주관구","aliases":["제주도서귀포"]},{"k":"제주도 서귀포","display":"제주도 서귀포","d":"제주교구","g":"광주관구","aliases":["제주도 서귀포"]},{"k":"제주도 제주","display":"제주도 제주","d":"제주교구","g":"광주관구","aliases":["제주도 제주"]},{"k":"제주도제주","display":"제주도제주","d":"제주교구","g":"광주관구","aliases":["제주도제주"]}];
-
-
+ 
+ 
 const OVERLAP_SUMMARY={"안산":{"인천교구":["대부동동","대부남동","대부북동","선감동","풍도동"],"수원교구":["건건동","고잔동","목내동","본오동","부곡동","사사동","사동","선부동","성곡동","성포동","수암동","신길동","양상동","원곡동","원시동","월피동","와동","이동","일동","장상동","장하동","초지동","팔곡일동","팔곡이동","화정동"]},"시흥":{"수원교구":["거모동","광석동","군자동","논곡동","능곡동","목감동","물왕동","배곧동","산현동","월곶동","장곡동","장현동","정왕동","조남동","죽율동","하상동","하중동","화정동"],"인천교구":["계수동","과림동","금이동","대야동","도창동","매화동","무지내동","미산동","방산동","신천동","안현동","은행동","포동"]},"김해":{"마산교구":["진영읍","생림면","진례면","한림면"],"부산교구":["대동면","상동면","생림면","주촌면","강동","관동동","구산동","내동","내덕동","대성동","대청동","동상동","명법동","무계동","봉황동","부곡동","부원동","불암동","삼계동","삼문동","삼방동","삼정동","서상동","수가동","신문동","안동","어방동","외동","유하동","율하동","응달동","이동","장유동","전하동","지내동","풍유동","화목동"]},"밀양":{"마산교구":["하남읍","초동면"],"부산교구":["삼랑진읍","단장면","무안면","부북면","산내면","산외면","상남면","상동면","청도면","가곡동","교동","남포동","내이동","내일동","삼문동","용평동","활성동"]},"평창":{"원주교구":["평창읍","대화면","미탄면","방림면"],"춘천교구":["대관령면","봉평면","용평면","진부면"]},"세종":{"대전교구":["조치원읍","금남면","소정면","연기면","연서면","장군면","전동면","전의면","가람동","고운동","나성동","누리동","다정동","대평동","도담동","반곡동","보람동","산울동","새롬동","세종동","소담동","아름동","어진동","용호동","종촌동","집현동","한별동","한솔동","해밀동"],"청주교구":["부강면","연동면","다솜동","세종동","집현동","합강동"]},"동해":{"원주교구":["구미동","구호동","귀운동","나안동","내동","단봉동","달방동","대구동","동회동","북평동","비천동","삼화동","송정동","쇄운동","신흥동","용정동","이기동","이도동","이로동","지가동","지흥동","천곡동","추암동","평릉동","호현동","효가동"],"춘천교구":["대진동","망상동","묵호진동","발한동","부곡동","심곡동","어달동","초구동"]},"고성":{"춘천교구":["강원 고성 전체"],"마산교구":["경남 고성 전체"]},"광주":{"수원교구":["경기 광주 전체"],"광주대교구":["광주광역시 전체"]}};
 const DIOCESE_META={"서울대교구":{"color":"#E63946","gwangu":"서울관구","parishes":233,"url":"https://aos.catholic.or.kr/index","region":"서울 전지역","detail":["서울 전지역"]},"인천교구":{"color":"#F4A261","gwangu":"서울관구","parishes":135,"url":"http://www.caincheon.or.kr/","region":"인천, 경기 서부","detail":["인천 전지역", "경기 서부 (김포·부천·시흥일부·안산일부)"]},"수원교구":{"color":"#2A9D8F","gwangu":"서울관구","parishes":222,"url":"https://www.casuwon.or.kr/","region":"수원, 경기 남부","detail":["경기 남부 (수원·광주·과천·광명·군포·성남·시흥일부·안산일부·안성·안양·양평·여주·오산·용인·의왕·이천·평택·하남·화성)"]},"의정부교구":{"color":"#457B9D","gwangu":"서울관구","parishes":88,"url":"http://ucatholic.or.kr/","region":"경기 북부","detail":["경기 북부 (의정부·고양·구리·남양주·동두천·양주·연천·파주·가평·포천)"]},"원주교구":{"color":"#6A4C93","gwangu":"서울관구","parishes":54,"url":"http://www.wjcatholic.or.kr/","region":"강원 남부, 충북 북부","detail":["강원 남부 (원주·삼척·영월·정선·태백·횡성·동해일부·평창일부)", "충북 북부 (단양·제천)"]},"춘천교구":{"color":"#E9C46A","gwangu":"서울관구","parishes":62,"url":"https://www.cccatholic.or.kr/","region":"강원 북부","detail":["강원 북부 (춘천·강릉·고성·속초·양구·양양·인제·철원·홍천·화천·동해일부·평창일부)", "경기 동북부 (가평·포천)"]},"대전교구":{"color":"#52B788","gwangu":"서울관구","parishes":145,"url":"https://www.djcatholic.or.kr/home/","region":"대전, 세종, 충남 전지역","detail":["대전 전지역", "세종일부", "충남 전지역 (공주·금산·논산·당진·보령·부여·서산·서천·아산·예산·천안·청양·태안·홍성·계룡)"]},"대구대교구":{"color":"#F4845F","gwangu":"대구관구","parishes":164,"url":"https://www.daegu-archdiocese.or.kr/","region":"대구, 경북 남부","detail":["대구 전지역", "경북 남부 (칠곡·성주·경주·경산·고령·구미·포항·영천·김천·울릉·청도)"]},"청주교구":{"color":"#4CC9F0","gwangu":"대구관구","parishes":82,"url":"https://www.cdcj.or.kr/","region":"충북 중남부, 세종","detail":["충북 중남부 (청주·충주·진천·증평·음성·옥천·영동·괴산·보은)", "세종일부"]},"안동교구":{"color":"#F77F00","gwangu":"대구관구","parishes":41,"url":"https://www.acatholic.or.kr/","region":"경북 북부","detail":["경북 북부 (안동·영덕·울진·영양·청송·문경·상주·영주·봉화·예천·의성)"]},"마산교구":{"color":"#80B918","gwangu":"대구관구","parishes":75,"url":"https://cathms.kr/","region":"경남 서부","detail":["경남 서부 (창원·창녕·함안·의령·진주·거창·산청·함양·합천·남해·사천·하동·고성·통영·거제, 김해일부, 밀양일부)"]},"부산교구":{"color":"#264653","gwangu":"대구관구","parishes":125,"url":"https://www.catholicbusan.or.kr/","region":"부산, 울산, 경남 동부","detail":["부산 전지역", "울산 전지역", "경남 동부 (양산·김해일부·밀양일부)"]},"광주대교구":{"color":"#9B5DE5","gwangu":"광주관구","parishes":143,"url":"https://www.gjcatholic.or.kr/","region":"광주, 전남 전지역","detail":["광주 전지역", "전남 전지역"]},"전주교구":{"color":"#06D6A0","gwangu":"광주관구","parishes":96,"url":"https://jcatholic.or.kr/index.php","region":"전북 전지역","detail":["전북 전지역"]},"제주교구":{"color":"#EF476F","gwangu":"광주관구","parishes":31,"url":"https://www.diocesejeju.or.kr/","region":"제주도 전지역","detail":["제주도 전지역 (제주·서귀포)"]}};
-
+ 
 const REGION_OVERLAP_PLAIN={
   "밀양":["밀양","밀양시","경남밀양","경남 밀양","경상남도밀양","경상남도 밀양"],
   "시흥":["시흥","시흥시","경기시흥","경기 시흥","경기도시흥","경기도 시흥"],
@@ -496,8 +502,8 @@ const REGION_OVERLAP_PLAIN={
   "동해":["동해","동해시","강원동해","강원 동해","강원도동해","강원도 동해"],
   "세종":["세종","세종시","세종특별자치시","세종특별자치"],
 };
-
-
+ 
+ 
 const NAME_SAME={
   "광주":{
     plain:["광주","광주시"],
@@ -510,19 +516,19 @@ const NAME_SAME={
     gyeongnam:["경남고성","경남 고성","경상남도고성","경상남도 고성"],
   }
 };
-
+ 
 function makeRow(disp,diocese){
   const m=DIOCESE_META[diocese];if(!m)return'';
   return`<div class="si-r"><div class="sl">${disp}</div><div class="srow"><div class="sdot" style="background:${m.color}"></div><div><div class="sd" style="color:${m.color}">${diocese}</div><div class="sg">${m.gwangu}</div></div></div></div>`;
 }
-
+ 
 function doSearch(){
   const raw=document.getElementById('si').value.trim();
   const res=document.getElementById('sres');
   if(!raw){res.innerHTML='<div class="se">검색어를 입력하세요</div>';return;}
-
+ 
   const q=raw.replace(/\s+/g,'');
-
+ 
   for(const [city,aliases] of Object.entries(REGION_OVERLAP_PLAIN)){
     if(aliases.map(a=>a.replace(/\s+/g,'')).includes(q)){
       const sm=OVERLAP_SUMMARY[city]||{};
@@ -534,8 +540,8 @@ function doSearch(){
       res.innerHTML=h+'</div>';return;
     }
   }
-
-
+ 
+ 
   for(const [city,groups] of Object.entries(NAME_SAME)){
     if(city==='광주'){
       if(groups.gwangyeok.map(a=>a.replace(/\s+/g,'')).includes(q)){
@@ -562,12 +568,12 @@ function doSearch(){
       res.innerHTML=rows;return;
     }
   }
-
+ 
   const matched=SEARCH_DB.filter(i=>{
     const aliases=i.aliases||[i.k];
     return aliases.some(alias=>alias.replace(/\s+/g,'')===q);
   });
-
+ 
   const results=matched.length?matched:SEARCH_DB.filter(i=>{
     const aliases=i.aliases||[i.k];
     return aliases.some(alias=>{
@@ -575,7 +581,7 @@ function doSearch(){
       return af.includes(q)&&q.length>=2;
     });
   });
-
+ 
   if(!results.length){res.innerHTML=`<div class="se">"${raw}"을 찾을 수 없습니다</div>`;return;}
   const seen=new Set();
   const u=results.filter(i=>{const k=i.k+'|'+i.d;if(seen.has(k))return false;seen.add(k);return true;});
