@@ -101,13 +101,17 @@ header {
 
 .search-box {
     position: fixed;
-    top: 128px;
+    top: 118px;
     left: 0;
     width: 100%;
     padding: 10px 16px;
-    background: rgba(255,255,255,0.96);
+    background: rgba(255,255,255,0.98);
     border-bottom: 1px solid #E7DDD6;
     z-index: 85;
+}
+
+#list-view {
+    padding: 182px 16px 24px;
 }
 
 .search-box input {
@@ -137,6 +141,7 @@ header {
     gap: 12px;
 }
 
+
 .prayer-item {
     width: 100%;
     min-height: 72px;
@@ -146,11 +151,11 @@ header {
     border-radius: 18px;
     box-shadow: 0 2px 8px rgba(70, 45, 25, 0.05);
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 14px;
 }
-
+    
 .prayer-item:last-child {
     min-height: 64px;
     padding: 14px 20px;
@@ -180,18 +185,18 @@ header {
     word-break: keep-all;
 }
 
+
 .prayer-title i,
 .prayer-title svg {
     flex: 0 0 18px;
     width: 18px;
     height: 18px;
-    margin-top: 3px;
-    color: #8B5E3C;
-    fill: #8B5E3C;
+    margin-top: 1px;
+    color: #A55D3A;
+    fill: #A55D3A;
     font-size: 18px;
-    opacity: 0.9;
+    opacity: 1;
 }
-
 .prayer-icon {
     flex: 0 0 22px;
     width: 22px;
@@ -273,10 +278,12 @@ header {
     box-shadow: 0 6px 20px rgba(80,50,30,0.06);
 }
 
-.detail-content p {
+
+    .detail-content p {
     margin-bottom: 18px;
-    text-align: justify;
+    text-align: left;
     word-break: keep-all;
+    line-height: 1.9;
 }
 
 .detail-content .rubric {
@@ -958,19 +965,22 @@ function renderList(category) {
 
     let dataToSearch = [];
 
+
+    
     if (category === 'favorites') {
-        for (const key in prayerData) {
-            dataToSearch = dataToSearch.concat(
-                prayerData[key].filter(prayer => favorites.includes(prayer.id))
-            );
-        }
-    } else if (keyword) {
-        for (const key in prayerData) {
-            dataToSearch = dataToSearch.concat(prayerData[key]);
-        }
-    } else {
-        dataToSearch = prayerData[category];
+    for (const key in prayerData) {
+        dataToSearch = dataToSearch.concat(
+            prayerData[key].filter(prayer => favorites.includes(prayer.id))
+        );
     }
+} else if (keyword) {
+    for (const key in prayerData) {
+        dataToSearch = dataToSearch.concat(prayerData[key]);
+    }
+} else {
+    dataToSearch = prayerData[category];
+}
+    
 
     if (!dataToSearch || dataToSearch.length === 0) {
         listContainer.innerHTML =
@@ -1018,16 +1028,20 @@ function renderList(category) {
     });
 }
 
+
+    
 tabBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
         tabBtns.forEach(b => b.classList.remove('active'));
         e.target.classList.add('active');
         currentCategory = e.target.getAttribute('data-category');
+
         renderList(currentCategory);
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 });
-
+    
 if (searchInput) {
     searchInput.addEventListener('input', () => {
         renderList(currentCategory);
