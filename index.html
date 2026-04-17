@@ -19,42 +19,108 @@
     --accent-color: #8B5E3C;
     --border-color: #E5DDD6;
     --header-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    -webkit-tap-highlight-color: transparent;
-}
-
-body {
-    font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
-    color: #2B2B2B;
-    background: #F7F4F1;
-    -webkit-text-size-adjust: 100%;
-    text-rendering: optimizeLegibility;
-}
-
-
-header {
+}.app-header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 60px;
-
+    height: 72px;
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* 🔥 왼쪽 정렬 */
-
-    background: linear-gradient(90deg, #6B4F3A, #8B5E3C);
+    justify-content: space-between;
+    padding: 0 16px 0 18px;
+    background: linear-gradient(135deg, #5E412F 0%, #7B573D 45%, #9A6A45 100%);
     color: #fff;
-
     z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 16px rgba(60, 35, 20, 0.18);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
 
-    padding: 0 16px;
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.header-cross {
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #FFF4E6;
+    font-size: 16px;
+    flex: 0 0 30px;
+}
+
+.header-title-wrap {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.header-title {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    color: #FFFFFF;
+}
+
+.header-subtitle {
+    margin-top: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: rgba(255, 247, 237, 0.78);
+    text-transform: uppercase;
+}
+
+.header-link {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFF7ED;
+    text-decoration: none;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.18);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+    transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.header-link i {
+    font-size: 17px;
+}
+
+.header-link:active {
+    transform: scale(0.96);
+}
+
+.header-link:hover {
+    background: rgba(255,255,255,0.18);
+}
+
+.tab-container {
+    position: fixed;
+    top: 72px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    padding: 10px 16px;
+    overflow-x: auto;
+    background: rgba(255,255,255,0.96);
+    border-bottom: 1px solid #E7DDD6;
+    z-index: 90;
+    scrollbar-width: none;
 }
 
 .tab-container::-webkit-scrollbar {
@@ -89,7 +155,7 @@ header {
 
 .search-box {
     position: fixed;
-    top: 118px;
+    top: 130px;
     left: 0;
     width: 100%;
     padding: 10px 16px;
@@ -115,7 +181,7 @@ header {
 }
 
 #list-view {
-    padding: 182px 16px 24px;
+    padding: 194px 16px 24px;
 }
 
 .prayer-list {
@@ -347,41 +413,25 @@ header {
     border-radius: 16px;
 }
 
-.header -title { font 
-    -size: 21px ; font -     weight: 800 ;     letter-spacing: -0.02em ; }
 
-.header-link {
-    position: absolute;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #FFF7ED;
-    text-decoration: none;
-    background: rgba(255,255,255,0.14);
-    border: 1px solid rgba(255,255,255,0.18);
-}
 
-.header-link i {
-    font-size: 16px;
-}
 
-.header-link:active {
-    transform: translateY(-50%) scale(0.95);
-}
+
+
 
     
 </style>
 </head>
 <body>
 
-<header>
-    <div class="header-title">기도문</div>
+<header class="app-header">
+    <div class="header-left">
+        <span class="header-cross">✝</span>
+        <div class="header-title-wrap">
+            <div class="header-title">기도문</div>
+            <div class="header-subtitle">Catholic Prayers</div>
+        </div>
+    </div>
 
     <a
         class="header-link"
@@ -389,6 +439,7 @@ header {
         target="_blank"
         rel="noopener noreferrer"
         title="굿뉴스 기도문"
+        aria-label="굿뉴스 기도문 바로가기"
     >
         <i class="fa-solid fa-book-bible"></i>
     </a>
