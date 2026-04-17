@@ -36,12 +36,6 @@ body {
     text-rendering: optimizeLegibility;
 }
 
-    
-<div class="search-box">
-    <input type="text" id="searchInput" placeholder="🔍 기도문 검색">
-</div>
-
-    
 header {
     position: fixed;
     top: 0;
@@ -201,23 +195,21 @@ header {
     justify-content: center;
 }
 
-.prayer-icon {
-    flex: 0 0 22px;
-    width: 22px;
-    height: 22px;
+.prayer-actions {
+    flex: 0 0 auto;
     display: flex;
     align-items: center;
-    justify-content: center;
-    color: #8B6A53;
-    font-size: 18px;
-    line-height: 1;
+    gap: 14px;
+    margin-left: 12px;
 }
 
 .fa-star {
     color: #CFC6BE;
-    font-size: 16px;
+    font-size: 18px;
     cursor: pointer;
     transition: color 0.2s ease, transform 0.2s ease;
+    width: 20px;
+    text-align: center;
 }
 
 .fa-star.active-star {
@@ -226,6 +218,18 @@ header {
 
 .fa-star:active {
     transform: scale(0.9);
+}
+
+.prayer-icon {
+    flex: 0 0 20px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #8B6A53;
+    font-size: 18px;
+    line-height: 1;
 }
 
 #detail-view {
@@ -338,39 +342,6 @@ header {
     background: #FCFAF8;
     border: 1px dashed #DDD6CF;
     border-radius: 16px;
-}
-
-.prayer-actions {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-left: 12px;
-}
-
-.fa-star {
-    color: #CFC6BE;
-    font-size: 18px;
-    cursor: pointer;
-    transition: color 0.2s ease, transform 0.2s ease;
-    width: 20px;
-    text-align: center;
-}
-
-.fa-star.active-star {
-    color: #B7791F;
-}
-
-.prayer-icon {
-    flex: 0 0 20px;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #8B6A53;
-    font-size: 18px;
-    line-height: 1;
 }
 
 
@@ -1039,21 +1010,21 @@ function renderList(category) {
             window.location.hash = `#prayer-${prayer.id}`;
         };
 
-       li.innerHTML = `
-    <div class="prayer-title">
-        <i class="fa-solid ${getIcon(prayer.title)}"></i>
-        ${prayer.title}
-    </div>
+        li.innerHTML = `
+            <div class="prayer-title">
+                <i class="fa-solid ${getIcon(prayer.title)}"></i>
+                ${prayer.title}
+            </div>
 
-    <div class="prayer-actions">
-        <i class="fa-solid fa-star ${favorites.includes(prayer.id) ? 'active-star' : ''}"
-           onclick="event.stopPropagation(); toggleFavorite('${prayer.id}')"></i>
+            <div class="prayer-actions">
+                <i class="fa-solid fa-star ${favorites.includes(prayer.id) ? 'active-star' : ''}"
+                   onclick="event.stopPropagation(); toggleFavorite('${prayer.id}')"></i>
 
-        <div class="prayer-icon">
-            <i class="fa-solid fa-chevron-right"></i>
-        </div>
-    </div>
-`;
+                <div class="prayer-icon">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+        `;
 
         listContainer.appendChild(li);
     });
