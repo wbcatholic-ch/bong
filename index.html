@@ -55,106 +55,91 @@ box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .tab-container {
-position: fixed;
-top: 60px;
-left: 0;
-width: 100%;
-display: flex;
-gap: 10px;
-padding: 12px 16px;
-overflow-x: auto;
-background: rgba(255,255,255,0.96);
-border-bottom: 1px solid #E7DDD6;
-z-index: 90;
-scrollbar-width: none;
-}
-
-.tab-container::-webkit-scrollbar {
-display: none;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    padding: 10px 16px;
+    overflow-x: auto;
+    background: rgba(255,255,255,0.96);
+    border-bottom: 1px solid #E7DDD6;
+    z-index: 90;
+    scrollbar-width: none;
 }
 
 .tab-btn {
-flex: 0 0 auto;
-min-width: 132px;
-height: 56px;
-padding: 0 20px;
-border-radius: 28px;
-border: 1px solid #DDD2C9;
-background: #F4EFEA;
-color: #6F625A;
-font-size: 15px;
-font-weight: 700;
-letter-spacing: -0.02em;
-white-space: nowrap;
+    flex: 0 0 auto;
+    min-width: 116px;
+    height: 48px;
+    padding: 0 18px;
+    border-radius: 24px;
+    border: 1px solid #DDD2C9;
+    background: #F4EFEA;
+    color: #6F625A;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
 }
 
-.tab-btn:hover {
-background-color: #F3EEE9;
-}
-
-.tab-btn.active {
-background: #7B573D;
-color: #fff;
-border-color: #7B573D;
-box-shadow: 0 6px 16px rgba(123,87,61,0.20);
-}
 #list-view {
-padding: 148px 16px 28px;
-}
-
-.prayer-list {
-list-style: none;
-display: flex;
-flex-direction: column;
-gap: 10px;
+    padding: 128px 16px 24px;
 }
 
 .prayer-item {
-width: 100%;
-min-height: 96px;
-padding: 18px 20px;
-background: #FFFDFC;
-border: 1px solid #E1D7CF;
-border-radius: 18px;
-box-shadow: 0 2px 8px rgba(70, 45, 25, 0.05);
-
-display: flex;
-align-items: center;
-justify-content: space-between;
-gap: 14px;
-}
-
-.prayer-item:active {
-transform: scale(0.99);
-}
-
-.prayer-item:hover {
-transform: translateY(-1px);
-box-shadow: 0 6px 16px rgba(80, 50, 30, 0.12);
-border-color: #D6C2B5;
+    width: 100%;
+    min-height: 72px;
+    padding: 16px 20px;
+    background: #FFFDFC;
+    border: 1px solid #E1D7CF;
+    border-radius: 18px;
+    box-shadow: 0 2px 8px rgba(70, 45, 25, 0.05);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
 }
 
 .prayer-title {
-flex: 1;
-min-width: 0;
-font-size: 16px;
-font-weight: 700;
-line-height: 1.45;
-letter-spacing: -0.02em;
-color: #2D2D2D;
-word-break: keep-all;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.45;
+    letter-spacing: -0.02em;
+    color: #2D2D2D;
+    word-break: keep-all;
+}
+
+.prayer-title i,
+.prayer-title svg {
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+    margin-right: 0;
+    margin-top: 3px;
+    color: #8B5E3C;
+    fill: #8B5E3C;
+    font-size: 18px;
+    opacity: 0.9;
 }
 
 .prayer-icon {
-flex: 0 0 22px;
-width: 22px;
-height: 22px;
-display: flex;
-align-items: center;
-justify-content: center;
-color: #8B6A53;
-font-size: 18px;
-line-height: 1;
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #8B6A53;
+    font-size: 18px;
+    line-height: 1;
+    margin-top: 4px;
 }
 
 #detail-view {
