@@ -908,6 +908,8 @@ header {
 
 const listContainer = document.getElementById('prayer-list');
 const tabBtns = document.querySelectorAll('.tab-btn');
+const searchInput = document.getElementById('searchInput'); // ✅ 추가
+
 let currentCategory = 'aim';
 
 function getIcon(title) {
@@ -917,19 +919,35 @@ function getIcon(title) {
     if (title.includes('예수')) return 'fa-book-bible';
     return 'fa-cross';
 }
+    function normalizeText(text) {
+    return (text || '').replace(/\s+/g, '').toLowerCase();
+}
 
 function renderList(category) {
     listContainer.innerHTML = '';
     const categoryData = prayerData[category];
+    const keyword = normalizeText(searchInput ? searchInput.value : '');
 
     if (!categoryData || categoryData.length === 0) {
         listContainer.innerHTML = '<div class="empty-state">아직 등록된 기도문이 없습니다.</div>';
         return;
     }
 
-    categoryData.forEach(prayer => {
+    const filteredData = categoryData.filter(prayer => {
+        if (!keyword) return true;
+        const title = normalizeText(prayer.title);
+        return title.includes(keyword);
+    });
+
+    if (filteredData.length === 0) {
+        listContainer.innerHTML = '<div class="empty-state">검색 결과가 없습니다.</div>';
+        return;
+    }
+
+    filteredData.forEach(prayer => {
         const li = document.createElement('li');
         li.className = 'prayer-item';
+
         li.onclick = () => {
             window.location.hash = `#prayer-${prayer.id}`;
         };
@@ -987,7 +1005,11 @@ function handleRouting() {
         detailView.classList.remove('show');
     }
 }
-
+if (searchInput) {
+    searchInput.addEventListener('input', () => {
+        renderList(currentCategory);
+    });
+}
 window.addEventListener('hashchange', handleRouting);
 window.addEventListener('load', handleRouting);
     </script>
