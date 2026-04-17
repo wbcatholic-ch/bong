@@ -857,9 +857,9 @@ border-radius: 16px;
               ]
         };
 
-        const listContainer = document.getElementById('prayer-list');
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        let currentCategory = 'aim';
+const listContainer = document.getElementById('prayer-list');
+const tabBtns = document.querySelectorAll('.tab-btn');
+let currentCategory = 'aim';
 
 function getIcon(title) {
     if (title.includes('성모')) return 'fa-hands-praying';
@@ -869,79 +869,78 @@ function getIcon(title) {
     return 'fa-cross';
 }
 
+function renderList(category) {
+    listContainer.innerHTML = '';
+    const categoryData = prayerData[category];
 
-        
-        function renderList(category) {
-            listContainer.innerHTML = '';
-            const categoryData = prayerData[category];
-            if (!categoryData || categoryData.length === 0) {
-                listContainer.innerHTML = '<div class="empty-state">아직 등록된 기도문이 없습니다.</div>';
-                return;
-            }
-            categoryData.forEach(prayer => {
-                const li = document.createElement('li');
-                li.className = 'prayer-item';
-                li.onclick = () => { window.location.hash = `#prayer-${prayer.id}`; };
-               
+    if (!categoryData || categoryData.length === 0) {
+        listContainer.innerHTML = '<div class="empty-state">아직 등록된 기도문이 없습니다.</div>';
+        return;
+    }
 
-               
-li.innerHTML = `
-<div class="prayer-title">
-    <i class="fa-solid ${getIcon(prayer.title)}"></i>
-    ${prayer.title}
-</div>
-<div class="prayer-icon">
-    <i class="fa-solid fa-chevron-right"></i>
-</div>
-`;
-               
-               
-.prayer-title i,
-.prayer-title svg {
-    color: #8B5E3C !important;
-    fill: #8B5E3C !important;
+    categoryData.forEach(prayer => {
+        const li = document.createElement('li');
+        li.className = 'prayer-item';
+        li.onclick = () => {
+            window.location.hash = `#prayer-${prayer.id}`;
+        };
+
+        li.innerHTML = `
+            <div class="prayer-title">
+                <i class="fa-solid ${getIcon(prayer.title)}"></i>
+                ${prayer.title}
+            </div>
+            <div class="prayer-icon">
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+        `;
+
+        listContainer.appendChild(li);
+    });
 }
 
-                listContainer.appendChild(li);
-            });
-        }
-
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                tabBtns.forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                currentCategory = e.target.getAttribute('data-category');
-                renderList(currentCategory);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        });
-
+tabBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        currentCategory = e.target.getAttribute('data-category');
         renderList(currentCategory);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+});
 
-        function handleRouting() {
-            const hash = window.location.hash;
-            const detailView = document.getElementById('detail-view');
-            if (hash.startsWith('#prayer-')) {
-                const id = hash.replace('#prayer-', '');
-                let foundPrayer = null;
-                for (const key in prayerData) {
-                    const found = prayerData[key].find(p => p.id === id);
-                    if (found) { foundPrayer = found; break; }
-                }
-                if (foundPrayer) {
-                    document.getElementById('detail-title').innerText = foundPrayer.title;
-                    document.getElementById('detail-content').innerHTML = foundPrayer.content;
-                    detailView.classList.add('show');
-                } else {
-                    detailView.classList.remove('show');
-                }
-            } else {
-                detailView.classList.remove('show');
+renderList(currentCategory);
+
+function handleRouting() {
+    const hash = window.location.hash;
+    const detailView = document.getElementById('detail-view');
+
+    if (hash.startsWith('#prayer-')) {
+        const id = hash.replace('#prayer-', '');
+        let foundPrayer = null;
+
+        for (const key in prayerData) {
+            const found = prayerData[key].find(p => p.id === id);
+            if (found) {
+                foundPrayer = found;
+                break;
             }
         }
 
-        window.addEventListener('hashchange', handleRouting);
-        window.addEventListener('load', handleRouting);
+        if (foundPrayer) {
+            document.getElementById('detail-title').innerText = foundPrayer.title;
+            document.getElementById('detail-content').innerHTML = foundPrayer.content;
+            detailView.classList.add('show');
+        } else {
+            detailView.classList.remove('show');
+        }
+    } else {
+        detailView.classList.remove('show');
+    }
+}
+
+window.addEventListener('hashchange', handleRouting);
+window.addEventListener('load', handleRouting);
     </script>
 </body>
 </html>
