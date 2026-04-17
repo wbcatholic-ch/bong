@@ -5,37 +5,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>기도문</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
+/* ══ 디자인 토큰 ══ */
 :root {
-  --bg: #F2EDE8;
-  --white: #FFFDF9;
-  --text-main: #2C2416;
-  --text-sub: #7A6652;
-  --text-hint: #B5A090;
-  --primary: #8B5E3C;
-  --primary-light: #F5EDE4;
-  --primary-dark: #6B4528;
-  --border: #DDD0C4;
-  --border-focus: #8B5E3C;
-  --shadow-sm: 0 1px 3px rgba(100,70,40,0.08), 0 1px 2px rgba(100,70,40,0.05);
-  --shadow-md: 0 4px 12px rgba(100,70,40,0.10);
-  --header-h: 56px;
-  --tab-h: 50px;
-  --search-h: 54px;
-  --tab-fav:    #D4881A; --tab-fav-bg:    #FFF3DC;
-  --tab-aim:    #C0392B; --tab-aim-bg:    #FDECEA;
-  --tab-basic:  #6052CC; --tab-basic-bg:  #EEEAFF;
-  --tab-spec:   #2274A5; --tab-spec-bg:   #E4F3FB;
-  --tab-etc:    #1F8F4E; --tab-etc-bg:    #E4F7EC;
-  --tab-bon1:   #636E72; --tab-bon1-bg:   #EEEEF0;
-  --tab-bon2:   #7D3C98; --tab-bon2-bg:   #F3E9FA;
-  --tab-bon3:   #CA6F1E; --tab-bon3-bg:   #FEF2E2;
+  --bg:           #F0F2F5;
+  --surface:      #FFFFFF;
+  --surface-sub:  #F5F6F8;
+  --text-main:    #1A1A2E;
+  --text-sub:     #555577;
+  --text-hint:    #9999BB;
+  --border:       #DDDDF0;
+  --shadow-sm:    0 1px 4px rgba(30,30,80,0.07);
+ 
+  /* 레이아웃 — 표준화 */
+  --header-h:  58px;
+  --tab-h:     52px;
+  --search-h:  52px;
+  --card-r:    12px;
+  --icon-size: 38px;
+  --icon-r:    9px;
+ 
+  /* 폰트 크기 — 표준화 */
+  --fs-header: 18px;
+  --fs-tab:    13.5px;
+  --fs-item:   15px;
+  --fs-body:   16px;
+  --fs-sub:    12px;
+ 
+  /* 카테고리 팔레트 */
+  --c-fav:   #E8780C; --c-fav-bg:   #FFF0DC; --c-fav-dk:   #7A3D00;
+  --c-aim:   #D12B2B; --c-aim-bg:   #FDEAEA; --c-aim-dk:   #7A0000;
+  --c-bas:   #5848D4; --c-bas-bg:   #EDEAFF; --c-bas-dk:   #28168A;
+  --c-spc:   #0878C8; --c-spc-bg:   #DCF0FF; --c-spc-dk:   #004080;
+  --c-etc:   #0A9E50; --c-etc-bg:   #D8F5E8; --c-etc-dk:   #004D22;
+  --c-bo1:   #546E7A; --c-bo1-bg:   #E8EDEF; --c-bo1-dk:   #1E3A42;
+  --c-bo2:   #8E24AA; --c-bo2-bg:   #F5E6FF; --c-bo2-dk:   #4A007A;
+  --c-bo3:   #C85A00; --c-bo3-bg:   #FFF0E0; --c-bo3-dk:   #6B2D00;
 }
-
+ 
 html, body {
   height: 100%;
   overflow-x: hidden;
@@ -45,93 +56,70 @@ html, body {
   -webkit-font-smoothing: antialiased;
   touch-action: pan-y;
 }
-
-/* ── HEADER ── */
+ 
+/* ══ HEADER ══ */
 .app-header {
   position: fixed;
   top: 0; left: 0; width: 100%;
   height: var(--header-h);
-  background: linear-gradient(135deg, #6B3F1E 0%, #8B5E3C 60%, #A5744F 100%);
-  border-bottom: 1px solid #5A3218;
+  background: linear-gradient(135deg, #B91CE0 0%, #7B2FF7 55%, #3B6EF5 100%);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
+  padding: 0 14px;
   z-index: 100;
-  box-shadow: 0 2px 8px rgba(80,40,10,0.18);
+  box-shadow: 0 2px 12px rgba(100,30,200,0.30);
 }
-
-.header-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
+ 
+.header-brand { display: flex; align-items: center; gap: 10px; }
+ 
 .header-cross {
-  width: 28px;
-  height: 28px;
-  background: rgba(255,255,255,0.22);
-  border-radius: 7px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 12px;
-  border: 1px solid rgba(255,255,255,0.3);
+  width: 32px; height: 32px;
+  background: rgba(255,255,255,0.20);
+  border: 1.5px solid rgba(255,255,255,0.38);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 14px;
 }
-
+ 
 .header-title {
-  font-size: 17px;
+  font-size: var(--fs-header);
   font-weight: 700;
   color: #fff;
   letter-spacing: -0.03em;
 }
-
+ 
 .header-subtitle {
-  font-size: 9px;
-  font-weight: 500;
-  color: rgba(255,255,255,0.65);
-  letter-spacing: 0.1em;
-  margin-top: 1px;
+  font-size: 9px; font-weight: 500;
+  color: rgba(255,255,255,0.62);
+  letter-spacing: 0.12em; margin-top: 1px;
 }
-
-/* 굿뉴스 버튼 — 카카오 노랑 */
+ 
+/* 굿뉴스 — 카카오 노랑 */
 .header-link {
-  height: 34px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
+  height: 32px;
+  border-radius: 7px;
+  display: flex; align-items: center; gap: 5px;
   color: #3C1E00;
   background: #FEE500;
-  border: none;
-  text-decoration: none;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 0 11px;
-  white-space: nowrap;
+  border: none; text-decoration: none;
+  font-size: var(--fs-sub); font-weight: 700;
+  padding: 0 10px; white-space: nowrap;
   box-shadow: 0 2px 6px rgba(0,0,0,0.18);
-  transition: filter 0.15s;
+  transition: filter .15s;
 }
-.header-link i { font-size: 12px; }
 .header-link:hover { filter: brightness(1.06); }
-
-/* ── TABS ── */
+ 
+/* ══ TAB BAR ══ */
 .tab-container {
   position: fixed;
-  top: var(--header-h);
-  left: 0;
-  width: 100%;
+  top: var(--header-h); left: 0; width: 100%;
   height: var(--tab-h);
-  display: flex;
-  align-items: center;
-  gap: 5px;
+  display: flex; align-items: center; gap: 6px;
   padding: 0 10px;
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  overflow-x: auto;
-  overflow-y: hidden;
+  background: var(--surface);
+  border-bottom: 1.5px solid var(--border);
+  overflow-x: auto; overflow-y: hidden;
   white-space: nowrap;
   touch-action: pan-x;
   -webkit-overflow-scrolling: touch;
@@ -141,300 +129,213 @@ html, body {
   box-shadow: var(--shadow-sm);
 }
 .tab-container::-webkit-scrollbar { display: none; }
-
-/* 기본 탭 */
+ 
 .tab-btn {
   flex: 0 0 auto;
-  height: 32px;
-  padding: 0 11px;
+  height: 33px; padding: 0 12px;
   border-radius: 7px;
   border: 1.5px solid var(--border);
-  background: var(--bg);
+  background: var(--surface-sub);
   color: var(--text-sub);
-  font-size: 12.5px;
-  font-weight: 600;
+  font-size: var(--fs-tab); font-weight: 600;
   font-family: 'Noto Sans KR', sans-serif;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+  white-space: nowrap; cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s, box-shadow .15s;
   letter-spacing: -0.02em;
   touch-action: manipulation;
 }
-.tab-btn:active { transform: scale(0.97); }
-
-/* 탭별 활성 색상 */
-.tab-btn[data-category="favorites"].active { background: var(--tab-fav-bg);   color: var(--tab-fav);   border-color: var(--tab-fav);   box-shadow: 0 2px 6px rgba(212,136,26,0.2); }
-.tab-btn[data-category="aim"].active       { background: var(--tab-aim-bg);   color: var(--tab-aim);   border-color: var(--tab-aim);   box-shadow: 0 2px 6px rgba(192,57,43,0.2); }
-.tab-btn[data-category="basic"].active     { background: var(--tab-basic-bg); color: var(--tab-basic); border-color: var(--tab-basic); box-shadow: 0 2px 6px rgba(96,82,204,0.2); }
-.tab-btn[data-category="special"].active   { background: var(--tab-spec-bg);  color: var(--tab-spec);  border-color: var(--tab-spec);  box-shadow: 0 2px 6px rgba(34,116,165,0.2); }
-.tab-btn[data-category="etc"].active       { background: var(--tab-etc-bg);   color: var(--tab-etc);   border-color: var(--tab-etc);   box-shadow: 0 2px 6px rgba(31,143,78,0.2); }
-.tab-btn[data-category="bong1"].active     { background: var(--tab-bon1-bg);  color: var(--tab-bon1);  border-color: var(--tab-bon1);  box-shadow: 0 2px 6px rgba(99,110,114,0.2); }
-.tab-btn[data-category="bong2"].active     { background: var(--tab-bon2-bg);  color: var(--tab-bon2);  border-color: var(--tab-bon2);  box-shadow: 0 2px 6px rgba(125,60,152,0.2); }
-.tab-btn[data-category="bong3"].active     { background: var(--tab-bon3-bg);  color: var(--tab-bon3);  border-color: var(--tab-bon3);  box-shadow: 0 2px 6px rgba(202,111,30,0.2); }
-
-/* ── SEARCH ── */
+.tab-btn:active { transform: scale(0.96); }
+ 
+.tab-btn[data-category="favorites"].active { background:var(--c-fav-bg); color:var(--c-fav-dk); border-color:var(--c-fav); box-shadow:0 2px 8px rgba(232,120,12,.22); }
+.tab-btn[data-category="aim"].active       { background:var(--c-aim-bg); color:var(--c-aim-dk); border-color:var(--c-aim); box-shadow:0 2px 8px rgba(209,43,43,.22); }
+.tab-btn[data-category="basic"].active     { background:var(--c-bas-bg); color:var(--c-bas-dk); border-color:var(--c-bas); box-shadow:0 2px 8px rgba(88,72,212,.22); }
+.tab-btn[data-category="special"].active   { background:var(--c-spc-bg); color:var(--c-spc-dk); border-color:var(--c-spc); box-shadow:0 2px 8px rgba(8,120,200,.22); }
+.tab-btn[data-category="etc"].active       { background:var(--c-etc-bg); color:var(--c-etc-dk); border-color:var(--c-etc); box-shadow:0 2px 8px rgba(10,158,80,.22); }
+.tab-btn[data-category="bong1"].active     { background:var(--c-bo1-bg); color:var(--c-bo1-dk); border-color:var(--c-bo1); box-shadow:0 2px 8px rgba(84,110,122,.22); }
+.tab-btn[data-category="bong2"].active     { background:var(--c-bo2-bg); color:var(--c-bo2-dk); border-color:var(--c-bo2); box-shadow:0 2px 8px rgba(142,36,170,.22); }
+.tab-btn[data-category="bong3"].active     { background:var(--c-bo3-bg); color:var(--c-bo3-dk); border-color:var(--c-bo3); box-shadow:0 2px 8px rgba(200,90,0,.22); }
+ 
+/* ══ SEARCH ══ */
 .search-bar {
   position: fixed;
   top: calc(var(--header-h) + var(--tab-h));
   left: 0; width: 100%;
   height: var(--search-h);
-  background: var(--white);
-  border-bottom: 2px solid var(--border);
+  background: var(--surface);
+  border-bottom: 1.5px solid var(--border);
   padding: 8px 12px;
   z-index: 85;
 }
-
-.search-wrap {
-  position: relative;
-  height: 100%;
-}
-
+.search-wrap { position: relative; height: 100%; }
 .search-icon {
-  position: absolute;
-  left: 13px;
-  top: 50%;
+  position: absolute; left: 13px; top: 50%;
   transform: translateY(-50%);
-  color: var(--text-sub);
-  font-size: 14px;
+  color: var(--text-sub); font-size: 14px;
   pointer-events: none;
 }
-
 .search-input {
-  width: 100%;
-  height: 38px;
-  border: 2px solid var(--border);
-  border-radius: 9px;
+  width: 100%; height: 36px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--card-r);
   background: var(--bg);
   padding: 0 12px 0 38px;
-  font-size: 14px;
+  font-size: 15px; font-weight: 500;
   color: var(--text-main);
   font-family: 'Noto Sans KR', sans-serif;
   outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color .15s, box-shadow .15s;
 }
-.search-input::placeholder { color: var(--text-sub); font-size: 13px; }
+.search-input::placeholder { color: var(--text-hint); font-size: 14px; }
 .search-input:focus {
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px rgba(139,94,60,0.13);
-  background: var(--white);
+  border-color: #7B2FF7;
+  box-shadow: 0 0 0 3px rgba(123,47,247,0.12);
+  background: var(--surface);
 }
-
-/* ── LIST ── */
+ 
+/* ══ LIST ══ */
 #list-view {
-  padding-top: calc(var(--header-h) + var(--tab-h) + var(--search-h) + 5px);
-  padding-bottom: 24px;
-  padding-left: 14px;
-  padding-right: 14px;
+  padding-top: calc(var(--header-h) + var(--tab-h) + var(--search-h) + 10px);
+  padding-bottom: 28px;
+  padding-left: 12px;
+  padding-right: 12px;
 }
-
+ 
 .prayer-list {
   list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+  display: flex; flex-direction: column; gap: 7px;
 }
-
+ 
 .prayer-item {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--card-r);
   padding: 13px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
   cursor: pointer;
-  transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+  transition: border-color .15s, box-shadow .15s, transform .1s;
   box-shadow: var(--shadow-sm);
 }
 .prayer-item:active { transform: scale(0.99); box-shadow: none; }
-.prayer-item:hover { border-color: #C4A882; box-shadow: 0 2px 8px rgba(139,94,60,0.10); }
-
+ 
 .prayer-item-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex: 1;
-  min-width: 0;
+  display: flex; align-items: center; gap: 12px;
+  flex: 1; min-width: 0;
 }
-
+ 
 .prayer-icon-dot {
-  flex: 0 0 32px;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: var(--icon-bg, var(--primary-light));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--icon-color, var(--primary));
-  font-size: 13px;
+  flex: 0 0 var(--icon-size);
+  width: var(--icon-size); height: var(--icon-size);
+  border-radius: var(--icon-r);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
 }
-
+ 
 .prayer-title {
-  font-size: 14px;
+  font-size: var(--fs-item);
   font-weight: 600;
   color: var(--text-main);
   line-height: 1.4;
   letter-spacing: -0.02em;
   word-break: keep-all;
-  flex: 1;
-  min-width: 0;
+  flex: 1; min-width: 0;
 }
-
+ 
 .prayer-item-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex: 0 0 auto;
+  display: flex; align-items: center; gap: 8px; flex: 0 0 auto;
 }
-
+ 
 .star-btn {
-  background: none;
-  border: none;
-  padding: 4px;
-  cursor: pointer;
-  color: #D1D5DB;
-  font-size: 15px;
+  background: none; border: none; padding: 4px;
+  cursor: pointer; color: #CCCCDD; font-size: 17px;
   line-height: 1;
-  transition: color 0.15s, transform 0.15s;
+  transition: color .15s, transform .15s;
+  touch-action: manipulation;
 }
-.star-btn:active { transform: scale(1.2); }
+.star-btn:active { transform: scale(1.25); }
 .star-btn.active { color: #F59E0B; }
-
-.chevron {
-  color: var(--text-hint);
-  font-size: 12px;
-}
-
+ 
+.chevron { color: var(--text-hint); font-size: 13px; }
+ 
 .empty-state {
-  text-align: center;
-  padding: 48px 16px;
-  color: var(--text-hint);
-  font-size: 14px;
-  background: var(--white);
-  border: 1px dashed var(--border);
-  border-radius: 12px;
+  text-align: center; padding: 52px 20px;
+  color: var(--text-hint); font-size: 15px;
+  background: var(--surface);
+  border: 1.5px dashed var(--border);
+  border-radius: var(--card-r);
   line-height: 1.8;
 }
-.empty-state-icon { font-size: 28px; margin-bottom: 12px; opacity: 0.4; }
-
-/* ── DETAIL VIEW ── */
+.empty-state-icon { font-size: 30px; margin-bottom: 14px; opacity: 0.35; }
+ 
+/* ══ DETAIL ══ */
 #detail-view {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100vh;
+  top: 0; left: 0; width: 100%; height: 100vh;
   background: var(--bg);
   z-index: 200;
   transform: translateX(100%);
   transition: transform 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
+  display: flex; flex-direction: column;
 }
 #detail-view.show { transform: translateX(0); }
-
+ 
 .detail-header {
-  position: sticky;
-  top: 0;
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
+  position: sticky; top: 0;
+  background: var(--surface);
+  border-bottom: 1.5px solid var(--border);
+  display: flex; align-items: center;
   padding: 0 14px;
-  height: 54px;
-  z-index: 210;
-  gap: 10px;
+  height: var(--header-h);
+  z-index: 210; gap: 10px;
   box-shadow: var(--shadow-sm);
 }
-
+ 
 .back-btn {
-  background: none;
-  border: none;
-  width: 34px;
-  height: 34px;
+  background: none; border: none;
+  width: 36px; height: 36px;
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-sub);
-  cursor: pointer;
-  font-size: 14px;
-  transition: background 0.15s;
-  flex: 0 0 34px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-sub); cursor: pointer; font-size: 15px;
+  transition: background .15s; flex: 0 0 36px;
+  touch-action: manipulation;
 }
 .back-btn:hover { background: var(--bg); }
-
+ 
 .detail-title {
   flex: 1;
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 16px; font-weight: 700;
   color: var(--text-main);
   text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   letter-spacing: -0.02em;
 }
-
-.detail-title-spacer { flex: 0 0 34px; }
-
-.detail-body {
-  padding: 20px 16px 32px;
-  flex: 1;
-}
-
+.detail-title-spacer { flex: 0 0 36px; }
+ 
+.detail-body { padding: 18px 14px 36px; flex: 1; }
+ 
+/* 본문 카드 — Noto Sans KR로 통일 */
 .detail-content-card {
-  background: var(--white);
-  border: 1px solid var(--border);
+  background: var(--surface);
+  border: 1.5px solid var(--border);
   border-radius: 14px;
-  padding: 24px 20px;
-  font-family: 'Noto Serif KR', serif;
-  font-size: 15px;
-  line-height: 2;
-  color: #2D3142;
+  padding: 26px 20px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: var(--fs-body);
+  line-height: 2.1;
+  color: var(--text-main);
   box-shadow: var(--shadow-sm);
 }
-
-.detail-content-card p {
-  margin-bottom: 16px;
-  word-break: keep-all;
-}
+.detail-content-card p { margin-bottom: 18px; word-break: keep-all; }
 .detail-content-card p:last-child { margin-bottom: 0; }
-
-.detail-content-card .rubric {
-  display: block;
-  color: var(--primary);
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin: 20px 0 8px;
-}
-
-.detail-content-card .bold {
-  font-weight: 700;
-  color: #1A1D23;
-}
-
-.detail-content-card .symbol {
-  color: var(--primary);
-  font-weight: 700;
-}
-
+.detail-content-card .symbol { color: #7B2FF7; font-weight: 700; }
 .detail-content-card .align-right {
-  text-align: right;
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 12px;
-  color: var(--text-sub);
-  margin-top: 20px;
-  font-style: italic;
+  text-align: right; font-size: 13px;
+  color: var(--text-sub); margin-top: 22px; font-style: italic;
 }
 </style>
 </head>
 <body>
-
+ 
 <header class="app-header">
   <div class="header-brand">
     <div class="header-cross"><i class="fa-solid fa-cross"></i></div>
@@ -449,8 +350,8 @@ html, body {
     <i class="fa-solid fa-book-bible"></i> 굿뉴스 기도문
   </a>
 </header>
-
-<div class="tab-container">
+ 
+<div class="tab-container" id="tabContainer">
   <button class="tab-btn" data-category="favorites">⭐ 즐겨찾기</button>
   <button class="tab-btn active" data-category="aim">대구대교구 인준</button>
   <button class="tab-btn" data-category="basic">주요 기도</button>
@@ -460,18 +361,18 @@ html, body {
   <button class="tab-btn" data-category="bong2">레지오 마리애</button>
   <button class="tab-btn" data-category="bong3">십자가의 길</button>
 </div>
-
+ 
 <div class="search-bar">
   <div class="search-wrap">
     <i class="fa-solid fa-magnifying-glass search-icon"></i>
     <input type="text" class="search-input" id="searchInput" placeholder="기도문 검색">
   </div>
 </div>
-
+ 
 <div id="list-view">
   <ul class="prayer-list" id="prayer-list"></ul>
 </div>
-
+ 
 <div id="detail-view">
   <div class="detail-header">
     <button class="back-btn" onclick="history.back()">
@@ -484,7 +385,7 @@ html, body {
     <div class="detail-content-card" id="detail-content"></div>
   </div>
 </div>
-
+ 
 <script>
         const prayerData = {
             'aim': [
@@ -1041,139 +942,106 @@ html, body {
             'bong3': [       
                {id: 'bong3_1', title: '십자가의 길', content: `<p><span class="rubric">아무 때나 바칠 수 있지만 특별히 사순시기 금요일과 성금요일에는 마땅히 바쳐야 한다.</span></p><br><p><span class="rubric">먼저 깊이 뉘우치고 아래의 기도를 바친다.</span></p><p><span class="symbol">†</span> 주 예수님,<br>저희를 위하여 온갖 수난을 겪으신<br>주님의 사랑을 묵상하며<br>성모님과 함께<br>십자가의 길을 걷고자 하나이다.<br>저희에게 죄를 뉘우치고<br>주님의 수난을 함께 나눌 마음을 주시어<br>언제나 주님을 사랑하게 하시며<br>성직자들을 거룩하게 하시고<br>모든 죄인이 회개하도록 은혜를 내려주소서.</p><br><p><span class="rubric">제1처로 가며</span></p><p>◎ 어머니께 청하오니<br>제 맘속에 주님 상처 깊이 새겨주소서.</p><br><p><span class="rubric bold">제1처</span> <span class="bold">예수님께서 사형 선고 받으심을 묵상합시다.</span></p><p><span class="symbol">†</span> 주님께서는 십자가로 온 세상을 구원하셨나이다.<br>◎ 예수 그리스도님,<br><span class="rubric">깊은 절을 하며</span><br>경배하며 찬송하나이다.</p><br><p>○ 구세주 예수님,<br>저희를 위하여<br>아무런 죄도 없이 극심한 모욕과 사형선고를 받으셨으니<br>죄인들이 마땅히 받아야 할 영원한 벌에서<br>저희를 구원하소서.</p><p><span class="rubric">잠깐 묵상한다.</span><br><span class="rubric">주님의 기도, 성모송, 영광송</span></p><br><p><span class="rubric">제 2처로 가며</span></p><p>◎ 어머니께 청하오니……</p><br><p><span class="rubric bold">제2처</span> <span class="bold">예수님께서 십자가 지심을 묵상합시다.</span></p><p><span class="symbol">†</span> 주님께서는 십자가로 온 세상을 구원하셨나이다.<br>◎ 예수 그리스도님,<br><span class="rubric">깊은 절을 하며</span><br>경배하며 찬송하나이다.</p><br><p>○ 구세주 예수님,<br>저희를 사랑하신 까닭에<br>이 무거운 십자가를 기꺼이 지고 가셨으니<br>저희도 주님을 사랑하며<br>주님께서 허락하시는 모든 십자가를<br>기꺼이 지게 하소서.</p><p><span class="rubric">잠깐 묵상한다.</span><br><span class="rubric">주님의 기도, 성모송, 영광송</span></p><br><p><span class="rubric">제3처로 가며</span></p><p>◎ 어머니께 청하오니……</p><br><p><span class="rubric bold">제3처</span> <span class="bold">예수님께서 기력이 떨어져 넘어지심을 묵상합시다.</span></p><p><span class="symbol">†</span> 주님께서는 십자가로 온 세상을 구원하셨나이다.<br>◎ 예수 그리스도님,<br><span class="rubric">깊은 절을 하며</span><br>경배하며 찬송하나이다.</p><br><p>○ 구세주 예수님,<br>무거운 십자가에 눌려 넘어지시는<br>고통과 모욕을 당하셨으니<br>저희가 언제나 주님을 변함없이 섬기며<br>죄에 떨어지는 일이 없게 하소서.</p><p><span class="rubric">잠깐 묵상한다.</span><br><span class="rubric">주님의 기도, 성모송, 영광송</span></p><br><p><span class="rubric">제4처로 가며</span></p><p>◎ 어머니께 청하오니……</p><br><p><span class="rubric bold">제4처</span> <span class="bold">예수님께서 성모님을 만나심을 묵상합시다.</span></p><p><span class="symbol">†</span> 주님께서는 십자가로 온 세상을 구원하셨나이다.<br>◎ 예수 그리스도님,<br><span class="rubric">깊은 절을 하며</span><br>경배하며 찬송하나이다.</p><br><p>○ 구세주 예수님과 성모 마리아님,<br>괴로운 십자가의 길에서 서로 만나시어<br>사무치는 아픔을 겪으셨으니<br>저의 마음에 사랑을 북돋아 주시어<br>주님과 성모님을 사랑하는 데에<br>장애 되는 모든 것을 물리치게 하소서.</p><p><span class="rubric">잠깐 묵상한다.</span><br><span class="rubric">주님의 기도, 성모송, 영광송</span></p><br><p><span class="rubric">제5처로 가며</span></p><p>◎ 어머니께 청하오니……</p><br><p><span class="rubric bold">제5처</span> <span class="bold">시몬이 예수님을 도와 십자가 짐을 묵상합시다.</span></p><p><span class="symbol">†</span> 주님께서는 십자가로 온 세상을 구원하셨나이다.<br>◎ 예수 그리스도님,<br><span class="rubric">깊은 절을 하며</span><br>경배하며 찬송하나이다.</p><br><p>○ 구세주 예수님,<br>시몬이 주님을 도와 십자가를 졌으니<br>저희도 주님께서 맡겨주시는 십자가를<br>날마다 기꺼이 지고 가게 하소서.</p><p><span class="rubric">잠깐 묵상한다.</span><br><span class="rubric">주님의 기도, 성모송, 영광송</span></p><br><p><span class="rubric">제6처로 가며</span></p><p>◎ 어머니께 청하오니……</p><br><p><span class="rubric bold">제6처</span> <span class="bold">베로니카, 수건으로 예수님의 얼굴을 닦아드림을 묵상합시다.</span></p><p><span class="symbol">†</span> 주님께서는 십자가로 온 세상을 구원하셨나이다.<br>◎ 예수 그리스도님,<br><span class="rubric">깊은 절을 하며</span><br>경배하며 찬송하나이다.</p><br><p>○ 구세주 예수님,<br>나쁜 무리가 주님의 얼굴에 침을 뱉고<br>주님을 업신여기며 모욕하였듯이<br>저희도 죄를 지을 때마다<br>주님의 얼굴을 더럽히는 것이오니<br>통회의 눈물로<br>주님의 얼굴을 씻어드리게 하소서.</p><p><span class="rubric">잠깐 묵상한다.</span><br><span class="rubric">주님의 기도, 성모송, 영광송</span></p><br><p><span class="rubric">제7처로 가며</span></p><p>◎ 어머니께 청하오니……</p><br><p><span class="rubric bold">제7처</span> <span class="bold">기력이 다하신 예수님께서 두 번째 넘어지심을 묵상합시다.</span></p><p><span class="symbol">†</span> 주님께서는 십자가로 온 세상을 구원하셨나이다.<br>◎ 예수 그리스도님,<br><span class="rubric">깊은 절을 하며</span><br>경배하며 찬송하나이다.</p><br><p>○ 구세주 예수님,<br>저희를 위하여 두 번째 넘어지시는 고욕을 당하셨으니<br>주님을 한결같이 섬기지 못하고<br>다시 죄에 떨어져<br>주님의 사랑을 저버리는 저희에게 자비를 베푸시어<br>다시는 세속과 육신의 간교한 유혹에 빠지지 않게 하소서.</p><p><span class="rubric">잠깐 묵상한다.</span><br><span class="rubric">주님의 기도, 성모송, 영광송</span></p><br><p><span class="rubric">제8처로 가며</span></p><p>◎ 어머니께 청하오니……</p><br><p><span class="rubric bold">제8처</span> <span class="bold">예수님께서 예루살렘 부인들을 위로하심을 묵상합시다.</span></p><p><span class="symbol">†</span> 주님께서는 십자가로 온 세상을 구원하셨나이다.<br>◎ 예수 그리스도님,<br><span class="rubric">깊은 절을 하며</span><br>경배하며 찬송하나이다.</p><br><p>○ 구세주 예수님,<br>저희 죄로 상처를 받으시고<br>온몸이 헤어지셨으니<br>저희에게 풍부한 은총을 내리시어<br>지난날에 지은 모든 죄를 뉘우치며<br>주님의 품을 찾아들게 하소서.</p><p><span class="rubric">잠깐 묵상한다.</span><br><span class="rubric">주님의 기도, 성모송, 영광송</span></p><br><p><span class="rubric">제9처로 가며</span></p><p>◎ 어머니께 청하오니……</p><br><p><span class="rubric bold">제9처</span> <span class="bold">예수님께서 세 번째 넘어지심을 묵상합시다.</span></p><p><span class="symbol">†</span> 주님께서는 십자가로 온 세상을 구원하셨나이다.<br>◎ 예수 그리스도님,<br><span class="rubric">깊은 절을 하며</span><br>경배하며 찬송하나이다.</p><br><p>○ 구세주 예수님,<br>무거운 저희 죄에 눌리시어<br>세 번이나 무참히 넘어지셨으니<br>그 수난의 공로를 저희에게 나누어 주시어<br>저희가 이미 지은 죄에서 다시 일어나게 하소서.</p><p><span class="rubric">잠깐 묵상한다.</span><br><span class="rubric">주님의 기도, 성모송, 영광송</span></p><br><p><span class="rubric">제10처로 가며</span></p><p>◎ 어머니께 청하오니……</p><br><p><span class="rubric bold">제10처</span> <span class="bold">예수님께서 옷 벗김 당하심을 묵상합시다.</span></p><p><span class="symbol">†</span> 주님께서는 십자가로 온 세상을 구원하셨나이다.<br>◎ 예수 그리스도님,<br><span class="rubric">깊은 절을 하며</span><br>경배하며 찬송하나이다.</p><br><p>○ 구세주 예수님,<br>병사들이 난폭하게 주님의 옷을 벗길 때에<br>살이 묻어나는 극도의 고통을 당하셨으며<br>죄수로 군중 앞에 서시는 모욕을 당하셨으니<br>저희가 모든 죄를 벗어버리게 하소서.</p><p><span class="rubric">잠깐 묵상한다.</span><br><span class="rubric">주님의 기도, 성모송, 영광송</span></p><br><p><span class="rubric">제11처로 가며</span></p><p>◎ 어머니께 청하오니……</p><br><p><span class="rubric bold">제11처</span> <span class="bold">예수님께서 십자가에 못박히심을 묵상합시다.</span></p><p><span class="symbol">†</span> 주님께서는 십자가로 온 세상을 구원하셨나이다.<br>◎ 예수 그리스도님,<br><span class="rubric">깊은 절을 하며</span><br>경배하며 찬송하나이다.</p><br><p>○ 구세주 예수님,<br>알몸으로 십자가에 못박혀 달리셨으니<br>저희도 주님과 같이<br>몸과 마음을 희생제물로 봉헌하게 하소서.</p><p><span class="rubric">잠깐 묵상한다.</span><br><span class="rubric">주님의 기도, 성모송, 영광송</span></p><br><p><span class="rubric">제12처로 가며</span></p><p>◎ 어머니께 청하오니……</p><br><p><span class="rubric bold">제12처</span> <span class="bold">예수님께서 십자가 위에서 돌아가심을 묵상합시다.</span></p><p><span class="symbol">†</span> 주님께서는 십자가로 온 세상을 구원하셨나이다.<br>◎ 예수 그리스도님,<br><span class="rubric">깊은 절을 하며</span><br>경배하며 찬송하나이다.</p><br><p>○ 구세주 예수님,<br>저희를 위하여 십자가 위에서 숨을 거두셨으니<br>저희도 십자가에 못박혀<br>다시는 저희 자신을 위하여 살지 않고<br>주님을 위하여 살게 하소서.<br>구세주 예수님,<br>혹시라도 영원히 주님을 떠날 불행이 저희에게 닥칠 양이면<br>차라리 지금 주님과 함께 죽는 행복을 내려주소서.</p><p><span class="rubric">잠깐 묵상한다.</span><br><span class="rubric">주님의 기도, 성모송, 영광송</span></p><br><p><span class="rubric">제13처로 가며</span></p><p>◎ 어머니께 청하오니……</p><br><p><span class="rubric bold">제13처</span> <span class="bold">제자들이 예수님 시신을 십자가에서 내림을 묵상합시다.</span></p><p><span class="symbol">†</span> 주님께서는 십자가로 온 세상을 구원하셨나이다.<br>◎ 예수 그리스도님,<br><span class="rubric">깊은 절을 하며</span><br>경배하며 찬송하나이다.</p><br><p>○ 구세주 예수님,<br>주님의 시신을 십자가에서 내려 품에 안으신<br>성모님의 전구를 들으시어<br>저희도 성모님 품안에서<br>효성스러운 자녀로 살다가<br>마침내 그 품안에서 죽게 하소서.</p><p><span class="rubric">잠깐 묵상한다.</span><br><span class="rubric">주님의 기도, 성모송, 영광송</span></p><br><p><span class="rubric">제14처로 가며</span></p><p>◎ 어머니께 청하오니……</p><br><p><span class="rubric bold">제14처</span> <span class="bold">예수님께서 무덤에 묻히심을 묵상합시다.</span></p><p><span class="symbol">†</span> 주님께서는 십자가로 온 세상을 구원하셨나이다.<br>◎ 예수 그리스도님,<br><span class="rubric">깊은 절을 하며</span><br>경배하며 찬송하나이다.</p><br><p>○ 돌무덤에 묻히신 구세주 예수님,<br>저희가 주님의 죽음을 생각하며<br>언제나 깨끗한 마음으로 정성을 다하여<br>사랑의 성체를 받아 모시게 하소서.</p><p><span class="rubric">잠깐 묵상한다.</span><br><span class="rubric">주님의 기도, 성모송, 영광송</span></p>`}
               ]
+
+           
         };
 
 const CATEGORY_STYLE = {
-  favorites: { bg: 'var(--tab-fav-bg)',   color: 'var(--tab-fav)',   icon: 'fa-star' },
-  aim:       { bg: 'var(--tab-aim-bg)',   color: 'var(--tab-aim)',   icon: 'fa-cross' },
-  basic:     { bg: 'var(--tab-basic-bg)', color: 'var(--tab-basic)', icon: 'fa-church' },
-  special:   { bg: 'var(--tab-spec-bg)',  color: 'var(--tab-spec)',  icon: 'fa-hands-praying' },
-  etc:       { bg: 'var(--tab-etc-bg)',   color: 'var(--tab-etc)',   icon: 'fa-book-open' },
-  bong1:     { bg: 'var(--tab-bon1-bg)',  color: 'var(--tab-bon1)',  icon: 'fa-dove' },
-  bong2:     { bg: 'var(--tab-bon2-bg)',  color: 'var(--tab-bon2)',  icon: 'fa-circle-dot' },
-  bong3:     { bg: 'var(--tab-bon3-bg)',  color: 'var(--tab-bon3)',  icon: 'fa-person-walking' },
+  favorites: { bg:'#FFF0DC', color:'#E8780C', icon:'fa-star' },
+  aim:       { bg:'#FDEAEA', color:'#D12B2B', icon:'fa-cross' },
+  basic:     { bg:'#EDEAFF', color:'#5848D4', icon:'fa-church' },
+  special:   { bg:'#DCF0FF', color:'#0878C8', icon:'fa-hands-praying' },
+  etc:       { bg:'#D8F5E8', color:'#0A9E50', icon:'fa-book-open' },
+  bong1:     { bg:'#E8EDEF', color:'#546E7A', icon:'fa-dove' },
+  bong2:     { bg:'#F5E6FF', color:'#8E24AA', icon:'fa-circle-dot' },
+  bong3:     { bg:'#FFF0E0', color:'#C85A00', icon:'fa-person-walking' },
 };
-
-const listEl = document.getElementById('prayer-list');
-const tabBtns = document.querySelectorAll('.tab-btn');
-const searchInput = document.getElementById('searchInput');
-const detailView = document.getElementById('detail-view');
-const tabContainer = document.querySelector('.tab-container');
-
-let isTouching = false;
-let startXTouch;
-let scrollLeftTouch;
-
-tabContainer.addEventListener('touchstart', (e) => {
-  isTouching = true;
-  startXTouch = e.touches[0].pageX - tabContainer.offsetLeft;
-  scrollLeftTouch = tabContainer.scrollLeft;
-});
-
-tabContainer.addEventListener('touchend', () => {
-  isTouching = false;
-});
-
-tabContainer.addEventListener('touchmove', (e) => {
-  if (!isTouching) return;
-  const x = e.touches[0].pageX - tabContainer.offsetLeft;
-  const walk = (x - startXTouch) * 1.5;
-  tabContainer.scrollLeft = scrollLeftTouch - walk;
-});
-
+ 
+const CATEGORIES = ['favorites','aim','basic','special','etc','bong1','bong2','bong3'];
+ 
+const listEl       = document.getElementById('prayer-list');
+const tabBtns      = document.querySelectorAll('.tab-btn');
+const searchInput  = document.getElementById('searchInput');
+const detailView   = document.getElementById('detail-view');
+const tabContainer = document.getElementById('tabContainer');
+const listView     = document.getElementById('list-view');
+ 
 let currentCategory = 'aim';
 let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-
-function normalizeText(t) {
-  return (t || '').replace(/\s+/g, '').toLowerCase();
-}
-
+ 
+function normalizeText(t) { return (t||'').replace(/\s+/g,'').toLowerCase(); }
+ 
 function toggleFavorite(id, e) {
   e.stopPropagation();
-  if (favorites.includes(id)) {
-    favorites = favorites.filter(f => f !== id);
-  } else {
-    favorites.push(id);
-  }
+  favorites = favorites.includes(id) ? favorites.filter(f=>f!==id) : [...favorites,id];
   localStorage.setItem('favorites', JSON.stringify(favorites));
   renderList(currentCategory);
 }
-
-function scrollActiveTabIntoView(activeBtn) {
-  if (!tabContainer || !activeBtn) return;
-  const containerWidth = tabContainer.clientWidth;
-  const tabLeft = activeBtn.offsetLeft;
-  const tabWidth = activeBtn.offsetWidth;
-  let targetScroll = tabLeft - (containerWidth / 2) + (tabWidth / 2);
-  const maxScroll = tabContainer.scrollWidth - containerWidth;
-  if (targetScroll < 0) targetScroll = 0;
-  if (targetScroll > maxScroll) targetScroll = maxScroll;
-  tabContainer.scrollTo({ left: targetScroll, behavior: 'smooth' });
+ 
+function scrollActiveTabIntoView(btn) {
+  if (!btn) return;
+  const cw = tabContainer.clientWidth;
+  let t = btn.offsetLeft - cw/2 + btn.offsetWidth/2;
+  t = Math.max(0, Math.min(t, tabContainer.scrollWidth - cw));
+  tabContainer.scrollTo({ left: t, behavior: 'smooth' });
 }
-
+ 
 function setActiveTab(category) {
-  tabBtns.forEach(btn => {
-    btn.classList.toggle('active', btn.getAttribute('data-category') === category);
-  });
-  const activeBtn = document.querySelector(`.tab-btn[data-category="${category}"]`);
-  if (activeBtn) scrollActiveTabIntoView(activeBtn);
+  tabBtns.forEach(b => b.classList.toggle('active', b.getAttribute('data-category') === category));
+  scrollActiveTabIntoView(document.querySelector(`.tab-btn[data-category="${category}"]`));
 }
-
+ 
+function switchCategory(category) {
+  currentCategory = category;
+  searchInput.value = '';
+  if (window.location.hash) history.replaceState(null,'',window.location.pathname);
+  detailView.classList.remove('show');
+  setActiveTab(category);
+  renderList(category);
+  window.scrollTo(0,0);
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+}
+ 
 function getCategoryForPrayer(id) {
-  for (const k in prayerData) {
-    if (prayerData[k].find(p => p.id === id)) return k;
-  }
+  for (const k in prayerData) { if (prayerData[k].find(p=>p.id===id)) return k; }
   return 'aim';
 }
-
+ 
 function renderList(category) {
   listEl.innerHTML = '';
   const kw = normalizeText(searchInput.value);
   let data = [];
-
   if (category === 'favorites') {
-    for (const k in prayerData) {
-      data = data.concat(prayerData[k].filter(p => favorites.includes(p.id)));
-    }
+    for (const k in prayerData) data = data.concat(prayerData[k].filter(p=>favorites.includes(p.id)));
   } else if (kw) {
-    for (const k in prayerData) {
-      data = data.concat(prayerData[k]);
-    }
+    for (const k in prayerData) data = data.concat(prayerData[k]);
   } else {
     data = prayerData[category] || [];
   }
-
-  const filtered = kw ? data.filter(p => normalizeText(p.title).includes(kw)) : data;
-
+  const filtered = kw ? data.filter(p=>normalizeText(p.title).includes(kw)) : data;
   if (filtered.length === 0) {
-    listEl.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-state-icon"><i class="fa-solid fa-dove"></i></div>
-        ${category === 'favorites' ? '즐겨찾기한 기도문이 없습니다.' : kw ? '검색 결과가 없습니다.' : '등록된 기도문이 없습니다.'}
-      </div>`;
+    listEl.innerHTML = `<div class="empty-state"><div class="empty-state-icon"><i class="fa-solid fa-dove"></i></div>${
+      category==='favorites'?'즐겨찾기한 기도문이 없습니다.':kw?'검색 결과가 없습니다.':'등록된 기도문이 없습니다.'
+    }</div>`;
     return;
   }
-
   filtered.forEach(prayer => {
-    const cat = (category === 'favorites' || kw) ? getCategoryForPrayer(prayer.id) : category;
-    const style = CATEGORY_STYLE[cat] || CATEGORY_STYLE.aim;
-
+    const cat = (category==='favorites'||kw) ? getCategoryForPrayer(prayer.id) : category;
+    const st = CATEGORY_STYLE[cat] || CATEGORY_STYLE.aim;
     const li = document.createElement('li');
     li.className = 'prayer-item';
-    li.onclick = () => {
-      searchInput.value = '';
-      window.location.hash = `#prayer-${prayer.id}`;
-    };
+    li.onclick = () => { searchInput.value=''; window.location.hash=`#prayer-${prayer.id}`; };
     li.innerHTML = `
       <div class="prayer-item-left">
-        <div class="prayer-icon-dot" style="background:${style.bg};color:${style.color}">
-          <i class="fa-solid ${style.icon}"></i>
+        <div class="prayer-icon-dot" style="background:${st.bg};color:${st.color}">
+          <i class="fa-solid ${st.icon}"></i>
         </div>
         <div class="prayer-title">${prayer.title}</div>
       </div>
       <div class="prayer-item-right">
-        <button class="star-btn ${favorites.includes(prayer.id) ? 'active' : ''}"
-          onclick="toggleFavorite('${prayer.id}', event)">
+        <button class="star-btn ${favorites.includes(prayer.id)?'active':''}"
+          onclick="toggleFavorite('${prayer.id}',event)">
           <i class="fa-solid fa-star"></i>
         </button>
         <i class="fa-solid fa-chevron-right chevron"></i>
@@ -1181,69 +1049,66 @@ function renderList(category) {
     listEl.appendChild(li);
   });
 }
-
-tabBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    currentCategory = btn.getAttribute('data-category');
-    searchInput.value = '';
-    window.location.hash = '';
-    detailView.classList.remove('show');
-    setActiveTab(currentCategory);
-    renderList(currentCategory);
-    requestAnimationFrame(() => {
-      window.scrollTo(0, 0);
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-      const listView = document.getElementById('list-view');
-      if (listView) listView.scrollIntoView({ block: 'start', behavior: 'auto' });
-    });
-  });
-});
-
-searchInput.addEventListener('input', () => {
-  renderList(currentCategory);
-  requestAnimationFrame(() => {
-    window.scrollTo(0, 0);
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-  });
-});
-
+ 
+/* ── 탭바 터치 스크롤 ── */
+let tabTX=0, tabSL=0, tabTouching=false;
+tabContainer.addEventListener('touchstart', e=>{ tabTouching=true; tabTX=e.touches[0].pageX-tabContainer.offsetLeft; tabSL=tabContainer.scrollLeft; },{passive:true});
+tabContainer.addEventListener('touchend', ()=>{ tabTouching=false; });
+tabContainer.addEventListener('touchmove', e=>{ if(!tabTouching)return; tabContainer.scrollLeft=tabSL-(e.touches[0].pageX-tabContainer.offsetLeft-tabTX)*1.4; },{passive:true});
+ 
+/* ── 본문 스와이프로 탭 전환 ── */
+let sx=0, sy=0, sMoving=false, sLocked=false;
+const THRESHOLD = 60;
+ 
+listView.addEventListener('touchstart', e=>{ sx=e.touches[0].clientX; sy=e.touches[0].clientY; sMoving=false; sLocked=false; },{passive:true});
+listView.addEventListener('touchmove', e=>{
+  if(sLocked)return;
+  const dx=e.touches[0].clientX-sx, dy=e.touches[0].clientY-sy;
+  if(Math.abs(dx)>8||Math.abs(dy)>8){
+    sLocked=true;
+    const ang=Math.abs(Math.atan2(dy,dx)*180/Math.PI);
+    sMoving = ang<28 || ang>152;
+  }
+},{passive:true});
+listView.addEventListener('touchend', e=>{
+  if(!sMoving) return;
+  const dx=e.changedTouches[0].clientX-sx;
+  if(Math.abs(dx)<THRESHOLD)return;
+  const idx=CATEGORIES.indexOf(currentCategory);
+  if(dx<0 && idx<CATEGORIES.length-1) switchCategory(CATEGORIES[idx+1]);
+  if(dx>0 && idx>0)                   switchCategory(CATEGORIES[idx-1]);
+},{passive:true});
+ 
+/* ── 탭 클릭 ── */
+tabBtns.forEach(btn=>btn.addEventListener('click',()=>switchCategory(btn.getAttribute('data-category'))));
+ 
+/* ── 검색 ── */
+searchInput.addEventListener('input',()=>{ renderList(currentCategory); window.scrollTo(0,0); });
+ 
+/* ── 라우팅 ── */
 function handleRouting() {
   const hash = window.location.hash;
   if (hash.startsWith('#prayer-')) {
-    const id = hash.replace('#prayer-', '');
-    let found = null;
-    for (const k in prayerData) {
-      found = prayerData[k].find(p => p.id === id);
-      if (found) break;
-    }
-    if (found) {
-      document.getElementById('detail-title').innerText = found.title;
-      document.getElementById('detail-content').innerHTML = found.content;
+    const id = hash.replace('#prayer-','');
+    let found=null;
+    for(const k in prayerData){ found=prayerData[k].find(p=>p.id===id); if(found)break; }
+    if(found){
+      document.getElementById('detail-title').innerText=found.title;
+      document.getElementById('detail-content').innerHTML=found.content;
       detailView.classList.add('show');
-      requestAnimationFrame(() => {
-        detailView.scrollTop = 0;
-        window.scrollTo(0, 0);
-      });
-    } else {
-      detailView.classList.remove('show');
-    }
+      requestAnimationFrame(()=>{ detailView.scrollTop=0; });
+    } else { detailView.classList.remove('show'); }
   } else {
     detailView.classList.remove('show');
-    window.scrollTo(0, 0);
+    window.scrollTo(0,0);
   }
 }
-
+ 
 window.addEventListener('hashchange', handleRouting);
-window.addEventListener('load', () => {
+window.addEventListener('load', ()=>{
   setActiveTab(currentCategory);
   renderList(currentCategory);
   handleRouting();
-  requestAnimationFrame(() => {
-    const listView = document.getElementById('list-view');
-    if (listView) listView.scrollIntoView({ block: 'start', behavior: 'auto' });
-  });
 });
 </script>
 </body>
