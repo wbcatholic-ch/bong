@@ -123,6 +123,8 @@ html, body {
   overflow-y: hidden;
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
   scrollbar-width: none;
   z-index: 90;
   box-shadow: var(--shadow-sm);
@@ -145,8 +147,8 @@ html, body {
   font-family: 'Noto Sans KR', sans-serif;
   white-space: nowrap;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
   letter-spacing: -0.02em;
+  touch-action: manipulation;
 }
 
 .tab-btn:active {
