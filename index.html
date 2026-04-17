@@ -113,46 +113,58 @@ html, body {
   left: 0;
   width: 100%;
   height: var(--tab-h);
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
+
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   padding: 0 12px;
+
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+
   overflow-x: auto;
   overflow-y: hidden;
+
   white-space: nowrap;
-  -webkit-overflow-scrolling: touch;
+
+  /* 🔥 핵심 */
   touch-action: pan-x;
+  -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
+
   scrollbar-width: none;
   z-index: 90;
-  box-shadow: var(--shadow-sm);
 }
-  
 
-  
 .tab-container::-webkit-scrollbar {
   display: none;
 }
 
 .tab-btn {
   flex: 0 0 auto;
+  min-width: 90px;
+
   height: 34px;
   padding: 0 14px;
+
   border-radius: 17px;
   border: 1px solid var(--border);
+
   background: var(--bg);
   color: var(--text-sub);
+
   font-size: 13px;
   font-weight: 600;
-  font-family: 'Noto Sans KR', sans-serif;
+
   white-space: nowrap;
-  cursor: pointer;
-  letter-spacing: -0.02em;
+
+  /* 🔥 중요 */
   touch-action: manipulation;
 }
-
+body {
+  touch-action: pan-y;
+}
+  
 .tab-btn:active {
   transform: scale(0.97);
 }
