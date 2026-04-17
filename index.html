@@ -3,410 +3,456 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>모바일 기도문</title>
-<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+<title>기도문</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
 :root {
-    --bg-color: #F7F4F1;
-    --white: #FFFFFF;
-    --text-main: #2B2B2B;
-    --text-sub: #7A6E66;
-    --primary-pastel: #EDE3DB;
-    --primary-active: #6B4F3A;
-    --accent-color: #8B5E3C;const cover = document
-    --border-color: #E5DDD6;
-    --header-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-    
-  html, body {
-    overflow-x: hidden;
+  --bg: #F8F9FB;
+  --white: #FFFFFF;
+  --text-main: #1A1D23;
+  --text-sub: #6B7280;
+  --text-hint: #9CA3AF;
+  --primary: #3B5BDB;
+  --primary-light: #EEF2FF;
+  --primary-dark: #2C44B8;
+  --border: #E5E7EB;
+  --border-focus: #3B5BDB;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --header-h: 56px;
+  --bar-h: 108px;
 }
 
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+  background: var(--bg);
+  font-family: 'Noto Sans KR', sans-serif;
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── HEADER ── */
 .app-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 14px 0 16px;
-    background: linear-gradient(135deg, #6B4F3A 0%, #8B5E3C 100%);
-    color: #fff;
-    z-index: 100;
-    box-shadow: 0 2px 10px rgba(60, 35, 20, 0.14);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+  position: fixed;
+  top: 0; left: 0; width: 100%;
+  height: var(--header-h);
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
 }
 
-.header-title-wrap {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-width: 0;
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-cross {
+  width: 28px;
+  height: 28px;
+  background: var(--primary);
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 12px;
 }
 
 .header-title {
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.05;
-    color: #FFFFFF;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.03em;
 }
 
 .header-subtitle {
-    margin-top: 2px;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: rgba(255,255,255,0.72);
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--text-hint);
+  letter-spacing: 0.1em;
+  margin-top: 1px;
 }
 
 .header-link {
-    flex: 0 0 34px;
-    width: 34px;
-    height: 34px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #FFF7ED;
-    text-decoration: none;
-    background: rgba(255,255,255,0.14);
-    border: 1px solid rgba(255,255,255,0.18);
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-sub);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  font-size: 14px;
+  transition: background 0.15s;
+}
+.header-link:hover { background: var(--primary-light); color: var(--primary); }
+
+/* ── TOOLBAR (dropdown + search) ── */
+.toolbar {
+  position: fixed;
+  top: var(--header-h);
+  left: 0; width: 100%;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 14px;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.header-link i {
-    font-size: 15px;
+.category-select-wrap {
+  position: relative;
 }
 
-.tab-container {
-    position: fixed;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    display: flex;
-    gap: 8px;
-    padding: 8px 12px;
-    overflow-x: auto;
-    background: rgba(255,255,255,0.97);
-    border-bottom: 1px solid #E7DDD6;
-    z-index: 90;
-    scrollbar-width: none;
+.category-select {
+  width: 100%;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  padding: 0 36px 0 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-main);
+  font-family: 'Noto Sans KR', sans-serif;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.category-select:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(59,91,219,0.12);
 }
 
-.tab-container::-webkit-scrollbar {
-    display: none;
+.select-arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-sub);
+  font-size: 12px;
+  pointer-events: none;
 }
 
-.tab-btn {
-    flex: 0 0 auto;
-    min-width: 108px;
-    height: 42px;
-    padding: 0 16px;
-    border-radius: 21px;
-    border: 1px solid #DDD2C9;
-    background: #F4EFEA;
-    color: #6F625A;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    white-space: nowrap;
+.search-wrap {
+  position: relative;
 }
 
-.tab-btn.active {
-    background: #7B573D;
-    color: #fff;
-    border-color: #7B573D;
-    box-shadow: 0 3px 10px rgba(123,87,61,0.16);
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-hint);
+  font-size: 13px;
+  pointer-events: none;
 }
 
-.search-box {
-    position: fixed;
-    top: 110px;
-    left: 0;
-    width: 100%;
-    padding: 8px 12px;
-    background: rgba(255,255,255,0.98);
-    border-bottom: 1px solid #E7DDD6;
-    z-index: 85;
+.search-input {
+  width: 100%;
+  height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  padding: 0 12px 0 36px;
+  font-size: 14px;
+  color: var(--text-main);
+  font-family: 'Noto Sans KR', sans-serif;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.search-input::placeholder { color: var(--text-hint); }
+.search-input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(59,91,219,0.12);
+  background: var(--white);
 }
 
-.search-box input {
-    width: 100%;
-    height: 38px;
-    border-radius: 12px;
-    border: 1px solid #E1D7CF;
-    background: #FFFDFC;
-    padding: 0 14px;
-    font-size: 14px;
-    color: #2B2B2B;
-    outline: none;
-}
-
-.search-box input::placeholder {
-    color: #9A8F86;
-}
-
+/* ── LIST ── */
 #list-view {
-    padding: 162px 12px 18px;
+  padding-top: calc(var(--header-h) + 108px + 16px);
+  padding-bottom: 24px;
+  padding-left: 14px;
+  padding-right: 14px;
 }
 
 .prayer-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .prayer-item {
-    width: 100%;
-    min-height: 64px;
-    padding: 14px 16px;
-    background: #FFFDFC;
-    border: 1px solid #E1D7CF;
-    border-radius: 18px;
-    box-shadow: 0 2px 8px rgba(70, 45, 25, 0.05);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+  box-shadow: var(--shadow-sm);
+}
+.prayer-item:active { transform: scale(0.99); box-shadow: none; }
+.prayer-item:hover { border-color: #C7D2FE; box-shadow: 0 2px 8px rgba(59,91,219,0.08); }
+
+.prayer-item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
 }
 
-.prayer-item:last-child {
-    min-height: 64px;
-    padding: 14px 16px;
+.prayer-icon-dot {
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  font-size: 13px;
 }
 
 .prayer-title {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 15px;
-    font-weight: 800;
-    line-height: 1.35;
-    letter-spacing: -0.02em;
-    color: #1F2937;
-    word-break: keep-all;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+  flex: 1;
+  min-width: 0;
 }
 
-.prayer-title i,
-.prayer-title svg {
-    flex: 0 0 16px;
-    width: 16px;
-    height: 16px;
-    color: #A55D3A;
-    fill: #A55D3A;
-    font-size: 16px;
-    margin: 0;
+.prayer-item-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
 }
 
-.prayer-actions {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-left: 8px;
+.star-btn {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: #D1D5DB;
+  font-size: 15px;
+  line-height: 1;
+  transition: color 0.15s, transform 0.15s;
 }
+.star-btn:active { transform: scale(1.2); }
+.star-btn.active { color: #F59E0B; }
 
-.fa-star {
-    color: #D1C9C1;
-    font-size: 17px;
-    width: 18px;
-    text-align: center;
-    cursor: pointer;
-}
-
-.fa-star.active-star {
-    color: #B7791F;
-}
-
-.prayer-icon {
-    flex: 0 0 18px;
-    width: 18px;
-    height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #8B6A53;
-    font-size: 18px;
-    line-height: 1;
-}
-
-#detail-view {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background-color: var(--bg-color);
-    z-index: 200;
-    transform: translateX(100%);
-    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-}
-
-#detail-view.show {
-    transform: translateX(0);
-}
-
-.detail-header {
-    position: sticky;
-    top: 0;
-    width: 100%;
-    min-height: 60px;
-    background-color: rgba(255,255,255,0.97);
-    backdrop-filter: blur(8px);
-    display: flex;
-    align-items: center;
-    padding: 0 16px;
-    box-shadow: var(--header-shadow);
-    border-bottom: 1px solid #EEE7E1;
-    z-index: 210;
-}
-
-.back-btn {
-    background: none;
-    border: none;
-    font-size: 20px;
-    color: var(--text-main);
-    cursor: pointer;
-    padding: 10px;
-    margin-left: -10px;
-}
-
-.detail-title {
-    flex: 1;
-    text-align: center;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-main);
-    margin-right: 20px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.detail-content {
-    padding: 28px 24px;
-    font-size: 16px;
-    line-height: 1.9;
-    color: #2B2B2B;
-    background: #FCFAF8;
-    margin: 16px;
-    border-radius: 18px;
-    border: 1px solid #E6DDD6;
-    box-shadow: 0 6px 20px rgba(80,50,30,0.06);
-}
-
-.detail-content p {
-    margin-bottom: 18px;
-    text-align: left;
-    word-break: keep-all;
-    line-height: 1.9;
-}
-
-.detail-content .rubric {
-    color: #8B5E3C;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    margin: 20px 0 10px;
-    display: block;
-    text-transform: uppercase;
-}
-
-.detail-content .bold {
-    font-weight: 700;
-    color: #3A2E25;
-}
-
-.detail-content .symbol {
-    color: var(--accent-color);
-    font-weight: 700;
-}
-
-.detail-content .align-right {
-    text-align: right;
-    font-size: 14px;
-    color: #7A6E66;
-    margin-top: 20px;
+.chevron {
+  color: var(--text-hint);
+  font-size: 12px;
 }
 
 .empty-state {
-    text-align: center;
-    padding: 56px 20px;
-    color: var(--text-sub);
-    font-size: 15px;
-    background: #FCFAF8;
-    border: 1px dashed #DDD6CF;
-    border-radius: 16px;
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--text-hint);
+  font-size: 14px;
+  background: var(--white);
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  line-height: 1.8;
+}
+.empty-state-icon { font-size: 28px; margin-bottom: 12px; opacity: 0.4; }
+
+/* ── DETAIL VIEW ── */
+#detail-view {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100vh;
+  background: var(--bg);
+  z-index: 200;
+  transform: translateX(100%);
+  transition: transform 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+#detail-view.show { transform: translateX(0); }
+
+.detail-header {
+  position: sticky;
+  top: 0;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  height: 54px;
+  z-index: 210;
+  gap: 10px;
+  box-shadow: var(--shadow-sm);
 }
 
+.back-btn {
+  background: none;
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-sub);
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.15s;
+  flex: 0 0 34px;
+}
+.back-btn:hover { background: var(--bg); }
 
+.detail-title {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-main);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.02em;
+}
 
+.detail-title-spacer { flex: 0 0 34px; }
 
+.detail-body {
+  padding: 20px 16px 32px;
+  flex: 1;
+}
 
+.detail-content-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 20px;
+  font-family: 'Noto Serif KR', serif;
+  font-size: 15px;
+  line-height: 2;
+  color: #2D3142;
+  box-shadow: var(--shadow-sm);
+}
 
+.detail-content-card p {
+  margin-bottom: 16px;
+  word-break: keep-all;
+}
+.detail-content-card p:last-child { margin-bottom: 0; }
 
-    
+.detail-content-card .rubric {
+  display: block;
+  color: var(--primary);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 20px 0 8px;
+}
+
+.detail-content-card .bold {
+  font-weight: 700;
+  color: #1A1D23;
+}
+
+.detail-content-card .symbol {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.detail-content-card .align-right {
+  text-align: right;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-top: 20px;
+  font-style: italic;
+}
 </style>
 </head>
 <body>
 
 <header class="app-header">
-    <div class="header-title-wrap">
-        <div class="header-title">기도문</div>
-        <div class="header-subtitle">CATHOLIC PRAYERS</div>
+  <div class="header-brand">
+    <div class="header-cross"><i class="fa-solid fa-cross"></i></div>
+    <div>
+      <div class="header-title">기도문</div>
+      <div class="header-subtitle">CATHOLIC PRAYERS</div>
     </div>
-
-    <a
-        class="header-link"
-        href="https://maria.catholic.or.kr/mobile/prayer"
-        target="_blank"
-        rel="noopener noreferrer"
-        title="굿뉴스 기도문"
-        aria-label="굿뉴스 기도문 바로가기"
-    >
-        <i class="fa-solid fa-book-bible"></i>
-    </a>
+  </div>
+  <a class="header-link"
+     href="https://maria.catholic.or.kr/mobile/prayer"
+     target="_blank" rel="noopener noreferrer"
+     title="굿뉴스 기도문">
+    <i class="fa-solid fa-book-bible"></i>
+  </a>
 </header>
 
-    
-<div class="tab-container">
-    <button class="tab-btn" data-category="favorites">⭐ 즐겨찾기</button>
-    <button class="tab-btn active" data-category="aim">대구대교구 인준 기도</button>
-    <button class="tab-btn" data-category="basic">주요 기도</button>
-    <button class="tab-btn" data-category="special">특수 기도</button>
-    <button class="tab-btn" data-category="etc">여러가지 기도</button>
-    <button class="tab-btn" data-category="bong1">위령기도</button>
-    <button class="tab-btn" data-category="bong2">레지오 마리애</button>
-    <button class="tab-btn" data-category="bong3">십자가의 길</button>
-
-</div>
-
-<div class="search-box">
-    <input type="text" id="searchInput" placeholder="🔍 기도문 검색">
+<div class="toolbar">
+  <div class="category-select-wrap">
+    <select class="category-select" id="categorySelect">
+      <option value="favorites">⭐ 즐겨찾기</option>
+      <option value="aim" selected>📜 대구대교구 인준 기도</option>
+      <option value="basic">✝️ 주요 기도</option>
+      <option value="special">🙏 특수 기도</option>
+      <option value="etc">📖 여러가지 기도</option>
+      <option value="bong1">🕯️ 위령기도</option>
+      <option value="bong2">📿 레지오 마리애</option>
+      <option value="bong3">✠ 십자가의 길</option>
+    </select>
+    <i class="fa-solid fa-chevron-down select-arrow"></i>
+  </div>
+  <div class="search-wrap">
+    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+    <input type="text" class="search-input" id="searchInput" placeholder="기도문 검색">
+  </div>
 </div>
 
 <div id="list-view">
-    <ul class="prayer-list" id="prayer-list"></ul>
+  <ul class="prayer-list" id="prayer-list"></ul>
 </div>
 
 <div id="detail-view">
-    <div class="detail-header">
-        <button class="back-btn" onclick="history.back()">
-            <i class="fa-solid fa-arrow-left"></i>
-        </button>
-        <div class="detail-title" id="detail-title">기도문</div>
-    </div>
-    <div class="detail-content" id="detail-content"></div>
+  <div class="detail-header">
+    <button class="back-btn" onclick="history.back()">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+    <div class="detail-title" id="detail-title">기도문</div>
+    <div class="detail-title-spacer"></div>
+  </div>
+  <div class="detail-body">
+    <div class="detail-content-card" id="detail-content"></div>
+  </div>
 </div>
+
 <script>
         const prayerData = {
             'aim': [
@@ -965,145 +1011,92 @@
               ]
         };
 
-const listContainer = document.getElementById('prayer-list');
-const tabBtns = document.querySelectorAll('.tab-btn');
+const listEl = document.getElementById('prayer-list');
+const categorySelect = document.getElementById('categorySelect');
 const searchInput = document.getElementById('searchInput');
-
 let currentCategory = 'aim';
 let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
 
-function getIcon(title) {
-    return 'fa-cross';
-}
+function normalizeText(t) { return (t||'').replace(/\s+/g,'').toLowerCase(); }
 
-function normalizeText(text) {
-    return (text || '').replace(/\s+/g, '').toLowerCase();
-}
-
-function toggleFavorite(id) {
-    if (favorites.includes(id)) {
-        favorites = favorites.filter(f => f !== id);
-    } else {
-        favorites.push(id);
-    }
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-    renderList(currentCategory);
+function toggleFavorite(id, e) {
+  e.stopPropagation();
+  if (favorites.includes(id)) favorites = favorites.filter(f=>f!==id);
+  else favorites.push(id);
+  localStorage.setItem('favorites', JSON.stringify(favorites));
+  renderList(currentCategory);
 }
 
 function renderList(category) {
-    listContainer.innerHTML = '';
-    const keyword = normalizeText(searchInput ? searchInput.value : '');
+  listEl.innerHTML = '';
+  const kw = normalizeText(searchInput.value);
+  let data = [];
 
-    let dataToSearch = [];
+  if (category === 'favorites') {
+    for (const k in prayerData) data = data.concat(prayerData[k].filter(p=>favorites.includes(p.id)));
+  } else if (kw) {
+    for (const k in prayerData) data = data.concat(prayerData[k]);
+  } else {
+    data = prayerData[category] || [];
+  }
 
-    if (category === 'favorites') {
-        for (const key in prayerData) {
-            dataToSearch = dataToSearch.concat(
-                prayerData[key].filter(prayer => favorites.includes(prayer.id))
-            );
-        }
-    } else if (keyword) {
-        for (const key in prayerData) {
-            dataToSearch = dataToSearch.concat(prayerData[key]);
-        }
-    } else {
-        dataToSearch = prayerData[category];
-    }
+  const filtered = kw ? data.filter(p=>normalizeText(p.title).includes(kw)) : data;
 
-    if (!dataToSearch || dataToSearch.length === 0) {
-        listContainer.innerHTML =
-            category === 'favorites'
-                ? '<div class="empty-state">⭐ 즐겨찾기가 없습니다.</div>'
-                : '<div class="empty-state">아직 등록된 기도문이 없습니다.</div>';
-        return;
-    }
+  if (filtered.length === 0) {
+    listEl.innerHTML = `<div class="empty-state"><div class="empty-state-icon"><i class="fa-solid fa-dove"></i></div>${
+      category==='favorites' ? '즐겨찾기한 기도문이 없습니다.' :
+      kw ? '검색 결과가 없습니다.' : '등록된 기도문이 없습니다.'
+    }</div>`;
+    return;
+  }
 
-    const filteredData = dataToSearch.filter(prayer => {
-        if (!keyword) return true;
-        return normalizeText(prayer.title).includes(keyword);
-    });
-
-    if (filteredData.length === 0) {
-        listContainer.innerHTML = '<div class="empty-state">검색 결과가 없습니다.</div>';
-        return;
-    }
-
-    filteredData.forEach(prayer => {
-        const li = document.createElement('li');
-        li.className = 'prayer-item';
-
-        li.onclick = () => {
-            window.location.hash = `#prayer-${prayer.id}`;
-        };
-
-li.innerHTML = `
-    <div class="prayer-title">
-        <i class="fa-solid ${getIcon(prayer.title)}"></i>
-        ${prayer.title}
-    </div>
-
-    <div class="prayer-actions">
-        <i class="fa-solid fa-star ${favorites.includes(prayer.id) ? 'active-star' : ''}"
-           onclick="event.stopPropagation(); toggleFavorite('${prayer.id}')"></i>
-
-        <div class="prayer-icon">
-            <i class="fa-solid fa-chevron-right"></i>
-        </div>
-    </div>
-`;
-
-        listContainer.appendChild(li);
-    });
+  filtered.forEach(prayer => {
+    const li = document.createElement('li');
+    li.className = 'prayer-item';
+    li.onclick = () => { window.location.hash = `#prayer-${prayer.id}`; };
+    li.innerHTML = `
+      <div class="prayer-item-left">
+        <div class="prayer-icon-dot"><i class="fa-solid fa-cross"></i></div>
+        <div class="prayer-title">${prayer.title}</div>
+      </div>
+      <div class="prayer-item-right">
+        <button class="star-btn ${favorites.includes(prayer.id)?'active':''}"
+          onclick="toggleFavorite('${prayer.id}',event)">
+          <i class="fa-solid fa-star"></i>
+        </button>
+        <i class="fa-solid fa-chevron-right chevron"></i>
+      </div>`;
+    listEl.appendChild(li);
+  });
 }
 
-tabBtns.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        tabBtns.forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        currentCategory = e.target.getAttribute('data-category');
-        renderList(currentCategory);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+categorySelect.addEventListener('change', e => {
+  currentCategory = e.target.value;
+  renderList(currentCategory);
+  window.scrollTo({top:0, behavior:'smooth'});
 });
 
-if (searchInput) {
-    searchInput.addEventListener('input', () => {
-        renderList(currentCategory);
-    });
-}
+searchInput.addEventListener('input', () => renderList(currentCategory));
 
 renderList(currentCategory);
 
 function handleRouting() {
-    const hash = window.location.hash;
-    const detailView = document.getElementById('detail-view');
-
-    if (hash.startsWith('#prayer-')) {
-        const id = hash.replace('#prayer-', '');
-        let foundPrayer = null;
-
-        for (const key in prayerData) {
-            const found = prayerData[key].find(p => p.id === id);
-            if (found) {
-                foundPrayer = found;
-                break;
-            }
-        }
-
-        if (foundPrayer) {
-            document.getElementById('detail-title').innerText = foundPrayer.title;
-            document.getElementById('detail-content').innerHTML = foundPrayer.content;
-            detailView.classList.add('show');
-        } else {
-            detailView.classList.remove('show');
-        }
-    } else {
-        detailView.classList.remove('show');
-    }
+  const hash = window.location.hash;
+  const dv = document.getElementById('detail-view');
+  if (hash.startsWith('#prayer-')) {
+    const id = hash.replace('#prayer-','');
+    let found = null;
+    for (const k in prayerData) { found = prayerData[k].find(p=>p.id===id); if(found) break; }
+    if (found) {
+      document.getElementById('detail-title').innerText = found.title;
+      document.getElementById('detail-content').innerHTML = found.content;
+      dv.classList.add('show');
+    } else dv.classList.remove('show');
+  } else dv.classList.remove('show');
 }
 
 window.addEventListener('hashchange', handleRouting);
 window.addEventListener('load', handleRouting);
-    </script>
+</script>
 </body>
 </html>
