@@ -359,13 +359,57 @@ header {
     border-radius: 16px;
 }
 
+.header-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+    pointer-events: none;
+}
+
+.header-link {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFF7ED;
+    text-decoration: none;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.18);
+}
+
+.header-link i {
+    font-size: 16px;
+}
+
+.header-link:active {
+    transform: translateY(-50%) scale(0.95);
+}
 
     
 </style>
 </head>
 <body>
 
-<header>기도문</header>
+<header>
+    <div class="header-title">기도문</div>
+
+    <a
+        class="header-link"
+        href="https://maria.catholic.or.kr/mobile/prayer"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="굿뉴스 기도문"
+    >
+        <i class="fa-solid fa-book-bible"></i>
+    </a>
+</header>
 
 <div class="tab-container">
     <button class="tab-btn" data-category="favorites">⭐ 즐겨찾기</button>
