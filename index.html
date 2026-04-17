@@ -22,23 +22,23 @@
   --shadow-sm:    0 1px 4px rgba(30,30,80,0.07);
  
   /* 레이아웃 — 표준화 */
-  --header-h:  58px;
-  --tab-h:     52px;
+  --header-h:  60px;
+  --tab-h:     60px;
   --search-h:  52px;
   --card-r:    12px;
   --icon-size: 38px;
   --icon-r:    9px;
  
   /* 폰트 크기 — 표준화 */
-  --fs-header: 18px;
-  --fs-tab:    13.5px;
+  --fs-header: 16px;
+  --fs-tab:    15px;
   --fs-item:   15px;
   --fs-body:   16px;
   --fs-sub:    12px;
  
-  /* 카테고리 팔레트 */
+  /* 카테고리 팔레트 — aim은 파란색으로 */
   --c-fav:   #E8780C; --c-fav-bg:   #FFF0DC; --c-fav-dk:   #7A3D00;
-  --c-aim:   #D12B2B; --c-aim-bg:   #FDEAEA; --c-aim-dk:   #7A0000;
+  --c-aim:   #1565C0; --c-aim-bg:   #E3F0FF; --c-aim-dk:   #0D3B7A;
   --c-bas:   #5848D4; --c-bas-bg:   #EDEAFF; --c-bas-dk:   #28168A;
   --c-spc:   #0878C8; --c-spc-bg:   #DCF0FF; --c-spc-dk:   #004080;
   --c-etc:   #0A9E50; --c-etc-bg:   #D8F5E8; --c-etc-dk:   #004D22;
@@ -46,6 +46,32 @@
   --c-bo2:   #8E24AA; --c-bo2-bg:   #F5E6FF; --c-bo2-dk:   #4A007A;
   --c-bo3:   #C85A00; --c-bo3-bg:   #FFF0E0; --c-bo3-dk:   #6B2D00;
 }
+ 
+/* ── 스와이프 피드백 오버레이 ── */
+#swipe-flash {
+  position: fixed;
+  top: calc(var(--header-h) + var(--tab-h));
+  left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 95;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+#swipe-flash.show { opacity: 1; }
+ 
+/* 탭 전환 시 펄스 애니메이션 */
+@keyframes tabPulse {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+.tab-btn.pulse { animation: tabPulse 0.28s ease-out; }
+ 
+/* 리스트 슬라이드 아웃/인 */
+@keyframes slideInRight { from { opacity:0; transform:translateX(40px); } to { opacity:1; transform:translateX(0); } }
+@keyframes slideInLeft  { from { opacity:0; transform:translateX(-40px); } to { opacity:1; transform:translateX(0); } }
+.prayer-list.slide-right { animation: slideInRight 0.22s ease-out; }
+.prayer-list.slide-left  { animation: slideInLeft  0.22s ease-out; }
  
 html, body {
   height: 100%;
@@ -147,7 +173,7 @@ html, body {
 .tab-btn:active { transform: scale(0.96); }
  
 .tab-btn[data-category="favorites"].active { background:var(--c-fav-bg); color:var(--c-fav-dk); border-color:var(--c-fav); box-shadow:0 2px 8px rgba(232,120,12,.22); }
-.tab-btn[data-category="aim"].active       { background:var(--c-aim-bg); color:var(--c-aim-dk); border-color:var(--c-aim); box-shadow:0 2px 8px rgba(209,43,43,.22); }
+.tab-btn[data-category="aim"].active       { background:var(--c-aim-bg); color:var(--c-aim-dk); border-color:var(--c-aim); box-shadow:0 2px 8px rgba(21,101,192,.25); }
 .tab-btn[data-category="basic"].active     { background:var(--c-bas-bg); color:var(--c-bas-dk); border-color:var(--c-bas); box-shadow:0 2px 8px rgba(88,72,212,.22); }
 .tab-btn[data-category="special"].active   { background:var(--c-spc-bg); color:var(--c-spc-dk); border-color:var(--c-spc); box-shadow:0 2px 8px rgba(8,120,200,.22); }
 .tab-btn[data-category="etc"].active       { background:var(--c-etc-bg); color:var(--c-etc-dk); border-color:var(--c-etc); box-shadow:0 2px 8px rgba(10,158,80,.22); }
@@ -198,6 +224,7 @@ html, body {
   padding-bottom: 28px;
   padding-left: 12px;
   padding-right: 12px;
+  min-height: 100vh; /* 빈 공간도 스와이프 감지 */
 }
  
 .prayer-list {
@@ -208,6 +235,7 @@ html, body {
 .prayer-item {
   background: var(--surface);
   border: 1.5px solid var(--border);
+  border-left-width: 4px;           /* 카테고리 색 왼쪽 강조선 */
   border-radius: var(--card-r);
   padding: 13px 14px;
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
@@ -368,6 +396,8 @@ html, body {
     <input type="text" class="search-input" id="searchInput" placeholder="기도문 검색">
   </div>
 </div>
+ 
+<div id="swipe-flash"></div>
  
 <div id="list-view">
   <ul class="prayer-list" id="prayer-list"></ul>
@@ -947,14 +977,14 @@ html, body {
         };
 
 const CATEGORY_STYLE = {
-  favorites: { bg:'#FFF0DC', color:'#E8780C', icon:'fa-star' },
-  aim:       { bg:'#FDEAEA', color:'#D12B2B', icon:'fa-cross' },
-  basic:     { bg:'#EDEAFF', color:'#5848D4', icon:'fa-church' },
-  special:   { bg:'#DCF0FF', color:'#0878C8', icon:'fa-hands-praying' },
-  etc:       { bg:'#D8F5E8', color:'#0A9E50', icon:'fa-book-open' },
-  bong1:     { bg:'#E8EDEF', color:'#546E7A', icon:'fa-dove' },
-  bong2:     { bg:'#F5E6FF', color:'#8E24AA', icon:'fa-circle-dot' },
-  bong3:     { bg:'#FFF0E0', color:'#C85A00', icon:'fa-person-walking' },
+  favorites: { bg:'#FFF0DC', color:'#E8780C', icon:'fa-star',           accent:'#E8780C' },
+  aim:       { bg:'#E3F0FF', color:'#1565C0', icon:'fa-cross',          accent:'#1565C0' },
+  basic:     { bg:'#EDEAFF', color:'#5848D4', icon:'fa-church',         accent:'#5848D4' },
+  special:   { bg:'#DCF0FF', color:'#0878C8', icon:'fa-hands-praying',  accent:'#0878C8' },
+  etc:       { bg:'#D8F5E8', color:'#0A9E50', icon:'fa-book-open',      accent:'#0A9E50' },
+  bong1:     { bg:'#E8EDEF', color:'#546E7A', icon:'fa-dove',           accent:'#546E7A' },
+  bong2:     { bg:'#F5E6FF', color:'#8E24AA', icon:'fa-circle-dot',     accent:'#8E24AA' },
+  bong3:     { bg:'#FFF0E0', color:'#C85A00', icon:'fa-person-walking', accent:'#C85A00' },
 };
  
 const CATEGORIES = ['favorites','aim','basic','special','etc','bong1','bong2','bong3'];
@@ -965,6 +995,7 @@ const searchInput  = document.getElementById('searchInput');
 const detailView   = document.getElementById('detail-view');
 const tabContainer = document.getElementById('tabContainer');
 const listView     = document.getElementById('list-view');
+const swipeFlash   = document.getElementById('swipe-flash');
  
 let currentCategory = 'aim';
 let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
@@ -980,10 +1011,7 @@ function toggleFavorite(id, e) {
  
 function scrollActiveTabIntoView(btn) {
   if (!btn) return;
-  const cw = tabContainer.clientWidth;
-  let t = btn.offsetLeft - cw/2 + btn.offsetWidth/2;
-  t = Math.max(0, Math.min(t, tabContainer.scrollWidth - cw));
-  tabContainer.scrollTo({ left: t, behavior: 'smooth' });
+  btn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
 }
  
 function setActiveTab(category) {
@@ -991,13 +1019,39 @@ function setActiveTab(category) {
   scrollActiveTabIntoView(document.querySelector(`.tab-btn[data-category="${category}"]`));
 }
  
-function switchCategory(category) {
+function switchCategory(category, direction) {
   currentCategory = category;
   searchInput.value = '';
   if (window.location.hash) history.replaceState(null,'',window.location.pathname);
   detailView.classList.remove('show');
   setActiveTab(category);
+ 
+  /* ── 진동 피드백 ── */
+  if (navigator.vibrate) navigator.vibrate(40);
+ 
+  /* ── 플래시 오버레이 (카테고리 색으로) ── */
+  const st = CATEGORY_STYLE[category] || CATEGORY_STYLE.aim;
+  swipeFlash.style.background = st.accent + '22'; /* 투명 컬러 플래시 */
+  swipeFlash.classList.add('show');
+  setTimeout(() => swipeFlash.classList.remove('show'), 180);
+ 
+  /* ── 탭 버튼 펄스 ── */
+  const activeBtn = document.querySelector(`.tab-btn[data-category="${category}"]`);
+  if (activeBtn) {
+    activeBtn.classList.remove('pulse');
+    void activeBtn.offsetWidth; // reflow
+    activeBtn.classList.add('pulse');
+    setTimeout(() => activeBtn.classList.remove('pulse'), 300);
+  }
+ 
+  /* ── 리스트 슬라이드 애니메이션 ── */
   renderList(category);
+  if (direction) {
+    listEl.classList.remove('slide-left','slide-right');
+    void listEl.offsetWidth;
+    listEl.classList.add(direction === 'next' ? 'slide-right' : 'slide-left');
+  }
+ 
   window.scrollTo(0,0);
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;
@@ -1046,6 +1100,7 @@ function renderList(category) {
         </button>
         <i class="fa-solid fa-chevron-right chevron"></i>
       </div>`;
+    li.style.borderLeftColor = st.accent;  /* 카드 왼쪽 색상 줄 */
     listEl.appendChild(li);
   });
 }
@@ -1075,12 +1130,12 @@ listView.addEventListener('touchend', e=>{
   const dx=e.changedTouches[0].clientX-sx;
   if(Math.abs(dx)<THRESHOLD)return;
   const idx=CATEGORIES.indexOf(currentCategory);
-  if(dx<0 && idx<CATEGORIES.length-1) switchCategory(CATEGORIES[idx+1]);
-  if(dx>0 && idx>0)                   switchCategory(CATEGORIES[idx-1]);
+  if(dx<0 && idx<CATEGORIES.length-1) switchCategory(CATEGORIES[idx+1], 'next');
+  if(dx>0 && idx>0)                   switchCategory(CATEGORIES[idx-1], 'prev');
 },{passive:true});
  
 /* ── 탭 클릭 ── */
-tabBtns.forEach(btn=>btn.addEventListener('click',()=>switchCategory(btn.getAttribute('data-category'))));
+tabBtns.forEach(btn=>btn.addEventListener('click',()=>switchCategory(btn.getAttribute('data-category'), null)));
  
 /* ── 검색 ── */
 searchInput.addEventListener('input',()=>{ renderList(currentCategory); window.scrollTo(0,0); });
@@ -1107,7 +1162,7 @@ function handleRouting() {
 window.addEventListener('hashchange', handleRouting);
 window.addEventListener('load', ()=>{
   setActiveTab(currentCategory);
-  renderList(currentCategory);
+  switchCategory(currentCategory, null);
   handleRouting();
 });
 </script>
