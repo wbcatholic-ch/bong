@@ -262,13 +262,13 @@
     <header>기도문</header>
     
     <div class="tab-container">
-        <button class="tab-btn" data-category="aim">교구 인준 기도</button>
+        <button class="tab-btn active" data-category="aim">교구 인준 기도</button>
         <button class="tab-btn" data-category="basic">주요 기도</button>
         <button class="tab-btn" data-category="special">특수 기도</button>
         <button class="tab-btn" data-category="etc">여러가지 기도</button>
         <button class="tab-btn" data-category="bong1">위령기도</button>
         <button class="tab-btn" data-category="bong2">레지오 마리에</button>
-        <button class="tab-btn active" data-category="bong3">십자가의 길</button>
+        <button class="tab-btn " data-category="bong3">십자가의 길</button>
     </div>
 
     <div id="list-view">
@@ -715,7 +715,7 @@
 
         const listContainer = document.getElementById('prayer-list');
         const tabBtns = document.querySelectorAll('.tab-btn');
-        let currentCategory = 'bong3';
+        let currentCategory = 'aim';
 
         function renderList(category) {
             listContainer.innerHTML = '';
