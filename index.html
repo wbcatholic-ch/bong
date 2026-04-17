@@ -7,18 +7,18 @@
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-    :root {
-        --bg-color: #F6F4F1;
-        --white: #FFFFFF;
-        --text-main: #1F2937;
-        --text-sub: #6B7280;
-        --primary-pastel: #E8DED4;
-        --primary-active: #A86C4A;
-        --accent-color: #8F4E36;
-        --border-color: #DDD6CF;
-        --card-shadow: 0 4px 14px rgba(0,0,0,0.05);
-        --header-shadow: 0 1px 6px rgba(0,0,0,0.05);
-    }
+:root {
+    --bg-color: #F7F4F1;
+    --white: #FFFFFF;
+
+    --text-main: #2B2B2B;
+    --text-sub: #7A6E66;
+
+    --primary-pastel: #EDE3DB;
+    --primary-active: #6B4F3A;   /* 핵심 브라운 */
+    --accent-color: #8B5E3C;     /* 포인트 브라운 */
+    --border-color: #E5DDD6;
+}
 
     * {
         box-sizing: border-box;
@@ -92,13 +92,12 @@
         background-color: #F3EEE9;
     }
 
-    .tab-btn.active {
-        background-color: var(--primary-active);
-        color: var(--white);
-        border-color: var(--primary-active);
-        font-weight: 700;
-        box-shadow: 0 4px 10px rgba(168,108,74,0.22);
-    }
+ .tab-btn.active {
+    background-color: var(--primary-active);
+    color: #FFFFFF;
+    border-color: var(--primary-active);
+    box-shadow: 0 4px 10px rgba(107,79,58,0.25);
+}
 
     #list-view {
         padding: 130px 16px 32px;
@@ -109,45 +108,39 @@
         list-style: none;
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 8px;
     }
 
-    .prayer-item {
-        background-color: var(--white);
-        padding: 18px 18px;
-        border-radius: 18px;
-        box-shadow: var(--card-shadow);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        cursor: pointer;
-        border: 1px solid #E7E0D9;
-        transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
-    }
+ .prayer-item {
+    background: linear-gradient(145deg, #FFFFFF, #F8F5F2);
+    padding: 14px 16px; /* 기존보다 살짝 줄임 */
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 3px 10px rgba(80, 50, 30, 0.06);
+    transition: all 0.2s ease;
+}
 
     .prayer-item:active {
         transform: scale(0.99);
     }
 
-    .prayer-item:hover {
-        border-color: #D6C6BA;
-        box-shadow: 0 6px 16px rgba(0,0,0,0.06);
-    }
+.prayer-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(80, 50, 30, 0.12);
+    border-color: #D6C2B5;
+}
 
-    .prayer-title {
-        font-size: 16px;
-        font-weight: 600;
-        color: var(--text-main);
-        word-break: keep-all;
-        padding-right: 15px;
-        line-height: 1.5;
-    }
+.prayer-title {
+    font-size: 15px; /* 살짝 줄여서 밀도 ↑ */
+    font-weight: 600;
+    color: #2B2B2B;
+}
 
-    .prayer-icon {
-        color: var(--primary-active);
-        font-size: 15px;
-        flex-shrink: 0;
-    }
+.prayer-icon {
+    color: var(--primary-active);
+    font-size: 14px;
+    opacity: 0.8;
+}
 
     #detail-view {
         position: fixed;
@@ -183,15 +176,11 @@
         z-index: 210;
     }
 
-    .back-btn {
-        background: none;
-        border: none;
-        font-size: 20px;
-        color: var(--text-main);
-        cursor: pointer;
-        padding: 10px;
-        margin-left: -10px;
-    }
+.tab-btn {
+    background-color: #F4EFEA;
+    color: #6F635C;
+    border: 1px solid #E2D8CF;
+}
 
     .detail-title {
         flex: 1;
