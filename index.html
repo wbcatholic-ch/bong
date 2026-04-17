@@ -158,12 +158,27 @@ header {
 
 .prayer-item:active {
     transform: scale(0.99);
+}.prayer-item {
+    width: 100%;
+    min-height: 78px;
+    padding: 18px 20px;
+    background: #FFFDFC;
+    border: 1px solid #E1D7CF;
+    border-radius: 18px;
+    box-shadow: 0 2px 8px rgba(70, 45, 25, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
 }
 
-.prayer-item:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(80, 50, 30, 0.12);
-    border-color: #D6C2B5;
+.prayer-item:last-child {
+    min-height: 78px;
+    padding: 18px 20px;
+}
+
+.prayer-item:active {
+    transform: scale(0.99);
 }
 
 .prayer-title {
@@ -1010,21 +1025,21 @@ function renderList(category) {
             window.location.hash = `#prayer-${prayer.id}`;
         };
 
-        li.innerHTML = `
-            <div class="prayer-title">
-                <i class="fa-solid ${getIcon(prayer.title)}"></i>
-                ${prayer.title}
-            </div>
+li.innerHTML = `
+    <div class="prayer-title">
+        <i class="fa-solid ${getIcon(prayer.title)}"></i>
+        ${prayer.title}
+    </div>
 
-            <div class="prayer-actions">
-                <i class="fa-solid fa-star ${favorites.includes(prayer.id) ? 'active-star' : ''}"
-                   onclick="event.stopPropagation(); toggleFavorite('${prayer.id}')"></i>
+    <div class="prayer-actions">
+        <i class="fa-solid fa-star ${favorites.includes(prayer.id) ? 'active-star' : ''}"
+           onclick="event.stopPropagation(); toggleFavorite('${prayer.id}')"></i>
 
-                <div class="prayer-icon">
-                    <i class="fa-solid fa-chevron-right"></i>
-                </div>
-            </div>
-        `;
+        <div class="prayer-icon">
+            <i class="fa-solid fa-chevron-right"></i>
+        </div>
+    </div>
+`;
 
         listContainer.appendChild(li);
     });
