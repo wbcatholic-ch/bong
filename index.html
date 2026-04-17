@@ -1052,31 +1052,31 @@ const searchInput = document.getElementById('searchInput');
 const detailView = document.getElementById('detail-view');
 const tabContainer = document.querySelector('.tab-container');
 
-let isDown = false;
-let startX;
-let scrollLeft;
 
-tabContainer.addEventListener('mousedown', (e) => {
-  isDown = true;
-  startX = e.pageX - tabContainer.offsetLeft;
-  scrollLeft = tabContainer.scrollLeft;
+  let isTouching = false;
+let startXTouch;
+let scrollLeftTouch;
+
+tabContainer.addEventListener('touchstart', (e) => {
+  isTouching = true;
+  startXTouch = e.touches[0].pageX - tabContainer.offsetLeft;
+  scrollLeftTouch = tabContainer.scrollLeft;
 });
 
-tabContainer.addEventListener('mouseleave', () => {
-  isDown = false;
+tabContainer.addEventListener('touchend', () => {
+  isTouching = false;
 });
 
-tabContainer.addEventListener('mouseup', () => {
-  isDown = false;
+tabContainer.addEventListener('touchmove', (e) => {
+  if (!isTouching) return;
+
+  const x = e.touches[0].pageX - tabContainer.offsetLeft;
+  const walk = (x - startXTouch) * 1.5;
+
+  tabContainer.scrollLeft = scrollLeftTouch - walk;
 });
 
-tabContainer.addEventListener('mousemove', (e) => {
-  if (!isDown) return;
-  e.preventDefault();
-  const x = e.pageX - tabContainer.offsetLeft;
-  const walk = (x - startX) * 1.5;
-  tabContainer.scrollLeft = scrollLeft - walk;
-}); 
+
   
 let currentCategory = 'aim';
 let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
