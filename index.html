@@ -1110,10 +1110,10 @@ function switchCategory(category, direction) {
   if (window.location.hash) history.replaceState(null,'',window.location.pathname);
   detailView.classList.remove('show');
   setActiveTab(category);
-  if (navigator.vibrate) navigator.vibrate(40);
-  flashCategoryAccent(category);
-  pulseActiveTab(category);
-  renderList(category);
+
+
+
+ 
   if (direction) {
     listEl.classList.remove('slide-left','slide-right');
     void listEl.offsetWidth;
