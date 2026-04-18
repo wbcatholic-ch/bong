@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -121,25 +120,16 @@ html, body {
 }
  
 .header-link {
-  height: 36px;
-  border-radius: 9px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #3C1E00;
-  background: #FEE500;
-  border: none;
-  text-decoration: none;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 0 12px;
-  white-space: nowrap;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.14);
-  transition: filter .15s, transform .12s;
-  flex: 0 0 auto;
+  height: 30px; border-radius: 7px;
+  display: flex; align-items: center; gap: 5px;
+  color: #3C1E00; background: #FEE500;
+  border: none; text-decoration: none;
+  font-size: 11px; font-weight: 700;
+  padding: 0 9px; white-space: nowrap;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  transition: filter .15s; flex: 0 0 auto;
 }
-.header-link:hover { filter: brightness(1.04); }
-.header-link:active { transform: scale(0.98); }
+.header-link:hover { filter: brightness(1.06); }
  
 /* ══ TAB BAR — 웜 크림 배경 ══ */
 .tab-container {
@@ -186,40 +176,80 @@ html, body {
 .search-bar {
   position: fixed;
   top: calc(var(--header-h) + var(--tab-h));
-  left: 0;
-  width: 100%;
+  left: 0; width: 100%;
   height: var(--search-h);
   background: var(--surface);
-  border-bottom: 1.5px solid var(--border);
-  padding: 0 12px;
+  border-bottom: 1px solid var(--border);
+  padding: 10px 12px;
   z-index: 85;
-
   display: flex;
   align-items: center;
   gap: 8px;
 }
-
 .search-wrap {
   position: relative;
-  height: 38px;
-  flex: 1;
-  max-width: 260px;
+  flex: 1;          /* 검색창이 남은 공간 차지 */
+  min-width: 0;
 }
-
-.font-controls {
-  display: flex;
-  gap: 6px;
+.search-icon {
+  position: absolute; left: 13px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-sub); font-size: 14px; pointer-events: none;
 }
-
-.font-btn {
-  height: 34px;
-  padding: 0 10px;
-  border-radius: 8px;
+.search-input {
+  width: 100%; height: 38px;
   border: 1px solid var(--border);
-  background: #fff;
-  font-size: 13px;
+  border-radius: var(--card-r);
+  background: var(--bg);
+  padding: 0 12px 0 38px;
+  font-size: 15px; font-weight: 500;
+  color: var(--text-main);
+  font-family: 'Noto Sans KR', sans-serif;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.search-input::placeholder { color: var(--text-hint); font-size: 14px; }
+.search-input:focus {
+  border-color: #1565C0;
+  box-shadow: 0 0 0 3px rgba(21,101,192,0.12);
+  background: var(--surface);
+}
+ 
+/* 검색창 오른쪽 글자 크기 버튼 그룹 */
+.search-font-ctrl {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2px 3px;
+  height: 38px;
+}
+.search-font-btn {
+  background: none;
+  border: none;
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-sub);
   font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif;
   cursor: pointer;
+  touch-action: manipulation;
+  transition: background .12s, color .12s;
+  line-height: 1;
+  padding: 0;
+}
+.search-font-btn.sf-small { font-size: 13px; }
+.search-font-btn.sf-large { font-size: 17px; }
+.search-font-btn:active  { background: var(--border); }
+.search-font-btn:disabled { opacity: 0.28; cursor: default; }
+.search-font-divider {
+  width: 1px; height: 16px;
+  background: var(--border);
+  margin: 0 1px;
 }
  
 /* ══ LIST ══ */
@@ -359,19 +389,41 @@ html, body {
   text-align: right; font-size: 13px;
   color: var(--text-sub); margin-top: 22px; font-style: italic;
 }
-
- :root {
-  --fs-base: 16px;
-  --fs-item: 16px;
-  --fs-body: 18px;
+ 
+/* ── 글자 크기 조절 버튼 ── */
+.font-ctrl {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2px 3px;
+  height: 32px;
 }
-
-.prayer-title {
-  font-size: var(--fs-item) !important;
+ 
+.font-ctrl-btn {
+  background: none;
+  border: none;
+  width: 26px; height: 26px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-sub);
+  font-size: 14px; font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background .12s, color .12s;
+  line-height: 1;
 }
-
-.detail-content-card {
-  font-size: var(--fs-body) !important;
+.font-ctrl-btn:active { background: var(--border); }
+.font-ctrl-btn:disabled { opacity: 0.28; cursor: default; }
+ 
+.font-ctrl-divider {
+  width: 1px; height: 16px;
+  background: var(--border);
+  margin: 0 1px;
 }
 </style>
 </head>
@@ -390,10 +442,6 @@ html, body {
      target="_blank" rel="noopener noreferrer">
     <i class="fa-solid fa-book-bible"></i> 굿뉴스 기도문
   </a>
- <div style="display:flex; gap:6px;">
-  <button onclick="setFontSize(-1)" style="height:28px;padding:0 8px;border-radius:6px;border:none;">A-</button>
-  <button onclick="setFontSize(1)" style="height:28px;padding:0 8px;border-radius:6px;border:none;">A+</button>
-</div>
 </header>
  
 <div class="tab-container" id="tabContainer">
@@ -408,18 +456,15 @@ html, body {
 </div>
  
 <div class="search-bar">
-
-
   <div class="search-wrap">
     <i class="fa-solid fa-magnifying-glass search-icon"></i>
     <input type="text" class="search-input" id="searchInput" placeholder="기도문 검색">
   </div>
-
-  <div class="font-controls">
-    <button class="font-btn" onclick="setFontSize(-1)">A-</button>
-    <button class="font-btn" onclick="setFontSize(1)">A+</button>
+  <div class="search-font-ctrl">
+    <button class="search-font-btn sf-small" id="sfDecrBtn" onclick="adjustFontSize(-1)" title="글자 작게">가</button>
+    <div class="search-font-divider"></div>
+    <button class="search-font-btn sf-large" id="sfIncrBtn" onclick="adjustFontSize(1)"  title="글자 크게">가</button>
   </div>
-
 </div>
  
 <div id="swipe-flash"></div>
@@ -434,7 +479,11 @@ html, body {
       <i class="fa-solid fa-arrow-left"></i>
     </button>
     <div class="detail-title" id="detail-title">기도문</div>
-    <div class="detail-title-spacer"></div>
+    <div class="font-ctrl" role="group" aria-label="글자 크기 조절">
+      <button class="font-ctrl-btn" id="fontDecrBtn" onclick="adjustFontSize(-1)" title="글자 작게">가</button>
+      <div class="font-ctrl-divider"></div>
+      <button class="font-ctrl-btn" id="fontIncrBtn" onclick="adjustFontSize(1)" title="글자 크게" style="font-size:17px">가</button>
+    </div>
   </div>
   <div class="detail-body">
     <div class="detail-content-card" id="detail-content"></div>
@@ -1027,6 +1076,31 @@ const detailContentEl = document.getElementById('detail-content');
 let currentCategory = 'aim';
 let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
  
+/* ── 글자 크기 조절 ── */
+const FONT_SIZES  = [13, 14, 15, 16, 17, 18, 19, 20];  /* px 단계 */
+const FONT_KEY    = 'prayer_font_size';
+let fontIdx = (() => {
+  const saved = parseInt(localStorage.getItem(FONT_KEY));
+  const idx   = FONT_SIZES.indexOf(saved);
+  return idx >= 0 ? idx : 3;  /* 기본값: 16px (index 3) */
+})();
+ 
+function applyFontSize() {
+  const px = FONT_SIZES[fontIdx];
+  document.documentElement.style.setProperty('--fs-body', px + 'px');
+  /* 버튼 disabled 처리 */
+  document.getElementById('fontDecrBtn').disabled = (fontIdx === 0);
+  document.getElementById('fontIncrBtn').disabled = (fontIdx === FONT_SIZES.length - 1);
+}
+ 
+function adjustFontSize(delta) {
+  const next = fontIdx + delta;
+  if (next < 0 || next >= FONT_SIZES.length) return;
+  fontIdx = next;
+  localStorage.setItem(FONT_KEY, FONT_SIZES[fontIdx]);
+  applyFontSize();
+}
+ 
 function normalizeText(t) { return (t||'').replace(/\s+/g,'').toLowerCase(); }
 function saveFavorites()  { localStorage.setItem('favorites', JSON.stringify(favorites)); }
  
@@ -1036,24 +1110,6 @@ function toggleFavorite(id, e) {
   saveFavorites();
   renderList(currentCategory);
 }
-
-function setFontSize(step) {
-  const root = document.documentElement;
-
-  let base = parseInt(getComputedStyle(root).getPropertyValue('--fs-base')) || 16;
-
-  base += step;
-
-  if (base < 14) base = 14;
-  if (base > 22) base = 22;
-
-  root.style.setProperty('--fs-base', base + 'px');
-  root.style.setProperty('--fs-item', base + 'px');
-  root.style.setProperty('--fs-body', (base + 2) + 'px');
-
-  localStorage.setItem('fontSize', base);
-}
-
  
 function scrollActiveTabIntoView(btn) {
   if (!btn) return;
@@ -1167,13 +1223,10 @@ function switchCategory(category, direction) {
   if (window.location.hash) history.replaceState(null,'',window.location.pathname);
   detailView.classList.remove('show');
   setActiveTab(category);
-  if (navigator.vibrate) navigator.vibrate(1);
+  if (navigator.vibrate) navigator.vibrate(40);
   flashCategoryAccent(category);
   pulseActiveTab(category);
   renderList(category);
-
-
- 
   if (direction) {
     listEl.classList.remove('slide-left','slide-right');
     void listEl.offsetWidth;
@@ -1224,16 +1277,11 @@ function handleRouting() {
  
 window.addEventListener('hashchange', handleRouting);
 window.addEventListener('load', ()=>{
+  applyFontSize();
   applyTabColors();
   setActiveTab(currentCategory);
   switchCategory(currentCategory, null);
   handleRouting();
- const saved = localStorage.getItem('fontSize');
-if (saved) {
-  document.documentElement.style.setProperty('--fs-base', saved + 'px');
-  document.documentElement.style.setProperty('--fs-item', saved + 'px');
-  document.documentElement.style.setProperty('--fs-body', (parseInt(saved)+2) + 'px');
-}
 });
 </script>
 </body>
