@@ -199,28 +199,32 @@ body {
   height: var(--tab-btn-h);
   padding: 0 14px;
   border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.18);
-  color: rgba(255,255,255,0.78);
+  border: 1px solid transparent;
+  color: #fff;
   font-size: var(--fs-tab);
   font-weight: 600;
   font-family: 'Noto Sans KR', sans-serif;
   white-space: nowrap;
   cursor: pointer;
-  transition: background .15s, color .15s, border-color .15s, transform .12s;
+  transition: background .15s, color .15s, border-color .15s, transform .12s, opacity .12s;
   letter-spacing: -0.02em;
   touch-action: manipulation;
   display: flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
+  opacity: .92;
 }
-.tab-btn:active { transform: scale(0.97); }
+
+.tab-btn:active {
+  transform: scale(0.97);
+}
 
 .tab-btn.active {
-  background: rgba(255,255,255,0.22);
-  border-color: rgba(255,255,255,0.38);
-  color: #ffffff;
+  color: #fff;
   font-weight: 700;
+  opacity: 1;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
 }
 
 /* ══ SEARCH ══ */
@@ -462,8 +466,8 @@ body {
 }
 
 .detail-content-card {
-  background: var(--surface);
-  border: 1.5px solid var(--border);
+  background: #F8FAFC;
+   border: 1px solid #E5E7EB;
   border-radius: 14px;
   padding: 26px 20px;
   font-family: 'Noto Sans KR', sans-serif;
@@ -1171,6 +1175,16 @@ function setActiveTab(category) {
   scrollActiveTabIntoView(activeBtn);
 }
 
+function applyTabColors() {
+  tabBtns.forEach(btn => {
+    const category = btn.getAttribute('data-category');
+    const style = CATEGORY_STYLE[category] || CATEGORY_STYLE.aim;
+
+    btn.style.background = style.accent;
+    btn.style.borderColor = style.accent;
+  });
+}
+  
 function flashCategoryAccent(category) {
   const style = CATEGORY_STYLE[category] || CATEGORY_STYLE.aim;
   swipeFlash.style.background = `${style.accent}22`;
@@ -1305,10 +1319,7 @@ function switchCategory(category, direction) {
   detailView.classList.remove('show');
   setActiveTab(category);
 
-  if (navigator.vibrate) {
-    navigator.vibrate(40);
-  }
-
+  
   flashCategoryAccent(category);
   pulseActiveTab(category);
   renderList(category);
@@ -1426,7 +1437,8 @@ function handleRouting() {
 
 window.addEventListener('hashchange', handleRouting);
 
-window.addEventListener('load', () => {
+  window.addEventListener('load', () => {
+  applyTabColors();
   setActiveTab(currentCategory);
   switchCategory(currentCategory, null);
   handleRouting();
