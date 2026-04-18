@@ -1,3 +1,6 @@
+
+복사
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -41,12 +44,12 @@
   /* 카테고리 팔레트 */
   --c-fav:   #E8780C; --c-fav-bg:   #FFF0DC; --c-fav-dk:   #7A3D00;
   --c-aim:   #1565C0; --c-aim-bg:   #E3F0FF; --c-aim-dk:   #0D3B7A;
-  --c-bas:   #5848D4; --c-bas-bg:   #EDEAFF; --c-bas-dk:   #28168A;
-  --c-spc:   #0878C8; --c-spc-bg:   #DCF0FF; --c-spc-dk:   #004080;
-  --c-etc:   #0A9E50; --c-etc-bg:   #D8F5E8; --c-etc-dk:   #004D22;
-  --c-bo1:   #546E7A; --c-bo1-bg:   #E8EDEF; --c-bo1-dk:   #1E3A42;
-  --c-bo2:   #8E24AA; --c-bo2-bg:   #F5E6FF; --c-bo2-dk:   #4A007A;
-  --c-bo3:   #C85A00; --c-bo3-bg:   #FFF0E0; --c-bo3-dk:   #6B2D00;
+  --c-bas:   #1E40AF; --c-bas-bg:   #EFF4FF; --c-bas-dk:   #1e3a8a;
+  --c-spc:   #BE185D; --c-spc-bg:   #FFF0F5; --c-spc-dk:   #831843;
+  --c-etc:   #15803D; --c-etc-bg:   #F0FDF4; --c-etc-dk:   #14532D;
+  --c-bo1:   #475569; --c-bo1-bg:   #F1F5F9; --c-bo1-dk:   #1E293B;
+  --c-bo2:   #7E22CE; --c-bo2-bg:   #FDF4FF; --c-bo2-dk:   #4C1D95;
+  --c-bo3:   #C2410C; --c-bo3-bg:   #FFF7ED; --c-bo3-dk:   #7C2D12;
 }
  
 /* ── 스와이프 피드백 오버레이 ── */
@@ -1060,14 +1063,14 @@ html, body {
         };
 
 const CATEGORY_STYLE = {
-  favorites: { bg:'#FFF0DC', color:'#E8780C', icon:'fa-star',           accent:'#E8780C' },
-  aim:       { bg:'#E3F0FF', color:'#1565C0', icon:'fa-cross',          accent:'#1565C0' },
-  basic:     { bg:'#EDEAFF', color:'#5848D4', icon:'fa-church',         accent:'#5848D4' },
-  special:   { bg:'#DCF0FF', color:'#0878C8', icon:'fa-hands-praying',  accent:'#0878C8' },
-  etc:       { bg:'#D8F5E8', color:'#0A9E50', icon:'fa-book-open',      accent:'#0A9E50' },
-  bong1:     { bg:'#E8EDEF', color:'#546E7A', icon:'fa-dove',           accent:'#546E7A' },
-  bong2:     { bg:'#F5E6FF', color:'#8E24AA', icon:'fa-circle-dot',     accent:'#8E24AA' },
-  bong3:     { bg:'#FFF0E0', color:'#C85A00', icon:'fa-person-walking', accent:'#C85A00' },
+  favorites: { bg:'#FFF0DC', color:'#E8780C', icon:'fa-star',              accent:'#E8780C' },  /* ⭐ */
+  aim:       { bg:'#E3F0FF', color:'#1565C0', icon:'fa-cross',             accent:'#1565C0' },  /* ✝️ */
+  basic:     { bg:'#EFF4FF', color:'#1E40AF', icon:'fa-church',            accent:'#1E40AF' },  /* ⛪ */
+  special:   { bg:'#FFF0F5', color:'#BE185D', icon:'fa-heart',             accent:'#BE185D' },  /* ❤️ */
+  etc:       { bg:'#F0FDF4', color:'#15803D', icon:'fa-book-open',         accent:'#15803D' },  /* 📖 */
+  bong1:     { bg:'#F1F5F9', color:'#475569', icon:'fa-dove',              accent:'#475569' },  /* 🕊️ */
+  bong2:     { bg:'#FDF4FF', color:'#7E22CE', icon:'fa-circle-nodes',      accent:'#7E22CE' },  /* 📿 */
+  bong3:     { bg:'#FFF7ED', color:'#C2410C', icon:'fa-person-walking',    accent:'#C2410C' },  /* 🌿 */
 };
  
 const CATEGORIES = ['favorites','aim','basic','special','etc','bong1','bong2','bong3'];
