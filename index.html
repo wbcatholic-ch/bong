@@ -346,6 +346,20 @@ html, body {
   text-align: right; font-size: 13px;
   color: var(--text-sub); margin-top: 22px; font-style: italic;
 }
+
+ :root {
+  --fs-base: 16px;
+  --fs-item: 16px;
+  --fs-body: 18px;
+}
+
+.prayer-title {
+  font-size: var(--fs-item) !important;
+}
+
+.detail-content-card {
+  font-size: var(--fs-body) !important;
+}
 </style>
 </head>
 <body>
@@ -363,6 +377,10 @@ html, body {
      target="_blank" rel="noopener noreferrer">
     <i class="fa-solid fa-book-bible"></i> 굿뉴스 기도문
   </a>
+ <div style="display:flex; gap:6px;">
+  <button onclick="setFontSize(-1)" style="height:28px;padding:0 8px;border-radius:6px;border:none;">A-</button>
+  <button onclick="setFontSize(1)" style="height:28px;padding:0 8px;border-radius:6px;border:none;">A+</button>
+</div>
 </header>
  
 <div class="tab-container" id="tabContainer">
@@ -997,6 +1015,24 @@ function toggleFavorite(id, e) {
   saveFavorites();
   renderList(currentCategory);
 }
+
+function setFontSize(step) {
+  const root = document.documentElement;
+
+  let base = parseInt(getComputedStyle(root).getPropertyValue('--fs-base')) || 16;
+
+  base += step;
+
+  if (base < 14) base = 14;
+  if (base > 22) base = 22;
+
+  root.style.setProperty('--fs-base', base + 'px');
+  root.style.setProperty('--fs-item', base + 'px');
+  root.style.setProperty('--fs-body', (base + 2) + 'px');
+
+  localStorage.setItem('fontSize', base);
+}
+
  
 function scrollActiveTabIntoView(btn) {
   if (!btn) return;
@@ -1171,6 +1207,12 @@ window.addEventListener('load', ()=>{
   setActiveTab(currentCategory);
   switchCategory(currentCategory, null);
   handleRouting();
+ const saved = localStorage.getItem('fontSize');
+if (saved) {
+  document.documentElement.style.setProperty('--fs-base', saved + 'px');
+  document.documentElement.style.setProperty('--fs-item', saved + 'px');
+  document.documentElement.style.setProperty('--fs-body', (parseInt(saved)+2) + 'px');
+}
 });
 </script>
 </body>
