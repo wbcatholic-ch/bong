@@ -904,14 +904,14 @@ html, body {
 
 
 const CATEGORY_STYLE = {
-  favorites: { bg:'#FFF0DC', color:'#E8780C', icon:'fa-star',            accent:'#E8780C' },  /* ⭐ */
-  aim:       { bg:'#E3F0FF', color:'#1565C0', icon:'fa-cross',           accent:'#1565C0' },  /* ✝️ */
-  basic:     { bg:'#EFF4FF', color:'#1E40AF', icon:'fa-church',          accent:'#1E40AF' },  /* ⛪ */
-  special:   { bg:'#FFF0F5', color:'#BE185D', icon:'fa-heart',           accent:'#BE185D' },  /* ✨ */
-  etc:       { bg:'#F0FDF4', color:'#15803D', icon:'fa-book-open',       accent:'#15803D' },  /* 📖 */
-  bong1:     { bg:'#F1F5F9', color:'#475569', icon:'fa-dove',            accent:'#475569' },  /* 🕊️ */
-  bong2:     { bg:'#FDF4FF', color:'#7E22CE', icon:'fa-hands-praying',   accent:'#7E22CE' },  /* 📿 */
-  bong3:     { bg:'#FFF7ED', color:'#C2410C', icon:'fa-person-walking',  accent:'#C2410C' },  /* ✝️ */
+  favorites: { bg:'#FFF0DC', color:'#E8780C', icon:'⭐', accent:'#E8780C' },
+  aim:       { bg:'#E3F0FF', color:'#1565C0', icon:'✝️', accent:'#1565C0' },
+  basic:     { bg:'#EFF4FF', color:'#1E40AF', icon:'⛪', accent:'#1E40AF' },
+  special:   { bg:'#FFF0F5', color:'#BE185D', icon:'❤️', accent:'#BE185D' },
+  etc:       { bg:'#F0FDF4', color:'#15803D', icon:'📖', accent:'#15803D' },
+  bong1:     { bg:'#F1F5F9', color:'#475569', icon:'🕊️', accent:'#475569' },
+  bong2:     { bg:'#FDF4FF', color:'#7E22CE', icon:'📿', accent:'#7E22CE' },
+  bong3:     { bg:'#FFF7ED', color:'#C2410C', icon:'🌿', accent:'#C2410C' },
 };
  
 const CATEGORIES = ['favorites','aim','basic','special','etc','bong1','bong2','bong3'];
@@ -1048,8 +1048,8 @@ function renderList(category) {
     li.onclick = () => { searchInput.value=''; window.location.hash=`#prayer-${prayer.id}`; };
     li.innerHTML = `
       <div class="prayer-item-left">
-        <div class="prayer-icon-dot" style="background:${st.bg};color:${st.color}">
-          <i class="fa-solid ${st.icon}"></i>
+        <div class="prayer-icon-dot" style="background:${st.bg};font-size:var(--icon-fs)">
+          ${st.icon}
         </div>
         <div class="prayer-title">${prayer.title}</div>
       </div>
