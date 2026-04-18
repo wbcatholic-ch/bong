@@ -1182,15 +1182,17 @@ function applyTabColors() {
     const style = CATEGORY_STYLE[category] || CATEGORY_STYLE.aim;
 
     if (btn.classList.contains('active')) {
-      // 활성 탭
       btn.style.background = style.accent;
       btn.style.color = "#ffffff";
       btn.style.borderColor = style.accent;
+      btn.style.boxShadow = "0 2px 8px rgba(0,0,0,0.12)";
     } else {
-      // 비활성 탭
-      btn.style.background = style.bg;
+      btn.style.background = "#ffffff";
       btn.style.color = style.color;
-      btn.style.borderColor = style.bg;
+      btn.style.borderColor = style.accent;
+
+      /* 👇 핵심 */
+      btn.style.boxShadow = `0 0 0 1.5px ${style.accent}33`;
     }
   });
 }
