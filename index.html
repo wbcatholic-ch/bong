@@ -3,419 +3,158 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>기 도 문</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<title>기도문</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
- 
-/* ══ 디자인 토큰 ══ */
-:root {
-  --bg:           #F0F2F5;
-  --surface:      #FFFFFF;
-  --surface-sub:  linear-gradient(135deg, #1F2A44, #2F4167);
-  --text-main:    #1A1A2E;
-  --text-sub:     #555577;
-  --text-hint:    #9999BB;
-  --border:       #DDDDF0;
-  --shadow-sm:    0 1px 4px rgba(30,30,80,0.07);
- 
-  /* 레이아웃 — 표준화 */
-  --header-h:  70px;
-  --tab-h:     55px;
-  --search-h:  60px;
-  --card-r:    12px;
-  --icon-size: 35px;
-  --icon-r:    12px;
- 
-  /* 폰트 크기 — 표준화 */
-  --fs-header: 22px;
-  --fs-tab:    15px;
-  --fs-item:   15px;
-  --fs-body:   16px;
-  --fs-sub:    12px;
- 
-  /* 카테고리 팔레트 — aim은 파란색으로 */
-  --c-fav:   #E8780C; --c-fav-bg:   #FFF0DC; --c-fav-dk:   #7A3D00;
-  --c-aim:   #1565C0; --c-aim-bg:   #E3F0FF; --c-aim-dk:   #0D3B7A;
-  --c-bas:   #5848D4; --c-bas-bg:   #EDEAFF; --c-bas-dk:   #28168A;
-  --c-spc:   #0878C8; --c-spc-bg:   #DCF0FF; --c-spc-dk:   #004080;
-  --c-etc:   #0A9E50; --c-etc-bg:   #D8F5E8; --c-etc-dk:   #004D22;
-  --c-bo1:   #546E7A; --c-bo1-bg:   #E8EDEF; --c-bo1-dk:   #1E3A42;
-  --c-bo2:   #8E24AA; --c-bo2-bg:   #F5E6FF; --c-bo2-dk:   #4A007A;
-  --c-bo3:   #C85A00; --c-bo3-bg:   #FFF0E0; --c-bo3-dk:   #6B2D00;
-}
- 
-/* ── 스와이프 피드백 오버레이 ── */
-#swipe-flash {
-  position: fixed;
-  top: calc(var(--header-h) + var(--tab-h));
-  left: 0; right: 0; bottom: 0;
-  pointer-events: none;
-  z-index: 95;
-  opacity: 0;
-  transition: opacity 0.18s ease;
-}
-#swipe-flash.show { opacity: 1; }
- 
-/* 탭 전환 시 펄스 애니메이션 */
-@keyframes tabPulse {
-  0%   { transform: scale(1); }
-  40%  { transform: scale(1.08); }
-  100% { transform: scale(1); }
-}
-.tab-btn.pulse { animation: tabPulse 0.28s ease-out; }
- 
-/* 리스트 슬라이드 아웃/인 */
-@keyframes slideInRight { from { opacity:0; transform:translateX(40px); } to { opacity:1; transform:translateX(0); } }
-@keyframes slideInLeft  { from { opacity:0; transform:translateX(-40px); } to { opacity:1; transform:translateX(0); } }
-.prayer-list.slide-right { animation: slideInRight 0.22s ease-out; }
-.prayer-list.slide-left  { animation: slideInLeft  0.22s ease-out; }
- 
-html, body {
-  height: 100%;
-  overflow-x: hidden;
-  background: var(--bg);
-  font-family: 'Noto Sans KR', sans-serif;
-  color: var(--text-main);
-  -webkit-font-smoothing: antialiased;
-  touch-action: pan-y;
-}
- 
-/* ══ HEADER ══ */
-.app-header {
-  position: fixed;
-  top: 0; left: 0; width: 100%;
-  height: var(--header-h);
-  background: linear-gradient(135deg, #1F2A44, #2F4167);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 14px;
-  z-index: 100;
-}
- 
-.header-brand { display: flex; align-items: center; gap: 10px; }
- 
-.header-cross {
-  width: 30px; height: 30px;
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.22);
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-size: 13px;
-}
- 
-.header-title {
-  font-size: var(--fs-header);
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: -0.02em;
-}
- 
-.header-subtitle {
-  font-size: 9px; font-weight: 500;
-  color: rgba(255,255,255,0.52);
-  letter-spacing: 0.12em; margin-top: 1px;
-}
- 
-/* 굿뉴스 — 카카오 노랑 */
-.header-link {
-  height: 30px;
-  border-radius: 7px;
-  display: flex; align-items: center; gap: 5px;
-  color: #3C1E00;
-  background: #FEE500;
-  border: none; text-decoration: none;
-  font-size: 11px; font-weight: 700;
-  padding: 0 9px; white-space: nowrap;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-  transition: filter .15s;
-}
-.header-link:hover { filter: brightness(1.06); }
- 
-/* ══ TAB BAR ══ */
-.tab-container {
-  position: fixed;
-  top: var(--header-h); left: 0; width: 100%;
-  height: var(--tab-h);
-  display: flex; align-items: center;
-  gap: 8px;
-  padding: 0 12px;
-  background: #F0F2F5;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  overflow-x: auto; overflow-y: hidden;
-  white-space: nowrap;
-  touch-action: pan-x;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-x: contain;
-  scrollbar-width: none;
-  z-index: 90;
-}
-.tab-container::-webkit-scrollbar { display: none; }
- 
-.tab-btn {
-  flex: 0 0 auto;
-  height: 35px;
-  padding: 0 14px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.18);
 
-  color: rgba(255,255,255,0.78);
-  font-size: var(--fs-tab);
-  font-weight: 600;
-  font-family: 'Noto Sans KR', sans-serif;
-  white-space: nowrap; cursor: pointer;
-  transition: background .15s, color .15s, border-color .15s;
-  letter-spacing: -0.02em;
-  touch-action: manipulation;
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+--bg:#F0F2F5;
+--surface:#FFFFFF;
+--text-main:#1A1A2E;
+--text-sub:#555577;
+--border:#DDDDF0;
+
+--header-h:70px;
+--tab-h:55px;
+--tab-btn-h:35px;
+--search-h:60px;
+
+--fs-header:22px;
+--fs-tab:15px;
+--fs-sub:12px;
 }
-.tab-btn:active { transform: scale(0.97); }
- 
-/* 활성 탭 — 단일 기준으로 통일 */
-.tab-btn.active {
-  background: rgba(255,255,255,0.22);
-  border-color: rgba(255,255,255,0.38);
-  color: #ffffff;
-  font-weight: 700;
+
+body{
+background:var(--bg);
+font-family:'Noto Sans KR',sans-serif;
 }
- 
-/* ══ SEARCH ══ */
-.search-bar {
-  position: fixed;
-  top: calc(var(--header-h) + var(--tab-h));
-  left: 0; width: 100%;
-  height: var(--search-h);
-  background: var(--surface);
-  border-bottom: 1.5px solid var(--border);
-  padding: 8px 12px;
-  z-index: 85;
+
+/* HEADER */
+.app-header{
+position:fixed;top:0;width:100%;
+height:var(--header-h);
+background:linear-gradient(135deg,#1F2A44,#2F4167);
+display:flex;align-items:center;justify-content:space-between;
+padding:0 14px;z-index:100;
 }
-.search-wrap { position: relative; height: 100%; }
-.search-icon {
-  position: absolute; left: 13px; top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-sub); font-size: 14px;
-  pointer-events: none;
+
+.header-title{color:#fff;font-size:var(--fs-header);font-weight:700}
+.header-subtitle{color:rgba(255,255,255,.5);font-size:var(--fs-sub)}
+
+/* TAB */
+.tab-container{
+position:fixed;top:var(--header-h);
+width:100%;height:var(--tab-h);
+display:flex;align-items:center;
+gap:8px;padding:0 12px;
+background:var(--bg);
+overflow-x:auto;
 }
-.search-input {
-  width: 100%; height: 36px;
-  border: 1.5px solid var(--border);
-  border-radius: var(--card-r);
-  background: var(--bg);
-  padding: 0 12px 0 38px;
-  font-size: 15px; font-weight: 500;
-  color: var(--text-main);
-  font-family: 'Noto Sans KR', sans-serif;
-  outline: none;
-  transition: border-color .15s, box-shadow .15s;
+
+.tab-btn{
+height:var(--tab-btn-h);
+padding:0 14px;
+border-radius:10px;
+background:rgba(0,0,0,.25);
+color:#fff;
+display:flex;align-items:center;justify-content:center;
+font-size:var(--fs-tab);
+cursor:pointer;
 }
-.search-input::placeholder { color: var(--text-hint); font-size: 14px; }
-.search-input:focus {
-  border-color: #7B2FF7;
-  box-shadow: 0 0 0 3px rgba(123,47,247,0.12);
-  background: var(--surface);
+
+.tab-btn.active{
+background:rgba(255,255,255,.25);
 }
- 
-/* ══ LIST ══ */
-#list-view {
-  padding-top: calc(var(--header-h) + var(--tab-h) + var(--search-h) + 10px);
-  padding-bottom: 28px;
-  padding-left: 12px;
-  padding-right: 12px;
-  min-height: 100vh; /* 빈 공간도 스와이프 감지 */
+
+/* SEARCH */
+.search-bar{
+position:fixed;
+top:calc(var(--header-h)+var(--tab-h));
+width:100%;
+padding:10px;background:#fff;
 }
- 
-.prayer-list {
-  list-style: none;
-  display: flex; flex-direction: column; gap: 7px;
+
+.search-input{
+width:100%;height:36px;
+border:1px solid #ddd;border-radius:10px;
+padding:0 10px;
 }
- 
-.prayer-item {
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-left-width: 4px;           /* 카테고리 색 왼쪽 강조선 */
-  border-radius: var(--card-r);
-  padding: 13px 14px;
-  display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  cursor: pointer;
-  transition: border-color .15s, box-shadow .15s, transform .1s;
-  box-shadow: var(--shadow-sm);
+
+/* LIST */
+#list-view{
+padding-top:calc(var(--header-h)+var(--tab-h)+var(--search-h)+10px);
+padding:0 12px;
 }
-.prayer-item:active { transform: scale(0.99); box-shadow: none; }
- 
-.prayer-item-left {
-  display: flex; align-items: center; gap: 12px;
-  flex: 1; min-width: 0;
+
+.prayer-item{
+background:#fff;
+padding:12px;border-radius:10px;
+margin-bottom:8px;
+cursor:pointer;
 }
- 
-.prayer-icon-dot {
-  flex: 0 0 var(--icon-size);
-  width: var(--icon-size); height: var(--icon-size);
-  border-radius: var(--icon-r);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px;
+
+/* DETAIL */
+#detail-view{
+position:fixed;top:0;width:100%;height:100%;
+background:#fff;
+transform:translateX(100%);
+transition:.3s;
 }
- 
-.prayer-title {
-  font-size: var(--fs-item);
-  font-weight: 600;
-  color: var(--text-main);
-  line-height: 1.4;
-  letter-spacing: -0.02em;
-  word-break: keep-all;
-  flex: 1; min-width: 0;
+
+#detail-view.show{transform:translateX(0)}
+
+.detail-header{
+height:70px;
+display:flex;align-items:center;
+padding:0 10px;
+border-bottom:1px solid #ddd;
 }
- 
-.prayer-item-right {
-  display: flex; align-items: center; gap: 8px; flex: 0 0 auto;
-}
- 
-.star-btn {
-  background: none; border: none; padding: 4px;
-  cursor: pointer; color: #CCCCDD; font-size: 17px;
-  line-height: 1;
-  transition: color .15s, transform .15s;
-  touch-action: manipulation;
-}
-.star-btn:active { transform: scale(1.25); }
-.star-btn.active { color: #F59E0B; }
- 
-.chevron { color: var(--text-hint); font-size: 13px; }
- 
-.empty-state {
-  text-align: center; padding: 52px 20px;
-  color: var(--text-hint); font-size: 15px;
-  background: var(--surface);
-  border: 1.5px dashed var(--border);
-  border-radius: var(--card-r);
-  line-height: 1.8;
-}
-.empty-state-icon { font-size: 30px; margin-bottom: 14px; opacity: 0.35; }
- 
-/* ══ DETAIL ══ */
-#detail-view {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100vh;
-  background: var(--bg);
-  z-index: 200;
-  transform: translateX(100%);
-  transition: transform 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  overflow-y: auto;
-  display: flex; flex-direction: column;
-}
-#detail-view.show { transform: translateX(0); }
- 
-.detail-header {
-  position: sticky; top: 0;
-  background: var(--surface);
-  border-bottom: 1.5px solid var(--border);
-  display: flex; align-items: center;
-  padding: 0 14px;
-  height: var(--header-h);
-  z-index: 210; gap: 10px;
-  box-shadow: var(--shadow-sm);
-}
- 
-.back-btn {
-  background: none; border: none;
-  width: 36px; height: 36px;
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--text-sub); cursor: pointer; font-size: 15px;
-  transition: background .15s; flex: 0 0 36px;
-  touch-action: manipulation;
-}
-.back-btn:hover { background: var(--bg); }
- 
-.detail-title {
-  flex: 1;
-  font-size: 16px; font-weight: 700;
-  color: var(--text-main);
-  text-align: center;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  letter-spacing: -0.02em;
-}
-.detail-title-spacer { flex: 0 0 36px; }
- 
-.detail-body { padding: 18px 14px 36px; flex: 1; }
- 
-/* 본문 카드 — Noto Sans KR로 통일 */
-.detail-content-card {
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: 14px;
-  padding: 26px 20px;
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: var(--fs-body);
-  line-height: 2.1;
-  color: var(--text-main);
-  box-shadow: var(--shadow-sm);
-}
-.detail-content-card p { margin-bottom: 18px; word-break: keep-all; }
-.detail-content-card p:last-child { margin-bottom: 0; }
-.detail-content-card .symbol { color: #7B2FF7; font-weight: 700; }
-.detail-content-card .align-right {
-  text-align: right; font-size: 13px;
-  color: var(--text-sub); margin-top: 22px; font-style: italic;
+
+.detail-title{
+flex:1;text-align:center;
+font-weight:700;
+display:-webkit-box;
+-webkit-line-clamp:2;
+-webkit-box-orient:vertical;
+overflow:hidden;
 }
 </style>
 </head>
+
 <body>
- 
+
 <header class="app-header">
-  <div class="header-brand">
-    <div class="header-cross"><i class="fa-solid fa-cross"></i></div>
-    <div>
-      <div class="header-title">기도문</div>
-      <div class="header-subtitle">CATHOLIC PRAYERS</div>
-    </div>
+  <div>
+    <div class="header-title">기도문</div>
+    <div class="header-subtitle">CATHOLIC PRAYERS</div>
   </div>
-  <a class="header-link"
-     href="https://maria.catholic.or.kr/mobile/prayer"
-     target="_blank" rel="noopener noreferrer">
-    <i class="fa-solid fa-book-bible"></i> 굿뉴스 기도문
-  </a>
 </header>
- 
+
 <div class="tab-container" id="tabContainer">
-  <button class="tab-btn" data-category="favorites">⭐ 즐겨찾기</button>
-  <button class="tab-btn active" data-category="aim">대구대교구 인준</button>
-  <button class="tab-btn" data-category="basic">주요 기도</button>
-  <button class="tab-btn" data-category="special">특수 기도</button>
-  <button class="tab-btn" data-category="etc">여러가지 기도</button>
-  <button class="tab-btn" data-category="bong1">위령기도</button>
-  <button class="tab-btn" data-category="bong2">레지오 마리애</button>
-  <button class="tab-btn" data-category="bong3">십자가의 길</button>
+  <button class="tab-btn active" data-category="aim">대구대교구</button>
+  <button class="tab-btn" data-category="basic">주요기도</button>
 </div>
- 
+
 <div class="search-bar">
-  <div class="search-wrap">
-    <i class="fa-solid fa-magnifying-glass search-icon"></i>
-    <input type="text" class="search-input" id="searchInput" placeholder="기도문 검색">
-  </div>
+  <input class="search-input" id="searchInput" placeholder="검색">
 </div>
- 
-<div id="swipe-flash"></div>
- 
+
 <div id="list-view">
-  <ul class="prayer-list" id="prayer-list"></ul>
+  <ul id="prayer-list"></ul>
 </div>
- 
+
 <div id="detail-view">
   <div class="detail-header">
-    <button class="back-btn" onclick="history.back()">
-      <i class="fa-solid fa-arrow-left"></i>
-    </button>
-    <div class="detail-title" id="detail-title">기도문</div>
-    <div class="detail-title-spacer"></div>
+    <button onclick="history.back()">←</button>
+    <div class="detail-title" id="detail-title"></div>
   </div>
-  <div class="detail-body">
-    <div class="detail-content-card" id="detail-content"></div>
-  </div>
+  <div id="detail-content"></div>
 </div>
- 
+
 <script>
         const prayerData = {
             'aim': [
@@ -976,197 +715,58 @@ html, body {
            
         };
 
+/* ===== 핵심 로직 ===== */
+const listEl = document.getElementById('prayer-list');
+const tabBtns = document.querySelectorAll('.tab-btn');
+const searchInput = document.getElementById('searchInput');
+const detailView = document.getElementById('detail-view');
 
-const CATEGORY_STYLE = {
-  favorites: { bg:'#FFF0DC', color:'#E8780C', icon:'fa-star',           accent:'#E8780C' },
-  aim:       { bg:'#E3F0FF', color:'#1565C0', icon:'fa-cross',          accent:'#1565C0' },
-  basic:     { bg:'#EDEAFF', color:'#5848D4', icon:'fa-church',         accent:'#5848D4' },
-  special:   { bg:'#DCF0FF', color:'#0878C8', icon:'fa-hands-praying',  accent:'#0878C8' },
-  etc:       { bg:'#D8F5E8', color:'#0A9E50', icon:'fa-book-open',      accent:'#0A9E50' },
-  bong1:     { bg:'#E8EDEF', color:'#546E7A', icon:'fa-dove',           accent:'#546E7A' },
-  bong2:     { bg:'#F5E6FF', color:'#8E24AA', icon:'fa-circle-dot',     accent:'#8E24AA' },
-  bong3:     { bg:'#FFF0E0', color:'#C85A00', icon:'fa-person-walking', accent:'#C85A00' },
-};
- 
-const CATEGORIES = ['favorites','aim','basic','special','etc','bong1','bong2','bong3'];
- 
-const listEl       = document.getElementById('prayer-list');
-const tabBtns      = document.querySelectorAll('.tab-btn');
-const searchInput  = document.getElementById('searchInput');
-const detailView   = document.getElementById('detail-view');
-const tabContainer = document.getElementById('tabContainer');
-const listView     = document.getElementById('list-view');
-const swipeFlash   = document.getElementById('swipe-flash');
- 
-let currentCategory = 'aim';
-let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
- 
-function normalizeText(t) { return (t||'').replace(/\s+/g,'').toLowerCase(); }
- 
-function toggleFavorite(id, e) {
-  e.stopPropagation();
-  favorites = favorites.includes(id) ? favorites.filter(f=>f!==id) : [...favorites,id];
-  localStorage.setItem('favorites', JSON.stringify(favorites));
-  renderList(currentCategory);
-}
- 
-function scrollActiveTabIntoView(btn) {
-  if (!btn) return;
-  btn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
-}
- 
-function setActiveTab(category) {
-  tabBtns.forEach(b => b.classList.toggle('active', b.getAttribute('data-category') === category));
-  scrollActiveTabIntoView(document.querySelector(`.tab-btn[data-category="${category}"]`));
-}
- 
-function switchCategory(category, direction) {
-  currentCategory = category;
-  searchInput.value = '';
-  if (window.location.hash) history.replaceState(null,'',window.location.pathname);
-  detailView.classList.remove('show');
-  setActiveTab(category);
- 
-  /* ── 진동 피드백 ── */
-  if (navigator.vibrate) navigator.vibrate(40);
- 
-  /* ── 플래시 오버레이 (카테고리 색으로) ── */
-  const st = CATEGORY_STYLE[category] || CATEGORY_STYLE.aim;
-  swipeFlash.style.background = st.accent + '22'; /* 투명 컬러 플래시 */
-  swipeFlash.classList.add('show');
-  setTimeout(() => swipeFlash.classList.remove('show'), 180);
- 
-  /* ── 탭 버튼 펄스 ── */
-  const activeBtn = document.querySelector(`.tab-btn[data-category="${category}"]`);
-  if (activeBtn) {
-    activeBtn.classList.remove('pulse');
-    void activeBtn.offsetWidth; // reflow
-    activeBtn.classList.add('pulse');
-    setTimeout(() => activeBtn.classList.remove('pulse'), 300);
-  }
- 
-  /* ── 리스트 슬라이드 애니메이션 ── */
-  renderList(category);
-  if (direction) {
-    listEl.classList.remove('slide-left','slide-right');
-    void listEl.offsetWidth;
-    listEl.classList.add(direction === 'next' ? 'slide-right' : 'slide-left');
-  }
- 
-  window.scrollTo(0,0);
-  document.documentElement.scrollTop = 0;
-  document.body.scrollTop = 0;
-}
- 
-function getCategoryForPrayer(id) {
-  for (const k in prayerData) { if (prayerData[k].find(p=>p.id===id)) return k; }
-  return 'aim';
-}
- 
-function renderList(category) {
-  listEl.innerHTML = '';
-  const kw = normalizeText(searchInput.value);
-  let data = [];
-  if (category === 'favorites') {
-    for (const k in prayerData) data = data.concat(prayerData[k].filter(p=>favorites.includes(p.id)));
-  } else if (kw) {
-    for (const k in prayerData) data = data.concat(prayerData[k]);
-  } else {
-    data = prayerData[category] || [];
-  }
-  const filtered = kw ? data.filter(p=>normalizeText(p.title).includes(kw)) : data;
-  if (filtered.length === 0) {
-    listEl.innerHTML = `<div class="empty-state"><div class="empty-state-icon"><i class="fa-solid fa-dove"></i></div>${
-      category==='favorites'?'즐겨찾기한 기도문이 없습니다.':kw?'검색 결과가 없습니다.':'등록된 기도문이 없습니다.'
-    }</div>`;
-    return;
-  }
-  filtered.forEach(prayer => {
-    const cat = (category==='favorites'||kw) ? getCategoryForPrayer(prayer.id) : category;
-    const st = CATEGORY_STYLE[cat] || CATEGORY_STYLE.aim;
-    const li = document.createElement('li');
-    li.className = 'prayer-item';
-    li.onclick = () => { searchInput.value=''; window.location.hash=`#prayer-${prayer.id}`; };
-    li.innerHTML = `
-      <div class="prayer-item-left">
-        <div class="prayer-icon-dot" style="background:${st.bg};color:${st.color}">
-          <i class="fa-solid ${st.icon}"></i>
-        </div>
-        <div class="prayer-title">${prayer.title}</div>
-      </div>
-      <div class="prayer-item-right">
-        <button class="star-btn ${favorites.includes(prayer.id)?'active':''}"
-          onclick="toggleFavorite('${prayer.id}',event)">
-          <i class="fa-solid fa-star"></i>
-        </button>
-        <i class="fa-solid fa-chevron-right chevron"></i>
-      </div>`;
-    li.style.borderLeftColor = st.accent;  /* 카드 왼쪽 색상 줄 */
+function renderList(category){
+  listEl.innerHTML='';
+  const data = prayerData[category] || [];
+  data.forEach(p=>{
+    const li=document.createElement('li');
+    li.className='prayer-item';
+    li.innerText=p.title;
+    li.onclick=()=>{
+      location.hash="#prayer-"+p.id;
+    };
     listEl.appendChild(li);
   });
 }
- 
-/* ── 탭바 터치 스크롤 ── */
-let tabTX=0, tabSL=0, tabTouching=false;
-tabContainer.addEventListener('touchstart', e=>{ tabTouching=true; tabTX=e.touches[0].pageX-tabContainer.offsetLeft; tabSL=tabContainer.scrollLeft; },{passive:true});
-tabContainer.addEventListener('touchend', ()=>{ tabTouching=false; });
-tabContainer.addEventListener('touchmove', e=>{ if(!tabTouching)return; tabContainer.scrollLeft=tabSL-(e.touches[0].pageX-tabContainer.offsetLeft-tabTX)*1.4; },{passive:true});
- 
-/* ── 본문 스와이프로 탭 전환 ── */
-let sx=0, sy=0, sMoving=false, sLocked=false;
-const THRESHOLD = 60;
- 
-listView.addEventListener('touchstart', e=>{ sx=e.touches[0].clientX; sy=e.touches[0].clientY; sMoving=false; sLocked=false; },{passive:true});
-listView.addEventListener('touchmove', e=>{
-  if(sLocked)return;
-  const dx=e.touches[0].clientX-sx, dy=e.touches[0].clientY-sy;
-  if(Math.abs(dx)>8||Math.abs(dy)>8){
-    sLocked=true;
-    const ang=Math.abs(Math.atan2(dy,dx)*180/Math.PI);
-    sMoving = ang<28 || ang>152;
-  }
-},{passive:true});
-listView.addEventListener('touchend', e=>{
-  if(!sMoving) return;
-  const dx=e.changedTouches[0].clientX-sx;
-  if(Math.abs(dx)<THRESHOLD)return;
-  const idx=CATEGORIES.indexOf(currentCategory);
-  if(dx<0 && idx<CATEGORIES.length-1) switchCategory(CATEGORIES[idx+1], 'next');
-  if(dx>0 && idx>0)                   switchCategory(CATEGORIES[idx-1], 'prev');
-},{passive:true});
- 
-/* ── 탭 클릭 ── */
-tabBtns.forEach(btn=>btn.addEventListener('click',()=>switchCategory(btn.getAttribute('data-category'), null)));
- 
-/* ── 검색 ── */
-searchInput.addEventListener('input',()=>{ renderList(currentCategory); window.scrollTo(0,0); });
- 
-/* ── 라우팅 ── */
-function handleRouting() {
-  const hash = window.location.hash;
-  if (hash.startsWith('#prayer-')) {
-    const id = hash.replace('#prayer-','');
-    let found=null;
-    for(const k in prayerData){ found=prayerData[k].find(p=>p.id===id); if(found)break; }
-    if(found){
-      document.getElementById('detail-title').innerText=found.title;
-      document.getElementById('detail-content').innerHTML=found.content;
-      detailView.classList.add('show');
-      requestAnimationFrame(()=>{ detailView.scrollTop=0; });
-    } else { detailView.classList.remove('show'); }
-  } else {
+
+function handleRouting(){
+  const hash=location.hash;
+  if(hash.startsWith('#prayer-')){
+    const id=hash.replace('#prayer-','');
+    for(const k in prayerData){
+      const f=prayerData[k].find(p=>p.id===id);
+      if(f){
+        document.getElementById('detail-title').innerText=f.title;
+        document.getElementById('detail-content').innerHTML=f.content;
+        detailView.classList.add('show');
+      }
+    }
+  }else{
     detailView.classList.remove('show');
-    window.scrollTo(0,0);
   }
 }
- 
-window.addEventListener('hashchange', handleRouting);
-window.addEventListener('load', ()=>{
-  setActiveTab(currentCategory);
-  switchCategory(currentCategory, null);
-  handleRouting();
+
+tabBtns.forEach(btn=>{
+  btn.onclick=()=>{
+    tabBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderList(btn.dataset.category);
+  };
 });
+
+window.addEventListener('hashchange',handleRouting);
+
+window.onload=()=>{
+  renderList('aim');
+};
+
 </script>
+
 </body>
 </html>
- 
