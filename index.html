@@ -189,7 +189,9 @@ html, body {
   width: var(--icon-size); height: var(--icon-size);
   border-radius: var(--icon-r);
   display: flex; align-items: center; justify-content: center;
-  font-size: var(--icon-fs);  /* ← 고정값 제거, 변수로 */
+  font-size: var(--icon-fs);
+  line-height: 1;
+  user-select: none;
 }
 .prayer-title {
   font-size: var(--fs-item); font-weight: 600; color: var(--text-main);
@@ -902,16 +904,15 @@ html, body {
 
 
 
-
 const CATEGORY_STYLE = {
   favorites: { bg:'#FFF0DC', color:'#E8780C', icon:'⭐', accent:'#E8780C' },
   aim:       { bg:'#E3F0FF', color:'#1565C0', icon:'✝️', accent:'#1565C0' },
-  basic:     { bg:'#EFF4FF', color:'#1E40AF', icon:'⛪', accent:'#1E40AF' },
-  special:   { bg:'#FFF0F5', color:'#BE185D', icon:'❤️', accent:'#BE185D' },
+  basic:     { bg:'#EFF4FF', color:'#1E40AF', icon:'🏰', accent:'#1E40AF' },
+  special:   { bg:'#FFF0F5', color:'#BE185D', icon:'🙏', accent:'#BE185D' },
   etc:       { bg:'#F0FDF4', color:'#15803D', icon:'📖', accent:'#15803D' },
   bong1:     { bg:'#F1F5F9', color:'#475569', icon:'🕊️', accent:'#475569' },
-  bong2:     { bg:'#FDF4FF', color:'#7E22CE', icon:'📿', accent:'#7E22CE' },
-  bong3:     { bg:'#FFF7ED', color:'#C2410C', icon:'🌿', accent:'#C2410C' },
+  bong2:     { bg:'#FDF4FF', color:'#7E22CE', icon:'✨', accent:'#7E22CE' },
+  bong3:     { bg:'#FFF7ED', color:'#C2410C', icon:'✞',  accent:'#C2410C' },
 };
  
 const CATEGORIES = ['favorites','aim','basic','special','etc','bong1','bong2','bong3'];
@@ -945,8 +946,8 @@ function applyFontSize() {
   r.style.setProperty('--fs-item',   px + 'px');
   r.style.setProperty('--fs-detail', (px + 1) + 'px');
   r.style.setProperty('--fs-tab',    Math.max(13, px - 2) + 'px');
-  r.style.setProperty('--icon-size', Math.max(35, Math.round(px * 2.2)) + 'px');
-  r.style.setProperty('--icon-fs',   Math.max(14, Math.round(px * 0.95)) + 'px'); /* 아이콘 크기 */
+  r.style.setProperty('--icon-size', Math.max(38, Math.round(px * 2.4)) + 'px');
+  r.style.setProperty('--icon-fs',   Math.max(20, Math.round(px * 1.3)) + 'px'); /* 이모지 크게 */
   const atMin = fontIdx === 0, atMax = fontIdx === FONT_SIZES.length - 1;
   ['sfDecrBtn','sfIncrBtn','fontDecrBtn','fontIncrBtn'].forEach(id => {
     const el = document.getElementById(id);
@@ -1048,7 +1049,7 @@ function renderList(category) {
     li.onclick = () => { searchInput.value=''; window.location.hash=`#prayer-${prayer.id}`; };
     li.innerHTML = `
       <div class="prayer-item-left">
-        <div class="prayer-icon-dot" style="background:${st.bg};font-size:var(--icon-fs)">
+        <div class="prayer-icon-dot" style="background:${st.bg};color:${st.color};font-size:var(--icon-fs)">
           ${st.icon}
         </div>
         <div class="prayer-title">${prayer.title}</div>
