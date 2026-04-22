@@ -674,15 +674,32 @@ tabBtns.forEach(btn=>btn.addEventListener('click',()=>switchCategory(btn.getAttr
 searchInput.addEventListener('input',()=>{ renderList(currentCategory); resetScrollToTop(); });
  
 function handleRouting() {
-  const hash=window.location.hash;
-  if(hash.startsWith('#prayer-')){
-    const found=getPrayerById(hash.replace('#prayer-',''));
-    if(found){
-      detailTitleEl.innerText=found.title; detailContentEl.innerHTML=found.content;
-      detailView.classList.add('show');
-      requestAnimationFrame(()=>{ detailView.scrollTop=0; });
-    } else { history.replaceState(null,'',location.pathname); detailView.classList.remove('show'); }
-  } else { detailView.classList.remove('show'); }
+  const hash = window.location.hash;
+  const dv = document.getElementById('detail-view');
+
+  if (hash.startsWith('#prayer-')) {
+    const id = hash.replace('#prayer-', '');
+    let found = null;
+
+    for (const k in prayerData) {
+      found = prayerData[k].find(p => p.id === id);
+      if (found) break;
+    }
+
+    if (found) {
+      document.getElementById('detail-title').innerText = found.title;
+
+      // 🔥 핵심 (body 우선, content 백업)
+      document.getElementById('detail-content').innerHTML =
+        found.body || found.content || '';
+
+      dv.classList.add('show');
+    } else {
+      dv.classList.remove('show');
+    }
+  } else {
+    dv.classList.remove('show');
+  }
 }
  
 window.addEventListener('hashchange', handleRouting);
