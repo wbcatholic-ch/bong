@@ -6,74 +6,290 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>보편교회 가톨릭</title>
 
-<style>
-body{margin:0;font-family:sans-serif;background:#1F2937;color:#111}
-.view{display:none;height:100vh}
-.active{display:flex}
-#cover{flex-direction:column;justify-content:center;align-items:center;padding:16px;color:#fff}
-.title{font-size:26px;font-weight:900;margin-bottom:16px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:420px}
-.btn{height:70px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;cursor:pointer}
-#detail{flex-direction:column;background:#F8FAFC}
-.header{height:60px;background:#1F2937;color:#fff;display:flex;align-items:center;padding:0 12px;font-size:18px;font-weight:900}
-.back{margin-right:10px;cursor:pointer}
-.content{flex:1;padding:16px;font-size:16px}
-.install{position:fixed;left:12px;bottom:20px;background:#0F172A;color:#fff;padding:10px 12px;border-radius:10px;font-size:13px}
-.qna{position:fixed;right:12px;bottom:20px;background:#0F172A;color:#fff;padding:10px 12px;border-radius:10px;font-size:13px}
+
+
+<style id="cover-linebreak-refine-20260429">
+:root{
+  --cover-navy:#172033;
+  --cover-navy2:#1F2937;
+  --cover-gold:#D4AA6A;
+  --cover-card:#FFFFFF;
+  --cover-ink:#111827;
+  --cover-sub:#6B7280;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR","Segoe UI",sans-serif;background:var(--cover-navy2);overflow:hidden}
+.view{display:none;position:fixed;inset:0}
+.view.active{display:flex}
+#cover{
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:calc(env(safe-area-inset-top,0px) + 16px) 15px calc(env(safe-area-inset-bottom,0px) + 16px);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(212,170,106,.20), transparent 34%),
+    linear-gradient(180deg,#172033 0%,#1F2937 58%,#111827 100%);
+  color:#fff;
+}
+.cover-inner{
+  width:min(100%,520px);
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:12px;
+}
+.cover-head{
+  text-align:center;
+  flex-shrink:0;
+  padding:4px 0 8px;
+}
+.cover-title-main{
+  display:block;
+  font-size:30px;
+  font-weight:900;
+  line-height:1.02;
+  letter-spacing:-.045em;
+  color:#fff;
+}
+.cover-title-sub{
+  display:block;
+  margin-top:3px;
+  font-size:34px;
+  font-weight:950;
+  line-height:1.02;
+  letter-spacing:-.045em;
+  color:var(--cover-gold);
+}
+.cover-desc-main{
+  margin-top:9px;
+  font-size:13px;
+  line-height:1.45;
+  color:rgba(255,255,255,.76);
+  word-break:keep-all;
+}
+.cover-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  width:100%;
+  min-height:0;
+}
+.cover-btn{
+  min-height:78px;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:18px;
+  background:rgba(255,255,255,.95);
+  box-shadow:0 10px 22px rgba(0,0,0,.16);
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:11px;
+  cursor:pointer;
+  overflow:hidden;
+}
+.cover-btn:active{transform:scale(.985)}
+.cover-emoji{
+  width:40px;
+  height:40px;
+  border-radius:14px;
+  background:#F3F4F6;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:23px;
+  flex-shrink:0;
+}
+.cover-text{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  gap:4px;
+}
+.cover-name{
+  display:block;
+  font-size:15.5px;
+  font-weight:900;
+  line-height:1.18;
+  letter-spacing:-.035em;
+  color:var(--cover-ink);
+  word-break:keep-all;
+}
+.cover-desc{
+  display:block;
+  font-size:11px;
+  font-weight:650;
+  line-height:1.25;
+  color:var(--cover-sub);
+  word-break:keep-all;
+}
+.cover-tools{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  padding-top:2px;
+  flex-shrink:0;
+}
+.font-pill{
+  height:34px;
+  border-radius:17px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.10);
+  color:#fff;
+  padding:0 12px;
+  font-size:13px;
+  font-weight:850;
+}
+.corner-btn{
+  position:fixed;
+  bottom:calc(14px + env(safe-area-inset-bottom,0px));
+  height:38px;
+  border:none;
+  border-radius:12px;
+  background:#0F172A;
+  color:#fff;
+  font-size:12.5px;
+  font-weight:850;
+  padding:0 12px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+  z-index:30;
+}
+#install-btn{left:12px}
+#qna-btn{right:12px}
+#detail{
+  flex-direction:column;
+  background:#F8FAFC;
+}
+.header{
+  height:70px;
+  background:#1F2937;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  padding:0 16px;
+  font-size:22px;
+  font-weight:800;
+}
+.content{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#111827;
+  background:#fff;
+}
+@media (max-height:720px){
+  .cover-title-main{font-size:26px}
+  .cover-title-sub{font-size:30px}
+  .cover-desc-main{font-size:12px;margin-top:7px}
+  .cover-grid{gap:7px}
+  .cover-btn{min-height:68px;padding:9px;border-radius:16px}
+  .cover-emoji{width:36px;height:36px;font-size:21px}
+  .cover-name{font-size:14.5px}
+  .cover-desc{font-size:10.5px}
+  .cover-tools{display:none}
+}
 </style>
+
 </head>
 
 <body>
 
 <div id="cover" class="view active">
-<div class="title">보편교회 가톨릭</div>
+  <div class="cover-inner">
+    <div class="cover-head">
+      <span class="cover-title-main">보편교회</span>
+      <span class="cover-title-sub">가톨릭</span>
+      <div class="cover-desc-main">기도와 순례, 성당과 신앙 정보를 한곳에서</div>
+    </div>
 
-<div class="grid">
-<div class="btn" onclick="openLink()">매일미사</div>
-<div class="btn" onclick="go('주요기도문')">주요기도문</div>
-<div class="btn" onclick="go('성지')">천주교 성지</div>
-<div class="btn" onclick="go('성당')">내주변 성당</div>
-<div class="btn" onclick="go('피정')">피정의 집</div>
-<div class="btn" onclick="go('순례길')">전국 순례길</div>
-<div class="btn" onclick="go('웹사이트')">웹사이트</div>
-<div class="btn" onclick="go('관구교구')">관구교구</div>
-</div>
+    <div class="cover-grid">
+      <button class="cover-btn" data-cat="mass">
+        <span class="cover-emoji">🕊️</span>
+        <span class="cover-text"><span class="cover-name">매일미사</span><span class="cover-desc">오늘의 전례</span></span>
+      </button>
+      <button class="cover-btn" data-cat="prayer">
+        <span class="cover-emoji">✝️</span>
+        <span class="cover-text"><span class="cover-name">주요기도문</span><span class="cover-desc">기도 모음</span></span>
+      </button>
+      <button class="cover-btn" data-cat="shrine">
+        <span class="cover-emoji">⛪</span>
+        <span class="cover-text"><span class="cover-name">천주교 성지 167곳</span><span class="cover-desc">순교와 믿음의 자리</span></span>
+      </button>
+      <button class="cover-btn" data-cat="parish">
+        <span class="cover-emoji">🏛️</span>
+        <span class="cover-text"><span class="cover-name">내주변 성당 찾기</span><span class="cover-desc">성당·본당 검색</span></span>
+      </button>
+      <button class="cover-btn" data-cat="retreat">
+        <span class="cover-emoji">🌿</span>
+        <span class="cover-text"><span class="cover-name">피정의 집 찾기</span><span class="cover-desc">쉼과 기도</span></span>
+      </button>
+      <button class="cover-btn" data-cat="trail">
+        <span class="cover-emoji">🚶</span>
+        <span class="cover-text"><span class="cover-name">전국 순례길</span><span class="cover-desc">신앙의 길</span></span>
+      </button>
+      <button class="cover-btn" data-cat="web">
+        <span class="cover-emoji">🌐</span>
+        <span class="cover-text"><span class="cover-name">가톨릭 주요 웹사이트</span><span class="cover-desc">신앙 포털</span></span>
+      </button>
+      <button class="cover-btn" data-cat="diocese">
+        <span class="cover-emoji">🗺️</span>
+        <span class="cover-text"><span class="cover-name">관구·교구 알아보기</span><span class="cover-desc">한국 천주교</span></span>
+      </button>
+    </div>
 
-<div class="install">앱설치</div>
-<div class="qna" onclick="qna()">문의</div>
+    <div class="cover-tools">
+      <button class="font-pill" id="font-down">가−</button>
+      <button class="font-pill" id="font-reset">기본</button>
+      <button class="font-pill" id="font-up">가＋</button>
+    </div>
+  </div>
+
+  <button class="corner-btn" id="install-btn">홈화면 앱설치</button>
+  <button class="corner-btn" id="qna-btn">문의·수정건의</button>
 </div>
 
 <div id="detail" class="view">
-<div class="header"><span class="back" onclick="back()">←</span><span id="title"></span></div>
-<div class="content">내용 영역</div>
+  <div class="header"><span onclick="goBack()" style="margin-right:12px;cursor:pointer;">‹</span><span id="title">제목</span></div>
+  <div class="content">내용 영역</div>
 </div>
 
-<script>
-let state="cover"
+<script id="cover-linebreak-refine-script-20260429">
+const MASS_URL = "https://maria.catholic.or.kr/mi_pr/missa/missa.asp";
+const QNA_URL = "https://docs.google.com/spreadsheets/d/1V5JkIo-ZfcWOQTBcI7rdXCE7kvZUGKZfm4SnNmrYRqs";
+let deferredPrompt = null;
 
 function show(id){
-document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'))
-document.getElementById(id).classList.add('active')
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
 }
-
-function go(name){
-state="detail"
-document.getElementById("title").innerText=name
-show("detail")
+function goDetail(name){
+  document.getElementById("title").textContent = name;
+  show("detail");
+  history.pushState({view:"detail"},"","#detail");
 }
-
-function back(){
-state="cover"
-show("cover")
+function goBack(){
+  show("cover");
+  history.replaceState({view:"cover"},"","#cover");
 }
-
-function openLink(){
-window.open("https://maria.catholic.or.kr/mi_pr/missa/missa.asp","_blank")
-}
-
-function qna(){
-window.open("https://docs.google.com","_blank")
-}
+document.querySelectorAll(".cover-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const cat = btn.dataset.cat;
+    if(cat === "mass"){ window.open(MASS_URL, "_blank"); return; }
+    const titleMap = {
+      prayer:"주요기도문", shrine:"천주교 성지 167곳", parish:"내주변 성당 찾기",
+      retreat:"피정의 집 찾기", trail:"전국 순례길", web:"가톨릭 주요 웹사이트", diocese:"관구·교구 알아보기"
+    };
+    goDetail(titleMap[cat] || "상세");
+  });
+});
+document.getElementById("qna-btn").onclick=()=>window.open(QNA_URL,"_blank");
+window.addEventListener("beforeinstallprompt",e=>{ e.preventDefault(); deferredPrompt=e; });
+document.getElementById("install-btn").onclick=async()=>{
+  if(deferredPrompt){ deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; }
+  else alert("브라우저 메뉴에서 '홈 화면에 추가' 또는 '앱 설치'를 선택해 주세요.");
+};
+window.addEventListener("popstate",()=>show("cover"));
 </script>
 
 </body>
