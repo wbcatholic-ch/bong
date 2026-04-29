@@ -41,7 +41,18 @@
     }
     #install-btn:hover { background-color: #27ae60; }
   </style>
-
+<script>
+  // 서비스 워커 등록 스크립트
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').then(registration => {
+        console.log('ServiceWorker 등록 성공');
+      }).catch(err => {
+        console.log('ServiceWorker 등록 실패: ', err);
+      });
+    });
+  }
+</script>
   <script>
     // 1단계: 카카오톡 브라우저 감지 및 크롬으로 자동 튕겨내기
     var userAgent = navigator.userAgent.toLowerCase();
