@@ -1,119 +1,78 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>PWA 안드로이드 테스트</title>
-
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#3498db">
-
-  <style>
-    body {
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      text-align: center;
-      padding: 50px 20px;
-      background-color: #f4f4f9;
-    }
-    .box {
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
-    h1 { color: #3498db; }
-    
-    /* 우리가 직접 만든 앱 설치 버튼 (처음엔 숨겨둠) */
-    #install-btn {
-      display: none;
-      background-color: #2ecc71;
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      font-size: 18px;
-      font-weight: bold;
-      border-radius: 30px;
-      cursor: pointer;
-      box-shadow: 0 4px 6px rgba(46, 204, 113, 0.4);
-      margin: 20px auto;
-      transition: background 0.3s;
-    }
-    #install-btn:hover { background-color: #27ae60; }
-  </style>
-<script>
-  // 서비스 워커 등록 스크립트
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js').then(registration => {
-        console.log('ServiceWorker 등록 성공');
-      }).catch(err => {
-        console.log('ServiceWorker 등록 실패: ', err);
-      });
-    });
-  }
-</script>
-  <script>
-    // 1단계: 카카오톡 브라우저 감지 및 크롬으로 자동 튕겨내기
-    var userAgent = navigator.userAgent.toLowerCase();
-    var targetUrl = location.href;
-
-    if (userAgent.match(/kakaotalk/i) && userAgent.match(/android/i)) {
-      // 안드로이드 카카오톡이면 크롬으로 강제 이동 후 종료
-      location.href = 'intent://' + targetUrl.replace(/https?:\/\//i, '') + '#Intent;scheme=https;package=com.android.chrome;end';
-    }
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Smart Dashboard</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a1a1a">
+    <style>
+        :root { --primary: #deff9a; --bg: #121212; --card: #1e1e1e; --text: #f5f5f5; }
+        body { margin: 0; font-family: 'Pretendard', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+        .header { padding: 40px 20px 20px; background: linear-gradient(to bottom, #1a1a1a, var(--bg)); }
+        .header h1 { font-size: 24px; margin: 0; color: var(--primary); }
+        .container { padding: 20px; }
+        .card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid #333; }
+        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .stat-item { background: #252525; padding: 15px; border-radius: 15px; text-align: center; }
+        .stat-val { display: block; font-size: 20px; font-weight: bold; color: var(--primary); }
+        .stat-label { font-size: 12px; color: #888; }
+        #install-btn { display: none; width: 100%; background: var(--primary); color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: bold; margin-bottom: 20px; }
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; background: #333; color: var(--primary); margin-top: 10px; }
+    </style>
+    <script>
+        // KakaoTalk -> Chrome Redirect
+        if (navigator.userAgent.toLowerCase().match(/kakaotalk/i) && navigator.userAgent.toLowerCase().match(/android/i)) {
+            location.href = 'intent://' + location.href.replace(/https?:\/\//i, '') + '#Intent;scheme=https;package=com.android.chrome;end';
+        }
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js'); });
+        }
+    </script>
 </head>
 <body>
-
-  <div class="box">
-    <h1>🚀 안드로이드 자동 설치</h1>
-    <p>크롬 브라우저로 열렸다면,<br>아래 버튼이 나타납니다.</p>
-    
-    <button id="install-btn">📱 홈 화면에 앱 설치하기</button>
-  </div>
-
-  <script>
-    // 2단계: 크롬에서 '설치하기' 버튼 활성화 및 팝업 띄우기
-    let deferredPrompt;
-    const installBtn = document.getElementById('install-btn');
-
-    // 브라우저가 PWA 설치 조건이 충족되었다고 판단하면 발생하는 이벤트
-    window.addEventListener('beforeinstallprompt', (e) => {
-      // 브라우저가 기본으로 띄우는 설치 안내바를 막음 (우리가 만든 버튼을 쓰기 위해)
-      e.preventDefault();
-      // 이벤트를 보관해둠 (나중에 버튼 클릭 시 실행하기 위해)
-      deferredPrompt = e;
-      // 숨겨두었던 설치 버튼을 화면에 보여줌
-      installBtn.style.display = 'inline-block';
-    });
-
-    // 우리가 만든 설치 버튼을 클릭했을 때
-    installBtn.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        // 보관해둔 설치 팝업을 띄움 ("설치하시겠습니까?")
-        deferredPrompt.prompt();
+    <div class="header">
+        <h1>PROJECT PWA</h1>
+        <div class="status-badge">System Online</div>
+    </div>
+    <div class="container">
+        <button id="install-btn">📱 앱 설치하고 전체화면으로 보기</button>
         
-        // 사용자가 '설치'를 눌렀는지 '취소'를 눌렀는지 결과 확인
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-          console.log('사용자가 설치를 승인했습니다.');
-          installBtn.style.display = 'none'; // 설치했으니 버튼 숨김
-        } else {
-          console.log('사용자가 설치를 취소했습니다.');
-        }
-        // 한 번 사용한 프롬프트는 비워줌
-        deferredPrompt = null;
-      }
-    });
+        <div class="card">
+            <h3>실시간 현황</h3>
+            <div class="stats">
+                <div class="stat-item"><span class="stat-val">98.5%</span><span class="stat-label">안정성</span></div>
+                <div class="stat-item"><span class="stat-val">1.2s</span><span class="stat-label">로딩 속도</span></div>
+            </div>
+        </div>
 
-    // 설치가 완전히 완료되었을 때 실행되는 이벤트
-    window.addEventListener('appinstalled', () => {
-      console.log('앱 설치가 완료되었습니다!');
-      installBtn.style.display = 'none';
-      alert('바탕화면에 앱이 설치되었습니다! 바탕화면에서 실행해주세요.');
-    });
-  </script>
+        <div class="card">
+            <h3>최근 활동</h3>
+            <p style="font-size: 14px; color: #aaa; line-height: 1.6;">
+                • 카카오톡 브라우저 감지 완료<br>
+                • 크롬 인텐트 리다이렉션 성공<br>
+                • 서비스 워커 활성화됨
+            </p>
+        </div>
+    </div>
 
+    <script>
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('install-btn').style.display = 'block';
+        });
+
+        document.getElementById('install-btn').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') document.getElementById('install-btn').style.display = 'none';
+                deferredPrompt = null;
+            }
+        });
+    </script>
 </body>
 </html>
