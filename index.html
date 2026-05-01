@@ -5758,16 +5758,39 @@ function init(){ensureQna();applyFont();injectDioceseAll();relayoutAll()}documen
 
 <script>
 (function(){
-  var QA_URL='qa-firebase.html';
-  window.openQnaView=function(){ location.href=QA_URL; };
-  window.QNA_FORM_URL=QA_URL;
-  window.goQaFirebase=function(){ location.href=QA_URL; };
+  function addNotice(){
+    const target = document.querySelector('.cv-shell-stage');
+    if(!target) return;
+
+    // 이미 있으면 중복 방지
+    if(document.getElementById('app-notice-box')) return;
+
+    const box = document.createElement('div');
+    box.id = 'app-notice-box';
+
+    box.style.cssText = `
+      margin-top:12px;
+      font-size:10.5px;
+      color:#6B7280;
+      text-align:center;
+      line-height:1.5;
+      padding:6px 8px;
+      position:relative;
+      z-index:999;
+    `;
+
+    box.innerHTML = `
+      본 앱은 가톨릭 신자들의 신앙생활을 돕기 위한 비공식 개인 앱입니다.<br>
+      일부 정보는 CBCK, 굿뉴스 및 각 교구 홈페이지를 참고했습니다.<br>
+      개인정보는 수집하지 않으며, 문의 시 입력된 내용은 Firebase에 저장됩니다.
+    `;
+
+    target.appendChild(box);
+  }
+
+  // 로딩 후 실행
+  window.addEventListener('load', addNotice);
 })();
 </script>
-  <div style="margin-top:12px;font-size:10.5px;color:#6B7280;text-align:center;line-height:1.5;padding:6px 8px;">
-본 앱은 가톨릭 신자들의 신앙생활을 돕기 위한 비공식 개인 앱입니다.<br>
-일부 정보는 CBCK, 굿뉴스 및 각 교구 홈페이지를 참고했습니다.<br>
-개인정보는 수집하지 않으며, 문의 시 입력된 내용은 Firebase에 저장됩니다.
-</div>
 </body>
 </html>
