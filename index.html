@@ -420,19 +420,17 @@ window.__DIOCESE_EMBED_HTML = "<!DOCTYPE html>\n<html lang=\"ko\">\n<head>\n<met
 
     box.style.cssText = `
       position:fixed;
-      bottom:10px;
+      bottom:8px;
       left:50%;
       transform:translateX(-50%);
-      width:90%;
+      width:92%;
       max-width:420px;
       font-size:10px;
       color:#6B7280;
       text-align:center;
-      line-height:1.4;
-      padding:6px 8px;
-      background:rgba(255,255,255,0.9);
-      border-radius:10px;
+      line-height:1.5;
       z-index:99999;
+      pointer-events:none;
     `;
 
     box.innerHTML = `
@@ -443,6 +441,7 @@ window.__DIOCESE_EMBED_HTML = "<!DOCTYPE html>\n<html lang=\"ko\">\n<head>\n<met
 
     document.body.appendChild(box);
   }
+
   window.addEventListener('load', addNotice);
 })();
 </script>
@@ -5959,19 +5958,17 @@ html.oai-font-global #cover .cover-name{font-size:calc(16px * var(--app-font-sca
 
     box.style.cssText = `
       position:fixed;
-      bottom:10px;
+      bottom:8px;
       left:50%;
       transform:translateX(-50%);
-      width:90%;
+      width:92%;
       max-width:420px;
       font-size:10px;
       color:#6B7280;
       text-align:center;
-      line-height:1.4;
-      padding:6px 8px;
-      background:rgba(255,255,255,0.9);
-      border-radius:10px;
+      line-height:1.5;
       z-index:99999;
+      pointer-events:none;
     `;
 
     box.innerHTML = `
@@ -5982,6 +5979,7 @@ html.oai-font-global #cover .cover-name{font-size:calc(16px * var(--app-font-sca
 
     document.body.appendChild(box);
   }
+
   window.addEventListener('load', addNotice);
 })();
 </script>
