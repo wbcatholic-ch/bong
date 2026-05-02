@@ -1074,7 +1074,8 @@ html:not(.app-active) #cover{display:flex!important;}
 }
 
 #qna-cover-btn{
-  right:12px!important;
+  left:12px!important;
+  right:auto!important;
   bottom:calc(12px + env(safe-area-inset-bottom,0px))!important;
   padding:9px 13px!important;
   font-size:12.5px!important;
@@ -1148,8 +1149,8 @@ html.retreat-mode #srch-modal #sm-tab-bar{
 
 /* ── 버튼 높이: 순례길 trail-tab과 동일 (34px) ── */
 #srch-modal .sm-tab{
-  height:34px !important;
-  min-height:34px !important;
+  height:38px !important;
+  min-height:38px !important;
   border-radius:10px !important;
   display:flex !important;
   align-items:center !important;
@@ -1162,10 +1163,11 @@ html.retreat-mode #srch-modal #sm-tab-bar{
 
 /* ── 버튼 활성화 색: 금색 ── */
 #srch-modal .sm-tab.active{
-  background:var(--gold) !important;
+  background:#F3E7C8 !important;
   color:#1F2937 !important;
-  border-color:var(--gold2) !important;
-  font-weight:800 !important;
+  border-color:#D4AA6A !important;
+  font-weight:850 !important;
+  box-shadow:0 3px 10px rgba(14,21,53,.14), inset 0 1px 0 rgba(255,255,255,.65) !important;
 }
 #srch-modal .sm-tab.active *{
   color:#1F2937 !important;
@@ -1349,10 +1351,11 @@ html.retreat-mode .tab-btn.active{
   justify-content:center!important;
 }
 #srch-modal .sm-tab.active{
-  background:#F3E7C8!important;
-  color:#0e1535!important;
-  border-color:#D4AA6A!important;
-  box-shadow:0 4px 12px rgba(14,21,53,.16), inset 0 1px 0 rgba(255,255,255,.55)!important;
+  background:#F3E7C8 !important;
+  color:#1F2937 !important;
+  border-color:#D4AA6A !important;
+  font-weight:850 !important;
+  box-shadow:0 3px 10px rgba(14,21,53,.14), inset 0 1px 0 rgba(255,255,255,.65) !important;
 }
 #prayer-view,#prayer-list-view,#prayer-view .pr-list,#prayer-detail,#pr-list-ul,.pr-item,.pr-title,.pr-item-left,.pr-item-right{
   opacity:1!important;
@@ -1462,9 +1465,13 @@ html.oai-ios-standalone:not(.app-active) #oai-ios-back-btn{display:none!importan
   - 위치/색/크기는 이 블록만 수정하면 됩니다.
 */
 #qna-cover-btn{
+  position:fixed!important;
   left:14px!important; right:auto!important;
   bottom:calc(16px + env(safe-area-inset-bottom,0px))!important;
-  z-index:30!important;
+  z-index:10020!important;
+  display:flex!important;
+  visibility:visible!important;
+  opacity:1!important;
 }
 #cover{
   padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))!important;
@@ -1506,6 +1513,27 @@ html.oai-ios-standalone:not(.app-active) #oai-ios-back-btn{display:none!importan
 /* 커버에서는 iPhone 뒤로가기 버튼이 절대 보이지 않게 고정 */
 html.oai-ios-standalone:not(.app-active) #oai-ios-back-btn,
 #cover #oai-ios-back-btn{display:none!important;}
+
+/* OAI corrected final visibility/layout 20260502 */
+#qna-cover-btn{position:fixed!important;left:14px!important;right:auto!important;bottom:calc(16px + env(safe-area-inset-bottom,0px))!important;display:flex!important;visibility:visible!important;opacity:1!important;z-index:10020!important;}
+html.app-active #qna-cover-btn{display:none!important;}
+#prayer-close,#missa-close,#diocese-close,#web-view .module-close,#trail-view .module-close,#qna-view .module-close,.sheet-x,.sm-x,.ic-close-btn,#oai-ios-install-x,#oai-ios-install-close{
+  display:flex!important; visibility:visible!important; opacity:1!important;
+  align-items:center!important; justify-content:center!important;
+  width:36px!important; height:36px!important; min-width:36px!important;
+  border-radius:50%!important; font-size:20px!important; font-weight:900!important; line-height:1!important;
+  background:rgba(255,255,255,.18)!important; color:#fff!important;
+  border:1px solid rgba(255,255,255,.32)!important; z-index:10050!important;
+}
+.ic-close-btn{background:#F3F4F6!important;color:#374151!important;border:1px solid #E5E7EB!important;}
+#oai-ios-install-x,#oai-ios-install-close{background:#F9FAFB!important;color:#374151!important;border:1px solid #E5E7EB!important;}
+#srch-modal #sm-tab-bar{min-height:54px!important;height:54px!important;padding:8px 12px!important;background:linear-gradient(135deg,#1f2f6b,#243a83)!important;}
+html.parish-mode #srch-modal #sm-tab-bar{background:linear-gradient(135deg,#3f5d7b,#4f6f90)!important;}
+html.retreat-mode #srch-modal #sm-tab-bar{background:linear-gradient(135deg,#3f7e5b,#4f8f6a)!important;}
+#srch-modal .sm-tab{height:38px!important;min-height:38px!important;background:#FFF8E8!important;color:#1F2937!important;border:1.5px solid #D8CCB2!important;border-radius:14px!important;font-weight:850!important;}
+#srch-modal .sm-tab.active{background:#F3E7C8!important;color:#0e1535!important;border-color:#D4AA6A!important;box-shadow:0 3px 10px rgba(14,21,53,.14), inset 0 1px 0 rgba(255,255,255,.65)!important;}
+#prayer-view .pr-title,#prayer-view .pr-content-card,#prayer-detail-ttl,#prayer-detail-body,#prayer-view .pr-empty{opacity:1!important;visibility:visible!important;color:#111827!important;text-shadow:none!important;filter:none!important;}
+#prayer-view .pr-item,#prayer-view .pr-title,#prayer-view .pr-content-card{animation:none!important;transition:none!important;transform:none!important;}
 </style>
 <!-- OAI iPhone UX follow-up patch 20260502 END -->
 
@@ -3687,11 +3715,14 @@ function smSwitchTab(tab){
   $('sm-body').style.display=tab==='cat'?'':'none';
   $('sm-body-place').style.display=tab==='place'?'':'none';
   const inp=$('sm-inp');
-  // iOS/Android 공통: 성지/일반장소 탭 전환 후 검색창에 포커스를 줘 키보드가 동일하게 열리게 함
+  // 성지/성당/피정 탭과 일반장소 탭 모두 같은 방식으로 키보드가 열리도록 포커스 유지
   if(inp){
-    setTimeout(function(){
-      try{ inp.focus(); inp.click && inp.click(); }catch(e){}
-    },80);
+    try{ inp.removeAttribute('readonly'); inp.disabled=false; }catch(e){}
+    [0,80,220].forEach(function(ms){
+      setTimeout(function(){
+        try{ inp.focus({preventScroll:true}); inp.click && inp.click(); }catch(e){}
+      },ms);
+    });
   }
   if(tab==='place'&&inp&&inp.value.trim()) _searchKakaoPlace(inp.value.trim());
   else if(tab==='cat'&&inp) filterModal(inp.value||'');
@@ -3790,7 +3821,7 @@ function openSearchModal(role){
   $('sm-inp').value='';
   filterModal('');
   $('srch-modal').classList.add('open');
-  setTimeout(()=>$('sm-inp')?.focus(),300);
+  [60,180,360].forEach(function(ms){setTimeout(function(){try{var i=$('sm-inp'); if(i){i.focus({preventScroll:true}); i.click&&i.click();}}catch(e){}},ms);});
 }
 
 function _blurAll(){ try{document.activeElement&&document.activeElement.blur();}catch(e){} }
@@ -5549,10 +5580,10 @@ function isPrayerOpen(){var p=el('prayer-view');return!!(p&&p.classList.contains
 window.__OAI_prayerBack=function(){if(!isPrayerOpen())return false;if(isPrayerDetail()){showPrayerList();try{history.pushState({oai_prayer_list:1},'',base())}catch(_){}}else{closePrayer();try{history.pushState({oai_cover:1},'',base())}catch(_){}}return true};
 var oldOpenPrayer=window.openPrayerBook;if(typeof oldOpenPrayer==='function'&&!oldOpenPrayer.__oaiTrueFinal){window.openPrayerBook=function(){var r=oldOpenPrayer.apply(this,arguments);setTimeout(function(){showPrayerList();try{history.pushState({oai_prayer_list:1},'',base())}catch(_){}} ,80);return r};window.openPrayerBook.__oaiTrueFinal=true}var oldDetail=window.prOpenDetail;if(typeof oldDetail==='function'&&!oldDetail.__oaiTrueFinal){window.prOpenDetail=function(){var r=oldDetail.apply(this,arguments);setTimeout(function(){applyFont();try{history.pushState({oai_prayer_detail:1},'',base())}catch(_){}} ,30);return r};window.prOpenDetail.__oaiTrueFinal=true}
 document.addEventListener('backbutton',function(e){if(window.__OAI_prayerBack()){try{e.preventDefault();e.stopPropagation();e.stopImmediatePropagation()}catch(_){}}},true);
-document.addEventListener('click',function(e){var t=e.target&&e.target.closest&&e.target.closest('.tab-btn,.filter-btn,.sm-tab,.sm-fb,.web-cat-btn,.trail-tab,#prayer-tabs .pr-tab,.region-search-btn,.sheet-x,.sm-x');if(t){setTimeout(function(){blur();applyFont();injectDioceseAll()},60)}},true);document.addEventListener('keydown',function(e){if(e.key==='Enter')setTimeout(blur,20)},true);
+document.addEventListener('click',function(e){var t=e.target&&e.target.closest&&e.target.closest('.tab-btn,.filter-btn,.sm-fb,.web-cat-btn,.trail-tab,#prayer-tabs .pr-tab,.region-search-btn,.sheet-x,.sm-x');if(t){setTimeout(function(){blur();applyFont();injectDioceseAll()},60)}},true);document.addEventListener('keydown',function(e){if(e.key==='Enter')setTimeout(blur,20)},true);
 function relayoutAll(){applyFont();try{if(typeof relayoutTrailMap==='function'){relayoutTrailMap(0);relayoutTrailMap(160);relayoutTrailMap(420)}}catch(_){}injectDioceseAll()}['openWebView','openTrailView','openQnaView','openDioceseView'].forEach(function(name){var fn=window[name];if(typeof fn==='function'&&!fn.__oaiTrueFinalWrap){window[name]=function(){var r=fn.apply(this,arguments);[60,220,600,1100].forEach(function(ms){setTimeout(relayoutAll,ms)});return r};window[name].__oaiTrueFinalWrap=true}});
 function cleanupParishCount(doc){try{doc.querySelectorAll('.lv-parish-count,.oai-parish-count,.lv-sec-cnt').forEach(function(n){n.textContent=n.textContent.replace(/(\d+)\s+개/g,'$1개').replace(/본당\s+(\d+)/g,'본당 $1')})}catch(_){}}
-function injectDioceseAll(){var f=el('diocese-frame');if(!f||!f.contentWindow)return;var doc;try{doc=f.contentWindow.document}catch(_){return}if(!doc||!doc.documentElement)return;doc.documentElement.style.setProperty('--app-font-scale',String(scale()));var st=doc.getElementById('oai-true-final-diocese-style-20260428');if(!st){st=doc.createElement('style');st.id='oai-true-final-diocese-style-20260428';st.textContent=':root{--app-font-scale:1;--std-header-h:72px;--std-title-fs:calc(20px*var(--app-font-scale));--std-sub-fs:calc(11px*var(--app-font-scale));--std-tab-h:48px;--std-btn-h:42px;--std-btn-fs:calc(15px*var(--app-font-scale));--std-radius:14px}html,body{width:100%!important;height:100%!important;overflow:hidden!important}body{display:flex!important;flex-direction:column!important}.hd,.header,.topbar{min-height:calc(var(--std-header-h) + env(safe-area-inset-top,0px))!important;height:calc(var(--std-header-h) + env(safe-area-inset-top,0px))!important;padding:calc(10px + env(safe-area-inset-top,0px)) 16px 10px!important;box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:space-between!important;flex-shrink:0!important}.hd h1,.header h1,.title,.hd-title{font-size:var(--std-title-fs)!important;font-weight:800!important;line-height:1.25!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;margin:0!important}.hd-sub,.subtitle,.sub,.hd .small{font-size:var(--std-sub-fs)!important;font-weight:600!important;line-height:1.25!important;opacity:.76!important;margin-top:3px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}.tabs,.tabbar,.seg,.mode-tabs{min-height:calc(var(--std-tab-h) + 16px)!important;height:calc(var(--std-tab-h) + 16px)!important;padding:8px 14px!important;display:flex!important;align-items:center!important;gap:8px!important;overflow-x:auto!important;overflow-y:hidden!important;flex-shrink:0!important;box-sizing:border-box!important}.tab,.qbtn,.tabs button,.tabbar button,.seg button,.mode-tabs button,.btn,.card button,.card a,.home-btn,.link-btn{min-height:var(--std-btn-h)!important;height:var(--std-btn-h)!important;border-radius:var(--std-radius)!important;font-size:var(--std-btn-fs)!important;font-weight:800!important;font-family:inherit!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;box-sizing:border-box!important;white-space:nowrap!important}.tab,.tabs button,.tabbar button,.seg button,.mode-tabs button{min-height:var(--std-tab-h)!important;height:var(--std-tab-h)!important;padding:0 16px!important}.list,.content,.map-wrap,.body,.main{flex:1 1 auto!important;min-height:0!important}.lv-name,.lv-nm,.sd,.c-nm,.sot,.si-r-name{font-size:calc(16px*var(--app-font-scale))!important;line-height:1.32!important}.lv-rg,.lv-full,.sg,.c-rg,.se,.lv-url,.si-r-url{font-size:calc(12px*var(--app-font-scale))!important;line-height:1.35!important}.lv-bdg,.lv-op{font-size:calc(11px*var(--app-font-scale))!important}.lv-parish-count,.oai-parish-count,.lv-sec-cnt{font-size:calc(8px*var(--app-font-scale))!important;font-weight:400!important;letter-spacing:0!important;gap:0!important;white-space:nowrap!important}.lv-parish-count b,.oai-parish-count b{font-weight:400!important;margin:0!important}.card h3{font-size:calc(17px*var(--app-font-scale))!important}.card .c-r,.card button,.card a{font-size:calc(13px*var(--app-font-scale))!important}';(doc.head||doc.documentElement).appendChild(st)}try{doc.querySelectorAll('a[href]').forEach(function(a){a.setAttribute('target','_top');a.setAttribute('rel','noopener')})}catch(_){}cleanupParishCount(doc)}
+function injectDioceseAll(){var f=el('diocese-frame');if(!f||!f.contentWindow)return;var doc;try{doc=f.contentWindow.document}catch(_){return}if(!doc||!doc.documentElement)return;doc.documentElement.style.setProperty('--app-font-scale',String(scale()));var st=doc.getElementById('oai-true-final-diocese-style-20260428');if(!st){st=doc.createElement('style');st.id='oai-true-final-diocese-style-20260428';st.textContent=':root{--app-font-scale:1;--std-header-h:72px;--std-title-fs:calc(20px*var(--app-font-scale));--std-sub-fs:calc(11px*var(--app-font-scale));--std-tab-h:48px;--std-btn-h:42px;--std-btn-fs:calc(15px*var(--app-font-scale));--std-radius:14px}html,body{width:100%!important;height:100%!important;overflow:hidden!important}body{display:flex!important;flex-direction:column!important}.hd,.header,.topbar{min-height:calc(var(--std-header-h) + env(safe-area-inset-top,0px))!important;height:calc(var(--std-header-h) + env(safe-area-inset-top,0px))!important;padding:calc(10px + env(safe-area-inset-top,0px)) 16px 10px!important;box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:space-between!important;flex-shrink:0!important}.hd h1,.header h1,.title,.hd-title{font-size:var(--std-title-fs)!important;font-weight:800!important;line-height:1.25!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;margin:0!important}.hd-sub,.subtitle,.sub,.hd .small{font-size:var(--std-sub-fs)!important;font-weight:600!important;line-height:1.25!important;opacity:.76!important;margin-top:3px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}.tabs,.tabbar,.seg,.mode-tabs{min-height:calc(var(--std-tab-h) + 16px)!important;height:calc(var(--std-tab-h) + 16px)!important;padding:8px 14px!important;display:flex!important;align-items:center!important;gap:8px!important;overflow-x:auto!important;overflow-y:hidden!important;flex-shrink:0!important;box-sizing:border-box!important}.tab,.qbtn,.tabs button,.tabbar button,.seg button,.mode-tabs button,.btn,.card button,.card a,.home-btn,.link-btn{min-height:var(--std-btn-h)!important;height:var(--std-btn-h)!important;border-radius:var(--std-radius)!important;font-size:var(--std-btn-fs)!important;font-weight:800!important;font-family:inherit!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;box-sizing:border-box!important;white-space:nowrap!important}.tab,.tabs button,.tabbar button,.seg button,.mode-tabs button{min-height:var(--std-tab-h)!important;height:var(--std-tab-h)!important;padding:0 16px!important}.list,.content,.map-wrap,.body,.main{flex:1 1 auto!important;min-height:0!important}.lv-name,.lv-nm,.sd,.c-nm,.sot,.si-r-name{font-size:calc(16px*var(--app-font-scale))!important;line-height:1.32!important}.lv-rg,.lv-full,.sg,.c-rg,.se,.lv-url,.si-r-url{font-size:calc(12px*var(--app-font-scale))!important;line-height:1.35!important}.lv-bdg,.lv-op{font-size:calc(11px*var(--app-font-scale))!important}.lv-parish-count,.oai-parish-count,.lv-sec-cnt{font-size:calc(8px*var(--app-font-scale))!important;font-weight:400!important;letter-spacing:0!important;gap:0!important;white-space:nowrap!important}.lv-parish-count b,.oai-parish-count b{font-weight:400!important;margin:0!important}.card h3{font-size:calc(17px*var(--app-font-scale))!important}.card .c-r,.card button,.card a{font-size:calc(13px*var(--app-font-scale))!important}';(doc.head||doc.documentElement).appendChild(st)}try{doc.querySelectorAll('a[href]').forEach(function(a){a.setAttribute('target','_top');a.setAttribute('rel','noopener')})}catch(_){}cleanupParishCount(doc);try{if(!doc.__oaiCardMarginClose){doc.__oaiCardMarginClose=true;doc.addEventListener('click',function(ev){var card=doc.getElementById('card');if(!card||!card.classList.contains('on'))return;var t=ev.target;if(t&&t.closest&&t.closest('#card,.dp,.lv-card,.si-r,.gb,.cb,button,a,input'))return;if(typeof doc.defaultView.hideCard==='function')doc.defaultView.hideCard();else card.classList.remove('on');},true);}}catch(_){}}
 function init(){ensureQna();applyFont();injectDioceseAll();relayoutAll()}document.addEventListener('DOMContentLoaded',init);setTimeout(init,0);setTimeout(init,400);setTimeout(init,1200);setInterval(function(){var v=el('diocese-view');if(v&&v.classList.contains('open'))injectDioceseAll()},1000);
 })();
 
@@ -5963,6 +5994,25 @@ function init(){ensureQna();applyFont();injectDioceseAll();relayoutAll()}documen
   window.openQnaView = function(){ location.href = QA_URL; };
   window.QNA_FORM_URL = QA_URL;
   document.addEventListener('DOMContentLoaded', bindQnaButton);
+})();
+
+
+(function(){
+  function f(){
+    var p=document.getElementById('sm-tab-place');
+    var c=document.getElementById('sm-tab-cat');
+    var i=document.getElementById('sm-inp');
+    function focusInput(){
+      i=document.getElementById('sm-inp');
+      if(!i)return;
+      try{i.removeAttribute('readonly');i.disabled=false;i.focus({preventScroll:true});i.click&&i.click();}catch(e){}
+      setTimeout(function(){try{i.focus({preventScroll:true});}catch(e){}},120);
+    }
+    if(p&&!p.__oaiFocusBound){p.__oaiFocusBound=true;p.addEventListener('touchstart',focusInput,{passive:true});p.addEventListener('mousedown',focusInput);p.addEventListener('click',function(){setTimeout(focusInput,60);setTimeout(focusInput,220);});}
+    if(c&&!c.__oaiFocusBound){c.__oaiFocusBound=true;c.addEventListener('touchstart',focusInput,{passive:true});c.addEventListener('mousedown',focusInput);c.addEventListener('click',function(){setTimeout(focusInput,60);});}
+  }
+  document.addEventListener('DOMContentLoaded',f);
+  setTimeout(f,0);setTimeout(f,800);
 })();
 
 </script>
