@@ -1321,7 +1321,7 @@ html.retreat-mode .tab-btn.active{
   50%      { box-shadow: 0 3px 22px rgba(22,163,74,0.75); transform: scale(1.03); }
 }
 </style>
-<style id="prayer-swipe-anim">@keyframes prSlideLeft{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}@keyframes prSlideRight{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:translateX(0)}}</style>
+<style id="prayer-swipe-anim">@keyframes prSlideLeft{from{opacity:1;transform:none}to{opacity:1;transform:none}}@keyframes prSlideRight{from{opacity:1;transform:none}to{opacity:1;transform:none}}</style>
 
 
 
@@ -3908,17 +3908,9 @@ function _fmtTime(s){
       return;
     }
 
-    /* ── 웹사이트 ── 리스트 전체 / 제외: web-cats(스크롤) */
+    /* ── 웹사이트 ── 옆으로 밀 때 탭 전환/깜빡임 방지: 탭 버튼으로만 이동 */
     const wv = document.getElementById('web-view');
     if(wv?.classList.contains('open')){
-      if(tgt.closest('.web-cats')) return;
-      const btns = Array.from(document.querySelectorAll('#web-cats .web-cat-btn'));
-      if(!btns.length) return;
-      const ci = btns.findIndex(b => b.classList.contains('on'));
-      const ni = dx < 0
-        ? (ci < btns.length - 1 ? ci + 1 : 0)
-        : (ci > 0 ? ci - 1 : btns.length - 1);
-      btns[ni]?.click();
       return;
     }
 
@@ -5030,53 +5022,7 @@ window.prSwitchCat = prSwitchCat;
 window.prOpenDetail = prOpenDetail;
 window.prCloseDetail = window.prCloseDetail;
 
-/* ── 기도문 좌우 스와이프 (순환) ── */
-(function(){
-  var el = document.getElementById('prayer-list-view');
-  if (!el) return;
-  var sx = 0, sy = 0, moved = false, locked = false;
-  var THRESHOLD = 55;
-
-  function getIdx(cat) { return PR_CATS.indexOf(cat); }
-  function goNext() {
-    var idx = getIdx(prCurCat);
-    var next = (idx + 1) % PR_CATS.length; // 순환
-    prSwitchCat(PR_CATS[next]);
-    el.style.animation = 'none';
-    el.offsetWidth;
-    el.style.animation = 'prSlideLeft .2s ease-out';
-  }
-  function goPrev() {
-    var idx = getIdx(prCurCat);
-    var prev = (idx - 1 + PR_CATS.length) % PR_CATS.length; // 순환
-    prSwitchCat(PR_CATS[prev]);
-    el.style.animation = 'none';
-    el.offsetWidth;
-    el.style.animation = 'prSlideRight .2s ease-out';
-  }
-
-  el.addEventListener('touchstart', function(e) {
-    sx = e.touches[0].clientX;
-    sy = e.touches[0].clientY;
-    moved = false; locked = false;
-  }, { passive: true });
-  el.addEventListener('touchmove', function(e) {
-    if (locked) return;
-    var dx = e.touches[0].clientX - sx;
-    var dy = e.touches[0].clientY - sy;
-    if (Math.abs(dx) > 8 || Math.abs(dy) > 8) {
-      locked = true;
-      var angle = Math.abs(Math.atan2(dy, dx) * 180 / Math.PI);
-      moved = (angle < 30 || angle > 150); // 수평 스와이프
-    }
-  }, { passive: true });
-  el.addEventListener('touchend', function(e) {
-    if (!moved) return;
-    var dx = e.changedTouches[0].clientX - sx;
-    if (Math.abs(dx) < THRESHOLD) return;
-    if (dx < 0) goNext(); else goPrev();
-  }, { passive: true });
-})();
+/* ── 기도문 좌우 스와이프 제거: 옆으로 밀 때 깜빡임 방지 ── */
 lyTabColors = prApplyTabColors;
 
 window.initPrayerView = function(){
@@ -5639,27 +5585,8 @@ function init(){ensureQna();applyFont();injectDioceseAll();relayoutAll()}documen
   }
 
   function installPrayerSwipe(){
-    var el = document.getElementById('prayer-list-view');
-    if(!el || el.__oaiSwipeFinal20260428) return;
-    el.__oaiSwipeFinal20260428 = true;
-    var sx=0, sy=0, tracking=false;
-    el.addEventListener('touchstart', function(e){
-      if(!e.touches || !e.touches.length) return;
-      sx = e.touches[0].clientX;
-      sy = e.touches[0].clientY;
-      tracking = true;
-    }, true);
-    el.addEventListener('touchend', function(e){
-      if(!tracking || !e.changedTouches || !e.changedTouches.length) return;
-      tracking = false;
-      var dx = e.changedTouches[0].clientX - sx;
-      var dy = e.changedTouches[0].clientY - sy;
-      if(Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.6) return;
-      if(switchPrayerBySwipe(dx < 0 ? 1 : -1)){
-        e.preventDefault();
-        e.stopImmediatePropagation();
-      }
-    }, true);
+    /* disabled: prayer side-swipe caused edge-arrow/flash on iOS/Android */
+    return;
   }
 
   function shrinkDioceseButtons(){
