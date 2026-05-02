@@ -1320,6 +1320,69 @@ html.retreat-mode .tab-btn.active{
   0%,100% { box-shadow: 0 3px 12px rgba(22,163,74,0.4); }
   50%      { box-shadow: 0 3px 22px rgba(22,163,74,0.75); transform: scale(1.03); }
 }
+
+
+/* OAI CLEAN-IN-PLACE 20260502: 검색 모달 탭/기도문/웹사이트 깜빡임 정리 */
+#srch-modal #sm-tab-bar{
+  background:rgba(255,255,255,.18)!important;
+  border-bottom:1px solid rgba(255,255,255,.28)!important;
+  gap:8px!important;
+  padding:8px 12px!important;
+  min-height:54px!important;
+  height:54px!important;
+  display:flex!important;
+  align-items:center!important;
+}
+#srch-modal .sm-tab{
+  height:38px!important;
+  min-height:38px!important;
+  border-radius:14px!important;
+  border:1.5px solid #D8CCB2!important;
+  background:#FFF8E8!important;
+  color:#1F2937!important;
+  font-size:14px!important;
+  font-weight:850!important;
+  line-height:1!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.72)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+#srch-modal .sm-tab.active{
+  background:#F3E7C8!important;
+  color:#0e1535!important;
+  border-color:#D4AA6A!important;
+  box-shadow:0 4px 12px rgba(14,21,53,.16), inset 0 1px 0 rgba(255,255,255,.55)!important;
+}
+#prayer-view,#prayer-list-view,#prayer-view .pr-list,#prayer-detail,#pr-list-ul,.pr-item,.pr-title,.pr-item-left,.pr-item-right{
+  opacity:1!important;
+  visibility:visible!important;
+}
+#prayer-list-view,#prayer-view .pr-list,#pr-list-ul,.pr-item,.pr-title{
+  animation:none!important;
+  transition:none!important;
+  transform:none!important;
+  will-change:auto!important;
+}
+#prayer-view .pr-title,#prayer-view .pr-body,#prayer-view .pr-detail-body,#prayer-view .pr-text{
+  color:#1A1A2E!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
+#web-view .web-card,#web-view .web-list,#web-view .web-body,#web-view .web-card-arrow{
+  animation:none!important;
+  transition:none!important;
+  transform:none!important;
+  opacity:1!important;
+  visibility:visible!important;
+  will-change:auto!important;
+}
+#web-view .web-card-arrow{
+  color:#5B6474!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
 </style>
 <style id="prayer-swipe-anim">@keyframes prSlideLeft{from{opacity:1;transform:none}to{opacity:1;transform:none}}@keyframes prSlideRight{from{opacity:1;transform:none}to{opacity:1;transform:none}}</style>
 
@@ -3624,8 +3687,15 @@ function smSwitchTab(tab){
   $('sm-body').style.display=tab==='cat'?'':'none';
   $('sm-body-place').style.display=tab==='place'?'':'none';
   const inp=$('sm-inp');
+  // iOS/Android 공통: 성지/일반장소 탭 전환 후 검색창에 포커스를 줘 키보드가 동일하게 열리게 함
+  if(inp){
+    setTimeout(function(){
+      try{ inp.focus(); inp.click && inp.click(); }catch(e){}
+    },80);
+  }
   if(tab==='place'&&inp&&inp.value.trim()) _searchKakaoPlace(inp.value.trim());
   else if(tab==='cat'&&inp) filterModal(inp.value||'');
+  else if(tab==='place'&&$('sm-body-place')) $('sm-body-place').innerHTML='<div class="sm-place-loading">장소명을 입력하세요</div>';
 }
 
 function onSmInp(v){
@@ -5045,6 +5115,12 @@ window.initPrayerView = function(){
 })();
 </script>
 
+<!-- OAI CLEAN-IN-PLACE 20260502: prayer swipe duplicate guards -->
+<script>
+window.__OAI_FINAL_SAFE_SWIPE_HEADER_20260428__ = true;
+window.__OAI_VERIFIED_SWIPE_HEADER_20260428__ = true;
+window.__OAI_PRAYER_SWIPE_LOOP_20260428__ = true;
+</script>
 <!-- OAI FINAL STABILITY PATCH 20260428 -->
 <div id="qna-view" class="module-view"><div class="module-bar web"><div class="module-bar-main"><div class="module-bar-ico" style="font-size:22px;background:rgba(255,255,255,.15);">💬</div><div class="module-bar-txt"><div class="module-bar-title">문의·건의 / Q&A</div><div class="module-bar-sub">질문, 오류, 수정요청을 남기고 답변을 확인하세요</div></div></div><button class="module-close" onclick="goToCover()">×</button></div><div class="qna-body"><div class="qna-tabs"><button class="qna-tab on" type="button" onclick="qnaShowTab('write')">작성</button><button class="qna-tab" type="button" onclick="qnaShowTab('answers')">답변</button></div><div class="qna-list" id="qna-list"></div></div></div>
 
