@@ -7165,5 +7165,99 @@ html.ios-browser:not(.app-active) #pwa-install-btn.oai-ios-install-visible{displ
 })();
 </script>
 
+
+
+<!-- OAI test patch 20260502: common X + Android-visible back test + prayer detail X -->
+<style id="oai-test-common-x-back-prayer-20260502">
+/* 테스트: X 버튼은 Android/iPhone 모두 공통 표시 */
+.sheet-x,.ic-close-btn,.sm-x,#missa-close,#prayer-close,#diocese-close,
+#web-view .module-close,#trail-view .module-close,.module-close,.trail-sh-close,
+#ios-install-guide-close,#prayer-detail .pr-back{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  pointer-events:auto!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
+.module-close,.trail-sh-close,#prayer-detail .pr-back{
+  width:34px!important;
+  height:34px!important;
+  min-width:34px!important;
+  border-radius:50%!important;
+  font-size:20px!important;
+  line-height:1!important;
+  z-index:30!important;
+}
+#prayer-detail .pr-back{
+  background:#efe6d8!important;
+  color:#4b3420!important;
+  border:1px solid #ddd5c8!important;
+  font-weight:900!important;
+}
+/* 테스트: Android에서도 iPhone과 같은 하단 뒤로가기 버튼 표시 */
+#ios-app-back-btn{
+  display:none!important;
+}
+html.app-active #ios-app-back-btn{
+  display:flex!important;
+}
+html:not(.app-active) #ios-app-back-btn{
+  display:none!important;
+}
+</style>
+<script id="oai-test-common-x-back-prayer-20260502-js">
+(function(){
+  'use strict';
+  if(window.__OAI_TEST_COMMON_X_BACK_PRAYER_20260502__) return;
+  window.__OAI_TEST_COMMON_X_BACK_PRAYER_20260502__ = true;
+
+  function byId(id){ return document.getElementById(id); }
+
+  function normalizePrayerDetailX(){
+    var btn = document.querySelector('#prayer-detail .pr-back');
+    if(!btn) return;
+    btn.setAttribute('aria-label','기도문 목록으로 돌아가기');
+    btn.title = '목록으로';
+    btn.innerHTML = '×';
+    btn.onclick = function(ev){
+      if(ev) ev.preventDefault();
+      if(typeof window.prCloseDetail === 'function'){
+        window.prCloseDetail();
+      }else{
+        var detail = byId('prayer-detail');
+        if(detail) detail.classList.remove('show');
+      }
+      return false;
+    };
+  }
+
+  function wireBackButtonForAllDevicesTest(){
+    var btn = byId('ios-app-back-btn');
+    if(!btn) return;
+    btn.setAttribute('aria-label','테스트 뒤로가기');
+    btn.title = '뒤로가기 테스트';
+    btn.onclick = function(ev){
+      if(ev) ev.preventDefault();
+      try{ history.back(); }
+      catch(e){
+        try{ if(typeof window._handleBack === 'function') window._handleBack(); }catch(_){}
+      }
+      return false;
+    };
+  }
+
+  function boot(){
+    normalizePrayerDetailX();
+    wireBackButtonForAllDevicesTest();
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
+  else boot();
+  window.addEventListener('load', function(){ boot(); setTimeout(boot,200); setTimeout(boot,800); }, {once:true});
+  try{ new MutationObserver(boot).observe(document.documentElement,{childList:true,subtree:true,attributes:true}); }catch(e){}
+})();
+</script>
+
 </body>
 </html>
