@@ -1320,195 +1320,8 @@ html.retreat-mode .tab-btn.active{
   0%,100% { box-shadow: 0 3px 12px rgba(22,163,74,0.4); }
   50%      { box-shadow: 0 3px 22px rgba(22,163,74,0.75); transform: scale(1.03); }
 }
-
-
-/* OAI CLEAN-IN-PLACE 20260502: 검색 모달 탭/기도문/웹사이트 깜빡임 정리 */
-#srch-modal #sm-tab-bar{
-  background:rgba(255,255,255,.18)!important;
-  border-bottom:1px solid rgba(255,255,255,.28)!important;
-  gap:8px!important;
-  padding:8px 12px!important;
-  min-height:54px!important;
-  height:54px!important;
-  display:flex!important;
-  align-items:center!important;
-}
-#srch-modal .sm-tab{
-  height:38px!important;
-  min-height:38px!important;
-  border-radius:14px!important;
-  border:1.5px solid #D8CCB2!important;
-  background:#FFF8E8!important;
-  color:#1F2937!important;
-  font-size:14px!important;
-  font-weight:850!important;
-  line-height:1!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.72)!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-}
-#srch-modal .sm-tab.active{
-  background:#F3E7C8!important;
-  color:#0e1535!important;
-  border-color:#D4AA6A!important;
-  box-shadow:0 4px 12px rgba(14,21,53,.16), inset 0 1px 0 rgba(255,255,255,.55)!important;
-}
-#prayer-view,#prayer-list-view,#prayer-view .pr-list,#prayer-detail,#pr-list-ul,.pr-item,.pr-title,.pr-item-left,.pr-item-right{
-  opacity:1!important;
-  visibility:visible!important;
-}
-#prayer-list-view,#prayer-view .pr-list,#pr-list-ul,.pr-item,.pr-title{
-  animation:none!important;
-  transition:none!important;
-  transform:none!important;
-  will-change:auto!important;
-}
-#prayer-view .pr-title,#prayer-view .pr-body,#prayer-view .pr-detail-body,#prayer-view .pr-text{
-  color:#1A1A2E!important;
-  opacity:1!important;
-  visibility:visible!important;
-}
-#web-view .web-card,#web-view .web-list,#web-view .web-body,#web-view .web-card-arrow{
-  animation:none!important;
-  transition:none!important;
-  transform:none!important;
-  opacity:1!important;
-  visibility:visible!important;
-  will-change:auto!important;
-}
-#web-view .web-card-arrow{
-  color:#5B6474!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-}
 </style>
-<style id="prayer-swipe-anim">@keyframes prSlideLeft{from{opacity:1;transform:none}to{opacity:1;transform:none}}@keyframes prSlideRight{from{opacity:1;transform:none}to{opacity:1;transform:none}}</style>
-
-
-
-<!-- OAI iPhone install + back patch 20260502 START -->
-<style id="oai-ios-install-back-style-20260502">
-/*
-  iPhone 전용 추가 블록입니다.
-  Android 기존 PWA 설치 버튼/뒤로가기 로직은 수정하지 않고, iPhone용 입구만 추가합니다.
-  나중에 디자인만 바꾸려면 이 style 블록의 색상/크기/위치만 수정하면 됩니다.
-*/
-#oai-ios-install-modal{
-  position:fixed; inset:0; z-index:99998; display:none;
-  align-items:center; justify-content:center; padding:22px;
-  background:rgba(14,21,53,.86); backdrop-filter:blur(5px);
-}
-#oai-ios-install-modal.open{display:flex;}
-.oai-ios-install-box{
-  width:min(420px,94vw); background:#fff; color:#1F2937;
-  border-radius:22px; padding:24px 20px 18px;
-  box-shadow:0 20px 60px rgba(0,0,0,.38);
-  border:2px solid rgba(212,170,106,.55);
-  font-family:'Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif;
-}
-.oai-ios-install-title{
-  font-size:21px; font-weight:900; line-height:1.35; color:#0e1535;
-  margin-bottom:10px; text-align:center;
-}
-.oai-ios-install-desc{
-  font-size:15px; font-weight:700; line-height:1.65; color:#374151;
-  text-align:center; word-break:keep-all; margin-bottom:16px;
-}
-.oai-ios-install-steps{
-  background:#F8FAFC; border:1.5px solid #E5E7EB; border-radius:16px;
-  padding:14px 15px; margin:12px 0 16px;
-}
-.oai-ios-install-step{
-  display:flex; gap:9px; align-items:flex-start;
-  font-size:15px; font-weight:800; line-height:1.55; color:#111827;
-  margin:8px 0; word-break:keep-all;
-}
-.oai-ios-install-num{
-  width:24px; height:24px; border-radius:50%; background:#0F766E; color:#fff;
-  display:inline-flex; align-items:center; justify-content:center;
-  font-size:13px; font-weight:900; flex:0 0 24px; margin-top:1px;
-}
-.oai-ios-install-note{
-  font-size:12px; color:#6B7280; line-height:1.55; text-align:center; margin-bottom:14px;
-}
-.oai-ios-install-actions{display:flex; gap:9px;}
-.oai-ios-install-actions button{
-  height:48px; border-radius:14px; border:none; font-family:inherit;
-  font-size:15px; font-weight:900; cursor:pointer;
-}
-#oai-ios-install-ok{flex:1; background:#0F766E; color:#fff;}
-#oai-ios-install-close{width:84px; background:#F3F4F6; color:#374151; border:1px solid #E5E7EB;}
-#oai-ios-back-btn{
-  position:fixed; right:14px; bottom:calc(18px + env(safe-area-inset-bottom,0px));
-  width:52px; height:52px; border-radius:50%; border:none; z-index:9997;
-  background:#0F766E; color:#fff; font-size:25px; font-weight:900;
-  display:none; align-items:center; justify-content:center;
-  box-shadow:0 8px 22px rgba(0,0,0,.32);
-  font-family:inherit; cursor:pointer; -webkit-tap-highlight-color:transparent;
-}
-#oai-ios-back-btn:active{transform:scale(.94);}
-html.oai-ios-standalone.app-active #oai-ios-back-btn{display:flex;}
-html.oai-ios-standalone:not(.app-active) #oai-ios-back-btn{display:none!important;}
-</style>
-<!-- OAI iPhone install + back patch 20260502 END -->
-
-<!-- OAI iPhone UX follow-up patch 20260502 START -->
-<style id="oai-ios-ux-followup-20260502">
-/*
-  후속 수정 전용 블록입니다.
-  - Android 기존 뒤로가기/설치 기능은 건드리지 않습니다.
-  - 위치/색/크기는 이 블록만 수정하면 됩니다.
-*/
-#qna-cover-btn{
-  left:14px!important; right:auto!important;
-  bottom:calc(16px + env(safe-area-inset-bottom,0px))!important;
-  z-index:30!important;
-}
-#cover{
-  padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))!important;
-}
-#missa-bar{
-  min-height:calc(60px + env(safe-area-inset-top,0px))!important;
-}
-#missa-bar-title{
-  font-size:20px!important;
-  line-height:1.25!important;
-  font-weight:900!important;
-}
-#missa-loading{
-  top:calc(60px + env(safe-area-inset-top,0px))!important;
-  justify-content:center!important;
-  padding:24px!important;
-}
-.missa-loading-txt{
-  font-size:17px!important;
-  line-height:1.55!important;
-  font-weight:800!important;
-  text-align:center!important;
-}
-.missa-spinner{
-  width:48px!important; height:48px!important;
-  border-width:5px!important;
-  margin-bottom:18px!important;
-}
-.oai-ios-install-box{position:relative!important; padding-top:46px!important;}
-#oai-ios-install-x{
-  position:absolute; top:12px; right:12px;
-  width:34px; height:34px; border-radius:50%;
-  border:1px solid #E5E7EB; background:#F9FAFB; color:#374151;
-  font-size:22px; font-weight:900; line-height:1;
-  display:flex; align-items:center; justify-content:center;
-  cursor:pointer; font-family:inherit;
-}
-#oai-ios-install-x:active{transform:scale(.94);}
-/* 커버에서는 iPhone 뒤로가기 버튼이 절대 보이지 않게 고정 */
-html.oai-ios-standalone:not(.app-active) #oai-ios-back-btn,
-#cover #oai-ios-back-btn{display:none!important;}
-</style>
-<!-- OAI iPhone UX follow-up patch 20260502 END -->
-
+<style id="prayer-swipe-anim">@keyframes prSlideLeft{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}@keyframes prSlideRight{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:translateX(0)}}</style>
 
 <body>
 <div id="missa-view">
@@ -1637,31 +1450,6 @@ html.oai-ios-standalone:not(.app-active) #oai-ios-back-btn,
 <button id="pwa-install-btn" onclick="triggerPwaInstall()" aria-label="앱 설치하기">
   📲 앱 설치
 </button>
-
-<!-- OAI iPhone install modal + back button 20260502 START -->
-<div id="oai-ios-install-modal" aria-hidden="true">
-  <div class="oai-ios-install-box" role="dialog" aria-modal="true" aria-labelledby="oai-ios-install-title">
-    <button id="oai-ios-install-x" type="button" aria-label="닫기">×</button>
-    <div id="oai-ios-install-title" class="oai-ios-install-title">📱 아이폰 앱 설치 안내</div>
-    <div class="oai-ios-install-desc">
-      아이폰은 Android처럼 자동 설치가 되지 않습니다.<br>
-      Safari에서 열고 홈 화면에 추가하면 앱처럼 사용할 수 있습니다.
-    </div>
-    <div class="oai-ios-install-steps">
-      <div class="oai-ios-install-step"><span class="oai-ios-install-num">1</span><span>카카오에서 보고 있다면 오른쪽 아래 또는 위의 <b>공유/더보기</b>를 누릅니다.</span></div>
-      <div class="oai-ios-install-step"><span class="oai-ios-install-num">2</span><span><b>Safari에서 열기</b>를 선택합니다.</span></div>
-      <div class="oai-ios-install-step"><span class="oai-ios-install-num">3</span><span>Safari 하단 <b>공유 버튼</b> → <b>홈 화면에 추가</b>를 누릅니다.</span></div>
-    </div>
-    <div class="oai-ios-install-note">설치 후 홈화면 아이콘으로 실행하면 이 버튼은 보이지 않습니다.</div>
-    <div class="oai-ios-install-actions">
-      <button id="oai-ios-install-ok" type="button">확인</button>
-      <button id="oai-ios-install-close" type="button">닫기</button>
-    </div>
-  </div>
-</div>
-<button id="oai-ios-back-btn" type="button" aria-label="뒤로가기">‹</button>
-<!-- OAI iPhone install modal + back button 20260502 END -->
-
 </div>
 <script>
 // --- [Fix 1] Reliable Back Button Logic ---
@@ -3687,15 +3475,8 @@ function smSwitchTab(tab){
   $('sm-body').style.display=tab==='cat'?'':'none';
   $('sm-body-place').style.display=tab==='place'?'':'none';
   const inp=$('sm-inp');
-  // iOS/Android 공통: 성지/일반장소 탭 전환 후 검색창에 포커스를 줘 키보드가 동일하게 열리게 함
-  if(inp){
-    setTimeout(function(){
-      try{ inp.focus(); inp.click && inp.click(); }catch(e){}
-    },80);
-  }
   if(tab==='place'&&inp&&inp.value.trim()) _searchKakaoPlace(inp.value.trim());
   else if(tab==='cat'&&inp) filterModal(inp.value||'');
-  else if(tab==='place'&&$('sm-body-place')) $('sm-body-place').innerHTML='<div class="sm-place-loading">장소명을 입력하세요</div>';
 }
 
 function onSmInp(v){
@@ -3978,9 +3759,17 @@ function _fmtTime(s){
       return;
     }
 
-    /* ── 웹사이트 ── 옆으로 밀 때 탭 전환/깜빡임 방지: 탭 버튼으로만 이동 */
+    /* ── 웹사이트 ── 리스트 전체 / 제외: web-cats(스크롤) */
     const wv = document.getElementById('web-view');
     if(wv?.classList.contains('open')){
+      if(tgt.closest('.web-cats')) return;
+      const btns = Array.from(document.querySelectorAll('#web-cats .web-cat-btn'));
+      if(!btns.length) return;
+      const ci = btns.findIndex(b => b.classList.contains('on'));
+      const ni = dx < 0
+        ? (ci < btns.length - 1 ? ci + 1 : 0)
+        : (ci > 0 ? ci - 1 : btns.length - 1);
+      btns[ni]?.click();
       return;
     }
 
@@ -5092,7 +4881,53 @@ window.prSwitchCat = prSwitchCat;
 window.prOpenDetail = prOpenDetail;
 window.prCloseDetail = window.prCloseDetail;
 
-/* ── 기도문 좌우 스와이프 제거: 옆으로 밀 때 깜빡임 방지 ── */
+/* ── 기도문 좌우 스와이프 (순환) ── */
+(function(){
+  var el = document.getElementById('prayer-list-view');
+  if (!el) return;
+  var sx = 0, sy = 0, moved = false, locked = false;
+  var THRESHOLD = 55;
+
+  function getIdx(cat) { return PR_CATS.indexOf(cat); }
+  function goNext() {
+    var idx = getIdx(prCurCat);
+    var next = (idx + 1) % PR_CATS.length; // 순환
+    prSwitchCat(PR_CATS[next]);
+    el.style.animation = 'none';
+    el.offsetWidth;
+    el.style.animation = 'prSlideLeft .2s ease-out';
+  }
+  function goPrev() {
+    var idx = getIdx(prCurCat);
+    var prev = (idx - 1 + PR_CATS.length) % PR_CATS.length; // 순환
+    prSwitchCat(PR_CATS[prev]);
+    el.style.animation = 'none';
+    el.offsetWidth;
+    el.style.animation = 'prSlideRight .2s ease-out';
+  }
+
+  el.addEventListener('touchstart', function(e) {
+    sx = e.touches[0].clientX;
+    sy = e.touches[0].clientY;
+    moved = false; locked = false;
+  }, { passive: true });
+  el.addEventListener('touchmove', function(e) {
+    if (locked) return;
+    var dx = e.touches[0].clientX - sx;
+    var dy = e.touches[0].clientY - sy;
+    if (Math.abs(dx) > 8 || Math.abs(dy) > 8) {
+      locked = true;
+      var angle = Math.abs(Math.atan2(dy, dx) * 180 / Math.PI);
+      moved = (angle < 30 || angle > 150); // 수평 스와이프
+    }
+  }, { passive: true });
+  el.addEventListener('touchend', function(e) {
+    if (!moved) return;
+    var dx = e.changedTouches[0].clientX - sx;
+    if (Math.abs(dx) < THRESHOLD) return;
+    if (dx < 0) goNext(); else goPrev();
+  }, { passive: true });
+})();
 lyTabColors = prApplyTabColors;
 
 window.initPrayerView = function(){
@@ -5115,12 +4950,6 @@ window.initPrayerView = function(){
 })();
 </script>
 
-<!-- OAI CLEAN-IN-PLACE 20260502: prayer swipe duplicate guards -->
-<script>
-window.__OAI_FINAL_SAFE_SWIPE_HEADER_20260428__ = true;
-window.__OAI_VERIFIED_SWIPE_HEADER_20260428__ = true;
-window.__OAI_PRAYER_SWIPE_LOOP_20260428__ = true;
-</script>
 <!-- OAI FINAL STABILITY PATCH 20260428 -->
 <div id="qna-view" class="module-view"><div class="module-bar web"><div class="module-bar-main"><div class="module-bar-ico" style="font-size:22px;background:rgba(255,255,255,.15);">💬</div><div class="module-bar-txt"><div class="module-bar-title">문의·건의 / Q&A</div><div class="module-bar-sub">질문, 오류, 수정요청을 남기고 답변을 확인하세요</div></div></div><button class="module-close" onclick="goToCover()">×</button></div><div class="qna-body"><div class="qna-tabs"><button class="qna-tab on" type="button" onclick="qnaShowTab('write')">작성</button><button class="qna-tab" type="button" onclick="qnaShowTab('answers')">답변</button></div><div class="qna-list" id="qna-list"></div></div></div>
 
@@ -5661,8 +5490,27 @@ function init(){ensureQna();applyFont();injectDioceseAll();relayoutAll()}documen
   }
 
   function installPrayerSwipe(){
-    /* disabled: prayer side-swipe caused edge-arrow/flash on iOS/Android */
-    return;
+    var el = document.getElementById('prayer-list-view');
+    if(!el || el.__oaiSwipeFinal20260428) return;
+    el.__oaiSwipeFinal20260428 = true;
+    var sx=0, sy=0, tracking=false;
+    el.addEventListener('touchstart', function(e){
+      if(!e.touches || !e.touches.length) return;
+      sx = e.touches[0].clientX;
+      sy = e.touches[0].clientY;
+      tracking = true;
+    }, true);
+    el.addEventListener('touchend', function(e){
+      if(!tracking || !e.changedTouches || !e.changedTouches.length) return;
+      tracking = false;
+      var dx = e.changedTouches[0].clientX - sx;
+      var dy = e.changedTouches[0].clientY - sy;
+      if(Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.6) return;
+      if(switchPrayerBySwipe(dx < 0 ? 1 : -1)){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      }
+    }, true);
   }
 
   function shrinkDioceseButtons(){
@@ -6030,103 +5878,284 @@ if('serviceWorker' in navigator){
 </script>
 
 
-<!-- OAI iPhone install + unified back script 20260502 START -->
-<script id="oai-ios-install-back-script-20260502">
+<!-- OAI iPhone Common App UX Patch 20260502
+     Scope: common X visibility, iPhone install guide, iPhone back button using Android history path.
+     Edit later only inside this block if needed. -->
+<style id="oai-iphone-common-app-ux-20260502">
+  /* 설치 버튼: Android 기존 버튼을 iPhone에서도 같은 크기/위치로 사용 */
+  #pwa-install-btn{
+    display:none;
+    margin:12px auto 0!important;
+    min-height:48px!important;
+    padding:13px 24px!important;
+    border-radius:999px!important;
+    background:linear-gradient(135deg,#0F766E,#115E59)!important;
+    color:#fff!important;
+    border:1.5px solid rgba(255,255,255,.35)!important;
+    font-size:15px!important;
+    font-weight:900!important;
+    letter-spacing:-.01em!important;
+    box-shadow:0 10px 24px rgba(15,118,110,.35)!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:7px!important;
+    z-index:30!important;
+  }
+  html.oai-show-install #pwa-install-btn{display:inline-flex!important;}
+  html.oai-standalone #pwa-install-btn{display:none!important;}
+
+  /* X 버튼은 iPhone/Android 공통 표시 */
+  .module-close,
+  .sheet-x,
+  .sm-x,
+  .ic-close-btn,
+  .c-x,
+  .exit-cancel,
+  .ios-install-x{
+    display:flex!important;
+    visibility:visible!important;
+    opacity:1!important;
+    pointer-events:auto!important;
+  }
+  .module-close{
+    width:34px!important;
+    height:34px!important;
+    min-width:34px!important;
+    border-radius:50%!important;
+    align-items:center!important;
+    justify-content:center!important;
+    background:rgba(255,255,255,.18)!important;
+    border:1px solid rgba(255,255,255,.28)!important;
+    color:#fff!important;
+    font-size:20px!important;
+    font-weight:900!important;
+  }
+
+  /* iPhone 앱 실행 중 전용 뒤로가기 버튼: Android 뒤로가기와 같은 history 경로 사용 */
+  #ios-history-back-btn{
+    display:none;
+    position:fixed;
+    right:16px;
+    bottom:calc(18px + env(safe-area-inset-bottom,0px));
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    border:1.5px solid rgba(255,255,255,.72);
+    background:linear-gradient(135deg,#1F2937,#0F172A);
+    color:#fff;
+    font-size:23px;
+    font-weight:900;
+    z-index:99990;
+    box-shadow:0 8px 24px rgba(0,0,0,.35);
+    align-items:center;
+    justify-content:center;
+    font-family:inherit;
+  }
+  html.oai-ios-standalone.app-active #ios-history-back-btn{display:flex!important;}
+  html:not(.app-active) #ios-history-back-btn{display:none!important;}
+
+  /* iPhone 설치 안내 큰 팝업 */
+  #ios-install-guide-modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:99999;
+    background:rgba(14,21,53,.86);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    align-items:center;
+    justify-content:center;
+    padding:22px;
+  }
+  #ios-install-guide-modal.open{display:flex!important;}
+  .ios-install-card{
+    width:min(420px,94vw);
+    max-height:calc(100vh - 44px);
+    overflow:auto;
+    border-radius:24px;
+    background:#FFFBF2;
+    color:#111827;
+    box-shadow:0 20px 60px rgba(0,0,0,.42);
+    border:1.5px solid rgba(212,170,106,.55);
+    padding:20px 18px 18px;
+    position:relative;
+    font-family:inherit;
+  }
+  .ios-install-x{
+    position:absolute;
+    top:12px;
+    right:12px;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    border:none;
+    background:#EDE3D2;
+    color:#374151;
+    font-size:21px;
+    font-weight:900;
+    align-items:center;
+    justify-content:center;
+    font-family:inherit;
+  }
+  .ios-install-title{
+    padding-right:38px;
+    font-size:21px;
+    line-height:1.3;
+    font-weight:900;
+    letter-spacing:-.03em;
+    color:#0F172A;
+    margin-bottom:8px;
+  }
+  .ios-install-lead{
+    font-size:14px;
+    line-height:1.65;
+    color:#4B5563;
+    margin-bottom:14px;
+    word-break:keep-all;
+  }
+  .ios-install-steps{
+    background:#fff;
+    border:1px solid #E6D7BD;
+    border-radius:18px;
+    padding:13px 14px;
+    margin:12px 0;
+  }
+  .ios-install-step{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    font-size:15px;
+    line-height:1.55;
+    font-weight:700;
+    color:#1F2937;
+    padding:8px 0;
+    border-bottom:1px solid #F1E6D6;
+  }
+  .ios-install-step:last-child{border-bottom:none;}
+  .ios-install-num{
+    flex:0 0 26px;
+    height:26px;
+    border-radius:50%;
+    background:#0F766E;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    font-weight:900;
+  }
+  .ios-install-note{
+    margin-top:10px;
+    padding:11px 12px;
+    border-radius:14px;
+    background:#F0FDF4;
+    color:#166534;
+    font-size:13px;
+    line-height:1.55;
+    font-weight:700;
+  }
+  .ios-install-confirm{
+    width:100%;
+    height:48px;
+    border:none;
+    border-radius:16px;
+    background:#0F766E;
+    color:white;
+    font-size:16px;
+    font-weight:900;
+    font-family:inherit;
+    margin-top:14px;
+  }
+</style>
+
+<button id="ios-history-back-btn" type="button" aria-label="뒤로가기">‹</button>
+
+<div id="ios-install-guide-modal" aria-hidden="true">
+  <div class="ios-install-card" role="dialog" aria-modal="true" aria-labelledby="ios-install-title">
+    <button type="button" class="ios-install-x" aria-label="닫기">×</button>
+    <div class="ios-install-title" id="ios-install-title">아이폰 앱 설치 안내</div>
+    <div class="ios-install-lead">
+      아이폰은 Android처럼 자동 설치 버튼이 뜨지 않습니다. Safari에서 아래 순서대로 한 번만 홈 화면에 추가하면 이후에는 앱 아이콘을 눌러 바로 사용할 수 있습니다.
+    </div>
+    <div class="ios-install-steps">
+      <div class="ios-install-step"><span class="ios-install-num">1</span><span>Safari에서 이 페이지를 엽니다.</span></div>
+      <div class="ios-install-step"><span class="ios-install-num">2</span><span>하단의 공유 버튼을 누릅니다.</span></div>
+      <div class="ios-install-step"><span class="ios-install-num">3</span><span>“홈 화면에 추가”를 선택합니다.</span></div>
+      <div class="ios-install-step"><span class="ios-install-num">4</span><span>홈 화면에 생긴 앱 아이콘으로 실행합니다.</span></div>
+    </div>
+    <div class="ios-install-note">설치 후 홈 화면 아이콘으로 실행하면 설치 버튼은 보이지 않습니다.</div>
+    <button type="button" class="ios-install-confirm">확인했습니다</button>
+  </div>
+</div>
+
+<script id="oai-iphone-common-app-ux-js-20260502">
 (function(){
   'use strict';
-  if(window.__OAI_IOS_INSTALL_BACK_20260502__) return;
-  window.__OAI_IOS_INSTALL_BACK_20260502__ = true;
-
-  var ua = navigator.userAgent || '';
-  var isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  var isStandalone = !!(window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches);
-  var root = document.documentElement;
-
-  if(isIOS) root.classList.add('oai-ios-device');
-  if(isIOS && isStandalone) root.classList.add('oai-ios-standalone');
+  if(window.__OAI_IPHONE_COMMON_APP_UX_20260502__) return;
+  window.__OAI_IPHONE_COMMON_APP_UX_20260502__ = true;
 
   function $(id){ return document.getElementById(id); }
-  function installed(){
-    return !!(window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches);
+  function isIOS(){ return /iphone|ipad|ipod/i.test(navigator.userAgent || ''); }
+  function isStandalone(){
+    return (window.navigator.standalone === true) ||
+           (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
   }
-  function openIosInstallGuide(){
-    var modal = $('oai-ios-install-modal');
-    if(!modal) return;
-    modal.classList.add('open');
-    modal.setAttribute('aria-hidden','false');
+  function refreshInstallState(){
+    var root=document.documentElement;
+    var standalone=isStandalone();
+    root.classList.toggle('oai-ios', isIOS());
+    root.classList.toggle('oai-standalone', standalone);
+    root.classList.toggle('oai-ios-standalone', isIOS() && standalone);
+    root.classList.toggle('oai-show-install', !standalone);
+    var btn=$('pwa-install-btn');
+    if(btn){ btn.style.display = standalone ? 'none' : 'inline-flex'; }
   }
-  function closeIosInstallGuide(){
-    var modal = $('oai-ios-install-modal');
-    if(!modal) return;
-    modal.classList.remove('open');
-    modal.setAttribute('aria-hidden','true');
-  }
-  window.openIosInstallGuide = openIosInstallGuide;
+  refreshInstallState();
+  window.addEventListener('pageshow', refreshInstallState);
+  window.addEventListener('appinstalled', function(){ setTimeout(refreshInstallState, 120); });
 
-  function setupIosInstallButton(){
-    var btn = $('pwa-install-btn');
-    if(!btn) return;
-
-    // Android/Chrome 기존 설치 기능은 건드리지 않습니다.
-    if(!isIOS) return;
-
-    // 아이폰에서 홈화면 앱으로 실행 중이면 설치 버튼 숨김
-    if(installed()){
-      btn.style.display = 'none';
+  /* 기존 Android 설치 로직 보존: iPhone은 같은 설치 버튼으로 큰 안내 팝업만 표시 */
+  var prevTrigger = window.triggerPwaInstall;
+  window.triggerPwaInstall = function(){
+    refreshInstallState();
+    if(isStandalone()) return;
+    if(isIOS()){
+      var modal=$('ios-install-guide-modal');
+      if(modal){ modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); }
       return;
     }
+    if(typeof prevTrigger === 'function') return prevTrigger.apply(this, arguments);
+  };
 
-    // 아이폰은 같은 설치 버튼을 안내 버튼으로 사용
-    btn.style.display = 'inline-block';
-    btn.onclick = function(ev){
-      if(ev){ ev.preventDefault(); ev.stopPropagation(); }
-      openIosInstallGuide();
-      return false;
-    };
+  function closeIOSGuide(){
+    var modal=$('ios-install-guide-modal');
+    if(modal){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); }
   }
-
-  function setupIosBackButton(){
-    var btn = $('oai-ios-back-btn');
-    if(!btn) return;
-    if(!(isIOS && installed())){
-      btn.style.display = 'none';
-      return;
+  document.addEventListener('click', function(e){
+    var t=e.target;
+    if(!t) return;
+    if(t.classList && (t.classList.contains('ios-install-x') || t.classList.contains('ios-install-confirm'))){
+      e.preventDefault(); e.stopPropagation(); closeIOSGuide(); return;
     }
+    if(t.id === 'ios-install-guide-modal') closeIOSGuide();
+  }, true);
 
-    btn.onclick = function(ev){
-      if(ev){ ev.preventDefault(); ev.stopPropagation(); }
-      // Android 물리 뒤로가기와 같은 popstate 흐름을 타게 합니다.
-      try{ history.back(); }catch(e){}
-      return false;
-    };
+  /* iPhone 하단 뒤로가기 버튼: Android 뒤로가기와 같은 history 경로로 이동 */
+  var backBtn=$('ios-history-back-btn');
+  if(backBtn){
+    backBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      try{ history.back(); }
+      catch(_){
+        try{
+          if(typeof window.goToCover === 'function') window.goToCover();
+        }catch(__){}
+      }
+    });
   }
-
-  function bindModalButtons(){
-    var ok = $('oai-ios-install-ok');
-    var close = $('oai-ios-install-close');
-    var closeX = $('oai-ios-install-x');
-    var modal = $('oai-ios-install-modal');
-    if(ok) ok.onclick = closeIosInstallGuide;
-    if(close) close.onclick = closeIosInstallGuide;
-    if(closeX) closeX.onclick = closeIosInstallGuide;
-    if(modal){
-      modal.addEventListener('click', function(e){
-        if(e.target === modal) closeIosInstallGuide();
-      });
-    }
-  }
-
-  function init(){
-    setupIosInstallButton();
-    setupIosBackButton();
-    bindModalButtons();
-  }
-
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, {once:true});
-  else init();
 })();
 </script>
-<!-- OAI iPhone install + unified back script 20260502 END -->
 
 </body>
 </html>
