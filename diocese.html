@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+<script>
+(function(){
+  var ua=(navigator.userAgent||'').toLowerCase();
+  var isIOS=/iphone|ipad|ipod/.test(ua) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+  if(isIOS){ document.documentElement.classList.add('ios-device'); }
+})();
+</script>
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -12,6 +19,10 @@
 <title>교구지도</title>
 <style>
 :root{
+  --diocese-font-scale:1;
+  --ios-dio-font-scale:1;
+  --dio-effective-font-scale:calc(var(--dio-font-scale,1) * var(--ios-dio-font-scale,1));
+  --diocese-effective-font-scale:calc(var(--diocese-font-scale,1) * var(--ios-dio-font-scale,1));
   --d:#1F2A44;
   --d-lt:#E8EBF0;
   --bg:#EDE8E0;
@@ -66,7 +77,8 @@ header{flex-shrink:0;background:var(--d);border-bottom:none;z-index:30;
   transition:opacity .15s,transform .12s,box-shadow .15s;}
 .tab.on{background:var(--d);color:#fff;border-color:transparent;font-weight:700;
   box-shadow:0 2px 8px rgba(31,42,68,.28);}
-.tab:active{transform:scale(.97);}
+.tab:active{transform:scale(.992);}
+.tab.on,.tab.on:active{transform:none!important;}
 
 /* ── 뷰 컨테이너 ── */
 #main{flex:1;overflow:hidden;min-height:0;position:relative;background:var(--bg);}
@@ -74,7 +86,8 @@ header{flex-shrink:0;background:var(--d);border-bottom:none;z-index:30;
 #map-view.on{display:flex;}
 #map-svg{width:100%;height:100%;cursor:grab;display:block;touch-action:none;position:absolute;top:0;left:0;}
 #map-svg:active{cursor:grabbing;}
-.dp{cursor:pointer;}
+.dp{cursor:pointer;transition:filter .08s ease,opacity .08s ease;}
+.dp.oai-dio-pressed{filter:brightness(.82);opacity:.88;}
 
 /* ── 인포카드 (v8 원본) ── */
 #card{position:absolute;top:10px;right:10px;width:206px;background:white;border-radius:13px;
@@ -104,7 +117,7 @@ header{flex-shrink:0;background:var(--d);border-bottom:none;z-index:30;
 
 /* ── 관구 버튼 ── */
 #gw-bar{position:absolute;top:10px;left:10px;display:flex;flex-direction:column;gap:5px;z-index:50;}
-.gb{padding:6px 14px;border-radius:20px;border:2px solid;font-size:12px;font-weight:700;
+.gb{padding:6px 14px;border-radius:20px;border:2px solid;font-size:calc(12px * var(--diocese-effective-font-scale,1));font-weight:700;
   cursor:pointer;background:white;box-shadow:0 2px 8px rgba(0,0,0,0.12);white-space:nowrap;}
 .gb.on{color:white!important;}
 .gb-all{color:#555!important;border-color:#bbb!important;font-weight:500;}
@@ -163,7 +176,7 @@ header{flex-shrink:0;background:var(--d);border-bottom:none;z-index:30;
 .lv-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);
   box-shadow:0 1px 8px rgba(0,0,0,.06);margin-bottom:12px;overflow:hidden;cursor:pointer;
   transition:transform .12s,box-shadow .12s;}
-.lv-card:active{transform:scale(.983);box-shadow:none;}
+.lv-card.oai-touch-pressed{transform:translateY(6px) scale(.982);box-shadow:none;filter:brightness(.96);}
 /* top: 뱃지 + 교구전체명 */
 .lv-top{display:flex;align-items:center;justify-content:space-between;padding:12px 14px 0;gap:8px;}
 .lv-bdg{font-size:12px;font-weight:800;padding:4px 10px;border-radius:6px;color:#fff;white-space:nowrap;flex-shrink:0;}
@@ -194,8 +207,10 @@ header{flex-shrink:0;background:var(--d);border-bottom:none;z-index:30;
 }
 
 /* OAI 20260504-5: 관구·교구 단독 화면 헤더 최종 표준화 */
-:root{--d:#1f2a44!important;--header-h:70px!important;--fs-header:20px!important;--fs-sub:11px!important;}
-html,body{width:100%!important;max-width:none!important;margin:0!important;overflow-x:hidden!important;}
+:root{
+  --diocese-font-scale:1;--d:#1f2a44!important;--header-h:70px!important;--fs-header:20px!important;--fs-sub:11px!important;}
+html,body{width:100%!important;max-width:none!important;margin:0!important;overflow-x:hidden!important;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+html.ios-device{--ios-dio-font-scale:.94;}
 body{background:var(--bg)!important;}
 header{width:100%!important;max-width:none!important;min-height:70px!important;height:70px!important;padding:0 16px!important;background:#1f2a44!important;background-image:none!important;background-color:#1f2a44!important;color:#fff!important;display:flex!important;align-items:center!important;border-bottom:0!important;box-shadow:none!important;box-sizing:border-box!important;}
 .hd{width:100%!important;display:flex!important;align-items:center!important;justify-content:space-between!important;}
@@ -224,46 +239,84 @@ body > header{display:none!important;visibility:hidden!important;height:0!import
 </style>
 <style id="oai-diocese-tab-standard-20260504">
 /* 관구교구 헤더 아래 탭 버튼 표준화 + 글자 크기 조절(지도 제외) */
-:root{--dio-font-scale:1;}
+:root{
+  --diocese-font-scale:1;--dio-font-scale:1;--dio-effective-font-scale:calc(var(--dio-font-scale,1) * var(--ios-dio-font-scale,1));--diocese-effective-font-scale:calc(var(--diocese-font-scale,1) * var(--ios-dio-font-scale,1));}
 .tab-bar{height:55px!important;padding:8px 10px!important;gap:8px!important;background:#FFFBF2!important;border-top:0!important;border-bottom:1px solid #DDD5C8!important;align-items:center!important;}
-.tab{height:40px!important;border-radius:12px!important;font-size:calc(15px * var(--dio-font-scale,1))!important;font-weight:800!important;background:#F8FAFC!important;color:#475569!important;border:1.5px solid #CBD5E1!important;display:flex!important;align-items:center!important;justify-content:center!important;}
+.tab{height:40px!important;border-radius:12px!important;font-size:calc(15px * var(--dio-effective-font-scale,1))!important;font-weight:800!important;background:#F8FAFC!important;color:#475569!important;border:1.5px solid #dde3ee!important;display:flex!important;align-items:center!important;justify-content:center!important;}
 .tab.on{background:#1F2A44!important;color:#fff!important;border-color:#1F2A44!important;box-shadow:0 3px 10px rgba(31,42,68,.22)!important;}
 
 
 
 
 
-#search-view #si,#search-view #sb{font-size:calc(15px * var(--dio-font-scale,1))!important;}
-#search-view .sh{font-size:calc(11px * var(--dio-font-scale,1))!important;}
-#search-view .se{font-size:calc(13px * var(--dio-font-scale,1))!important;}
-#search-view .sl{font-size:calc(12px * var(--dio-font-scale,1))!important;}
-#search-view .si-r-op{font-size:calc(11px * var(--dio-font-scale,1))!important;}
-#search-view .sd{font-size:calc(16px * var(--dio-font-scale,1))!important;}
-#search-view .sg{font-size:calc(12px * var(--dio-font-scale,1))!important;}
-#search-view .si-r-url{font-size:calc(11px * var(--dio-font-scale,1))!important;}
-#search-view .si-r-arr{font-size:calc(15px * var(--dio-font-scale,1))!important;}
-#search-view .sot{font-size:calc(12px * var(--dio-font-scale,1))!important;}
-#search-view .sod{font-size:calc(13px * var(--dio-font-scale,1))!important;}
-#search-view .sodd{font-size:calc(12px * var(--dio-font-scale,1))!important;}
-#list-view .lv-sec-bdg{font-size:calc(15px * var(--dio-font-scale,1))!important;}
-#list-view .lv-sec-cnt{font-size:calc(14px * var(--dio-font-scale,1))!important;}
-#list-view .lv-bdg{font-size:calc(12px * var(--dio-font-scale,1))!important;}
-#list-view .lv-op{font-size:calc(11.5px * var(--dio-font-scale,1))!important;}
-#list-view .lv-name{font-size:calc(17px * var(--dio-font-scale,1))!important;}
-#list-view .lv-rg,#list-view .lv-det{font-size:calc(13px * var(--dio-font-scale,1))!important;}
-#list-view .lv-parish-count{font-size:calc(8px * var(--dio-font-scale,1))!important;}
-#list-view .lv-parish-count b{font-size:calc(12px * var(--dio-font-scale,1))!important;}
-#list-view .lv-parish-count span{font-size:calc(7px * var(--dio-font-scale,1))!important;}
-#list-view .lv-url{font-size:calc(12px * var(--dio-font-scale,1))!important;}
-#list-view .lv-arr{font-size:calc(15px * var(--dio-font-scale,1))!important;}
+#search-view #si,#search-view #sb{font-size:calc(15px * var(--dio-effective-font-scale,1))!important;}
+#search-view .sh{font-size:calc(11px * var(--dio-effective-font-scale,1))!important;}
+#search-view .se{font-size:calc(13px * var(--dio-effective-font-scale,1))!important;}
+#search-view .sl{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
+#search-view .si-r-op{font-size:calc(11px * var(--dio-effective-font-scale,1))!important;}
+#search-view .sd{font-size:calc(16px * var(--dio-effective-font-scale,1))!important;}
+#search-view .sg{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
+#search-view .si-r-url{font-size:calc(11px * var(--dio-effective-font-scale,1))!important;}
+#search-view .si-r-arr{font-size:calc(15px * var(--dio-effective-font-scale,1))!important;}
+#search-view .sot{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
+#search-view .sod{font-size:calc(13px * var(--dio-effective-font-scale,1))!important;}
+#search-view .sodd{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
+#list-view .lv-sec-bdg{font-size:calc(15px * var(--dio-effective-font-scale,1))!important;}
+#list-view .lv-sec-cnt{font-size:calc(14px * var(--dio-effective-font-scale,1))!important;}
+#list-view .lv-bdg{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
+#list-view .lv-op{font-size:calc(11.5px * var(--dio-effective-font-scale,1))!important;}
+#list-view .lv-name{font-size:calc(17px * var(--dio-effective-font-scale,1))!important;}
+#list-view .lv-rg,#list-view .lv-det{font-size:calc(13px * var(--dio-effective-font-scale,1))!important;}
+#list-view .lv-parish-count{font-size:calc(8px * var(--dio-effective-font-scale,1))!important;}
+#list-view .lv-parish-count b{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
+#list-view .lv-parish-count span{font-size:calc(7px * var(--dio-effective-font-scale,1))!important;}
+#list-view .lv-url{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
+#list-view .lv-arr{font-size:calc(15px * var(--dio-effective-font-scale,1))!important;}
 @media(max-width:360px){}
 </style>
 
 
 <style id="oai-touch-ux-standard-20260506">
-/* OAI 20260506: 관구교구 공통 터치 UX 표준화 */
-.oai-touchable{transition:transform .10s ease, filter .10s ease, box-shadow .10s ease!important;will-change:transform;-webkit-tap-highlight-color:transparent!important;}
-.oai-touch-pressed{transform:scale(.966)!important;filter:brightness(.96)!important;}
+/* OAI 20260506: 공통 터치 UX 표준화 */
+.oai-touch-pressed{
+  transform:scale(.992)!important;
+  filter:brightness(.995)!important;
+  transition:transform .12s ease, filter .12s ease!important;
+}
+.oai-touchable{
+  transition:transform .12s ease, filter .12s ease!important;
+  will-change:transform;
+}
+</style>
+
+<style id="oai-diocese-smooth-entry-20260506">
+/* OAI 20260506: 관구·교구 첫 표시/탭 전환 부드럽게 */
+#map-view.on,#list-view.on,#search-view.on{animation:oaiDioFadeIn .22s ease both;}
+@keyframes oaiDioFadeIn{from{opacity:.01}to{opacity:1}}
+html.oai-dio-returning #map-view.on,html.oai-dio-returning #list-view.on,html.oai-dio-returning #search-view.on{animation:none!important;}
+</style>
+
+
+<style id="oai-ios-ui-density-v22">
+/* V37: iPhone 관구·교구 iframe 내부 UI 밀도 보정 */
+html.ios-device{--ios-dio-ui-scale:.96;}
+html.ios-device .tab-bar{height:52px!important;padding:7px 9px!important;gap:7px!important;}
+html.ios-device .tab{height:38px!important;border-radius:11px!important;}
+html.ios-device #gw-bar{gap:6px!important;padding:7px 9px!important;}
+html.ios-device .gb{min-height:34px!important;padding:0 10px!important;border-radius:11px!important;}
+html.ios-device #card{width:170px!important;border-radius:13px!important;}
+html.ios-device .c-hd{padding:12px 13px!important;}
+html.ios-device .c-bd{padding:10px 13px 12px!important;}
+html.ios-device .c-x{width:28px!important;height:28px!important;}
+html.ios-device .c-dtbtn,
+html.ios-device .c-btn{min-height:38px!important;border-radius:10px!important;}
+html.ios-device #search-view .ss{padding:10px 11px!important;}
+html.ios-device #search-view #si,
+html.ios-device #search-view #sb{height:38px!important;border-radius:10px!important;}
+html.ios-device #sres{padding:10px 11px!important;}
+html.ios-device .si-r,
+html.ios-device .lv-card{border-radius:12px!important;padding:10px 12px!important;}
+html.ios-device .cb{width:34px!important;height:34px!important;border-radius:10px!important;}
 </style>
 </head>
 <body>
@@ -1345,16 +1398,45 @@ svg.addEventListener('wheel',e=>{
   if(_zoomRAF)cancelAnimationFrame(_zoomRAF);
   _zoomRAF=requestAnimationFrame(()=>{ _applyZoom(nw,nh,mx,my,rx,ry); _zoomRAF=null; });
 },{passive:false});
-let t0=null,t1=null;
+let t0=null,t1=null,dpTap=null;
+let dioSuppressClickUntil=0;
+const DIO_TAP_LIMIT_PX=8;
+const DIO_PAN_START_PX=10;
+const DIO_PAN_DAMPING=.82;
+let dioPressedEl=null, dioPressTimer=null;
+function clearDioPressed(){
+  if(dioPressTimer){ clearTimeout(dioPressTimer); dioPressTimer=null; }
+  if(dioPressedEl){ try{ dioPressedEl.classList.remove('oai-dio-pressed'); }catch(_){} dioPressedEl=null; }
+}
+function setDioPressed(el){
+  clearDioPressed();
+  if(!el) return;
+  dioPressedEl=el;
+  try{ el.classList.add('oai-dio-pressed'); }catch(_){}
+}
+function scheduleDioPressed(el){
+  clearDioPressed();
+  if(!el) return;
+  dioPressTimer=setTimeout(function(){ setDioPressed(el); },55);
+}
+function clearDioTouch(){ t0=null; t1=null; dpTap=null; clearDioPressed(); }
+svg.addEventListener('click',e=>{
+  if(dioSuppressClickUntil && Date.now()<dioSuppressClickUntil){
+    e.preventDefault();
+    e.stopImmediatePropagation();
+  }
+},true);
 svg.addEventListener('touchstart',e=>{
   e.preventDefault();
-  if(e.touches.length===1 && e.target && e.target.classList && e.target.classList.contains('dp')){
-    showCard(e.target);
-    dragging=false; t0=null; t1=null;
-    return;
-  }
+  dpTap=null;
   if(e.touches.length===1){
-    t0={x:e.touches[0].clientX,y:e.touches[0].clientY,vx,vy};
+    const t=e.touches[0];
+    if(e.target && e.target.classList && e.target.classList.contains('dp')){
+      dpTap={el:e.target,x:t.clientX,y:t.clientY,moved:false};
+      scheduleDioPressed(e.target);
+    }
+    dragging=false;
+    t0={x:t.clientX,y:t.clientY,vx,vy,started:false};
     t1=null;
   }
   if(e.touches.length===2){
@@ -1367,19 +1449,29 @@ svg.addEventListener('touchstart',e=>{
     const rx=(cx-rect.left)/rect.width;
     const ry=(cy-rect.top)/rect.height;
     t1={d,vw,vh,vx,vy,cx,cy,rx,ry,mx:rx*vw+vx,my:ry*vh+vy};
-    t0=null;
+    t0=null; dpTap=null;
   }
 },{passive:false});
 svg.addEventListener('touchmove',e=>{
   e.preventDefault();
   const rect=svg.getBoundingClientRect();
+  if(dpTap && e.touches.length===1){
+    const dx=e.touches[0].clientX-dpTap.x, dy=e.touches[0].clientY-dpTap.y;
+    if(Math.hypot(dx,dy)>DIO_TAP_LIMIT_PX){ dpTap.moved=true; clearDioPressed(); }
+  }
   if(e.touches.length===1&&t0){
+    const dx=e.touches[0].clientX-t0.x, dy=e.touches[0].clientY-t0.y;
+    if(!t0.started && Math.hypot(dx,dy)<DIO_PAN_START_PX) return;
+    t0.started=true;
+    if(dpTap){ dpTap.moved=true; clearDioPressed(); }
+    dioSuppressClickUntil=Date.now()+450;
     const sx=vw/rect.width,sy=vh/rect.height;
-    vx=t0.vx-(e.touches[0].clientX-t0.x)*sx;
-    vy=t0.vy-(e.touches[0].clientY-t0.y)*sy;
+    vx=t0.vx-(dx*DIO_PAN_DAMPING)*sx;
+    vy=t0.vy-(dy*DIO_PAN_DAMPING)*sy;
     setVB();
   }
   if(e.touches.length===2&&t1){
+    dioSuppressClickUntil=Date.now()+450;
     const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
     const f=t1.d/d; // d 작아지면 f>1 → 축소
     const nw=Math.max(80,Math.min(1800,t1.vw*f));
@@ -1391,6 +1483,21 @@ svg.addEventListener('touchmove',e=>{
     setVB();
   }
 },{passive:false});
+svg.addEventListener('touchend',e=>{
+  e.preventDefault();
+  const dioTapped = !!(dpTap && !dpTap.moved && e.touches.length===0);
+  if(dioTapped){
+    dioSuppressClickUntil=Date.now()+450;
+    setDioPressed(dpTap.el);
+    showCard(dpTap.el);
+    setTimeout(clearDioPressed,130);
+  }
+  if(e.touches.length===0){
+    t0=null; t1=null; dpTap=null;
+    if(!dioTapped) clearDioPressed();
+  }
+},{passive:false});
+svg.addEventListener('touchcancel',clearDioTouch,{passive:true});
 
 const GW_COL={'서울관구':'#1a6bb5','대구관구':'#c05a00','광주관구':'#7a1fa2'};
 
@@ -1764,44 +1871,124 @@ window.addEventListener('pageshow',function(){
   if(window.__oaiTouchUxKeyboard20260506) return;
   window.__oaiTouchUxKeyboard20260506 = true;
 
-  var DELAY_MS = 90;
-  var delayedSelectors = ['.tab','.lv-card','.si-r','.gb','.filter-btn'].join(',');
-  var directSelectors = ['a','input','textarea','select','label','.c-btn','.c-x','#sb'].join(',');
+  var ACTION_DELAY_MS = 55;
+  var FEEDBACK_MS = 170;
+  var PRESS_DELAY_MS = 85;
+  var MOVE_CANCEL_PX = 7;
+  var delayedSelectors = '#list-view .lv-card';
+  var directSelectors = [
+    'a','input','textarea','select','label',
+    '#card','#card *','.c-x','.c-btn','[data-dio-url]',
+    '.tab','.tab-btn','#si','#font-controls button'
+  ].join(',');
 
-  function closest(el, sel){try{return el && el.closest ? el.closest(sel) : null;}catch(e){return null;}}
+  var activeTouch = null;
+  function closest(el, sel){ try{return el && el.closest ? el.closest(sel) : null;}catch(e){return null;} }
+  function clearPress(el){ if(!el) return; try{el.classList.remove('oai-touch-pressed');}catch(e){} el.__oaiPressing=false; }
   function press(el){
     if(!el || el.__oaiPressing) return;
     el.__oaiPressing = true;
     el.classList.add('oai-touchable','oai-touch-pressed');
-    setTimeout(function(){try{el.classList.remove('oai-touch-pressed');}catch(e){} el.__oaiPressing=false;}, DELAY_MS + 40);
+    setTimeout(function(){ clearPress(el); }, FEEDBACK_MS);
   }
-  document.addEventListener('pointerdown',function(e){
-    var el=closest(e.target,delayedSelectors);
-    if(!el || closest(e.target,directSelectors)) return;
-    press(el);
-  },true);
-  document.addEventListener('click',function(e){
+  function cancelActive(){
+    if(!activeTouch) return;
+    activeTouch.canceled = true;
+    if(activeTouch.timer){ clearTimeout(activeTouch.timer); activeTouch.timer = null; }
+    clearPress(activeTouch.el);
+    try{ activeTouch.el.__oaiTouchCanceledUntil = Date.now() + 350; }catch(e){}
+  }
+
+  document.addEventListener('pointerdown', function(e){
+    if(closest(e.target, directSelectors)) return;
+    var el = closest(e.target, delayedSelectors);
+    if(!el) return;
+    activeTouch = {el:el,id:e.pointerId,x:e.clientX,y:e.clientY,canceled:false,timer:null};
+    activeTouch.timer = setTimeout(function(){
+      if(activeTouch && activeTouch.el === el && !activeTouch.canceled) press(el);
+    }, PRESS_DELAY_MS);
+  }, true);
+  document.addEventListener('pointermove', function(e){
+    if(!activeTouch || activeTouch.id !== e.pointerId) return;
+    var dx=Math.abs(e.clientX-activeTouch.x), dy=Math.abs(e.clientY-activeTouch.y);
+    if(dx > MOVE_CANCEL_PX || dy > MOVE_CANCEL_PX) cancelActive();
+  }, true);
+  document.addEventListener('pointercancel', cancelActive, true);
+  document.addEventListener('pointerup', function(e){
+    if(!activeTouch || activeTouch.id !== e.pointerId) return;
+    if(activeTouch.timer){ clearTimeout(activeTouch.timer); activeTouch.timer = null; }
+    if(activeTouch.canceled) clearPress(activeTouch.el);
+    activeTouch = null;
+  }, true);
+
+  document.addEventListener('click', function(e){
     if(e.__oaiTouchReplay) return;
-    if(closest(e.target,directSelectors)) return;
-    var el=closest(e.target,delayedSelectors);
-    if(!el || el.__oaiClickDelay) return;
-    e.preventDefault(); e.stopImmediatePropagation(); press(el); el.__oaiClickDelay=true;
+    if(closest(e.target, directSelectors)) return;
+    var el = closest(e.target, delayedSelectors);
+    if(!el) return;
+    if(el.__oaiTouchCanceledUntil && Date.now() < el.__oaiTouchCanceledUntil){ e.preventDefault(); e.stopImmediatePropagation(); return; }
+    if(el.__oaiClickDelay) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    press(el);
+    el.__oaiClickDelay = true;
     setTimeout(function(){
-      try{var ev=new MouseEvent('click',{bubbles:true,cancelable:true,view:window}); ev.__oaiTouchReplay=true; el.dispatchEvent(ev);}catch(err){try{el.click();}catch(_e){}}
-      setTimeout(function(){el.__oaiClickDelay=false;},0);
-    },DELAY_MS);
-  },true);
+      try{
+        var ev = new MouseEvent('click', {bubbles:true,cancelable:true,view:window});
+        ev.__oaiTouchReplay = true;
+        el.dispatchEvent(ev);
+      }catch(err){ try{ el.click(); }catch(_e){} }
+      setTimeout(function(){ el.__oaiClickDelay = false; }, 0);
+    }, ACTION_DELAY_MS);
+  }, true);
+
   function disableKeyboardSuggestions(root){
-    root=root||document;
-    var nodes=root.querySelectorAll?root.querySelectorAll('input[type="text"], input[type="search"], input:not([type]), textarea'):[];
+    root = root || document;
+    var nodes = root.querySelectorAll ? root.querySelectorAll('input[type="text"], input[type="search"], input:not([type]), textarea') : [];
     nodes.forEach(function(el){
-      if(el.type==='password'||el.type==='number'||el.type==='tel'||el.type==='email') return;
-      el.setAttribute('autocomplete','off');el.setAttribute('autocorrect','off');el.setAttribute('autocapitalize','off');el.setAttribute('spellcheck','false');el.setAttribute('enterkeyhint','done');
+      if(el.type === 'password' || el.type === 'number' || el.type === 'tel' || el.type === 'email') return;
+      el.setAttribute('autocomplete','off');
+      el.setAttribute('autocorrect','off');
+      el.setAttribute('autocapitalize','off');
+      el.setAttribute('spellcheck','false');
+      el.setAttribute('enterkeyhint','done');
     });
   }
   disableKeyboardSuggestions(document);
-  document.addEventListener('DOMContentLoaded',function(){disableKeyboardSuggestions(document);});
+  document.addEventListener('DOMContentLoaded', function(){ disableKeyboardSuggestions(document); });
+  try{
+    var mo = new MutationObserver(function(muts){
+      for(var i=0;i<muts.length;i++) for(var j=0;j<muts[i].addedNodes.length;j++){
+        var n=muts[i].addedNodes[j]; if(n && n.nodeType===1) disableKeyboardSuggestions(n);
+      }
+    });
+    mo.observe(document.documentElement,{childList:true,subtree:true});
+  }catch(e){}
 })();
 </script>
+
+<script>
+(function(){
+  'use strict';
+  var KEY='prayer_font_size', BASE=16;
+  function readScale(){
+    try{
+      var px=parseInt(localStorage.getItem(KEY)||'16',10);
+      if(!px || px < 12 || px > 32) px=16;
+      return px/BASE;
+    }catch(e){ return 1; }
+  }
+  function applyDioceseFontScale(){
+    try{
+      document.documentElement.style.setProperty('--diocese-font-scale', String(readScale()));
+    }catch(e){}
+  }
+  applyDioceseFontScale();
+  window.addEventListener('storage', function(e){ if(!e || e.key===KEY) applyDioceseFontScale(); });
+  document.addEventListener('visibilitychange', function(){ if(document.visibilityState==='visible') applyDioceseFontScale(); }, true);
+  window.addEventListener('pageshow', applyDioceseFontScale, true);
+})();
+</script>
+
 </body>
 </html>
