@@ -137,7 +137,7 @@
 }
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;height:100%;background:var(--navy)!important;font-family:'Noto Sans KR',sans-serif;overscroll-behavior:none;overscroll-behavior-x:none!important;overflow-x:hidden!important;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html,body{width:100%;height:100%;background:var(--navy)!important;font-family:'Noto Sans KR',sans-serif;overscroll-behavior:none;overscroll-behavior-x:none!important;overflow:hidden!important;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 html.ios-device{--ios-inner-font-scale:.91;}
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-thumb{background:rgba(26,36,86,.15);border-radius:2px}
@@ -3086,3 +3086,39 @@ html.ios-device .trail-sh-head{padding-left:12px!important;padding-right:12px!im
 html.ios-device .qna-tab{height:36px!important;border-radius:10px!important;}
 html.ios-device .qna-card,
 html.ios-device .qna-panel{border-radius:13px!important;}
+
+
+/* V37-6-5: 빠른메뉴 외부 복귀 흔들림 최소 보정
+   - history/popstate/goToCover는 건드리지 않고, 무거운 blur/큰 눌림 변형만 줄인다. */
+.mass-quick-modal .guide-backdrop{
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+  background:rgba(31,42,68,.30)!important;
+}
+.mass-quick-modal .guide-panel,
+.mass-quick-panel{
+  transform:translateZ(0);
+  backface-visibility:hidden;
+  contain:layout paint style;
+}
+.mass-quick-btn.app-pressing,
+.mass-quick-btn.mass-quick-primary.app-pressing{
+  transform:translateY(2px) scale(.995)!important;
+  filter:brightness(.98)!important;
+  box-shadow:0 7px 16px rgba(31,42,68,.08)!important;
+  transition:transform .10s ease,filter .10s ease,box-shadow .10s ease!important;
+}
+
+
+/* V37-6-9: 빠른메뉴 버튼 눌림 효과 복원
+   - 외부사이트 이동 반응은 지연하지 않고, 버튼 자체만 작게 눌리는 느낌을 준다. */
+#mass-quick-modal .mass-quick-btn.app-pressing,
+#mass-quick-modal .mass-quick-btn.mass-quick-primary.app-pressing,
+#mass-quick-modal .mass-quick-btn:active,
+#mass-quick-modal .mass-quick-btn.mass-quick-primary:active{
+  transform:translateY(2px) scale(.995)!important;
+  filter:brightness(.97)!important;
+  box-shadow:0 6px 14px rgba(31,42,68,.08)!important;
+  transition:transform .08s ease,filter .08s ease,box-shadow .08s ease!important;
+}
+
