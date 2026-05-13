@@ -173,8 +173,20 @@
        바로 앱 종료 흐름으로 빠질 수 있다. */
     if(isGuideModalOpen()){
       _restoring = false;
+      var mqWasOpen = false;
+      try{ var mq = $b('mass-quick-modal'); mqWasOpen = !!(mq && mq.classList.contains('show')); }catch(e){ mqWasOpen = false; }
       closeGuideModals();
-      try{ history.replaceState({_p:1}, '', _href); }catch(e){ console.warn("[가톨릭길동무]", e); }
+      /* 빠른메뉴 팝업에서 뒤로가기를 누른 경우에는 반드시 커버에 남긴다.
+         Android/PWA에서는 popstate가 이미 루트 상태로 내려온 뒤 실행될 수 있으므로
+         replaceState만 하면 다음 뒤로가기가 즉시 앱 종료로 이어진다. 루트(0) + 트랩(1)을
+         다시 세워 팝업 → 커버 → 종료 안내 → 앱 종료 흐름을 보장한다. */
+      try{
+        if(mqWasOpen && typeof window.goToCover === 'function') window.goToCover();
+        if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
+        if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
+        history.replaceState({_p:0}, '', _href);
+        history.pushState({_p:1}, '', _href);
+      }catch(e){ console.warn("[가톨릭길동무]", e); }
       return;
     }
 
@@ -210,7 +222,17 @@
 
   /* Cordova 물리 백버튼 */
   document.addEventListener('backbutton', function(){
-    if(isGuideModalOpen()){ closeGuideModals(); return; }
+    if(isGuideModalOpen()){
+      var mqWasOpen = false;
+      try{ var mq = $b('mass-quick-modal'); mqWasOpen = !!(mq && mq.classList.contains('show')); }catch(e){ mqWasOpen = false; }
+      closeGuideModals();
+      if(mqWasOpen){
+        try{ if(typeof window.goToCover === 'function') window.goToCover(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+        try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+        try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      }
+      return;
+    }
     var prayerOpen = $b('prayer-view');
     if(prayerOpen && prayerOpen.classList.contains('open')){
       if(typeof window._closePrayerAndReturn === 'function') window._closePrayerAndReturn();
