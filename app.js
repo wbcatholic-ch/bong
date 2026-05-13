@@ -274,7 +274,7 @@ var _massQuickResumeBusy = false;
 function _resumeMassQuickReturnIfNeeded(){
   try{
     // 매일미사/성가 외부 사이트에서 돌아온 경우에만 빠른메뉴 팝업을 복구한다.
-    // V38: pageshow에서 reload 판정으로 먼저 지워버리면 외부 복귀 플래그가 사라질 수 있으므로,
+    // V38-1: pageshow에서 reload 판정으로 먼저 지워버리면 외부 복귀 플래그가 사라질 수 있으므로,
     // 복귀 플래그 확인을 가장 먼저 하고 실제 복구는 한 번만 예약한다.
     if(!_shouldMassQuickReturn()) return false;
     if(document.documentElement.classList.contains('app-active')) return false;
@@ -397,7 +397,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V38';
+    var target = btn.getAttribute('data-target-version') || 'V38-1';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -553,7 +553,7 @@ function missaLoaded(){
 
 function openPrayerBook(opts){
   // 주요기도문은 앱 내부 화면이다. 빠른메뉴에서 들어와도 외부복귀 팝업 플래그를 쓰지 않고,
-  // 뒤로가기 기준을 '기도문 → 커버'로 고정한다.
+  // 뒤로가기 기준을 '기도문 → 빠른메뉴 팝업 → 커버'로 고정한다.
   if(opts && opts.fromMassQuick){
     try{
       _setMassQuickReturn(false);
@@ -587,10 +587,12 @@ function closePrayerView(){
 function _closePrayerAndReturn(){
   closePrayerView();
   if(_shouldQuickPrayerToCover()){
+    // 빠른메뉴 팝업에서 주요기도문으로 들어온 경우:
+    // 기도문 목록 → 빠른메뉴 팝업 → 커버 흐름을 복원한다.
     try{ _setQuickPrayerToCover(false); }catch(e){ console.warn("[가톨릭길동무]", e); }
     try{ _setMassQuickReturn(false); }catch(e){ console.warn("[가톨릭길동무]", e); }
-    if(typeof goToCover==='function') goToCover();
-    try{ if(typeof _ensureCoverBackTrap==='function') _ensureCoverBackTrap(); }catch(e){ console.warn("[가톨릭길동무]", e); }
+    if(typeof _returnToMassQuickMenu === 'function') _returnToMassQuickMenu();
+    else if(typeof goToCover==='function') goToCover();
     return;
   }
   if(_shouldMassQuickReturn()) _returnToMassQuickMenu();
@@ -689,7 +691,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V38';
+    frame.src='diocese.html?v=V38-1';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -3786,7 +3788,7 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
   });
   on('mass-quick-prayer', 'click', function() {
     // 주요기도문은 외부 사이트가 아니므로 매일미사/성가 복귀 플래그를 쓰지 않는다.
-    // 빠른메뉴에서 들어와도 뒤로가기는 항상 커버로 보낸다.
+    // 빠른메뉴에서 들어오면 뒤로가기는 빠른메뉴 팝업을 한 번 거친 뒤 커버로 보낸다.
     _setMassQuickReturn(false);
     if (typeof _setQuickPrayerToCover === 'function') _setQuickPrayerToCover(true);
     if (typeof _hideMassQuickMenuOnly === 'function') _hideMassQuickMenuOnly();
