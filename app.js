@@ -381,7 +381,9 @@ function _forceCoverAfterPrayerQuickPopup(){
     _clearCoverExitArmed();
     _markPrayerCoverNeedsFirstToast(false);
     try{
-      window.__OAI_PRAYER_POPUP_COVER_GUARD_UNTIL__ = 0;
+      // V2: 기도문 복귀 팝업을 닫는 순간 일부 Android/iOS WebView가 popstate를 한 번 더 보내도
+      // 커버 트랩을 다시 세우고 앱 종료 흐름으로 빠지지 않게 짧은 보호 시간을 둔다.
+      window.__OAI_PRAYER_POPUP_COVER_GUARD_UNTIL__ = Date.now() + 1800;
       window.__OAI_PRAYER_COVER_FORCE_FIRST_TOAST_UNTIL__ = Date.now() + 10000;
     }catch(_e){}
     function prime(reason){
@@ -431,7 +433,12 @@ function _openPrayerReturnQuickMenuStable(){
     if(modal){
       try{ modal.dataset.returnSource='prayer'; }catch(_e){}
     }
-    try{ if(typeof _ensureCoverBackTrap === 'function') _ensureCoverBackTrap('prayer-return-popup'); }catch(_e){}
+    try{
+      // V2: 기도문에서 돌아온 빠른메뉴 팝업은 열기 직전에 커버용 [root→trap]을 강제로 재설정한다.
+      // 기존 ensure 방식은 history.state가 _p:1이면 그대로 지나가서, 간헐적으로 팝업 Back이 앱 종료로 빠질 수 있었다.
+      if(typeof _resetCoverBackTrap === 'function') _resetCoverBackTrap('prayer-return-popup');
+      else if(typeof _ensureCoverBackTrap === 'function') _ensureCoverBackTrap('prayer-return-popup');
+    }catch(_e){}
     openMassQuickMenu({keepReturn:true, fromPrayerReturn:true});
   }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
@@ -534,7 +541,7 @@ var _massQuickResumeBusy = false;
 function _resumeMassQuickReturnIfNeeded(){
   try{
     // 매일미사/성가 외부 사이트에서 돌아온 경우에만 빠른메뉴 팝업을 복구한다.
-    // V37-6-12: pageshow에서 reload 판정으로 먼저 지워버리면 외부 복귀 플래그가 사라질 수 있으므로,
+    // 기존 보정: pageshow에서 reload 판정으로 먼저 지워버리면 외부 복귀 플래그가 사라질 수 있으므로,
     // 복귀 플래그 확인을 가장 먼저 하고 실제 복구는 한 번만 예약한다.
     if(!_shouldMassQuickReturn()) return false;
     if(document.documentElement.classList.contains('app-active')) return false;
@@ -630,9 +637,11 @@ function _showRefreshContentDialog(onConfirm){
     wrap.setAttribute('aria-modal','true');
     wrap.setAttribute('aria-label','Refresh Content');
     wrap.style.cssText = 'position:fixed;inset:0;z-index:10090;display:flex;align-items:center;justify-content:center;background:rgba(14,21,53,.36);padding:22px;box-sizing:border-box;';
-    wrap.innerHTML = '<div style="width:min(92vw,370px);background:#fffaf2;border:1px solid rgba(212,170,106,.42);border-radius:20px;box-shadow:0 18px 42px rgba(14,21,53,.24);padding:22px 18px 17px;text-align:center;font-family:inherit;color:#1f2937;box-sizing:border-box;">' +
+    wrap.innerHTML = '<div style="width:min(92vw,380px);background:#fffaf2;border:1px solid rgba(212,170,106,.42);border-radius:20px;box-shadow:0 18px 42px rgba(14,21,53,.24);padding:22px 18px 17px;text-align:center;font-family:inherit;color:#1f2937;box-sizing:border-box;">' +
       '<div style="font-size:21px;font-weight:900;line-height:1.2;margin-bottom:10px;">Refresh Content</div>' +
-      '<div style="font-size:15px;font-weight:700;line-height:1.55;color:#64748b;margin-bottom:18px;">앱 화면을 안정형으로 다시 불러올까요?<br>캐시와 설치 상태는 삭제하지 않습니다.</div>' +
+      '<div style="font-size:15px;font-weight:800;line-height:1.55;color:#475569;margin-bottom:10px;">앱 화면을 안정형으로 다시 불러옵니다.</div>' +
+      '<div style="font-size:14px;font-weight:700;line-height:1.55;color:#64748b;margin-bottom:12px;">캐시와 설치 상태는 삭제하지 않습니다.<br>글자 크기와 즐겨찾기도 그대로 유지됩니다.</div>' +
+      '<div style="font-size:12.5px;font-weight:800;line-height:1.45;color:#8A6A2F;background:#fff4d7;border:1px solid rgba(212,170,106,.45);border-radius:12px;padding:8px 10px;margin-bottom:16px;">문제가 계속되면 새로고침 버튼을 더 길게 눌러<br>앱 캐시 초기화를 실행할 수 있습니다.</div>' +
       '<div style="display:flex;gap:10px;justify-content:center;">' +
       '<button type="button" data-oai-refresh-cancel="1" style="height:42px;min-width:96px;padding:0 16px;border:1px solid #d8d1c5;border-radius:999px;background:#fff;color:#475569;font-family:inherit;font-size:15px;font-weight:850;">취소</button>' +
       '<button type="button" data-oai-refresh-ok="1" style="height:42px;min-width:96px;padding:0 18px;border:0;border-radius:999px;background:#1f2a44;color:#fff;font-family:inherit;font-size:15px;font-weight:900;">확인</button>' +
@@ -657,10 +666,8 @@ function refreshAppFilesOnly(){
 window.refreshAppFilesOnly = refreshAppFilesOnly;
 
 // 관리용 완전 정리 함수: 일반 새로고침 버튼에서는 호출하지 않는다.
-// 캐시가 심하게 꼬였을 때만 콘솔/별도 호출로 사용한다.
-async function clearAppFilesCacheCompletely(){
-  var msg = '앱 파일 캐시와 서비스워커를 완전히 삭제할까요?\n일반 새로고침보다 강한 정리입니다.';
-  if(!window.confirm(msg)) return;
+// 캐시가 심하게 꼬였을 때만 새로고침 버튼 길게 누르기 또는 별도 호출로 사용한다.
+async function _runClearAppFilesCacheCompletely(){
   try{
     if(window.caches && caches.keys){
       var keys = await caches.keys();
@@ -681,6 +688,41 @@ async function clearAppFilesCacheCompletely(){
     location.reload();
   }
 }
+function _showCacheClearDialog(onConfirm){
+  try{
+    var old = document.getElementById('oai-cache-clear-dialog');
+    if(old && old.parentNode) old.parentNode.removeChild(old);
+    var wrap = document.createElement('div');
+    wrap.id = 'oai-cache-clear-dialog';
+    wrap.setAttribute('role','dialog');
+    wrap.setAttribute('aria-modal','true');
+    wrap.setAttribute('aria-label','앱 캐시 초기화');
+    wrap.style.cssText = 'position:fixed;inset:0;z-index:10095;display:flex;align-items:center;justify-content:center;background:rgba(14,21,53,.46);padding:22px;box-sizing:border-box;';
+    wrap.innerHTML = '<div style="width:min(92vw,390px);background:#fffaf2;border:2px solid rgba(212,170,106,.70);border-radius:20px;box-shadow:0 18px 46px rgba(14,21,53,.30);padding:22px 18px 17px;text-align:center;font-family:inherit;color:#1f2937;box-sizing:border-box;">' +
+      '<div style="font-size:21px;font-weight:950;line-height:1.2;margin-bottom:10px;color:#1f2a44;">앱 캐시 초기화</div>' +
+      '<div style="font-size:15px;font-weight:800;line-height:1.55;color:#475569;margin-bottom:10px;">앱 파일 캐시를 삭제하고 다시 불러옵니다.</div>' +
+      '<div style="font-size:14px;font-weight:700;line-height:1.55;color:#64748b;margin-bottom:12px;">화면이 이상하게 꼬였을 때만 사용하세요.<br>글자 크기와 즐겨찾기는 유지됩니다.</div>' +
+      '<div style="font-size:12.5px;font-weight:800;line-height:1.45;color:#8A3B20;background:#fff1e8;border:1px solid rgba(194,65,12,.22);border-radius:12px;padding:8px 10px;margin-bottom:16px;">인터넷이 약하면 다시 불러오는 데 시간이 걸릴 수 있습니다.</div>' +
+      '<div style="display:flex;gap:10px;justify-content:center;">' +
+      '<button type="button" data-oai-cache-cancel="1" style="height:42px;min-width:96px;padding:0 16px;border:1px solid #d8d1c5;border-radius:999px;background:#fff;color:#475569;font-family:inherit;font-size:15px;font-weight:850;">취소</button>' +
+      '<button type="button" data-oai-cache-ok="1" style="height:42px;min-width:120px;padding:0 18px;border:0;border-radius:999px;background:#1f2a44;color:#fff;font-family:inherit;font-size:15px;font-weight:900;">초기화</button>' +
+      '</div></div>';
+    function close(){ try{ if(wrap && wrap.parentNode) wrap.parentNode.removeChild(wrap); }catch(_e){} }
+    wrap.addEventListener('click', function(e){ if(e.target === wrap) close(); }, true);
+    var cancel = wrap.querySelector('[data-oai-cache-cancel]');
+    var ok = wrap.querySelector('[data-oai-cache-ok]');
+    if(cancel) cancel.onclick = function(e){ e.preventDefault(); close(); };
+    if(ok) ok.onclick = function(e){ e.preventDefault(); close(); if(typeof onConfirm === 'function') onConfirm(); };
+    document.body.appendChild(wrap);
+    setTimeout(function(){ try{ if(cancel) cancel.focus(); }catch(_e){} }, 0);
+  }catch(e){
+    console.warn('[가톨릭길동무]', e);
+    if(typeof onConfirm === 'function') onConfirm();
+  }
+}
+function clearAppFilesCacheCompletely(){
+  _showCacheClearDialog(_runClearAppFilesCacheCompletely);
+}
 window.clearAppFilesCacheCompletely = clearAppFilesCacheCompletely;
 
 function syncCoverUpdateVersionState(){
@@ -689,7 +731,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V38-34';
+    var target = btn.getAttribute('data-target-version') || 'V2';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -911,16 +953,12 @@ function _closePrayerAndReturn(){
     return /iphone|ipad|ipod/.test(u) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   }
   function isKakao(){ return ua().indexOf('kakaotalk') > -1; }
-  function isAndroid(){ return ua().indexOf('android') > -1; }
   function isStandalone(){
     try{ if(window.navigator.standalone === true) return true; }catch(e){ console.warn('[가톨릭길동무]', e); }
     try{ return window.matchMedia && window.matchMedia('(display-mode: standalone)').matches; }catch(e){ console.warn('[가톨릭길동무]', e); }
     return false;
   }
   function shouldShow(){
-    // V38-34 임시 확인용: iPhone 설치 안내를 Android에서도 확인할 수 있게 한다.
-    // 실제 배포 확정 후에는 아래 Android 조건만 제거하면 된다.
-    if(isAndroid()) return true;
     return isIOS() && isKakao() && !isStandalone();
   }
   function showModal(){
@@ -940,10 +978,9 @@ function _closePrayerAndReturn(){
     var banner = document.getElementById('ios-kakao-safari-banner');
     if(!banner) return;
     var show = shouldShow();
-    var preview = show && isAndroid();
     if(show){
-      document.documentElement.classList.toggle('ios-install-preview-mode', !!preview);
-      document.documentElement.classList.toggle('ios-kakao-inapp', !preview);
+      document.documentElement.classList.add('ios-kakao-inapp');
+      document.documentElement.classList.remove('ios-install-preview-mode');
       banner.hidden = false;
       banner.setAttribute('aria-hidden','false');
     }else{
@@ -994,7 +1031,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V38-34';
+    frame.src='diocese.html?v=V2';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -2273,13 +2310,13 @@ function _mkrImgRetreat(color,big){
 }
 function _mkrImg(color,big){
   const w=big?40:28,h=big?52:36;
-  // V37: iPhone/Android marker cross unified to the cleaner text-glyph marker.
-  // This avoids Safari's SVG rect rendering difference inside the white marker circle.
-  const crossBig = `<text x="20" y="25" text-anchor="middle" font-size="13" fill="${color}" font-family="serif" font-weight="bold">✝</text>`;
-  const crossSmall = `<text x="14" y="18" text-anchor="middle" font-size="9" fill="${color}" font-family="serif" font-weight="bold">✝</text>`;
+  // V2: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
+  // This removes the purple emoji background and keeps a plain white cross.
+  const crossBig = `<g fill="#fff" opacity="0.96"><rect x="18.45" y="10.5" width="3.1" height="18.5" rx="1.1"/><rect x="13.4" y="16.3" width="13.2" height="3.1" rx="1.1"/></g>`;
+  const crossSmall = `<g fill="#fff" opacity="0.96"><rect x="12.85" y="7.8" width="2.3" height="12.8" rx="0.8"/><rect x="9.6" y="11.7" width="8.8" height="2.3" rx="0.8"/></g>`;
   const svg=big?
-  `<svg ${_NS} width="40" height="52" viewBox="0 0 40 52"><path d="M20 0C8.954 0 0 8.954 0 20c0 14.21 20 32 20 32S40 34.21 40 20C40 8.954 31.046 0 20 0z" fill="${color}"/><circle cx="20" cy="20" r="9" fill="white" opacity="0.95"/>${crossBig}</svg>`:
-  `<svg ${_NS} width="28" height="36" viewBox="0 0 28 36"><path d="M14 0C6.268 0 0 6.268 0 14c0 9.941 14 22 14 22S28 23.941 28 14C28 6.268 21.732 0 14 0z" fill="${color}" opacity="0.9"/><circle cx="14" cy="14" r="6" fill="white" opacity="0.9"/>${crossSmall}</svg>`;
+  `<svg ${_NS} width="40" height="52" viewBox="0 0 40 52"><path d="M20 0C8.954 0 0 8.954 0 20c0 14.21 20 32 20 32S40 34.21 40 20C40 8.954 31.046 0 20 0z" fill="${color}"/>${crossBig}</svg>`:
+  `<svg ${_NS} width="28" height="36" viewBox="0 0 28 36"><path d="M14 0C6.268 0 0 6.268 0 14c0 9.941 14 22 14 22S28 23.941 28 14C28 6.268 21.732 0 14 0z" fill="${color}" opacity="0.92"/>${crossSmall}</svg>`;
   return new _MI(_svgUrl(svg),new _SZ(w,h),{offset:new _PT(w/2,h)});
 }
 
@@ -4115,7 +4152,112 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
   });
 
   // ── 커버 기타 ──
-  on('cover-update-btn','click', function(e) { e.stopPropagation(); refreshAppFilesOnly(); });
+  (function bindCoverRefreshPressActions(){
+    var refreshBtn = document.getElementById('cover-update-btn');
+    if(!refreshBtn) return;
+    var holdTimer = null;
+    var pressActive = false;
+    var cacheActionFired = false;
+    var handledUntil = 0;
+    // 짧은 탭과 보통 길게 누른 뒤 놓기는 일반 새로고침, 더 오래 누르면 캐시 초기화.
+    var CACHE_HOLD_MS = 1350;
+    function now(){ return Date.now ? Date.now() : new Date().getTime(); }
+    function markHandled(ms){
+      handledUntil = now() + (ms || 900);
+      try{ window.__OAI_REFRESH_PRESS_HANDLED_UNTIL__ = handledUntil; }catch(_e){}
+    }
+    function recentlyHandled(){
+      var t = now();
+      try{
+        return t < handledUntil ||
+          (window.__OAI_REFRESH_PRESS_HANDLED_UNTIL__ && t < window.__OAI_REFRESH_PRESS_HANDLED_UNTIL__);
+      }catch(_e){
+        return t < handledUntil;
+      }
+    }
+    function stopEvent(e, preventDefault){
+      try{
+        if(e){
+          e.stopPropagation();
+          if(preventDefault && e.cancelable) e.preventDefault();
+        }
+      }catch(_e){}
+    }
+    function clearHoldOnly(){
+      if(holdTimer){ clearTimeout(holdTimer); holdTimer = null; }
+    }
+    function armPress(e){
+      try{ if(e && e.button !== undefined && e.button !== 0) return; }catch(_e){}
+      // 여기서 preventDefault를 걸면 일부 iPhone/Android에서 짧은 탭 click이 사라질 수 있어 막지 않는다.
+      stopEvent(e, false);
+      clearHoldOnly();
+      pressActive = true;
+      cacheActionFired = false;
+      try{
+        refreshBtn.style.webkitUserSelect = 'none';
+        refreshBtn.style.userSelect = 'none';
+        refreshBtn.style.webkitTouchCallout = 'none';
+      }catch(_e){}
+      holdTimer = setTimeout(function(){
+        holdTimer = null;
+        if(!pressActive || recentlyHandled()) return;
+        cacheActionFired = true;
+        pressActive = false;
+        markHandled(1600);
+        try{ if(navigator.vibrate) navigator.vibrate(25); }catch(_e){}
+        if(typeof clearAppFilesCacheCompletely === 'function') clearAppFilesCacheCompletely();
+      }, CACHE_HOLD_MS);
+    }
+    function releasePress(e){
+      stopEvent(e, true);
+      if(recentlyHandled()){
+        pressActive = false;
+        clearHoldOnly();
+        return;
+      }
+      if(!pressActive){
+        clearHoldOnly();
+        return;
+      }
+      pressActive = false;
+      clearHoldOnly();
+      if(!cacheActionFired){
+        markHandled(900);
+        refreshAppFilesOnly();
+      }
+    }
+    function cancelPress(e){
+      stopEvent(e, false);
+      pressActive = false;
+      clearHoldOnly();
+    }
+    function preventNativePressMenu(e){
+      stopEvent(e, true);
+      return false;
+    }
+
+    on(refreshBtn, 'pointerdown', armPress, {passive:false});
+    on(refreshBtn, 'pointerup', releasePress, {passive:false});
+    on(refreshBtn, 'pointercancel', cancelPress, {passive:false});
+    // iPhone/Android에서는 손가락이 버튼 경계 밖으로 살짝 흔들려도 짧은 탭이 취소되지 않게 한다.
+    on(refreshBtn, 'pointerleave', function(e){ try{ if(e && e.pointerType === 'mouse') cancelPress(e); }catch(_e){} }, {passive:false});
+    // 포인터 이벤트가 불안정한 환경을 위해 터치/마우스 입력도 같은 컨트롤러에 연결한다.
+    on(refreshBtn, 'touchstart', armPress, {passive:false});
+    on(refreshBtn, 'touchend', releasePress, {passive:false});
+    on(refreshBtn, 'touchcancel', cancelPress, {passive:false});
+    on(refreshBtn, 'mousedown', armPress, {passive:false});
+    on(refreshBtn, 'mouseup', releasePress, {passive:false});
+    on(refreshBtn, 'mouseleave', cancelPress, {passive:false});
+    on(refreshBtn, 'contextmenu', preventNativePressMenu, {capture:true});
+    on(refreshBtn, 'selectstart', preventNativePressMenu, {capture:true});
+    on(refreshBtn, 'dragstart', preventNativePressMenu, {capture:true});
+    on('cover-update-btn','click', function(e) {
+      stopEvent(e, true);
+      if(recentlyHandled()) return;
+      markHandled(900);
+      refreshAppFilesOnly();
+    });
+  })();
   on('qna-cover-btn',  'click', function() { openQnaView(); });
   on('pwa-install-btn','click', function() { triggerPwaInstall(); });
 
