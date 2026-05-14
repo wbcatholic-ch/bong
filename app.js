@@ -241,13 +241,20 @@ function _armMassQuickHistoryTrap(opts){
   try{
     var href = location.href.split('#')[0];
     if(opts && opts.skip){
-      // 주요기도문에서 빠른메뉴 팝업으로 되돌아온 경우에는 새 mq history state를 만들지 않는다.
-      // 이 팝업은 이미 커버 위에 떠 있어야 하며, 다음 Back은 기존 [root(0) → trap(1)] 구조에서
-      // 팝업만 닫고 커버를 확정하면 된다. 여기서 다시 oai_mass_quick state를 만들면
-      // history.go(1) 복원 타이밍과 충돌해 팝업 → 커버 단계가 앱 종료로 오판될 수 있다.
       return;
     }
     history.pushState({_p:1, oai_mass_quick:1}, '', href);
+  }catch(e){ console.warn("[가톨릭길동무]", e); }
+}
+function _armPrayerReturnPopupHistoryTrap(reason){
+  /* 주요기도문에서 빠른메뉴 팝업으로 돌아온 상태는 일반 안내 팝업보다 더 엄격히 잡는다.
+     일부 Android/iOS PWA에서는 커버용 trap만 재설정하면 현재 히스토리 위치가 순간적으로 부족해
+     팝업에서 Back이 앱 종료로 빠질 수 있어, 팝업 자체에 전용 history 한 칸을 둔다. */
+  try{
+    if(document.documentElement.classList.contains('app-active')) return;
+    var href = location.href.split('#')[0];
+    history.replaceState({_p:1, oai_cover_trap:reason||'prayer-return-popup-base'}, '', href);
+    history.pushState({_p:1, oai_prayer_return_popup:reason||'prayer-return-popup'}, '', href);
   }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
 function _hideMassQuickMenuOnly(afterHidden, opts){
@@ -381,7 +388,7 @@ function _forceCoverAfterPrayerQuickPopup(){
     _clearCoverExitArmed();
     _markPrayerCoverNeedsFirstToast(false);
     try{
-      // V2: 기도문 복귀 팝업을 닫는 순간 일부 Android/iOS WebView가 popstate를 한 번 더 보내도
+      // V1: 기도문 복귀 팝업을 닫는 순간 일부 Android/iOS WebView가 popstate를 한 번 더 보내도
       // 커버 트랩을 다시 세우고 앱 종료 흐름으로 빠지지 않게 짧은 보호 시간을 둔다.
       window.__OAI_PRAYER_POPUP_COVER_GUARD_UNTIL__ = Date.now() + 1800;
       window.__OAI_PRAYER_COVER_FORCE_FIRST_TOAST_UNTIL__ = Date.now() + 10000;
@@ -434,7 +441,7 @@ function _openPrayerReturnQuickMenuStable(){
       try{ modal.dataset.returnSource='prayer'; }catch(_e){}
     }
     try{
-      // V2: 기도문에서 돌아온 빠른메뉴 팝업은 열기 직전에 커버용 [root→trap]을 강제로 재설정한다.
+      // V1: 기도문에서 돌아온 빠른메뉴 팝업은 열기 직전에 커버용 [root→trap]을 강제로 재설정한다.
       // 기존 ensure 방식은 history.state가 _p:1이면 그대로 지나가서, 간헐적으로 팝업 Back이 앱 종료로 빠질 수 있었다.
       if(typeof _resetCoverBackTrap === 'function') _resetCoverBackTrap('prayer-return-popup');
       else if(typeof _ensureCoverBackTrap === 'function') _ensureCoverBackTrap('prayer-return-popup');
@@ -506,7 +513,11 @@ function openMassQuickMenu(opts){
   if(!(opts && opts.keepReturn)) _setMassQuickReturn(false);
   _resetCoverExitReady();
   _clearCoverExitArmed();
-  _armMassQuickHistoryTrap(opts && opts.fromPrayerReturn ? {skip:true} : null);
+  if(opts && opts.fromPrayerReturn){
+    _armPrayerReturnPopupHistoryTrap('prayer-return-popup');
+  }else{
+    _armMassQuickHistoryTrap(null);
+  }
   modal.classList.add('show');
   modal.setAttribute('aria-hidden','false');
 }
@@ -602,7 +613,7 @@ window.addEventListener('focus', function(){
 if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(_tryResumeMassQuickSoon, 80); }, {once:true});
 else setTimeout(_tryResumeMassQuickSoon, 80);
 window.addEventListener('load', function(){ setTimeout(_tryResumeMassQuickSoon, 80); }, {once:true});
-try{ window._shouldMassQuickReturn=_shouldMassQuickReturn; window._shouldPrayerQuickReturn=_shouldPrayerQuickReturn; window._clearMassQuickReturnForReload=_clearMassQuickReturnForReload; window._clearPrayerQuickReturn=_clearPrayerQuickReturn; window._returnToMassQuickMenu=_returnToMassQuickMenu; window._closePrayerAndReturn=_closePrayerAndReturn; window._resetCoverExitReady=_resetCoverExitReady; window._clearCoverExitArmed=_clearCoverExitArmed; window._ensureCoverBackTrap=_ensureCoverBackTrap; window._ensureAppBackTrap=_ensureAppBackTrap; window._hideMassQuickMenuOnly=_hideMassQuickMenuOnly; window._setPrayerPopupReturnSource=_setPrayerPopupReturnSource; window._isPrayerPopupReturnSource=_isPrayerPopupReturnSource; window._forceCoverAfterPrayerQuickPopup=_forceCoverAfterPrayerQuickPopup; window._resetCoverBackTrap=_resetCoverBackTrap; window._consumePrayerCoverNeedsFirstToast=_consumePrayerCoverNeedsFirstToast; window.openMassQuickMenu=openMassQuickMenu; window.closeMassQuickMenu=closeMassQuickMenu; }catch(e){ console.warn('[가톨릭길동무]', e); }
+try{ window._shouldMassQuickReturn=_shouldMassQuickReturn; window._shouldPrayerQuickReturn=_shouldPrayerQuickReturn; window._clearMassQuickReturnForReload=_clearMassQuickReturnForReload; window._clearPrayerQuickReturn=_clearPrayerQuickReturn; window._returnToMassQuickMenu=_returnToMassQuickMenu; window._closePrayerAndReturn=_closePrayerAndReturn; window._resetCoverExitReady=_resetCoverExitReady; window._clearCoverExitArmed=_clearCoverExitArmed; window._ensureCoverBackTrap=_ensureCoverBackTrap; window._ensureAppBackTrap=_ensureAppBackTrap; window._hideMassQuickMenuOnly=_hideMassQuickMenuOnly; window._setPrayerPopupReturnSource=_setPrayerPopupReturnSource; window._isPrayerPopupReturnSource=_isPrayerPopupReturnSource; window._forceCoverAfterPrayerQuickPopup=_forceCoverAfterPrayerQuickPopup; window._resetCoverBackTrap=_resetCoverBackTrap; window._armPrayerReturnPopupHistoryTrap=_armPrayerReturnPopupHistoryTrap; window._consumePrayerCoverNeedsFirstToast=_consumePrayerCoverNeedsFirstToast; window.openMassQuickMenu=openMassQuickMenu; window.closeMassQuickMenu=closeMassQuickMenu; }catch(e){ console.warn('[가톨릭길동무]', e); }
 
 // 안정형 새로고침: 캐시/서비스워커를 지우지 않고 현재 화면만 다시 불러온다.
 // 즐겨찾기/localStorage는 물론, Service Worker와 Cache Storage도 건드리지 않는다.
@@ -731,7 +742,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V2';
+    var target = btn.getAttribute('data-target-version') || 'V1';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -1031,7 +1042,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V2';
+    frame.src='diocese.html?v=V1';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -2310,7 +2321,7 @@ function _mkrImgRetreat(color,big){
 }
 function _mkrImg(color,big){
   const w=big?40:28,h=big?52:36;
-  // V2: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
+  // V1: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
   // This removes the purple emoji background and keeps a plain white cross.
   const crossBig = `<g fill="#fff" opacity="0.96"><rect x="18.45" y="10.5" width="3.1" height="18.5" rx="1.1"/><rect x="13.4" y="16.3" width="13.2" height="3.1" rx="1.1"/></g>`;
   const crossSmall = `<g fill="#fff" opacity="0.96"><rect x="12.85" y="7.8" width="2.3" height="12.8" rx="0.8"/><rect x="9.6" y="11.7" width="8.8" height="2.3" rx="0.8"/></g>`;

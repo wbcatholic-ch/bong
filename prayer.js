@@ -448,7 +448,7 @@ window.prSwitchCat = prSwitchCat;
 window.prOpenDetail = prOpenDetail;
 window.prCloseDetail = window.prCloseDetail;
 
-/* ── 기도문 좌우 스와이프 (순환) — V2: iPhone/Android에서 더 가볍게 반응하도록 감도 조정 */
+/* ── 기도문 좌우 스와이프 (순환) — V1: iPhone/Android에서 더 가볍게 반응하도록 감도 조정 */
 (function(){
   var el = document.getElementById('prayer-list-view');
   if (!el) return;
