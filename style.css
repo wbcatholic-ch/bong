@@ -2498,6 +2498,44 @@ html.ios-install-preview-mode #cover .ios-safari-banner{
   background:#fff;
   box-shadow:0 6px 18px rgba(31,42,68,.10);
 }
+.ios-safari-shot{
+  grid-column:1 / 3;
+  justify-self:center;
+  position:relative;
+  display:block;
+  max-width:100%;
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 6px 18px rgba(31,42,68,.10);
+  overflow:hidden;
+}
+.ios-safari-shot img{
+  grid-column:auto!important;
+  justify-self:auto!important;
+  width:100%;
+  height:auto;
+  max-width:100%!important;
+  max-height:none!important;
+  border-radius:14px!important;
+  box-shadow:none!important;
+  background:transparent!important;
+}
+.ios-safari-shot-more{
+  width:100%;
+  max-width:480px;
+}
+.ios-gold-highlight{
+  position:absolute;
+  right:2.6%;
+  top:8%;
+  width:24.5%;
+  height:84%;
+  border:4px solid #d4aa6a;
+  border-radius:28px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.75) inset, 0 2px 8px rgba(31,42,68,.16);
+  pointer-events:none;
+  box-sizing:border-box;
+}
 .ios-safari-step:nth-child(1) img{max-height:150px;}
 .ios-safari-step:nth-child(2) img{max-height:210px;}
 .ios-safari-step:nth-child(3) img{max-height:260px;}

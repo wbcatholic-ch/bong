@@ -1,26 +1,26 @@
-/* 가톨릭길동무 Service Worker - V38-27
+/* 가톨릭길동무 Service Worker - V38-28
    캐시를 매번 삭제하지 않고, 버전 변경 시 오래된 캐시만 정리합니다.
    localStorage/사용자 설정은 건드리지 않습니다. */
-const CACHE_VERSION = 'catholic-way-V38-27';
+const CACHE_VERSION = 'catholic-way-V38-28';
 const APP_SHELL = [
   './',
   './index.html',
   './diocese.html',
   './qa-firebase.html',
-  './parishes.js?v=V38-27',
-  './style.css?v=V38-27',
-  './app.js?v=V38-27',
-  './web.js?v=V38-27',
-  './prayer.js?v=V38-27',
-  './patches.js?v=V38-27',
-  './sw-update.js?v=V38-27',
+  './parishes.js?v=V38-28',
+  './style.css?v=V38-28',
+  './app.js?v=V38-28',
+  './web.js?v=V38-28',
+  './prayer.js?v=V38-28',
+  './patches.js?v=V38-28',
+  './sw-update.js?v=V38-28',
   './manifest.json',
   './icon-192x192.png',
   './icon-512x512.png',
   './icon-512x512-maskable.png',
   './ios-install-step1-kakao-bottom-buttons.png',
   './ios-install-step2-safari-open.png',
-  './ios-install-step3-more-menu.png',
+  './KakaoTalk_20260514_134255658_04.jpg',
   './ios-install-step3-share-menu.png',
   './ios-install-step4-home-screen.png'
 ];
