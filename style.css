@@ -3436,3 +3436,70 @@ html.ios-device #prayer-tabs .pr-tab{
   padding:5px 10px!important;
   gap:6px!important;
 }
+
+/* V38-35: iPhone 커버 비율 1차 보정
+   Android 공통 구조는 건드리지 않고, iPhone/확인용 ios-device 상태에서만 커버 카드 글자와 하단 안내문 균형을 조정한다. */
+html.ios-device #cover,
+html.ios-install-preview-mode #cover{
+  padding-bottom:calc((var(--cover-vh, 1vh) * 2.2) + env(safe-area-inset-bottom,0px))!important;
+}
+html.ios-device #cover .cover-header,
+html.ios-install-preview-mode #cover .cover-header{
+  padding-bottom:16px!important;
+}
+html.ios-device #cover-main-block,
+html.ios-install-preview-mode #cover-main-block{
+  height:calc((var(--cover-vh, 1dvh) * 100) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 210px)!important;
+  padding-bottom:4px!important;
+}
+html.ios-device #cover .cover-card,
+html.ios-device #cover .cv-btn,
+html.ios-install-preview-mode #cover .cover-card,
+html.ios-install-preview-mode #cover .cv-btn{
+  padding:7px 7px!important;
+  gap:8px!important;
+}
+html.ios-device #cover .cover-emoji,
+html.ios-device #cover .cover-icon-wrap,
+html.ios-install-preview-mode #cover .cover-emoji,
+html.ios-install-preview-mode #cover .cover-icon-wrap{
+  font-size:29px!important;
+}
+html.ios-device #cover .cover-name,
+html.ios-device #cover .cv-btn-label,
+html.ios-install-preview-mode #cover .cover-name,
+html.ios-install-preview-mode #cover .cv-btn-label{
+  font-size:calc(14px * var(--app-font-scale,1))!important;
+  line-height:1.14!important;
+  letter-spacing:-.035em!important;
+}
+html.ios-device #cover #cc-1 .cover-name,
+html.ios-install-preview-mode #cover #cc-1 .cover-name{
+  font-size:calc(13.6px * var(--app-font-scale,1))!important;
+}
+html.ios-device #cover #cover-action-row,
+html.ios-install-preview-mode #cover #cover-action-row{
+  margin-top:6px!important;
+}
+html.ios-device #cover #cover-update-btn,
+html.ios-device #cover #qna-cover-btn,
+html.ios-install-preview-mode #cover #cover-update-btn,
+html.ios-install-preview-mode #cover #qna-cover-btn{
+  min-height:37px!important;
+  height:37px!important;
+  font-size:calc(11px * var(--app-font-scale,1))!important;
+  padding-left:13px!important;
+  padding-right:13px!important;
+}
+html.ios-device #cover #cover-bottom-note,
+html.ios-install-preview-mode #cover #cover-bottom-note{
+  padding:3px 16px calc(8px + env(safe-area-inset-bottom,0px)) 16px!important;
+  font-size:8.35px!important;
+  line-height:1.32!important;
+  letter-spacing:-.045em!important;
+  max-width:430px!important;
+}
+html.ios-device #cover #oai-build-marker,
+html.ios-install-preview-mode #cover #oai-build-marker{
+  bottom:calc(env(safe-area-inset-bottom,0px) + 7px)!important;
+}
