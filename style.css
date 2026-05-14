@@ -2450,7 +2450,7 @@ html.ios-install-preview-mode #cover .ios-safari-banner{
   margin-bottom:10px;
 }
 
-/* V38-33: iPhone 설치 안내 팝업 구분감 강화 */
+/* V38-34: iPhone 설치 안내 팝업 구분감 강화 */
 #ios-safari-guide-modal .guide-backdrop{
   background:rgba(14,21,53,.58)!important;
   -webkit-backdrop-filter:blur(3px);
@@ -3254,7 +3254,7 @@ html.ios-device .qna-panel{border-radius:13px!important;}
 }
 
 
-/* V38-33: iPhone 설치 안내 팝업 가독성 보정
+/* V38-34: iPhone 설치 안내 팝업 가독성 보정
    - 팝업 패널은 더 어둡게, 안내 카드 내부는 아이보리로 분리
    - 제목/리드 문구가 이미지 카드와 겹치지 않도록 flex 영역 고정 */
 #ios-safari-guide-modal .guide-backdrop{
@@ -3274,7 +3274,6 @@ html.ios-device .qna-panel{border-radius:13px!important;}
 }
 .ios-safari-guide-panel .guide-badge,
 .ios-safari-guide-panel h2,
-.ios-safari-guide-panel .guide-lead,
 .ios-safari-guide-panel .guide-actions{
   flex:0 0 auto!important;
 }
@@ -3301,6 +3300,28 @@ html.ios-device .qna-panel{border-radius:13px!important;}
   line-height:1.45!important;
   box-sizing:border-box!important;
 }
+
+/* V38-34: 설치 안내 팝업은 제목까지 고정하고, 안내 문구부터 단계 카드까지 함께 스크롤한다. */
+.ios-safari-scroll{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+  padding:0 2px 8px!important;
+  margin-top:2px!important;
+  box-sizing:border-box!important;
+}
+.ios-safari-scroll .guide-lead{
+  margin:0 0 12px!important;
+}
+.ios-safari-scroll .ios-safari-steps{
+  overflow:visible!important;
+  flex:0 0 auto!important;
+  min-height:auto!important;
+  padding:0 0 2px!important;
+}
+
 .ios-safari-steps{
   flex:1 1 auto!important;
   min-height:0!important;
@@ -3334,7 +3355,7 @@ html.ios-device .qna-panel{border-radius:13px!important;}
   box-shadow:0 10px 22px rgba(0,0,0,.26)!important;
 }
 
-/* V38-33: 커버 뒤로가기 종료 안내문을 화면 중앙으로 이동 */
+/* V38-34: 커버 뒤로가기 종료 안내문을 화면 중앙으로 이동 */
 #oai-cover-exit-toast{
   top:50%!important;
   bottom:auto!important;
@@ -3353,7 +3374,7 @@ html.ios-device .qna-panel{border-radius:13px!important;}
   transform:translate(-50%,-50%) scale(1)!important;
 }
 
-/* V38-33: iPhone 설치 안내 팝업 X 버튼 색상과 커버 종료 안내 중앙 고정 */
+/* V38-34: iPhone 설치 안내 팝업 X 버튼 색상과 커버 종료 안내 중앙 고정 */
 #ios-safari-guide-modal .guide-x{
   background:#fffaf1!important;
   color:#111!important;
@@ -3371,7 +3392,7 @@ html.ios-device .qna-panel{border-radius:13px!important;}
 }
 
 
-/* V38-33: iPhone 1차 화면 높이 축소
+/* V38-34: iPhone 1차 화면 높이 축소
    Android 공통 구조는 유지하고, iPhone 내부 화면의 헤더·탭 세로 밀도만 소폭 줄인다. */
 html.ios-device #app .module-title,
 html.ios-device #prayer-view .module-title,
@@ -3388,7 +3409,7 @@ html.ios-device #prayer-view .pr-filter-btn{
   padding-bottom:3px!important;
 }
 
-/* V38-33: iPhone 1차 탭 높이 직접 보정
+/* V38-34: iPhone 1차 탭 높이 직접 보정
    기존 Android/공통 탭 규칙은 유지하고, iPhone에서 실제 크게 보였던 #tabbar 높이만 소폭 낮춘다. */
 html.ios-device{
   --tab-h:64px;
