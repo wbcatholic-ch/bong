@@ -607,17 +607,22 @@ function _runRefreshAppFilesOnly(){
       btn.textContent = '새로고침 중';
     }
     if(document.activeElement && document.activeElement.blur) document.activeElement.blur();
-    // V37: 새로고침 전에는 레이아웃/스크롤/모달 DOM을 건드리지 않고,
-    // 복귀 상태값만 정리한다. 화면 흔들림은 주로 reload 직전 DOM 조작에서 발생했다.
+    // V37 기준 유지: 새로고침 전에는 화면을 닫거나 재배치하지 않는다.
+    // 단, 현재 커버 높이만 저장하고 다음 부팅에서 즉시 재측정하지 않게 하여 짧은 떨림을 줄인다.
     sessionStorage.setItem('oai_soft_refresh_requested', String(Date.now ? Date.now() : new Date().getTime()));
+    try{
+      document.documentElement.classList.add('oai-refresh-lock');
+      var h = window.innerHeight || document.documentElement.clientHeight || 0;
+      if(h > 0) localStorage.setItem('oai_cover_vh_px', String(h * 0.01));
+    }catch(_e){}
     try{ _clearMassQuickReturnForReload(); }catch(_e){}
   }catch(e){
     console.warn('[가톨릭길동무]', e);
   }
   try{
-    location.reload();
+    requestAnimationFrame(function(){ setTimeout(function(){ location.reload(); }, 30); });
   }catch(e){
-    location.href = location.href.split('#')[0];
+    try{ location.reload(); }catch(_e){ location.href = location.href.split('#')[0]; }
   }
 }
 function _showRefreshContentDialog(onConfirm){
@@ -724,7 +729,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V1';
+    var target = btn.getAttribute('data-target-version') || 'V1-3';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -1024,7 +1029,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V1';
+    frame.src='diocese.html?v=V1-3';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -2303,7 +2308,7 @@ function _mkrImgRetreat(color,big){
 }
 function _mkrImg(color,big){
   const w=big?40:28,h=big?52:36;
-  // V1: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
+  // V1-3: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
   // This removes the purple emoji background and keeps a plain white cross.
   const crossBig = `<g fill="#fff" opacity="0.96"><rect x="18.45" y="10.5" width="3.1" height="18.5" rx="1.1"/><rect x="13.4" y="16.3" width="13.2" height="3.1" rx="1.1"/></g>`;
   const crossSmall = `<g fill="#fff" opacity="0.96"><rect x="12.85" y="7.8" width="2.3" height="12.8" rx="0.8"/><rect x="9.6" y="11.7" width="8.8" height="2.3" rx="0.8"/></g>`;

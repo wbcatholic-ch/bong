@@ -928,9 +928,9 @@
         cover.style.opacity='';
         cover.style.pointerEvents='';
         cover.classList.remove('pulling','refreshing');
-        cover.scrollTop=0;
+        // 커버는 overflow hidden 구조라 새로고침 완료 시 강제 scrollTop/scrollTo를 하지 않는다.
+        // 이 강제 스크롤이 모바일에서 짧은 상하 떨림으로 보일 수 있다.
       }
-      window.scrollTo(0,0);
       hideIndicator(ind);
     }catch(e){ console.warn('[가톨릭길동무]', e); }
   };
