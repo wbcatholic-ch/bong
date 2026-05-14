@@ -2450,7 +2450,7 @@ html.ios-install-preview-mode #cover .ios-safari-banner{
   margin-bottom:10px;
 }
 
-/* V38-30: iPhone 설치 안내 팝업 구분감 강화 */
+/* V38-31: iPhone 설치 안내 팝업 구분감 강화 */
 #ios-safari-guide-modal .guide-backdrop{
   background:rgba(14,21,53,.58)!important;
   -webkit-backdrop-filter:blur(3px);
@@ -3254,7 +3254,7 @@ html.ios-device .qna-panel{border-radius:13px!important;}
 }
 
 
-/* V38-30: iPhone 설치 안내 팝업 가독성 보정
+/* V38-31: iPhone 설치 안내 팝업 가독성 보정
    - 팝업 패널은 더 어둡게, 안내 카드 내부는 아이보리로 분리
    - 제목/리드 문구가 이미지 카드와 겹치지 않도록 flex 영역 고정 */
 #ios-safari-guide-modal .guide-backdrop{
@@ -3334,7 +3334,7 @@ html.ios-device .qna-panel{border-radius:13px!important;}
   box-shadow:0 10px 22px rgba(0,0,0,.26)!important;
 }
 
-/* V38-30: 커버 뒤로가기 종료 안내문을 화면 중앙으로 이동 */
+/* V38-31: 커버 뒤로가기 종료 안내문을 화면 중앙으로 이동 */
 #oai-cover-exit-toast{
   top:50%!important;
   bottom:auto!important;
@@ -3351,4 +3351,21 @@ html.ios-device .qna-panel{border-radius:13px!important;}
 #oai-cover-exit-toast.show{
   opacity:1!important;
   transform:translate(-50%,-50%) scale(1)!important;
+}
+
+/* V38-31: iPhone 설치 안내 팝업 X 버튼 색상과 커버 종료 안내 중앙 고정 */
+#ios-safari-guide-modal .guide-x{
+  background:#fffaf1!important;
+  color:#111!important;
+  border:2px solid #111!important;
+  box-shadow:0 8px 18px rgba(0,0,0,.24)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+#_bt{
+  top:50%!important;
+  left:50%!important;
+  bottom:auto!important;
+  transform:translate(-50%,-50%)!important;
 }

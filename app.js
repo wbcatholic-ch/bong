@@ -689,7 +689,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V38-30';
+    var target = btn.getAttribute('data-target-version') || 'V38-31';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -918,7 +918,7 @@ function _closePrayerAndReturn(){
     return false;
   }
   function shouldShow(){
-    // V38-30 임시 확인용: iPhone 설치 안내를 Android에서도 확인할 수 있게 한다.
+    // V38-31 임시 확인용: iPhone 설치 안내를 Android에서도 확인할 수 있게 한다.
     // 실제 배포 확정 후에는 아래 Android 조건만 제거하면 된다.
     if(isAndroid()) return true;
     return isIOS() && isKakao() && !isStandalone();
@@ -994,7 +994,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V38-30';
+    frame.src='diocese.html?v=V38-31';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -1568,7 +1568,7 @@ function _showBackToast(){
   const t=document.createElement('div');
   t.id='_bt';
   t.textContent='한 번 더 누르면 앱이 종료됩니다';
-  t.style.cssText='position:fixed;bottom:calc(env(safe-area-inset-bottom,0px)+18px);left:50%;transform:translateX(-50%);background:rgba(14,21,53,.92);color:#fff;padding:10px 22px;border-radius:22px;font-size:13px;font-weight:600;z-index:99999;white-space:nowrap;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.3);';
+  t.style.cssText='position:fixed;top:50%;left:50%;bottom:auto;transform:translate(-50%,-50%);background:rgba(14,21,53,.94);color:#fff;padding:12px 24px;border-radius:24px;font-size:14px;font-weight:800;z-index:99999;white-space:nowrap;pointer-events:none;box-shadow:0 14px 36px rgba(0,0,0,.32);';
   document.body.appendChild(t);
   _exitTimer=setTimeout(function(){
     _exitReady=false;
