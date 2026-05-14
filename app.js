@@ -903,9 +903,7 @@ function openPrayerBook(opts){
   const cv=$('cover');
   if(cv){ cv.style.opacity='0'; cv.style.display='none'; }
   document.documentElement.classList.add('app-active');
-  /* [fix] _ensureAppBackTrap('prayer-open') 제거: 50ms 후 setTimeout 안의
-     'prayer-list-ready' 호출로 통합. 중복 replaceState+pushState 쌍이 스택을
-     오염시키지 않도록 진입점 trap은 setup 완료 후 1회만 심는다. */
+  try{ if(typeof _ensureAppBackTrap==='function') _ensureAppBackTrap('prayer-open'); }catch(e){ console.warn("[가톨릭길동무]", e); }
   if(typeof oaiSetMainMapLayerHidden==='function') oaiSetMainMapLayerHidden(true);
   view.classList.add('open');
   if(typeof oaiEnterView==='function') oaiEnterView(view);
