@@ -251,6 +251,15 @@
     if(_restoring){
       _restoring = false;
       runPendingPrayerQuickPopup();
+      /* closeExtOrModule/closeLayer가 앱 활성 상태로 끝난 경우 트랩 재설정 */
+      try{
+        var _pendingTrap = window.__OAI_PENDING_TRAP_AFTER_RESTORE__;
+        window.__OAI_PENDING_TRAP_AFTER_RESTORE__ = null;
+        if(_pendingTrap && appActive()){
+          if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap(_pendingTrap);
+          else history.pushState({_p:1}, '', _href);
+        }
+      }catch(_e){ console.warn('[가톨릭길동무]', _e); }
       return;
     }
 
@@ -293,14 +302,19 @@
         var _pd = $b('prayer-detail');
         if(_pd && _pd.classList.contains('show')){
           /* 본문 → 목록: 팝업 경유 여부 무관하게 go(1) 없이 처리
-             (본문 단계에서는 아직 팝업 복귀 콜백이 등록되지 않음) */
+             (본문 단계에서는 아직 팝업 복귀 콜백이 등록되지 않음)
+             트랩은 setTimeout 없이 즉시 동기적으로 심는다.
+             setTimeout 0이면 빠른 연속 뒤로가기 시 트랩이 심어지기 전에
+             다음 popstate가 발화해 앱이 탈출될 수 있다. */
           window.__APP_PRAYER_DETAIL_TS__ = Date.now();
           if(typeof window.prCloseDetail === 'function') window.prCloseDetail();
           else _pd.classList.remove('show');
           if(typeof window.showPrayerListOnly === 'function') try{ window.showPrayerListOnly(); }catch(_e){}
-          setTimeout(function(){
-            try{ if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-detail-to-list'); }catch(e){ console.warn('[가톨릭길동무]', e); }
-          }, 0);
+          /* _ensureAppBackTrap은 st._p===1이면 skip하므로 직접 강제로 심는다 */
+          try{
+            history.replaceState({_p:0, oai_app_trap_from:'prayer-detail-closed'}, '', _href);
+            history.pushState({_p:1, oai_app_trap:'prayer-list-ready'}, '', _href);
+          }catch(_e){ console.warn('[가톨릭길동무]', _e); }
           return;
         }
 
@@ -321,28 +335,19 @@
 
     /* 그 외: go(1)으로 트랩 복원 후 UI 처리.
        closeExtOrModule/closeLayer가 return true로 빠져나오면
-       go(1)의 popstate가 뒤늦게 도착해 트랩을 소멸시킬 수 있으므로
-       80ms 후 트랩을 재확인한다. */
+       go(1)의 popstate가 _restoring 해제 지점(L251)에서 트랩 재설정을 한다.
+       80ms setTimeout으로 재설정하면 go(1) popstate가 먼저 도착해 트랩을 소멸시킬 수 있다. */
     _restoring = true;
     history.go(1);
 
     if(closeExtOrModule()){
-      setTimeout(function(){
-        try{
-          if(!appActive()) return;
-          if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('post-close-ext');
-          else history.pushState({_p:1}, '', _href);
-        }catch(e){ console.warn('[가톨릭길동무]', e); }
-      }, 80);
+      /* go(1) popstate → _restoring 해제 → runPendingPrayerQuickPopup 또는 트랩 재설정 */
+      /* appActive()이면 트랩이 필요하므로 _pendingTrapAfterRestore 플래그로 전달 */
+      if(appActive()) window.__OAI_PENDING_TRAP_AFTER_RESTORE__ = 'post-close-ext';
       return;
     }
     if(closeLayer()){
-      setTimeout(function(){
-        try{
-          if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('post-close-layer');
-          else history.pushState({_p:1}, '', _href);
-        }catch(e){ console.warn('[가톨릭길동무]', e); }
-      }, 80);
+      if(appActive()) window.__OAI_PENDING_TRAP_AFTER_RESTORE__ = 'post-close-layer';
       return;
     }
     callGTC();                      /* 아무것도 없으면 커버로 */
@@ -366,14 +371,15 @@
         }catch(_e){}
         var _pd = $b('prayer-detail');
         if(_pd && _pd.classList.contains('show')){
-          /* 본문 → 목록 */
+          /* 본문 → 목록: 즉시 동기 트랩 */
           window.__APP_PRAYER_DETAIL_TS__ = Date.now();
           if(typeof window.prCloseDetail === 'function') window.prCloseDetail();
           else _pd.classList.remove('show');
           if(typeof window.showPrayerListOnly === 'function') try{ window.showPrayerListOnly(); }catch(_e){}
-          setTimeout(function(){
-            try{ if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('cordova-prayer-detail-to-list'); }catch(e){ console.warn('[가톨릭길동무]', e); }
-          }, 0);
+          try{
+            history.replaceState({_p:0, oai_app_trap_from:'cordova-prayer-detail-closed'}, '', _href);
+            history.pushState({_p:1, oai_app_trap:'cordova-prayer-list-ready'}, '', _href);
+          }catch(_e){ console.warn('[가톨릭길동무]', _e); }
           return;
         }
         if(!_fromQuick){
