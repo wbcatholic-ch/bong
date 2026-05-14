@@ -422,8 +422,9 @@ function prOpenDetail(prayer){
   if(!detail) return;
   ttl.textContent = prayer.title;
   content.innerHTML = ((prayer.content||prayer.body||'')+'').replace(/class="symbol"/g,'class="pr-symbol"');
+  // 본문 열기는 DOM 레이어 전환만 담당한다.
+  // 뒤로가기 history trap은 통합 컨트롤러(patches.js)가 한 곳에서만 관리한다.
   detail.classList.add('show');
-  try{ if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-detail'); }catch(e){ console.warn('[가톨릭길동무]', e); }
   // 현재 기도문 ID 저장 → 본문 즐겨찾기 버튼에 반영
   detail.dataset.pid = prayer.id || '';
   var starBtn = prG('pr-detail-star');
@@ -439,8 +440,9 @@ function prOpenDetail(prayer){
 
 window.prCloseDetail = function(){
   const detail = prG('prayer-detail');
+  // 본문 닫기도 DOM 상태만 바꾼다.
+  // history 복원 중에 pushState를 추가하면 다음 Back 단계가 꼬이므로 금지한다.
   if(detail) detail.classList.remove('show');
-  try{ if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-list'); }catch(e){ console.warn('[가톨릭길동무]', e); }
 };
 
 /* ── IIFE 스코프 외부 노출 ── */
