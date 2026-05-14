@@ -278,14 +278,22 @@
     /* 기도문 뷰가 열린 경우: go(1) 없이 즉시 처리한다.
        go(1)을 실행하면 뒤늦게 도착하는 popstate가 트랩을 소멸시켜
        다음 뒤로가기가 먹통이 되거나 앱이 탈출된다.
-       - 본문(상세)이 열려있으면 → 본문만 닫고 목록 유지, 트랩 재설정
-       - 목록 상태이면 → 기도문 뷰 닫고 커버로 이동 (goToCover) */
+       단, 팝업(빠른메뉴) 경유 진입이면 _schedulePrayerReturnQuickMenuStable이
+       go(1) popstate의 _restoring 해제 시점을 기다리므로 반드시 go(1) 흐름을 유지해야 한다. */
     try{
       var _pv = $b('prayer-view');
       if(_pv && _pv.classList.contains('open')){
+        /* 팝업 경유 여부 확인 */
+        var _fromQuick = false;
+        try{
+          if(_pv.dataset && _pv.dataset.quickSource === 'mass') _fromQuick = true;
+          if(!_fromQuick && typeof window._shouldPrayerQuickReturn === 'function') _fromQuick = window._shouldPrayerQuickReturn();
+        }catch(_e){}
+
         var _pd = $b('prayer-detail');
         if(_pd && _pd.classList.contains('show')){
-          /* 본문 → 목록 */
+          /* 본문 → 목록: 팝업 경유 여부 무관하게 go(1) 없이 처리
+             (본문 단계에서는 아직 팝업 복귀 콜백이 등록되지 않음) */
           window.__APP_PRAYER_DETAIL_TS__ = Date.now();
           if(typeof window.prCloseDetail === 'function') window.prCloseDetail();
           else _pd.classList.remove('show');
@@ -293,16 +301,21 @@
           setTimeout(function(){
             try{ if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-detail-to-list'); }catch(e){ console.warn('[가톨릭길동무]', e); }
           }, 0);
+          return;
+        }
+
+        if(_fromQuick){
+          /* 팝업 경유 목록 → 팝업 복귀: go(1) 흐름 유지 (아래 일반 경로로 fall-through) */
         } else {
-          /* 목록 → 커버 */
+          /* 일반 목록 → 커버: go(1) 없이 즉시 처리 */
           if(typeof window._closePrayerAndReturn === 'function') window._closePrayerAndReturn();
           else {
             if(typeof window.closePrayerView === 'function') window.closePrayerView();
             else _pv.classList.remove('open');
             callGTC();
           }
+          return;
         }
-        return;
       }
     }catch(e){ console.warn('[가톨릭길동무]', e); }
 
@@ -342,10 +355,15 @@
       if(typeof window._showBackToast==='function') window._showBackToast();
       return;
     }
-    /* 기도문 뷰 - popstate와 동일하게 go(1) 없이 처리 */
+    /* 기도문 뷰 - popstate와 동일하게 처리 */
     try{
       var _pv = $b('prayer-view');
       if(_pv && _pv.classList.contains('open')){
+        var _fromQuick = false;
+        try{
+          if(_pv.dataset && _pv.dataset.quickSource === 'mass') _fromQuick = true;
+          if(!_fromQuick && typeof window._shouldPrayerQuickReturn === 'function') _fromQuick = window._shouldPrayerQuickReturn();
+        }catch(_e){}
         var _pd = $b('prayer-detail');
         if(_pd && _pd.classList.contains('show')){
           /* 본문 → 목록 */
@@ -356,16 +374,19 @@
           setTimeout(function(){
             try{ if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('cordova-prayer-detail-to-list'); }catch(e){ console.warn('[가톨릭길동무]', e); }
           }, 0);
-        } else {
-          /* 목록 → 커버 */
+          return;
+        }
+        if(!_fromQuick){
+          /* 일반 목록 → 커버 */
           if(typeof window._closePrayerAndReturn === 'function') window._closePrayerAndReturn();
           else {
             if(typeof window.closePrayerView === 'function') window.closePrayerView();
             else _pv.classList.remove('open');
             callGTC();
           }
+          return;
         }
-        return;
+        /* 팝업 경유 목록 → fall-through to closeExtOrModule */
       }
     }catch(e){ console.warn('[가톨릭길동무]', e); }
     if(closeExtOrModule()) return;
