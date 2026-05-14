@@ -74,25 +74,9 @@
       else missa.classList.remove('open');
       return true;
     }
-    /* 기도문: 본문이면 목록으로, 목록이면 커버로 */
+    /* 기도문: 목록 상태(본문 닫힌 상태)이면 커버로 */
     var prayer = $b('prayer-view');
     if(prayer && prayer.classList.contains('open')){
-      var prayerDetail = $b('prayer-detail');
-      if(prayerDetail && prayerDetail.classList.contains('show')){
-        // 기도문 본문은 내부 레이어이므로 첫 뒤로가기는 본문만 닫고 목록을 유지한다.
-        // 닫은 뒤 다음 뒤로가기에서 목록 → 빠른메뉴 팝업 흐름을 탈 수 있도록 앱용 trap만 조용히 확인한다.
-        /* [fix] __APP_PRAYER_DETAIL_TS__ 제거: 설정만 하고 참조처가 없던 dead code */
-        if(typeof window.prCloseDetail === 'function') window.prCloseDetail();
-        else prayerDetail.classList.remove('show');
-        if(typeof window.showPrayerListOnly === 'function'){
-          /* [fix] keepScroll:true — 상세 닫을 때 목록 스크롤 위치 보존. 스크롤 리셋은 openPrayerBook에서만. */
-          try{ window.showPrayerListOnly({keepScroll:true}); }catch(e){ console.warn('[가톨릭길동무]', e); }
-        }
-        setTimeout(function(){
-          try{ if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-detail-to-list'); }catch(e){ console.warn('[가톨릭길동무]', e); }
-        }, 0);
-        return true;
-      }
       if(typeof window._closePrayerAndReturn === 'function') window._closePrayerAndReturn();
       else {
         if(typeof window.closePrayerView === 'function') window.closePrayerView();
@@ -174,19 +158,6 @@
 
     var sheets = document.querySelectorAll('.sheet.open');
     if(sheets.length){ sheets[sheets.length-1].classList.remove('open'); return true; }
-
-    /* [fix issue 3] prayer-detail: prayer-view가 없는 경로에서도 상세가 열려 있으면 닫기.
-       closeExtOrModule()은 prayer-view.open 조건 아래서만 체크하므로, 일부 경로에서
-       상세가 닫히지 않는 문제를 closeLayer 최후 안전망으로 처리한다. */
-    var prayerDetailLayer = $b('prayer-detail');
-    if(prayerDetailLayer && prayerDetailLayer.classList.contains('show')){
-      if(typeof window.prCloseDetail === 'function') window.prCloseDetail();
-      else prayerDetailLayer.classList.remove('show');
-      setTimeout(function(){
-        try{ if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-detail-closeLayer'); }catch(e){ console.warn('[가톨릭길동무]', e); }
-      }, 0);
-      return true;
-    }
 
     return false;
   }
@@ -302,12 +273,52 @@
       return;
     }
 
-    /* 앱 활성: go(1) 복원 후 처리 */
+    /* 앱 활성 */
+
+    /* 기도문 상세(본문)가 열린 경우: 내부 레이어이므로 go(1) 없이 즉시 닫고
+       트랩만 재설정한다. go(1)을 하면 나중에 popstate가 한 번 더 와서
+       트랩이 소멸되고 다음 뒤로가기에서 앱 탈출로 이어진다. */
+    try{
+      var _pd = $b('prayer-detail');
+      var _pv = $b('prayer-view');
+      if(_pv && _pv.classList.contains('open') && _pd && _pd.classList.contains('show')){
+        window.__APP_PRAYER_DETAIL_TS__ = Date.now();
+        if(typeof window.prCloseDetail === 'function') window.prCloseDetail();
+        else _pd.classList.remove('show');
+        if(typeof window.showPrayerListOnly === 'function') try{ window.showPrayerListOnly(); }catch(_e){}
+        setTimeout(function(){
+          try{ if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-detail-to-list'); }catch(e){ console.warn('[가톨릭길동무]', e); }
+        }, 0);
+        return;
+      }
+    }catch(e){ console.warn('[가톨릭길동무]', e); }
+
+    /* 그 외: go(1)으로 트랩 복원 후 UI 처리.
+       closeExtOrModule/closeLayer가 return true로 빠져나오면
+       go(1)의 popstate가 뒤늦게 도착해 트랩을 소멸시킬 수 있으므로
+       80ms 후 트랩을 재확인한다. */
     _restoring = true;
     history.go(1);
 
-    if(closeExtOrModule()) return;  /* 닫으면서 goToCover() 이미 호출됨 */
-    if(closeLayer()) return;        /* 레이어만 닫기, 앱 유지 */
+    if(closeExtOrModule()){
+      setTimeout(function(){
+        try{
+          if(!appActive()) return;
+          if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('post-close-ext');
+          else history.pushState({_p:1}, '', _href);
+        }catch(e){ console.warn('[가톨릭길동무]', e); }
+      }, 80);
+      return;
+    }
+    if(closeLayer()){
+      setTimeout(function(){
+        try{
+          if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('post-close-layer');
+          else history.pushState({_p:1}, '', _href);
+        }catch(e){ console.warn('[가톨릭길동무]', e); }
+      }, 80);
+      return;
+    }
     callGTC();                      /* 아무것도 없으면 커버로 */
   }, false);
 
@@ -318,6 +329,21 @@
       if(typeof window._showBackToast==='function') window._showBackToast();
       return;
     }
+    /* 기도문 상세 열린 경우 - popstate와 동일하게 go(1) 없이 처리 */
+    try{
+      var _pd = $b('prayer-detail');
+      var _pv = $b('prayer-view');
+      if(_pv && _pv.classList.contains('open') && _pd && _pd.classList.contains('show')){
+        window.__APP_PRAYER_DETAIL_TS__ = Date.now();
+        if(typeof window.prCloseDetail === 'function') window.prCloseDetail();
+        else _pd.classList.remove('show');
+        if(typeof window.showPrayerListOnly === 'function') try{ window.showPrayerListOnly(); }catch(_e){}
+        setTimeout(function(){
+          try{ if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('cordova-prayer-detail-to-list'); }catch(e){ console.warn('[가톨릭길동무]', e); }
+        }, 0);
+        return;
+      }
+    }catch(e){ console.warn('[가톨릭길동무]', e); }
     if(closeExtOrModule()) return;
     if(closeLayer()) return;
     callGTC();
@@ -350,17 +376,13 @@
 
   /* 통합 뒤로가기 컨트롤러가 기도문을 처리하므로, 여기서는 목록 초기화만 담당한다.
      기도문 전용 history.pushState / 별도 popstate / 별도 backbutton은 사용하지 않는다. */
-  /* [fix issue 4] keepScroll 옵션 추가: 상세에서 목록으로 돌아올 때는 스크롤을 0으로
-     강제 초기화하지 않는다. scrollTop=0 리셋은 openPrayerBook(신규 진입)에서만 수행. */
-  function showPrayerListOnly(opts){
+  function showPrayerListOnly(){
     blurActive();
     var d=el('prayer-detail');
     if(d) d.classList.remove('show');
-    if(!(opts && opts.keepScroll)){
-      var lv=el('prayer-list-view');
-      if(lv){
-        try{ lv.style.scrollBehavior='auto'; lv.scrollTop=0; lv.style.scrollBehavior=''; }catch(_){ console.warn("[가톨릭길동무] silent catch"); }
-      }
+    var lv=el('prayer-list-view');
+    if(lv){
+      try{ lv.style.scrollBehavior='auto'; lv.scrollTop=0; lv.style.scrollBehavior=''; }catch(_){ console.warn("[가톨릭길동무] silent catch"); }
     }
   }
   try{ window.showPrayerListOnly = showPrayerListOnly; }catch(_){ console.warn("[가톨릭길동무] silent catch"); }
