@@ -2366,11 +2366,11 @@ html.ios-install-preview-mode #cover .ios-safari-banner{
   max-width:520px;
   margin:0 auto;
   padding:24px 18px 20px;
-  border:2.5px solid rgba(212,170,106,.72);
+  border:3px solid rgba(212,170,106,.96);
   border-radius:28px;
-  background:rgba(255,248,232,.98);
+  background:linear-gradient(180deg,#ffffff 0%,#fffaf1 100%);
   color:#1f2a44;
-  box-shadow:0 22px 54px rgba(31,42,68,.24);
+  box-shadow:0 30px 70px rgba(14,21,53,.34),0 0 0 1px rgba(31,42,68,.08);
   box-sizing:border-box;
   pointer-events:auto;
 }
@@ -2441,10 +2441,47 @@ html.ios-install-preview-mode #cover .ios-safari-banner{
   flex-direction:column;
   width:min(94vw,520px);
   max-height:min(88dvh,820px);
+  background:linear-gradient(180deg,#ffffff 0%,#fffdf8 100%)!important;
+  border:3px solid #d4aa6a!important;
+  box-shadow:0 30px 80px rgba(14,21,53,.42),0 0 0 1px rgba(255,255,255,.85) inset!important;
 }
 .ios-safari-guide-panel .guide-lead{
   min-height:0;
   margin-bottom:10px;
+}
+
+/* V38-29: iPhone 설치 안내 팝업 구분감 강화 */
+#ios-safari-guide-modal .guide-backdrop{
+  background:rgba(14,21,53,.58)!important;
+  -webkit-backdrop-filter:blur(3px);
+  backdrop-filter:blur(3px);
+}
+#ios-safari-guide-modal .guide-x{
+  background:#1f2a44!important;
+  color:#fff!important;
+  box-shadow:0 8px 18px rgba(14,21,53,.22)!important;
+}
+.ios-safari-guide-panel .guide-badge{
+  background:#1f2a44!important;
+  color:#fff!important;
+  border:1.5px solid #d4aa6a!important;
+  box-shadow:0 6px 14px rgba(31,42,68,.16)!important;
+}
+.ios-safari-guide-panel h2{
+  color:#0e1535!important;
+}
+.ios-safari-guide-panel .guide-lead{
+  color:#374151!important;
+  font-weight:800!important;
+}
+.ios-safari-guide-panel .guide-primary{
+  background:linear-gradient(135deg,#1f2a44,#31446c)!important;
+  color:#fff!important;
+  border:1.5px solid #d4aa6a!important;
+}
+#cover #ios-kakao-safari-help{
+  background:linear-gradient(135deg,#1f2a44,#31446c)!important;
+  border:1.5px solid rgba(212,170,106,.82)!important;
 }
 .ios-safari-steps{
   width:100%;
@@ -2464,8 +2501,8 @@ html.ios-install-preview-mode #cover .ios-safari-banner{
   gap:8px 10px!important;
   padding:12px 12px!important;
   border-radius:16px!important;
-  background:#fffaf2!important;
-  border:1px solid rgba(212,170,106,.32)!important;
+  background:#ffffff!important;
+  border:1.5px solid rgba(212,170,106,.50)!important;
 }
 .ios-safari-step b{
   display:flex;
