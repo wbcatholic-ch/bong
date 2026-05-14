@@ -928,9 +928,9 @@
         cover.style.opacity='';
         cover.style.pointerEvents='';
         cover.classList.remove('pulling','refreshing');
-        // 커버는 overflow hidden 구조라 새로고침 완료 시 강제 scrollTop/scrollTo를 하지 않는다.
-        // 이 강제 스크롤이 모바일에서 짧은 상하 떨림으로 보일 수 있다.
+        cover.scrollTop=0;
       }
+      window.scrollTo(0,0);
       hideIndicator(ind);
     }catch(e){ console.warn('[가톨릭길동무]', e); }
   };
@@ -1014,7 +1014,7 @@
   function isCover(){var c=$('cover');return !!(c && !document.documentElement.classList.contains('app-active') && getComputedStyle(c).display!=='none');}
   function clearNativeExitToast(){
     try{window._exitReady=false; clearTimeout(window._exitTimer);}catch(e){ console.warn("[가톨릭길동무]", e); }
-    try{var t=$('_bt'); if(t) t.remove(); var t2=$('oai-cover-exit-toast'); if(t2) t2.classList.remove('show');}catch(e){ console.warn("[가톨릭길동무]", e); }
+    try{var t=$('_bt'); if(t) t.remove();}catch(e){ console.warn("[가톨릭길동무]", e); }
   }
   if(typeof window._resetCoverExitReady !== 'function') window._resetCoverExitReady = clearNativeExitToast;
   function resetNativeExitToastOnCoverEntry(){

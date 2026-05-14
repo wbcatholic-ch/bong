@@ -174,8 +174,6 @@ function _resetCoverExitReady(){
     clearTimeout(window._exitTimer);
     const bt = document.getElementById('_bt');
     if(bt) bt.remove();
-    const toast = document.getElementById('oai-cover-exit-toast');
-    if(toast) toast.classList.remove('show');
   }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
 function _clearCoverExitArmed(){
@@ -571,6 +569,15 @@ function _tryResumeMassQuickSoon(){
   }catch(e){ console.warn("[가톨릭길동무]", e); }
   return false;
 }
+// 외부 복귀(pageshow/visibilitychange/focus) 중복 발화 방어용 디바운스
+var _resumeDebounceTimer = null;
+function _debouncedResumeMassQuick(){
+  if(_resumeDebounceTimer) clearTimeout(_resumeDebounceTimer);
+  _resumeDebounceTimer = setTimeout(function(){
+    _resumeDebounceTimer = null;
+    _tryResumeMassQuickSoon();
+  }, 60);
+}
 window.addEventListener('pageshow', function(){
   // 외부 복귀 시에는 빠른메뉴 복귀만 확인한다.
   // 커버 종료 대기값은 여기서 초기화하지 않는다.
@@ -584,13 +591,13 @@ window.addEventListener('pageshow', function(){
 }, true);
 document.addEventListener('visibilitychange', function(){
   if(document.visibilityState === 'visible'){
-    _tryResumeMassQuickSoon();
-    setTimeout(_tryResumeMassQuickSoon, 120);
+    _debouncedResumeMassQuick();
+    setTimeout(_debouncedResumeMassQuick, 120);
   }
 }, true);
 window.addEventListener('focus', function(){
-  _tryResumeMassQuickSoon();
-  setTimeout(_tryResumeMassQuickSoon, 120);
+  _debouncedResumeMassQuick();
+  setTimeout(_debouncedResumeMassQuick, 120);
 }, true);
 if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(_tryResumeMassQuickSoon, 80); }, {once:true});
 else setTimeout(_tryResumeMassQuickSoon, 80);
@@ -607,22 +614,17 @@ function _runRefreshAppFilesOnly(){
       btn.textContent = '새로고침 중';
     }
     if(document.activeElement && document.activeElement.blur) document.activeElement.blur();
-    // V37 기준 유지: 새로고침 전에는 화면을 닫거나 재배치하지 않는다.
-    // 단, 현재 커버 높이만 저장하고 다음 부팅에서 즉시 재측정하지 않게 하여 짧은 떨림을 줄인다.
+    // V37: 새로고침 전에는 레이아웃/스크롤/모달 DOM을 건드리지 않고,
+    // 복귀 상태값만 정리한다. 화면 흔들림은 주로 reload 직전 DOM 조작에서 발생했다.
     sessionStorage.setItem('oai_soft_refresh_requested', String(Date.now ? Date.now() : new Date().getTime()));
-    try{
-      document.documentElement.classList.add('oai-refresh-lock');
-      var h = window.innerHeight || document.documentElement.clientHeight || 0;
-      if(h > 0) localStorage.setItem('oai_cover_vh_px', String(h * 0.01));
-    }catch(_e){}
     try{ _clearMassQuickReturnForReload(); }catch(_e){}
   }catch(e){
     console.warn('[가톨릭길동무]', e);
   }
   try{
-    requestAnimationFrame(function(){ setTimeout(function(){ location.reload(); }, 30); });
+    location.reload();
   }catch(e){
-    try{ location.reload(); }catch(_e){ location.href = location.href.split('#')[0]; }
+    location.href = location.href.split('#')[0];
   }
 }
 function _showRefreshContentDialog(onConfirm){
@@ -729,7 +731,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V1-3';
+    var target = btn.getAttribute('data-target-version') || 'V1';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -1029,7 +1031,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V1-3';
+    frame.src='diocese.html?v=V1';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -1626,8 +1628,21 @@ function attemptAppExit(){
 
   // 중요: 여기서 history.back()을 호출하면 외부사이트 방문 기록으로 되돌아갈 수 있다.
   // 따라서 종료 시도는 window.close까지만 하고, 히스토리 트랩은 다시 심지 않는다.
-  try{ window.open('', '_self'); window.close(); }catch(e){ console.warn("[가톨릭길동무]", e); }
+  // PWA standalone 모드에서는 window.close()가 동작하지 않는 경우가 대부분이므로
+  // 일정 시간 후에도 페이지가 살아있으면 커버로 복귀한다.
+  var _closeTried = false;
+  try{ window.open('', '_self'); window.close(); _closeTried = true; }catch(e){ console.warn("[가톨릭길동무]", e); }
   try{ document.documentElement.classList.add('app-exiting'); }catch(e){ console.warn("[가톨릭길동무]", e); }
+  // window.close()가 무효인 PWA/Safari에서는 300ms 후 커버로 복귀
+  setTimeout(function(){
+    try{
+      if(document.documentElement.classList.contains('app-exiting')){
+        document.documentElement.classList.remove('app-exiting');
+        window._appExiting = false;
+        if(typeof goToCover === 'function') goToCover();
+      }
+    }catch(e){ console.warn("[가톨릭길동무]", e); }
+  }, 300);
 }
 function closeExitDlg(){
   _exitReady=false;
@@ -2308,7 +2323,7 @@ function _mkrImgRetreat(color,big){
 }
 function _mkrImg(color,big){
   const w=big?40:28,h=big?52:36;
-  // V1-3: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
+  // V1: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
   // This removes the purple emoji background and keeps a plain white cross.
   const crossBig = `<g fill="#fff" opacity="0.96"><rect x="18.45" y="10.5" width="3.1" height="18.5" rx="1.1"/><rect x="13.4" y="16.3" width="13.2" height="3.1" rx="1.1"/></g>`;
   const crossSmall = `<g fill="#fff" opacity="0.96"><rect x="12.85" y="7.8" width="2.3" height="12.8" rx="0.8"/><rect x="9.6" y="11.7" width="8.8" height="2.3" rx="0.8"/></g>`;
