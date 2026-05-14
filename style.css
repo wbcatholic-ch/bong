@@ -2450,7 +2450,7 @@ html.ios-install-preview-mode #cover .ios-safari-banner{
   margin-bottom:10px;
 }
 
-/* V38-31: iPhone 설치 안내 팝업 구분감 강화 */
+/* V38-33: iPhone 설치 안내 팝업 구분감 강화 */
 #ios-safari-guide-modal .guide-backdrop{
   background:rgba(14,21,53,.58)!important;
   -webkit-backdrop-filter:blur(3px);
@@ -3087,14 +3087,14 @@ html.app-active #cover-guide-btn{ display:none!important; }
    - 커버/설치 배너/지도 컨테이너는 그대로 두고, 내부 카드·버튼·여백만 조밀하게 조정한다.
    - transform scale을 쓰지 않아 가장자리 빈 공간과 지도 터치 좌표 문제를 피한다. */
 html.ios-device{
-  --ios-ui-density:.92;
-  --mod-header-h:62px;
-  --module-tab-h:43px;
-  --mod-tabbar-h:47px;
-  --tab-btn-h:36px;
-  --oai-std-header-h:62px;
-  --oai-std-tab-h:32px;
-  --oai-std-btn-h:32px;
+  --ios-ui-density:.90;
+  --mod-header-h:60px;
+  --module-tab-h:40px;
+  --mod-tabbar-h:44px;
+  --tab-btn-h:34px;
+  --oai-std-header-h:60px;
+  --oai-std-tab-h:30px;
+  --oai-std-btn-h:30px;
   --oai-std-gap:6px;
 }
 html.ios-device #app .module-bar,
@@ -3103,7 +3103,7 @@ html.ios-device #web-view .module-bar,
 html.ios-device #trail-view .module-bar,
 html.ios-device #diocese-view .module-bar,
 html.ios-device #qna-view .module-bar{
-  padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 10px!important;
+  padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px!important;
   gap:9px!important;
 }
 html.ios-device #app .module-bar-main,
@@ -3117,21 +3117,21 @@ html.ios-device #prayer-view .module-bar-ico,
 html.ios-device #web-view .module-bar-ico,
 html.ios-device #trail-view .module-bar-ico,
 html.ios-device #diocese-view .module-bar-ico,
-html.ios-device #qna-view .module-bar-ico{width:36px!important;height:36px!important;}
+html.ios-device #qna-view .module-bar-ico{width:34px!important;height:34px!important;}
 html.ios-device .module-close,
 html.ios-device #diocese-close-btn,
 html.ios-device #prayer-close,
 html.ios-device #web-close,
-html.ios-device #trail-close{width:34px!important;height:34px!important;min-width:34px!important;}
-html.ios-device #app .tab-btn{min-height:43px!important;padding:7px 0 6px!important;gap:4px!important;border-radius:10px!important;}
-html.ios-device #app .tab-icon{font-size:18px!important;}
-html.ios-device #app .tab-btn.active .tab-icon{font-size:20px!important;}
+html.ios-device #trail-close{width:32px!important;height:32px!important;min-width:32px!important;}
+html.ios-device #app .tab-btn{min-height:40px!important;padding:5px 0 4px!important;gap:3px!important;border-radius:10px!important;}
+html.ios-device #app .tab-icon{font-size:17px!important;}
+html.ios-device #app .tab-btn.active .tab-icon{font-size:18px!important;}
 html.ios-device #app .filter-btn,
 html.ios-device #app .region-search-btn,
 html.ios-device #app .sm-fb,
 html.ios-device #app .sm-tab,
 html.ios-device .web-cat-btn,
-html.ios-device .trail-tab{min-height:32px!important;padding:4px 10px!important;border-radius:13px!important;}
+html.ios-device .trail-tab{min-height:30px!important;padding:3px 9px!important;border-radius:12px!important;}
 html.ios-device #app .sheet-hd{padding:10px 12px!important;}
 html.ios-device #app .sheet-title{letter-spacing:.02em!important;}
 html.ios-device #app .sheet-x,
@@ -3254,7 +3254,7 @@ html.ios-device .qna-panel{border-radius:13px!important;}
 }
 
 
-/* V38-31: iPhone 설치 안내 팝업 가독성 보정
+/* V38-33: iPhone 설치 안내 팝업 가독성 보정
    - 팝업 패널은 더 어둡게, 안내 카드 내부는 아이보리로 분리
    - 제목/리드 문구가 이미지 카드와 겹치지 않도록 flex 영역 고정 */
 #ios-safari-guide-modal .guide-backdrop{
@@ -3334,7 +3334,7 @@ html.ios-device .qna-panel{border-radius:13px!important;}
   box-shadow:0 10px 22px rgba(0,0,0,.26)!important;
 }
 
-/* V38-31: 커버 뒤로가기 종료 안내문을 화면 중앙으로 이동 */
+/* V38-33: 커버 뒤로가기 종료 안내문을 화면 중앙으로 이동 */
 #oai-cover-exit-toast{
   top:50%!important;
   bottom:auto!important;
@@ -3353,7 +3353,7 @@ html.ios-device .qna-panel{border-radius:13px!important;}
   transform:translate(-50%,-50%) scale(1)!important;
 }
 
-/* V38-31: iPhone 설치 안내 팝업 X 버튼 색상과 커버 종료 안내 중앙 고정 */
+/* V38-33: iPhone 설치 안내 팝업 X 버튼 색상과 커버 종료 안내 중앙 고정 */
 #ios-safari-guide-modal .guide-x{
   background:#fffaf1!important;
   color:#111!important;
@@ -3368,4 +3368,50 @@ html.ios-device .qna-panel{border-radius:13px!important;}
   left:50%!important;
   bottom:auto!important;
   transform:translate(-50%,-50%)!important;
+}
+
+
+/* V38-33: iPhone 1차 화면 높이 축소
+   Android 공통 구조는 유지하고, iPhone 내부 화면의 헤더·탭 세로 밀도만 소폭 줄인다. */
+html.ios-device #app .module-title,
+html.ios-device #prayer-view .module-title,
+html.ios-device #web-view .module-title,
+html.ios-device #trail-view .module-title,
+html.ios-device #qna-view .module-title{
+  line-height:1.12!important;
+}
+html.ios-device #prayer-view .pr-tab,
+html.ios-device #prayer-view .pr-cat,
+html.ios-device #prayer-view .pr-filter-btn{
+  min-height:30px!important;
+  padding-top:3px!important;
+  padding-bottom:3px!important;
+}
+
+/* V38-33: iPhone 1차 탭 높이 직접 보정
+   기존 Android/공통 탭 규칙은 유지하고, iPhone에서 실제 크게 보였던 #tabbar 높이만 소폭 낮춘다. */
+html.ios-device{
+  --tab-h:64px;
+}
+html.ios-device #tabbar{
+  height:calc(var(--tab-h) + env(safe-area-inset-top,0px))!important;
+  min-height:calc(var(--tab-h) + env(safe-area-inset-top,0px))!important;
+  padding:calc(env(safe-area-inset-top,0px) + 4px) 6px 5px!important;
+  gap:5px!important;
+}
+html.ios-device #tabbar .tab-btn{
+  height:40px!important;
+  min-height:40px!important;
+  padding:4px 2px 4px!important;
+  gap:2px!important;
+}
+html.ios-device #prayer-tabs{
+  padding:7px 10px!important;
+  gap:5px!important;
+}
+html.ios-device #prayer-tabs .pr-tab{
+  height:32px!important;
+  min-height:32px!important;
+  padding:5px 10px!important;
+  gap:6px!important;
 }
