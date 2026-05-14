@@ -224,16 +224,18 @@ function _resetCoverBackTrap(reason){
   }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
 function _ensureAppBackTrap(reason){
-  /* 내부 기도문처럼 앱 안에서 단계 이동하는 화면은 외부 사이트 복귀와 달리
-     브라우저 히스토리가 부족하면 Android/PWA 뒤로가기에서 popstate가 발생하지 않고
-     앱이 바로 닫힐 수 있다. 앱 활성 상태에서 현재 history를 원칙 컨트롤러의
-     p1 트랩으로 고정해, 본문 → 목록 → 팝업/커버 단계가 반드시 JS에서 처리되게 한다. */
+  /* 내부 기도문은 외부 사이트가 아니라 앱 안에서 본문→목록→빠른메뉴 팝업으로 단계 이동한다.
+     빠른메뉴 팝업 상태를 history.back()으로 제거한 직후에는 history.state가 {_p:1}이어도
+     이것이 기도문 전용 trap이라고 보장할 수 없다. 그 상태를 그대로 믿으면 Android/PWA에서
+     기도문 목록 Back이 JS 컨트롤러로 들어오지 못하고 앱 종료로 빠질 수 있다.
+     따라서 현재 항목이 이미 oai_app_trap인 경우에만 유지하고, 그 외에는 기도문 전용
+     [root(0) → trap(1)]을 정확히 다시 세운다. */
   try{
     if(!document.documentElement.classList.contains('app-active')) return;
     var href = location.href.split('#')[0];
     var st = history.state;
-    if(st && st._p === 1) return;
-    history.replaceState({_p:0, oai_app_trap_from:reason||'app'}, '', href);
+    if(st && st._p === 1 && st.oai_app_trap) return;
+    history.replaceState({_p:0, oai_app_root:reason||'app'}, '', href);
     history.pushState({_p:1, oai_app_trap:reason||'app'}, '', href);
   }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
@@ -453,11 +455,17 @@ function _schedulePrayerReturnQuickMenuStable(){
   }catch(e){ console.warn('[가톨릭길동무]', e); }
   // 일부 WebView에서 history.go(1) 복귀 popstate가 늦거나 생략될 수 있어 안전망만 둔다.
   // 정상 경로에서는 patches.js의 _restoring 해제 지점에서 즉시 실행된다.
+  // 너무 빠른 fallback은 복원 중인 history와 경쟁할 수 있어, 복원 여유를 둔 뒤 한 번 더 확인한다.
   setTimeout(function(){
     try{
       if(window.__OAI_AFTER_RESTORE_PRAYER_QUICK_POPUP__ === run) run();
     }catch(e){ console.warn('[가톨릭길동무]', e); }
-  }, 90);
+  }, 180);
+  setTimeout(function(){
+    try{
+      if(window.__OAI_AFTER_RESTORE_PRAYER_QUICK_POPUP__ === run) run();
+    }catch(e){ console.warn('[가톨릭길동무]', e); }
+  }, 420);
 }
 function _returnToMassQuickMenu(source){
   var fromPrayer = source === 'prayer' || (source && source.fromPrayer);
@@ -724,7 +732,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V1';
+    var target = btn.getAttribute('data-target-version') || 'V2';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -1024,7 +1032,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V1';
+    frame.src='diocese.html?v=V2';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -2303,7 +2311,7 @@ function _mkrImgRetreat(color,big){
 }
 function _mkrImg(color,big){
   const w=big?40:28,h=big?52:36;
-  // V1: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
+  // V2: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
   // This removes the purple emoji background and keeps a plain white cross.
   const crossBig = `<g fill="#fff" opacity="0.96"><rect x="18.45" y="10.5" width="3.1" height="18.5" rx="1.1"/><rect x="13.4" y="16.3" width="13.2" height="3.1" rx="1.1"/></g>`;
   const crossSmall = `<g fill="#fff" opacity="0.96"><rect x="12.85" y="7.8" width="2.3" height="12.8" rx="0.8"/><rect x="9.6" y="11.7" width="8.8" height="2.3" rx="0.8"/></g>`;
