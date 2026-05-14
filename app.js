@@ -227,14 +227,26 @@ function _ensureAppBackTrap(reason){
   /* 내부 기도문처럼 앱 안에서 단계 이동하는 화면은 외부 사이트 복귀와 달리
      브라우저 히스토리가 부족하면 Android/PWA 뒤로가기에서 popstate가 발생하지 않고
      앱이 바로 닫힐 수 있다. 앱 활성 상태에서 현재 history를 원칙 컨트롤러의
-     p1 트랩으로 고정해, 본문 → 목록 → 팝업/커버 단계가 반드시 JS에서 처리되게 한다. */
+     p1 트랩으로 고정해, 본문 → 목록 → 팝업/커버 단계가 반드시 JS에서 처리되게 한다.
+
+     기도문 본문은 목록 위에 한 단계 더 올라간 내부 레이어다. 기존에는 현재 state가
+     이미 _p:1이면 새 칸을 만들지 않아, 일부 iOS/Android PWA에서 본문 Back이 JS에
+     닿기 전에 앱 종료로 빠질 수 있었다. 본문을 열 때만 전용 detail state를 한 칸
+     추가하고, 목록/팝업/커버 흐름은 기존 컨트롤러가 그대로 처리하게 둔다. */
   try{
     if(!document.documentElement.classList.contains('app-active')) return;
     var href = location.href.split('#')[0];
+    var key = reason || 'app';
     var st = history.state;
-    if(st && st._p === 1) return;
-    history.replaceState({_p:0, oai_app_trap_from:reason||'app'}, '', href);
-    history.pushState({_p:1, oai_app_trap:reason||'app'}, '', href);
+    if(st && st._p === 1){
+      if(key === 'prayer-detail'){
+        if(st.oai_prayer_detail === 1) return;
+        history.pushState({_p:1, oai_prayer_detail:1, oai_app_trap:key}, '', href);
+      }
+      return;
+    }
+    history.replaceState({_p:0, oai_app_trap_from:key}, '', href);
+    history.pushState({_p:1, oai_app_trap:key}, '', href);
   }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
 function _armMassQuickHistoryTrap(opts){
