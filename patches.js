@@ -183,6 +183,36 @@
   window.addEventListener('popstate', function(){
     if(window._appExiting) return;
 
+    /* 주요기도문에서 돌아온 빠른메뉴 팝업을 닫은 직후 Android/PWA가
+       popstate를 한 번 더 보내면, 커버 상태를 앱 종료로 오판하지 말고
+       커버 트랩만 다시 고정한다. */
+    try{
+      var coverGuardUntil = Number(window.__OAI_PRAYER_POPUP_COVER_GUARD_UNTIL__ || 0);
+      if(coverGuardUntil && Date.now() < coverGuardUntil){
+        _restoring = false;
+        if(typeof window._ensureCoverBackTrap === 'function') window._ensureCoverBackTrap();
+        else history.pushState({_p:1}, '', _href);
+        return;
+      }
+    }catch(e){ console.warn('[가톨릭길동무]', e); }
+
+    /* 주요기도문에서 복귀한 빠른메뉴 팝업은 일반 안내팝업과 달리
+       닫히는 결과가 반드시 커버여야 한다. guide-modal 판정보다 먼저
+       출처 플래그를 확인해서 앱 종료/토스트 흐름으로 빠지는 것을 막는다. */
+    try{
+      var mqForPrayer = $b('mass-quick-modal');
+      var prayerPopupOpen = !!(mqForPrayer && mqForPrayer.classList.contains('show'));
+      var prayerPopupSource = false;
+      if(typeof window._isPrayerPopupReturnSource === 'function') prayerPopupSource = window._isPrayerPopupReturnSource();
+      try{ if(mqForPrayer && mqForPrayer.dataset && mqForPrayer.dataset.returnSource === 'prayer') prayerPopupSource = true; }catch(_e){}
+      if(prayerPopupOpen && prayerPopupSource){
+        _restoring = false;
+        if(typeof window._forceCoverAfterPrayerQuickPopup === 'function') window._forceCoverAfterPrayerQuickPopup();
+        else closeGuideModals();
+        return;
+      }
+    }catch(e){ console.warn('[가톨릭길동무]', e); }
+
     /* 빠른메뉴에서 주요기도문으로 진입하기 위해 팝업용 mq history state를
        직접 pop하는 중이면, 이것은 사용자의 뒤로가기 명령이 아니다.
        기존 back 컨트롤러가 go(1) 복원이나 커버 종료 판단을 하지 않도록 여기서 흡수한다. */
@@ -408,7 +438,7 @@
   if(window.__APP_FONT_SCALE_GUARD__) return;
   window.__APP_FONT_SCALE_GUARD__=true;
   // V37: 문의·건의는 qa-firebase.html 한 경로로만 통일한다.
-  var QA_URL="qa-firebase.html?v=V38-15";
+  var QA_URL="qa-firebase.html?v=V38-16";
   var FONT_KEY='prayer_font_size', BASE=16, SIZES=[15,16,17,18,19,20,21,22,24,26,28];
   function el(id){return document.getElementById(id)}
   function getPx(){var px=parseInt(localStorage.getItem(FONT_KEY)||BASE,10);return (px>=15&&px<=28)?px:BASE;}
