@@ -911,12 +911,16 @@ function _closePrayerAndReturn(){
     return /iphone|ipad|ipod/.test(u) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   }
   function isKakao(){ return ua().indexOf('kakaotalk') > -1; }
+  function isAndroid(){ return ua().indexOf('android') > -1; }
   function isStandalone(){
     try{ if(window.navigator.standalone === true) return true; }catch(e){ console.warn('[가톨릭길동무]', e); }
     try{ return window.matchMedia && window.matchMedia('(display-mode: standalone)').matches; }catch(e){ console.warn('[가톨릭길동무]', e); }
     return false;
   }
   function shouldShow(){
+    // V38-27 임시 확인용: iPhone 설치 안내를 Android에서도 확인할 수 있게 한다.
+    // 실제 배포 확정 후에는 아래 Android 조건만 제거하면 된다.
+    if(isAndroid()) return true;
     return isIOS() && isKakao() && !isStandalone();
   }
   function showModal(){
@@ -935,12 +939,15 @@ function _closePrayerAndReturn(){
   function init(){
     var banner = document.getElementById('ios-kakao-safari-banner');
     if(!banner) return;
-    if(shouldShow()){
-      document.documentElement.classList.add('ios-kakao-inapp');
+    var show = shouldShow();
+    var preview = show && isAndroid();
+    if(show){
+      document.documentElement.classList.toggle('ios-install-preview-mode', !!preview);
+      document.documentElement.classList.toggle('ios-kakao-inapp', !preview);
       banner.hidden = false;
       banner.setAttribute('aria-hidden','false');
     }else{
-      document.documentElement.classList.remove('ios-kakao-inapp');
+      document.documentElement.classList.remove('ios-kakao-inapp','ios-install-preview-mode');
       banner.hidden = true;
       banner.setAttribute('aria-hidden','true');
     }

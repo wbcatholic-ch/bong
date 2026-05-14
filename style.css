@@ -2349,7 +2349,8 @@ html.app-active #cover {
 #cover .ios-safari-banner{
   display:none;
 }
-html.ios-kakao-inapp #cover .ios-safari-banner{
+html.ios-kakao-inapp #cover .ios-safari-banner,
+html.ios-install-preview-mode #cover .ios-safari-banner{
   position:fixed!important;
   left:max(18px,calc(env(safe-area-inset-left,0px) + 18px))!important;
   right:max(18px,calc(env(safe-area-inset-right,0px) + 18px))!important;
@@ -2499,8 +2500,9 @@ html.ios-kakao-inapp #cover .ios-safari-banner{
 }
 .ios-safari-step:nth-child(1) img{max-height:150px;}
 .ios-safari-step:nth-child(2) img{max-height:210px;}
-.ios-safari-step:nth-child(3) img{max-height:225px;}
-.ios-safari-step:nth-child(4) img{max-height:245px;}
+.ios-safari-step:nth-child(3) img{max-height:260px;}
+.ios-safari-step:nth-child(4) img{max-height:225px;}
+.ios-safari-step:nth-child(5) img{max-height:245px;}
 @media (max-height:700px){
   html.ios-kakao-inapp #cover .ios-safari-banner{
     top:49%!important;
