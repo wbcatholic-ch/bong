@@ -1,4 +1,4 @@
-/* 가톨릭길동무 Service Worker - V1-5
+/* 가톨릭길동무 Service Worker - V1
    캐시를 매번 삭제하지 않고, 버전 변경 시 오래된 캐시만 정리합니다.
    localStorage/사용자 설정은 건드리지 않습니다.
 
@@ -8,19 +8,19 @@
    - APP_SHELL 목록의 파일명도 실제 파일과 일치하는지 확인하세요.
      (특히 날짜가 포함된 이미지 파일명은 교체 시 목록도 함께 수정)
 */
-const CACHE_VERSION = 'catholic-way-V1-5';
+const CACHE_VERSION = 'catholic-way-V1';
 const APP_SHELL = [
   './',
   './index.html',
   './diocese.html',
   './qa-firebase.html',
-  './parishes.js?v=V1-5',
-  './style.css?v=V1-5',
-  './app.js?v=V1-5',
-  './web.js?v=V1-5',
-  './prayer.js?v=V1-5',
-  './patches.js?v=V1-5',
-  './sw-update.js?v=V1-5',
+  './parishes.js?v=V1',
+  './style.css?v=V1',
+  './app.js?v=V1',
+  './web.js?v=V1',
+  './prayer.js?v=V1',
+  './patches.js?v=V1',
+  './sw-update.js?v=V1',
   './manifest.json',
   './icon-192x192.png',
   './icon-512x512.png',
