@@ -224,13 +224,11 @@ function _ensureAppBackTrap(reason){
 function _armMassQuickHistoryTrap(opts){
   try{
     var href = location.href.split('#')[0];
-    if(opts && opts.forceReset){
-      // 기도문에서 빠른메뉴 팝업으로 돌아온 경우에는 Android/PWA Back이
-      // 반드시 JS popstate로 들어오도록 현재 지점을 [root(0) → trap(1)]으로 재정렬한다.
-      // 단순 pushState만 하면 앞선 prayer popstate의 history.go(1) 복원 타이밍과 겹쳐
-      // 팝업에서 곧바로 앱이 닫힐 수 있다.
-      history.replaceState({_p:0, oai_mass_quick_root:1}, '', href);
-      history.pushState({_p:1, oai_mass_quick:1}, '', href);
+    if(opts && opts.skip){
+      // 주요기도문에서 빠른메뉴 팝업으로 되돌아온 경우에는 새 mq history state를 만들지 않는다.
+      // 이 팝업은 이미 커버 위에 떠 있어야 하며, 다음 Back은 기존 [root(0) → trap(1)] 구조에서
+      // 팝업만 닫고 커버를 확정하면 된다. 여기서 다시 oai_mass_quick state를 만들면
+      // history.go(1) 복원 타이밍과 충돌해 팝업 → 커버 단계가 앱 종료로 오판될 수 있다.
       return;
     }
     history.pushState({_p:1, oai_mass_quick:1}, '', href);
@@ -362,13 +360,15 @@ function _returnToMassQuickMenu(source){
         var cv=document.getElementById('cover');
         document.documentElement.classList.remove('app-active','parish-mode','retreat-mode');
         if(cv){ cv.style.display=''; cv.style.opacity=''; cv.style.pointerEvents=''; }
+        try{ if(typeof _ensureCoverBackTrap === 'function') _ensureCoverBackTrap(); }catch(_e){}
       }
       openMassQuickMenu({keepReturn:true, fromPrayerReturn:fromPrayer});
     }catch(e){ console.warn('[가톨릭길동무]', e); }
   };
   if(fromPrayer){
-    // prayer popstate에서 history.go(1) 복원이 끝난 뒤 팝업용 trap을 다시 심어야
-    // 다음 Android Back이 앱 종료가 아니라 '팝업 닫기 → 커버'로 들어온다.
+    // prayer popstate에서 history.go(1) 복원이 끝난 뒤 팝업을 다시 띄운다.
+    // 단, 이 복귀 팝업에는 새 mq history state를 만들지 않는다.
+    // 다음 Back은 기존 커버 트랩에서 popstate로 들어와 팝업을 닫고 커버를 확정한다.
     setTimeout(open, 120);
   }else if(window.requestAnimationFrame) requestAnimationFrame(open);
   else setTimeout(open, 0);
@@ -385,7 +385,7 @@ function openMassQuickMenu(opts){
   if(!(opts && opts.keepReturn)) _setMassQuickReturn(false);
   _resetCoverExitReady();
   _clearCoverExitArmed();
-  _armMassQuickHistoryTrap(opts && opts.fromPrayerReturn ? {forceReset:true} : null);
+  _armMassQuickHistoryTrap(opts && opts.fromPrayerReturn ? {skip:true} : null);
   modal.classList.add('show');
   modal.setAttribute('aria-hidden','false');
 }
@@ -543,7 +543,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V38-16';
+    var target = btn.getAttribute('data-target-version') || 'V38-17';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -837,7 +837,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V38-16';
+    frame.src='diocese.html?v=V38-17';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
