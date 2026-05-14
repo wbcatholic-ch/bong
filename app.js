@@ -1024,7 +1024,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V1-1';
+    frame.src='diocese.html?v=V1-2';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -3679,7 +3679,7 @@ async function _calcRoute(){
   _refreshRouteTmpMarkers();
   $('rs-km').textContent='—';
   $('rs-time').textContent='—';
-  note.textContent='자동차 경로를 불러오지 못했습니다. 카카오 REST 프록시 연결을 확인한 뒤 다시 시도하세요.';
+  note.innerHTML='자동차 경로를 불러오지 못했습니다.<br>현재 파일 문제가 아니라 <b>카카오 REST 프록시(Cloudflare Worker)</b> 연결 실패입니다. Worker 배포와 REST API 키 설정을 확인해야 지도 안에 자동차 경로가 표시됩니다.';
   note.style.display='block';
   const sBtn=$('rs-search-btn');
   if(sBtn) sBtn.style.display='block';
