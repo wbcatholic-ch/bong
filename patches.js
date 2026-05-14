@@ -42,10 +42,10 @@
         var fromPrayer = false;
         try{ fromPrayer = !!(mq.dataset && mq.dataset.returnSource === 'prayer'); }catch(e){}
         try{ if(typeof window._isPrayerPopupReturnSource === 'function' && window._isPrayerPopupReturnSource()) fromPrayer = true; }catch(e){}
+        // closeMassQuickMenu() 안에서 기도문 복귀 팝업 여부를 직접 판정해 커버를 확정한다.
+        // 여기서 한 번 더 _forceCoverAfterPrayerQuickPopup()를 호출하면 커버/히스토리 재설정이 중복되어
+        // 팝업 복귀 또는 팝업 닫힘 순간 화면이 흔들릴 수 있다.
         window.closeMassQuickMenu();
-        if(fromPrayer && typeof window._forceCoverAfterPrayerQuickPopup === 'function'){
-          window._forceCoverAfterPrayerQuickPopup();
-        }
       } else {
         document.querySelectorAll('.guide-modal.show').forEach(function(el){
           el.classList.remove('show');
@@ -180,6 +180,25 @@
   /* ── popstate 핸들러 ── */
   var _restoring = false;
 
+  function runPendingPrayerQuickPopup(){
+    try{
+      var cb = window.__OAI_AFTER_RESTORE_PRAYER_QUICK_POPUP__;
+      var until = Number(window.__OAI_AFTER_RESTORE_PRAYER_QUICK_POPUP_UNTIL__ || 0);
+      if(typeof cb !== 'function') return false;
+      if(until && Date.now() > until){
+        window.__OAI_AFTER_RESTORE_PRAYER_QUICK_POPUP__ = null;
+        window.__OAI_AFTER_RESTORE_PRAYER_QUICK_POPUP_UNTIL__ = 0;
+        return false;
+      }
+      window.__OAI_AFTER_RESTORE_PRAYER_QUICK_POPUP__ = null;
+      window.__OAI_AFTER_RESTORE_PRAYER_QUICK_POPUP_UNTIL__ = 0;
+      setTimeout(function(){
+        try{ cb(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      }, 0);
+      return true;
+    }catch(e){ console.warn('[가톨릭길동무]', e); return false; }
+  }
+
   window.addEventListener('popstate', function(){
     if(window._appExiting) return;
 
@@ -211,7 +230,7 @@
       var prayerPopupSource = false;
       if(typeof window._isPrayerPopupReturnSource === 'function') prayerPopupSource = window._isPrayerPopupReturnSource();
       try{ if(mqForPrayer && mqForPrayer.dataset && mqForPrayer.dataset.returnSource === 'prayer') prayerPopupSource = true; }catch(_e){}
-      if(prayerPopupOpen && prayerPopupSource){
+      if(!_restoring && prayerPopupOpen && prayerPopupSource){
         _restoring = false;
         if(typeof window._forceCoverAfterPrayerQuickPopup === 'function') window._forceCoverAfterPrayerQuickPopup();
         else closeGuideModals();
@@ -237,14 +256,18 @@
     /* 빠른메뉴/안내 팝업이 열려 있으면 어떤 복원 상태보다 먼저 닫는다.
        _restoring이 남은 상태에서 이 검사를 건너뛰면 Android PWA가 팝업을 닫지 못하고
        바로 앱 종료 흐름으로 빠질 수 있다. */
-    if(isGuideModalOpen()){
+    if(!_restoring && isGuideModalOpen()){
       _restoring = false;
       closeGuideModals();
       try{ if(typeof window._ensureCoverBackTrap === 'function') window._ensureCoverBackTrap(); else history.replaceState({_p:1}, '', _href); }catch(e){ console.warn("[가톨릭길동무]", e); }
       return;
     }
 
-    if(_restoring){ _restoring = false; return; }
+    if(_restoring){
+      _restoring = false;
+      runPendingPrayerQuickPopup();
+      return;
+    }
 
     /* 커버: 토스트 → 두 번째에 종료. go(1) 재복원 없이 바로 트랩만 다시 심어 2번으로 끝낸다. */
     if(!appActive()){
