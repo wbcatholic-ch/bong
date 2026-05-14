@@ -3129,7 +3129,7 @@ html.ios-device .qna-panel{border-radius:13px!important;}
 
 
 
-/* V38-22 주요기도문 헤더 구조 정리: 이모지 제거, 닫기 왼쪽, 굿뉴스 기도문 오른쪽 */
+/* V38-23 주요기도문 헤더 구조 정리: 이모지 제거, 닫기 왼쪽, 굿뉴스 기도문 오른쪽 */
 #prayer-bar{
   justify-content:flex-start!important;
 }

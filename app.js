@@ -561,14 +561,14 @@ function _showRefreshContentDialog(onConfirm){
     wrap.id = 'oai-refresh-content-dialog';
     wrap.setAttribute('role','dialog');
     wrap.setAttribute('aria-modal','true');
-    wrap.setAttribute('aria-label','refresh content');
+    wrap.setAttribute('aria-label','Refresh Content');
     wrap.style.cssText = 'position:fixed;inset:0;z-index:10090;display:flex;align-items:center;justify-content:center;background:rgba(14,21,53,.36);padding:22px;box-sizing:border-box;';
     wrap.innerHTML = '<div style="width:min(92vw,340px);background:#fffaf2;border:1px solid rgba(212,170,106,.42);border-radius:18px;box-shadow:0 18px 42px rgba(14,21,53,.24);padding:18px 16px 14px;text-align:center;font-family:inherit;color:#1f2937;box-sizing:border-box;">' +
-      '<div style="font-size:18px;font-weight:900;line-height:1.2;margin-bottom:8px;">refresh content</div>' +
-      '<div style="font-size:13px;font-weight:650;line-height:1.45;color:#64748b;margin-bottom:15px;">앱 콘텐츠를 다시 불러옵니다.</div>' +
+      '<div style="font-size:18px;font-weight:900;line-height:1.2;margin-bottom:8px;">Refresh Content</div>' +
+      '<div style="font-size:13px;font-weight:650;line-height:1.45;color:#64748b;margin-bottom:15px;">앱 화면을 안정형으로 다시 불러올까요?<br>캐시와 설치 상태는 삭제하지 않습니다.</div>' +
       '<div style="display:flex;gap:8px;justify-content:center;">' +
       '<button type="button" data-oai-refresh-cancel="1" style="height:38px;min-width:88px;padding:0 14px;border:1px solid #d8d1c5;border-radius:999px;background:#fff;color:#475569;font-family:inherit;font-size:13px;font-weight:800;">취소</button>' +
-      '<button type="button" data-oai-refresh-ok="1" style="height:38px;min-width:128px;padding:0 16px;border:0;border-radius:999px;background:#1f2a44;color:#fff;font-family:inherit;font-size:13px;font-weight:900;">refresh content</button>' +
+      '<button type="button" data-oai-refresh-ok="1" style="height:38px;min-width:88px;padding:0 16px;border:0;border-radius:999px;background:#1f2a44;color:#fff;font-family:inherit;font-size:13px;font-weight:900;">확인</button>' +
       '</div></div>';
     function close(){ try{ if(wrap && wrap.parentNode) wrap.parentNode.removeChild(wrap); }catch(_e){} }
     wrap.addEventListener('click', function(e){ if(e.target === wrap) close(); }, true);
@@ -622,7 +622,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V38-22';
+    var target = btn.getAttribute('data-target-version') || 'V38-23';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -916,7 +916,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V38-22';
+    frame.src='diocese.html?v=V38-23';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
