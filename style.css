@@ -2450,7 +2450,7 @@ html.ios-install-preview-mode #cover .ios-safari-banner{
   margin-bottom:10px;
 }
 
-/* V38-29: iPhone 설치 안내 팝업 구분감 강화 */
+/* V38-30: iPhone 설치 안내 팝업 구분감 강화 */
 #ios-safari-guide-modal .guide-backdrop{
   background:rgba(14,21,53,.58)!important;
   -webkit-backdrop-filter:blur(3px);
@@ -3251,4 +3251,104 @@ html.ios-device .qna-panel{border-radius:13px!important;}
 #prayer-detail-hd #pr-detail-star{
   margin-left:6px!important;
   margin-right:0!important;
+}
+
+
+/* V38-30: iPhone 설치 안내 팝업 가독성 보정
+   - 팝업 패널은 더 어둡게, 안내 카드 내부는 아이보리로 분리
+   - 제목/리드 문구가 이미지 카드와 겹치지 않도록 flex 영역 고정 */
+#ios-safari-guide-modal .guide-backdrop{
+  background:rgba(14,21,53,.76)!important;
+  -webkit-backdrop-filter:blur(4px)!important;
+  backdrop-filter:blur(4px)!important;
+}
+.ios-safari-guide-panel{
+  display:flex!important;
+  flex-direction:column!important;
+  max-height:min(88dvh,820px)!important;
+  background:linear-gradient(180deg,#172347 0%,#0e1535 100%)!important;
+  border:3px solid #d4aa6a!important;
+  box-shadow:0 34px 90px rgba(0,0,0,.50),0 0 0 1px rgba(255,255,255,.10) inset!important;
+  color:#fffaf1!important;
+  padding:20px 16px 16px!important;
+}
+.ios-safari-guide-panel .guide-badge,
+.ios-safari-guide-panel h2,
+.ios-safari-guide-panel .guide-lead,
+.ios-safari-guide-panel .guide-actions{
+  flex:0 0 auto!important;
+}
+.ios-safari-guide-panel .guide-badge{
+  background:#fffaf1!important;
+  color:#1f2a44!important;
+  border:1.5px solid #d4aa6a!important;
+}
+.ios-safari-guide-panel h2{
+  color:#fffaf1!important;
+  margin-bottom:6px!important;
+  padding-right:24px!important;
+}
+.ios-safari-guide-panel .guide-lead{
+  display:block!important;
+  position:relative!important;
+  z-index:2!important;
+  margin:0 0 12px!important;
+  padding:8px 10px!important;
+  border-radius:12px!important;
+  background:rgba(255,250,241,.10)!important;
+  color:#fff4de!important;
+  font-weight:850!important;
+  line-height:1.45!important;
+  box-sizing:border-box!important;
+}
+.ios-safari-steps{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  margin-top:0!important;
+  padding:2px 2px 8px!important;
+  gap:10px!important;
+  overflow:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+.ios-safari-step{
+  background:#fffaf1!important;
+  border:2px solid rgba(212,170,106,.70)!important;
+  box-shadow:0 8px 20px rgba(0,0,0,.13)!important;
+}
+.ios-safari-step span{
+  color:#3E362E!important;
+}
+.ios-safari-step img,
+.ios-safari-shot{
+  background:#fffaf1!important;
+}
+.ios-safari-guide-panel .guide-actions{
+  margin-top:12px!important;
+  padding-top:8px!important;
+  border-top:1px solid rgba(212,170,106,.45)!important;
+}
+.ios-safari-guide-panel .guide-primary{
+  background:#fffaf1!important;
+  color:#1f2a44!important;
+  border:2px solid #d4aa6a!important;
+  box-shadow:0 10px 22px rgba(0,0,0,.26)!important;
+}
+
+/* V38-30: 커버 뒤로가기 종료 안내문을 화면 중앙으로 이동 */
+#oai-cover-exit-toast{
+  top:50%!important;
+  bottom:auto!important;
+  left:50%!important;
+  transform:translate(-50%,-50%) scale(.98)!important;
+  min-height:48px!important;
+  padding:0 22px!important;
+  border-radius:999px!important;
+  background:rgba(31,42,68,.96)!important;
+  color:#fff!important;
+  font-size:14px!important;
+  box-shadow:0 16px 36px rgba(14,21,53,.34)!important;
+}
+#oai-cover-exit-toast.show{
+  opacity:1!important;
+  transform:translate(-50%,-50%) scale(1)!important;
 }
