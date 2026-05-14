@@ -2176,7 +2176,7 @@ html.oai-font-global #qna-view  .qna-tab {
    V37 커버 레이아웃 안정 복원
    구조: #cover > cover-header / #cover-main-block / #cover-bottom-note
    #cover-main-block: cover-grid + cover-action-row 한 몸체
-   V29 완료 기준 커버 구조로 복원
+   V19 완료 기준 커버 구조로 복원
    ══════════════════════════════════════════════════════════════════ */
 
 /* 1. #cover — flex column, 스크롤 없음 */

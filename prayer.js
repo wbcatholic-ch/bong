@@ -448,13 +448,13 @@ window.prSwitchCat = prSwitchCat;
 window.prOpenDetail = prOpenDetail;
 window.prCloseDetail = window.prCloseDetail;
 
-/* ── 기도문 좌우 스와이프 (순환) — V1: iPhone/Android에서 더 가볍게 반응하도록 감도 조정 */
+/* ── 기도문 좌우 스와이프 (순환) — 웹사이트 기준 감도와 동일화 */
 (function(){
   var el = document.getElementById('prayer-list-view');
   if (!el) return;
   var sx = 0, sy = 0;
-  var THRESHOLD = 24;
-  var HORIZONTAL_RATIO = 0.95;
+  var THRESHOLD = 32;
+  var HORIZONTAL_RATIO = 1.03;
   var SWIPE_BLOCK_MS = 700;
   var horizontalLocked = false;
 
@@ -486,7 +486,7 @@ window.prCloseDetail = window.prCloseDetail;
     if(!e.touches || !e.touches[0]) return;
     var dx = e.touches[0].clientX - sx;
     var dy = e.touches[0].clientY - sy;
-    if(Math.abs(dx) > 5 && Math.abs(dx) > Math.abs(dy) * HORIZONTAL_RATIO){
+    if(Math.abs(dx) > 7 && Math.abs(dx) > Math.abs(dy) * HORIZONTAL_RATIO){
       horizontalLocked = true;
       blockFavAfterSwipe();
       if(e.cancelable) e.preventDefault();
@@ -496,12 +496,12 @@ window.prCloseDetail = window.prCloseDetail;
     if (!e.changedTouches || !e.changedTouches[0]) return;
     var dx = e.changedTouches[0].clientX - sx;
     var dy = e.changedTouches[0].clientY - sy;
-    if(Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * HORIZONTAL_RATIO) blockFavAfterSwipe();
+    if(Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * HORIZONTAL_RATIO) blockFavAfterSwipe();
     if (!isHorizontalSwipe(dx, dy)) return;
     if (dx < 0) goNext(); else goPrev();
   }, { passive: true });
 })();
-window.prApplyTabColors = prApplyTabColors;
+lyTabColors = prApplyTabColors;
 
 window.initPrayerView = function(){
   prLoadPrefs();
