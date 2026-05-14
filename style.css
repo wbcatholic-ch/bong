@@ -3127,3 +3127,51 @@ html.ios-device .qna-panel{border-radius:13px!important;}
   transition:transform .08s ease,filter .08s ease,box-shadow .08s ease!important;
 }
 
+
+
+/* V38-22 주요기도문 헤더 구조 정리: 이모지 제거, 닫기 왼쪽, 굿뉴스 기도문 오른쪽 */
+#prayer-bar{
+  justify-content:flex-start!important;
+}
+#prayer-bar .module-bar-ico{
+  display:none!important;
+}
+#prayer-bar .module-bar-main{
+  flex:1 1 auto!important;
+  min-width:0!important;
+  gap:0!important;
+}
+#prayer-close,
+#prayer-bar .module-close{
+  order:0!important;
+  margin-left:0!important;
+  margin-right:12px!important;
+  color:#fff!important;
+}
+#prayer-bar .module-bar-main{order:1!important;}
+#goodnews-prayer-btn{
+  order:2!important;
+  margin-left:auto!important;
+  margin-right:0!important;
+  max-width:118px!important;
+  padding:8px 10px!important;
+  font-size:12px!important;
+  border-radius:11px!important;
+}
+#prayer-detail-hd{
+  justify-content:flex-start!important;
+}
+#prayer-detail-hd #pr-back-btn{
+  order:0!important;
+  margin-left:0!important;
+  margin-right:8px!important;
+  flex:0 0 42px!important;
+  color:#1f2a44!important;
+}
+#prayer-detail-hd .pr-font-ctrl{
+  margin-left:auto!important;
+}
+#prayer-detail-hd #pr-detail-star{
+  margin-left:6px!important;
+  margin-right:0!important;
+}
