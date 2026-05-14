@@ -1324,10 +1324,15 @@ html.app-active
 html.retreat-mode .region-row{display:grid;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;gap:8px!important;width:100%!important}
 html.retreat-mode .region-row .srch-inner{width:100%!important;min-width:0!important;height:42px!important;box-sizing:border-box}
 html.retreat-mode .region-search-btn{width:74px;min-width:74px!important;max-width:74px!important;height:42px!important;padding:0 6px!important;box-sizing:border-box;display:flex!important;align-items:center!important;justify-content:center;text-align:center!important;white-space:normal;word-break:keep-all;line-height:1.08!important;font-size:11px!important;letter-spacing:-.04em;border-radius:21px!important}
-/* 피정 리스트 카드: 오른쪽 배지/거리 때문에 본문 박스가 밀리지 않게 고정 */
+/* 피정 리스트 카드: 오른쪽 배지/거리 때문에 본문 박스가 밀리지 않게 고정
+   기존 width:100% + 좌우 margin 10px 조합은 실제 폭을 100%+20px로 만들어
+   내 주변/지역검색 10개 목록이 좌우로 흔들리는 원인이 되므로 카드 폭을 margin만큼 뺀다. */
+html.retreat-mode #list-body,
+html.retreat-mode #nearby-body,
+html.retreat-mode #region-body{overflow-x:hidden!important}
 html.retreat-mode .nearby-item,
 html.retreat-mode .list-item,
-html.retreat-mode .region-item{width:100%!important;min-width:0!important;box-sizing:border-box;align-items:flex-start!important}
+html.retreat-mode .region-item{width:calc(100% - 20px)!important;max-width:calc(100% - 20px)!important;min-width:0!important;margin-left:10px!important;margin-right:10px!important;box-sizing:border-box;align-items:flex-start!important}
 html.retreat-mode .nearby-info,
 html.retreat-mode .li-info{flex:1 1 auto!important;min-width:0!important}
 html.retreat-mode .nearby-meta{width:74px!important;min-width:74px!important;max-width:74px!important;flex:0 0 74px!important}
