@@ -163,7 +163,7 @@
 
 
   /* ─────────────────────────────────────────────
-     V1-6 기도문 전용 뒤로가기 컨트롤러 — 단순 트랩 방식
+     V1-7 기도문 전용 뒤로가기 컨트롤러 — 기존 간섭 제거형
 
      핵심 원칙:
      - 기도문은 앱 내부 화면이다. 매일미사/성가의 외부 복귀 흐름과 섞지 않는다.
@@ -214,14 +214,32 @@
     try{ window.__OAI_PRAYER_SOLO_STEP = step || ''; }catch(_e){}
     try{ if(step) sessionStorage.setItem('oai_prayer_solo_step', step); else sessionStorage.removeItem('oai_prayer_solo_step'); }catch(_e){}
   }
-  function armSinglePrayerTrap(reason){
+  function _hasPrayerBackSurface(){
+    try{ return isPrayerOpen() || (isPrayerPopupOpen() && isPrayerPopupSource()); }
+    catch(_e){ return false; }
+  }
+  function _ensureSinglePrayerTrap(reason){
     try{
+      var st = history.state || {};
+      if(st && st._p === 1 && st.oai_prayer_trap) return;
       var href=location.href.split('#')[0];
       /* 기도문은 다른 공통 히스토리 흔적 위에 덧쌓지 않고, 단계마다 [root(0) → trap(1)]만 다시 만든다.
          이것이 없으면 본문→목록 또는 목록→팝업 뒤 다음 Back에서 앱이 바로 종료될 수 있다. */
       history.replaceState({_p:0, oai_prayer_root:reason||'prayer'}, '', href);
       history.pushState({_p:1, oai_prayer_trap:reason||'prayer'}, '', href);
     }catch(e){ console.warn('[가톨릭길동무]', e); }
+  }
+  function armSinglePrayerTrap(reason){
+    _ensureSinglePrayerTrap(reason || 'prayer');
+    /* Android/PWA 일부 환경에서 popstate 직후 pushState가 다음 프레임에 덮이거나
+       기존 복원 플래그가 뒤늦게 정리되는 경우가 있어, 기도문 화면이 실제로 남아 있을 때만
+       짧게 두 번 더 확인한다. 이미 prayer trap이면 추가 push는 하지 않는다. */
+    [70, 260].forEach(function(ms){
+      setTimeout(function(){
+        try{ if(_hasPrayerBackSurface()) _ensureSinglePrayerTrap((reason||'prayer') + '-settle'); }
+        catch(e){ console.warn('[가톨릭길동무]', e); }
+      }, ms);
+    });
   }
   function hidePrayerOnly(){
     try{ var d=prayerDetail(); if(d) d.classList.remove('show'); }catch(_e){}
@@ -356,18 +374,20 @@
   window.addEventListener('popstate', function(){
     if(window._appExiting) return;
 
-    /* V1-6: 기도문은 공통 history.go(1) 복원 흐름을 타지 않는다.
-       사용자가 Back을 눌러 p0에 내려온 그 순간, 현재 DOM 상태(detail/list/popup)를 보고
-       기도문 전용 컨트롤러가 직접 다음 화면을 만든 뒤 새 [root → trap]을 심는다.
-       이전처럼 여기서 history.go(1)을 먼저 호출하면, 그 비동기 popstate가 뒤늦게 돌아와
-       방금 만든 list/popup/cover 상태를 다시 흔들어 본문→목록→앱종료 문제가 반복된다. */
-    if(!_restoring && typeof window._oaiPrayerBackActive === 'function' && window._oaiPrayerBackActive()){
-      if(typeof window._oaiPrayerBackHandle === 'function' && window._oaiPrayerBackHandle('prayer-popstate-direct')){
+    /* V1-7: 기도문은 _restoring 값과 무관하게 항상 최우선으로 처리한다.
+       이전 버전에서는 다른 화면의 history.go(1) 복원 플래그(_restoring)가 남아 있으면
+       기도문 전용 핸들러가 건너뛰어졌고, 그 결과 기도문 목록/본문에서 다음 Back이
+       브라우저 기본 뒤로가기로 빠져 앱 종료가 발생했다.
+       기도문이 열려 있거나 기도문 복귀 팝업이 떠 있으면 여기서 _restoring을 끊고
+       본문→목록, 목록→팝업, 팝업→커버를 직접 처리한 뒤 공통 로직으로 내려가지 않는다. */
+    if(typeof window._oaiPrayerBackActive === 'function' && window._oaiPrayerBackActive()){
+      _restoring = false;
+      if(typeof window._oaiPrayerBackHandle === 'function' && window._oaiPrayerBackHandle('prayer-popstate-v17')){
         return;
       }
     }
 
-    /* V1-6: 기존 기도문 팝업/커버 보정 블록은 제거했다.
+    /* V1-7: 기존 기도문 팝업/커버 보정 블록은 사용하지 않는다.
        기도문 단계는 위의 단독 컨트롤러만 처리한다. */
 
     /* 빠른메뉴에서 주요기도문으로 진입하기 위해 팝업용 mq history state를
@@ -432,7 +452,10 @@
 
   /* Cordova 물리 백버튼 */
   document.addEventListener('backbutton', function(){
-    if(typeof window._oaiPrayerBackHandle === 'function' && window._oaiPrayerBackHandle('prayer-hardware-back')) return;
+    if(typeof window._oaiPrayerBackActive === 'function' && window._oaiPrayerBackActive()){
+      _restoring = false;
+      if(typeof window._oaiPrayerBackHandle === 'function' && window._oaiPrayerBackHandle('prayer-hardware-back')) return;
+    }
     if(isGuideModalOpen()){ closeGuideModals(); return; }
     if(!appActive()){
       if(typeof window._showBackToast==='function') window._showBackToast();
@@ -612,7 +635,7 @@
   if(window.__APP_FONT_SCALE_GUARD__) return;
   window.__APP_FONT_SCALE_GUARD__=true;
   // V37: 문의·건의는 qa-firebase.html 한 경로로만 통일한다.
-  var QA_URL="qa-firebase.html?v=V1-6";
+  var QA_URL="qa-firebase.html?v=V1-7";
   var FONT_KEY='prayer_font_size', BASE=16, SIZES=[13,14,15,16,17,18,19,20,21,22,24,26,28,30];
   function el(id){return document.getElementById(id)}
   function getPx(){var px=parseInt(localStorage.getItem(FONT_KEY)||BASE,10);return (px>=13&&px<=30)?px:BASE;}

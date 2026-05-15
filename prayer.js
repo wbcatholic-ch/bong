@@ -423,14 +423,10 @@ function prOpenDetail(prayer){
   ttl.textContent = prayer.title;
   content.innerHTML = ((prayer.content||prayer.body||'')+'').replace(/class="symbol"/g,'class="pr-symbol"');
   detail.classList.add('show');
-  try{
-    // 본문은 기도문 전용 history state(detail)만 추가한다.
-    // 공통 앱 back trap과 섞지 않는다.
-    if(typeof window._oaiPrayerPushDetailState === 'function') window._oaiPrayerPushDetailState('prayer-detail-open');
-    else if(typeof window._oaiArmPrayerBackTrap === 'function') window._oaiArmPrayerBackTrap('prayer-detail-open');
-  }catch(e){
-    console.warn('[가톨릭길동무]', e);
-  }
+  /* V1-7: 본문을 열 때는 history를 새로 건드리지 않는다.
+     기도문 진입 시 이미 단일 back trap이 있으므로, 본문은 DOM 상태(show)로만 판단한다.
+     여기서 replaceState/pushState를 다시 실행하면 기존 목록용 트랩과 겹쳐
+     본문 → 목록 뒤 앱 종료 현상이 반복될 수 있다. */
   // 현재 기도문 ID 저장 → 본문 즐겨찾기 버튼에 반영
   detail.dataset.pid = prayer.id || '';
   var starBtn = prG('pr-detail-star');
@@ -449,10 +445,8 @@ window.prCloseDetail = function(opts){
   if(detail) detail.classList.remove('show');
   if(!(opts && opts.skipTrap)){
     try{
-      // 버튼으로 본문을 닫는 경우 현재 history state가 detail일 수 있으므로
-      // 현재 state만 list로 바꾼다. 새 state를 push하지 않는다.
-      if(typeof window._oaiPrayerReplaceListState === 'function') window._oaiPrayerReplaceListState('prayer-detail-button-to-list');
-      else if(typeof window._oaiArmPrayerBackTrap === 'function') window._oaiArmPrayerBackTrap('prayer-detail-button-to-list');
+      // 본문 X 버튼은 브라우저 Back이 아니므로 목록 상태의 단일 트랩만 다시 세운다.
+      if(typeof window._oaiArmPrayerBackTrap === 'function') window._oaiArmPrayerBackTrap('prayer-detail-button-to-list');
     }catch(e){
       console.warn('[가톨릭길동무]', e);
     }

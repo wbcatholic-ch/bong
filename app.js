@@ -765,7 +765,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V1-6';
+    var target = btn.getAttribute('data-target-version') || 'V1-7';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -967,25 +967,18 @@ function closePrayerView(){
   }
 }
 function _closePrayerAndReturn(){
+  /* V1-7: 기도문 닫기는 기도문 전용 컨트롤러 한 곳으로만 보낸다.
+     예전 _returnToMassQuickMenu()/goToCover fallback이 같이 남아 있으면
+     목록→팝업 또는 본문→목록 단계에서 공통 뒤로가기와 다시 충돌한다. */
   try{
     if(typeof window._oaiPrayerListToPopupOrCover === 'function'){
       window._oaiPrayerListToPopupOrCover('prayer-close-button');
       return;
     }
   }catch(e){ console.warn('[가톨릭길동무]', e); }
-  var pv = $('prayer-view');
-  var fromQuickPrayer = _shouldPrayerQuickReturn();
-  try{ if(pv && pv.dataset && pv.dataset.quickSource === 'mass') fromQuickPrayer = true; }catch(e){ console.warn("[가톨릭길동무]", e); }
-  // 빠른메뉴에서 들어온 주요기도문은 커버가 아니라 먼저 빠른메뉴 팝업으로 한 단계 복귀한다.
-  // 이때 기도문 화면을 먼저 닫아 커버를 노출하면 화면이 흔들려 보이므로,
-  // history 복원이 끝난 뒤 _returnToMassQuickMenu('prayer') 안에서 한 프레임에 닫고 팝업을 띄운다.
-  if(fromQuickPrayer){
-    _returnToMassQuickMenu('prayer');
-  } else {
-    closePrayerView();
-    try{ _clearPrayerQuickReturn(); }catch(e){ console.warn("[가톨릭길동무]", e); }
-    if(typeof goToCover==='function') goToCover();
-  }
+  closePrayerView();
+  try{ _clearPrayerQuickReturn(); }catch(e){ console.warn("[가톨릭길동무]", e); }
+  if(typeof goToCover==='function') goToCover();
 }
 
 
@@ -1087,7 +1080,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V1-6';
+    frame.src='diocese.html?v=V1-7';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
