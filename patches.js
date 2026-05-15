@@ -1,5 +1,5 @@
 /* patches.js — 뒤로가기·스와이프·터치 UX 패치
-   V1-10: 뒤로가기 단일 컨트롤러 보강.
+   V1-11: 뒤로가기 단일 컨트롤러 재작성.
    핵심은 pushState를 계속 추가하는 방식이 아니라, Android/PWA가 앱을 닫기 전에
    history.go(1)로 현재 trap 위치를 복원한 뒤 화면 상태만 직접 정리하는 방식입니다.
 
@@ -14,42 +14,36 @@
   if(window.__BACK_CTRL__) return;
   window.__BACK_CTRL__ = true;
 
+  /* V1-11: 3단계 history 단일 컨트롤러.
+     V1-11에서 정상화된 기도문 흐름은 유지하고,
+     Android/PWA에서 첫 Back이 곧바로 앱 종료로 내려가지 않도록
+     root → mid → top 3칸을 유지한다. */
   var HREF = location.href.split('#')[0];
-  var restoring = false;
+  var trapSerial = 0;
 
   function $(id){ return document.getElementById(id); }
   function safe(fn){ try{ return fn(); }catch(e){ console.warn('[가톨릭길동무]', e); } }
   function has(el, cls){ return !!(el && el.classList && el.classList.contains(cls)); }
   function appActive(){ return document.documentElement.classList.contains('app-active'); }
   function root(){ return document.documentElement; }
+  function quickOpen(){ return has($('mass-quick-modal'),'show'); }
 
   function resetExit(){ safe(function(){ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }); }
   function clearExit(){ safe(function(){ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }); }
 
-  function isQuickModalOpen(){ return has($('mass-quick-modal'),'show'); }
-  function coverVisible(){
-    var cv = $('cover');
-    if(!cv) return !appActive();
-    try{ return !appActive() && getComputedStyle(cv).display !== 'none'; }
-    catch(e){ return !appActive(); }
-  }
-  function primeTrapLater(reason){
-    function run(tag){
-      if(window._appExiting) return;
-      if(appActive()) return;
-      if(coverVisible() || isQuickModalOpen()) installTrap((reason||'cover') + (tag?('-'+tag):''));
-    }
-    run('now');
-    if(window.requestAnimationFrame) requestAnimationFrame(function(){ run('raf'); });
-    setTimeout(function(){ run('80'); }, 80);
-    setTimeout(function(){ run('220'); }, 220);
-  }
-
   function installTrap(reason){
     safe(function(){
       HREF = location.href.split('#')[0];
-      history.replaceState({oai_root:true, reason:reason||'root'}, '', HREF);
-      history.pushState({oai_trap:true, reason:reason||'trap'}, '', HREF);
+      trapSerial++;
+      history.replaceState({oai_root:true, serial:trapSerial, reason:reason||'root'}, '', HREF);
+      history.pushState({oai_mid:true, serial:trapSerial, reason:reason||'mid'}, '', HREF);
+      history.pushState({oai_top:true, serial:trapSerial, reason:reason||'top'}, '', HREF);
+    });
+  }
+  function pushTop(reason){
+    safe(function(){
+      HREF = location.href.split('#')[0];
+      history.pushState({oai_top:true, serial:trapSerial, reason:reason||'top-rearm'}, '', HREF);
     });
   }
   installTrap('init');
@@ -60,15 +54,14 @@
   window._ensureAppBackTrap = function(reason){ if(appActive()) installTrap(reason || 'app'); };
   window._resetAppBackTrap = function(reason){ if(appActive()) installTrap(reason || 'app-reset'); };
 
-  function restoreTrap(){
-    try{
-      restoring = true;
-      history.go(1);
-      setTimeout(function(){ restoring = false; }, 120);
-    }catch(e){
-      restoring = false;
-      installTrap('restore-fallback');
-    }
+  function coverVisible(){
+    var cv = $('cover');
+    if(!cv) return !appActive();
+    try{ return !appActive() && getComputedStyle(cv).display !== 'none'; }
+    catch(e){ return !appActive(); }
+  }
+  function isPlainCover(){
+    return coverVisible() && !quickOpen() && !has($('exit-dlg'),'open') && !document.querySelector('.guide-modal.show:not(#mass-quick-modal)');
   }
 
   function showCoverOnly(reason){
@@ -84,14 +77,12 @@
       if(cv){ cv.style.display=''; cv.style.opacity=''; cv.style.pointerEvents=''; try{ cv.scrollTop=0; }catch(_e){} }
       resetExit(); clearExit();
     });
-    primeTrapLater(reason || 'show-cover');
   }
 
   function goCover(reason){
     if(typeof window.goToCover === 'function') safe(function(){ window.goToCover(); });
     else showCoverOnly(reason);
     resetExit(); clearExit();
-    primeTrapLater(reason || 'go-cover');
   }
 
   function clearQuickFlags(){
@@ -138,7 +129,6 @@
     showCoverOnly('quick-modal-cover');
     clearQuickFlags();
     resetExit(); clearExit();
-    primeTrapLater('quick-modal-cover');
     return true;
   }
 
@@ -217,17 +207,29 @@
     return false;
   }
 
-  window.addEventListener('popstate', function(){
-    if(window._appExiting) return;
-    if(restoring){ restoring = false; return; }
+  function rearmAfterHandled(){ pushTop('handled-rearm'); }
 
-    /* 커버 두 번째 Back은 일부러 trap 복원을 하지 않고 종료 루틴으로 넘긴다. */
-    if(!appActive() && !has($('mass-quick-modal'),'show') && coverExitArmed()){
-      if(typeof window._showBackToast === 'function') window._showBackToast();
+  window.addEventListener('popstate', function(ev){
+    if(window._appExiting) return;
+    var state = (ev && ev.state) || {};
+
+    if(quickOpen() || appActive() || has($('prayer-view'),'open') || has($('missa-view'),'open') || has($('diocese-view'),'open') || document.querySelector('.module-view.open')){
+      rearmAfterHandled();
+      handleBack();
       return;
     }
 
-    restoreTrap();
+    if(isPlainCover()){
+      if(coverExitArmed()){
+        if(typeof window._showBackToast === 'function') window._showBackToast();
+        return;
+      }
+      if(typeof window._showBackToast === 'function') window._showBackToast();
+      if(state && state.oai_root){ installTrap('cover-root-rearm'); }
+      return;
+    }
+
+    rearmAfterHandled();
     handleBack();
   }, false);
 
@@ -238,16 +240,9 @@
 
   window.addEventListener('pageshow', function(){
     if(window._appExiting) return;
-    setTimeout(function(){ primeTrapLater('pageshow'); }, 0);
-  }, true);
-  document.addEventListener('visibilitychange', function(){
-    if(document.visibilityState === 'visible') setTimeout(function(){ primeTrapLater('visible'); }, 0);
-  }, true);
-  window.addEventListener('focus', function(){
-    setTimeout(function(){ primeTrapLater('focus'); }, 0);
+    setTimeout(function(){ installTrap('pageshow'); }, 0);
   }, true);
 
-  /* app.js/prayer.js에서 부르는 기존 이름들은 새 단일 컨트롤러로 흡수한다. */
   window._oaiArmPrayerBackTrap = function(){ installTrap('prayer-arm'); };
   window._oaiPrayerPushDetailState = function(){ installTrap('prayer-detail'); };
   window._oaiPrayerReplaceListState = function(){ installTrap('prayer-list'); };
@@ -255,7 +250,6 @@
   window._oaiPrayerListToPopupOrCover = function(){ return handlePrayer(); };
   window._oaiPrayerResetToCover = function(){ return closeAnyQuickModalToCover() || (goCover('prayer-reset'), true); };
   window._oaiHandleBackNow = function(){ return handleBack(); };
-  window._oaiPrimeBackTrapLater = primeTrapLater;
 })();
 
 
@@ -416,7 +410,7 @@
   if(window.__APP_FONT_SCALE_GUARD__) return;
   window.__APP_FONT_SCALE_GUARD__=true;
   // V37: 문의·건의는 qa-firebase.html 한 경로로만 통일한다.
-  var QA_URL="qa-firebase.html?v=V1-10";
+  var QA_URL="qa-firebase.html?v=V1-11";
   var FONT_KEY='prayer_font_size', BASE=16, SIZES=[13,14,15,16,17,18,19,20,21,22,24,26,28,30];
   function el(id){return document.getElementById(id)}
   function getPx(){var px=parseInt(localStorage.getItem(FONT_KEY)||BASE,10);return (px>=13&&px<=30)?px:BASE;}
