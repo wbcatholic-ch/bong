@@ -7,7 +7,6 @@
 // --- [Fix 1] Reliable Back Button Logic ---
 // We push a history state when leaving the cover so the back button has something to pop.
 function hideCoverAndRun(callback) {
-  try{ if(typeof oaiHoldStabilityVeil === 'function') oaiHoldStabilityVeil('cover-enter', 420); }catch(e){ console.warn("[가톨릭길동무]", e); }
   try{
     document.querySelectorAll('.module-view.open,#prayer-view.open,#diocese-view.open,#missa-view.open').forEach(function(v){v.classList.remove('open');});
     var pd=document.getElementById('prayer-detail'); if(pd) pd.classList.remove('show');
@@ -32,8 +31,7 @@ function markExternalReturnStabilize(kind){
     var stamp = String(Date.now ? Date.now() : new Date().getTime());
     sessionStorage.setItem('oai_external_nav_started_at', stamp);
     sessionStorage.setItem('oai_external_nav_kind', kind || 'external');
-    document.documentElement.classList.add('oai-external-leaving','oai-stability-veil');
-    document.documentElement.setAttribute('data-oai-stability-reason', 'external-leaving');
+    document.documentElement.classList.add('oai-external-leaving');
   }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
 
@@ -555,6 +553,7 @@ function openMassQuickMenu(opts){
   _armMassQuickHistoryTrap(opts && opts.fromPrayerReturn ? {reason:'prayer-return', skip:true} : null);
   modal.classList.add('show');
   modal.setAttribute('aria-hidden','false');
+  try{ if(typeof oaiEnterView === 'function') oaiEnterView(modal); }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
 function closeMassQuickMenu(opts){
   const modal=document.getElementById('mass-quick-modal');
@@ -800,7 +799,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V1-22';
+    var target = btn.getAttribute('data-target-version') || 'V1-23';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -1128,7 +1127,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V1-22';
+    frame.src='diocese.html?v=V1-23';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -1840,16 +1839,15 @@ function oaiEnterView(el){
   try{
     var root=document.documentElement;
     if(root.classList.contains('oai-returning')) return;
-    // 헤더가 본문을 아래로 미는 순간을 요소 visibility로 숨기지 말고,
-    // 전체 안정막으로 아주 짧게 가린다. 요소 자체를 숨기면 오히려 첫 프레임 덜컹거림이 보일 수 있다.
-    if(typeof oaiHoldStabilityVeil === 'function') oaiHoldStabilityVeil('view-enter', 320);
+    // V1-23: 화면 진입 효과는 안정막으로 덮지 않고, 실제 화면 자체를 아주 짧게 fade-in 한다.
+    // 뒤로가기/history는 건드리지 않고, 카테고리 첫 진입의 시각 효과만 통일한다.
     el.classList.remove('oai-enter-ready','oai-enter-show','oai-prepaint-view');
     el.classList.add('oai-enter-ready');
     requestAnimationFrame(function(){
       el.classList.add('oai-enter-show');
       setTimeout(function(){
         try{ el.classList.remove('oai-enter-ready','oai-enter-show','oai-prepaint-view'); }catch(e){ console.warn("[가톨릭길동무]", e); }
-      }, 160);
+      }, 240);
     });
   }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
@@ -1875,6 +1873,9 @@ function oaiHideCategoryEntryVeil(){
       try{
         root.classList.remove('oai-category-entering');
         if(veil){ veil.style.opacity=''; veil.className=''; }
+        // 성지·성당·피정의집은 초기 아이보리 시트/지도 준비막이 사라진 뒤 한 번 더 실제 화면 fade-in.
+        var appEl=document.getElementById('app');
+        if(appEl && root.classList.contains('app-active') && typeof oaiEnterView==='function') oaiEnterView(appEl);
       }catch(e){ console.warn("[가톨릭길동무]", e); }
     }, 230);
   }catch(e){ console.warn("[가톨릭길동무]", e); }
@@ -3355,7 +3356,7 @@ function _loadNearbyWithDist(lat,lng,items,getIdx,getColor,getLabel){
   }
 
   if(body){
-    body.innerHTML='<div class="empty-msg">📍 정확한 거리를 계산 중입니다...</div>';
+    body.innerHTML='<div class="empty-msg nearby-distance-loading">📍 정확한 거리를 계산 중입니다...</div>';
   }
 
   // 성당 첫 진입/내주변 목록은 정확한 도로거리 계산이 끝난 뒤에 표시한다.

@@ -198,7 +198,6 @@
   };
 
   function enterIntegratedView(id){
-    try{ if(typeof oaiHoldStabilityVeil === 'function') oaiHoldStabilityVeil('integrated-enter', 260); }catch(e){ console.warn("[가톨릭길동무]", e); }
     hideIntegratedViews();
     _screen = 'map';
     if(typeof window.oaiSetMainMapLayerHidden === 'function') window.oaiSetMainMapLayerHidden(true);

@@ -1605,8 +1605,8 @@ html.retreat-mode #sm-tab-bar .sm-tab.active{
 .app-pressing{transition:transform .16s ease,filter .16s ease;will-change:transform}
 .app-touchable{transition:transform .16s ease,filter .16s ease;will-change:transform}
 .tab.on,.tab.on:active{transform:none}
-.oai-enter-ready{opacity:1;transform:none!important;transition:none!important}
-.oai-enter-ready.oai-enter-show{opacity:1;transform:none!important;transition:none!important}
+.oai-enter-ready{opacity:.01!important;transform:none!important;transition:none!important;will-change:opacity}
+.oai-enter-ready.oai-enter-show{opacity:1!important;transform:none!important;transition:opacity .22s ease-out!important}
 .oai-prepaint-view{visibility:hidden!important;opacity:1!important;transform:none!important;transition:none!important}
 html.oai-returning .oai-enter-ready{opacity:1;transform:none!important;transition:none!important}
 #oai-category-entry-veil{position:fixed;left:0;right:0;top:var(--tab-h,72px);bottom:0;z-index:790;display:none;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity .22s cubic-bezier(.22,.61,.36,1);transform:translateZ(0);backface-visibility:hidden}
@@ -3760,7 +3760,7 @@ html:not(.ios-device) #ios-safari-guide-modal{
   word-break:keep-all!important;
 }
 
-/* V1-22 화면 흔들림 안정화
+/* V1-23 화면 흔들림 안정화
    - 첫 커버는 index.html에서 --cover-vh를 최초 1회만 고정한다.
    - 헤더가 있는 모듈/웹사이트 화면은 한 프레임 prepaint 후 보여서 헤더가 본문을 밀어내는 느낌을 줄인다.
    - 뒤로가기/카테고리 로직은 변경하지 않는다. */
@@ -3793,7 +3793,7 @@ html:not(.ios-device) #ios-safari-guide-modal{
 }
 
 
-/* V1-22 화면 흔들림 재수정
+/* V1-23 화면 흔들림 재수정
    - 커버는 실제 사용 중인 --cover-vh 고정값만 사용한다.
    - 외부 사이트 복귀/모듈 진입·닫힘 순간에는 아주 짧은 안정막으로 헤더 재배치가 보이지 않게 한다.
    - 뒤로가기 로직은 변경하지 않는다. */
@@ -3861,7 +3861,7 @@ html.oai-external-return-freeze body::after{
 @keyframes oaiStabilitySpin{to{transform:rotate(360deg)}}
 
 
-/* V1-22: 성지·성당·피정의집 첫 진입 깜빡임 방지
+/* V1-23: 성지·성당·피정의집 첫 진입 깜빡임 방지
    지도 로딩 전에 내 주변 아이보리 시트를 먼저 고정해, 지도/배경이 먼저 보이는 순간을 숨긴다. */
 .sheet.oai-preopen-nearby{
   transform:translate(0,0)!important;
@@ -3877,7 +3877,7 @@ html.oai-category-entering #sheet-nearby.oai-preopen-nearby{
 }
 
 
-/* V1-22: 커버 아이콘 하단 잘림 보정
+/* V1-23: 커버 아이콘 하단 잘림 보정
    V1-19에서 십자가 위치 안정화를 위해 overflow:hidden을 적용했지만,
    일부 emoji/폰트가 아이콘 박스 아래에서 잘렸다. 위치 안정화는 유지하고 클리핑만 해제한다. */
 #cc-1 .cover-emoji,
@@ -3905,41 +3905,48 @@ html.oai-category-entering #sheet-nearby.oai-preopen-nearby{
 }
 
 
-/* V1-22: 성지·성당·피정의집 내 주변 시트 안내 글자 검정색 고정
-   기능/뒤로가기 변경 없이, 내 주변 제목과 거리 계산 안내문 색상만 조정한다. */
-#nearby-sheet-title,
-html.parish-mode #nearby-sheet-title,
-html.retreat-mode #nearby-sheet-title,
-html:not(.parish-mode):not(.retreat-mode) #nearby-sheet-title{
+/* V1-23: 내 주변 제목은 원래 색상 유지.
+   '정확한 거리를 계산 중입니다...' 문구만 검정 + 살짝 크게 표시한다. */
+#nearby-body .nearby-distance-loading,
+#sheet-nearby.oai-preopen-nearby .nearby-distance-loading{
   color:#111827!important;
-}
-#nearby-body .empty-msg,
-#sheet-nearby.oai-preopen-nearby .empty-msg{
-  color:#111827!important;
+  font-size:15px!important;
+  font-weight:700!important;
 }
 
-/* V1-22: 전체 화면 첫 표시 안정화
-   버튼을 누른 직후부터 아주 짧은 안정 배경을 유지해 헤더·지도·시트가 따로 움직이는 첫 프레임을 숨긴다.
-   뒤로가기/history 로직에는 관여하지 않는다. */
-html.oai-stability-veil[data-oai-stability-reason="cover-enter"] body::after,
-html.oai-stability-veil[data-oai-stability-reason="view-enter"] body::after,
-html.oai-stability-veil[data-oai-stability-reason="view-close"] body::after,
-html.oai-stability-veil[data-oai-stability-reason="external-leaving"] body::after,
-html.oai-stability-veil[data-oai-stability-reason="external-return"] body::after{
-  display:none!important;
-}
-html.oai-stability-veil[data-oai-stability-reason="cover-enter"] body::before,
-html.oai-stability-veil[data-oai-stability-reason="view-enter"] body::before,
-html.oai-stability-veil[data-oai-stability-reason="view-close"] body::before,
-html.oai-stability-veil[data-oai-stability-reason="external-leaving"] body::before,
-html.oai-stability-veil[data-oai-stability-reason="external-return"] body::before{
-  background:#f5f0e8!important;
-  opacity:1!important;
-}
-html.oai-stability-veil[data-oai-stability-reason="cover-enter"] #app,
-html.oai-stability-veil[data-oai-stability-reason="view-enter"] #app,
-html.oai-stability-veil[data-oai-stability-reason="external-return"] #app{
+
+/* V1-23: 모든 카테고리 첫 진입 appearance/enter 효과 통일
+   - 안정막/뒤로가기 로직은 건드리지 않고 화면 자체를 짧게 fade-in 한다.
+   - 위쪽/아래쪽 이동 효과는 넣지 않아 흔들림처럼 보이지 않게 한다. */
+#app.oai-enter-ready,
+#prayer-view.open.oai-enter-ready,
+#diocese-view.open.oai-enter-ready,
+#missa-view.open.oai-enter-ready,
+#web-view.module-view.open.oai-enter-ready,
+#trail-view.module-view.open.oai-enter-ready,
+#qna-view.module-view.open.oai-enter-ready,
+#mass-quick-modal.show.oai-enter-ready{
+  opacity:.01!important;
   transform:none!important;
   transition:none!important;
-  animation:none!important;
+  will-change:opacity!important;
+}
+#app.oai-enter-ready.oai-enter-show,
+#prayer-view.open.oai-enter-ready.oai-enter-show,
+#diocese-view.open.oai-enter-ready.oai-enter-show,
+#missa-view.open.oai-enter-ready.oai-enter-show,
+#web-view.module-view.open.oai-enter-ready.oai-enter-show,
+#trail-view.module-view.open.oai-enter-ready.oai-enter-show,
+#qna-view.module-view.open.oai-enter-ready.oai-enter-show,
+#mass-quick-modal.show.oai-enter-ready.oai-enter-show{
+  opacity:1!important;
+  transform:none!important;
+  transition:opacity .22s ease-out!important;
+}
+@media (prefers-reduced-motion: reduce){
+  .oai-enter-ready,
+  .oai-enter-ready.oai-enter-show{
+    opacity:1!important;
+    transition:none!important;
+  }
 }
