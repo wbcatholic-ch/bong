@@ -362,7 +362,7 @@ html.retreat-mode .sm-tab.active{color:#ffffff!important;border-bottom-color:var
 .web-cat-btn[data-web-cat="전체"].on{background:#0e1a3a}
 .web-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:14px 14px calc(80px + env(safe-area-inset-bottom,0px));display:block;background:#EDE8E0!important;min-height:0}
 .web-list::-webkit-scrollbar{display:none}
-.web-card{display:block;width:100%;overflow:hidden;background:#FFFBF2;border:1px solid #DDD5C8;border-radius:14px;box-shadow:0 1px 8px rgba(0,0,0,.06);cursor:pointer;margin-bottom:12px;transition:transform .12s ease,box-shadow .12s ease}
+.web-card{display:block;width:100%;overflow:hidden;background:#FFFBF2;border:1.25px solid #C8B79F;border-radius:14px;box-shadow:0 1px 8px rgba(0,0,0,.06);cursor:pointer;margin-bottom:12px;transition:transform .12s ease,box-shadow .12s ease}
 .web-card.app-pressing{transform:translateY(6px) scale(.982);box-shadow:none!important;filter:brightness(.96)}
 .web-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px 0}
 .web-card-badge{display:inline-flex;align-items:center;justify-content:center;min-height:24px;padding:0 10px;border-radius:6px;color:#FFFFFF;font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0}
@@ -386,7 +386,7 @@ html.retreat-mode .sm-tab.active{color:#ffffff!important;border-bottom-color:var
 #trail-map{position:absolute;inset:0;width:100%!important;height:100%!important}
 #trail-list{flex:1!important;min-height:0!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch;padding:12px 14px calc(74px + env(safe-area-inset-bottom,0));display:flex!important;flex-direction:column;gap:12px!important;align-items:stretch!important;padding-bottom:calc(84px + env(safe-area-inset-bottom,0));background:var(--bg-unified)!important;height:auto!important}
 #trail-list::-webkit-scrollbar{display:none}
-.trail-card{background:#fff;border-radius:12px;border:1px solid #e8ecf3;box-shadow:0 1px 4px rgba(22,31,52,.05);overflow:hidden;cursor:pointer;transition:transform .12s;display:block;width:100%}
+.trail-card{background:#fff;border-radius:12px;border:1.25px solid #C8B79F;box-shadow:0 1px 4px rgba(22,31,52,.05);overflow:hidden;cursor:pointer;transition:transform .12s;display:block;width:100%}
 .trail-card.app-pressing{transform:translateY(6px) scale(.982);filter:brightness(.96)}
 .trail-r1{display:flex;align-items:center;gap:7px;padding:10px 14px 0}
 .trail-bdg{font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px;color:#fff;white-space:nowrap;flex-shrink:0}
@@ -443,8 +443,8 @@ html.retreat-mode .sm-tab.active{color:#ffffff!important;border-bottom-color:var
 .module-bar::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent)}
 .web-cats,.trail-tabs{padding:9px 14px!important;background:rgba(255,255,255,.88);backdrop-filter:none!important;border-bottom:1px solid #e8ecf3;min-height:var(--mod-tabbar-h)!important;align-items:center!important;height:var(--mod-tabbar-h)!important;max-height:var(--mod-tabbar-h)!important;display:flex!important;box-sizing:border-box;flex-shrink:0;-webkit-backdrop-filter:none!important}
 .web-list,#trail-list{padding:14px 14px calc(86px + env(safe-area-inset-bottom,0))}
-.trail-card{border-radius:22px;border:1px solid #e6dccd;box-shadow:0 14px 26px rgba(15,23,42,.08);background:linear-gradient(180deg,#fffdfb 0%,#faf5ee 100%)}
-.web-card{border-radius:14px;border:1px solid #DDD5C8;box-shadow:0 1px 8px rgba(0,0,0,.06);background:#FFFBF2}
+.trail-card{border-radius:22px;border:1.25px solid #C8B79F;box-shadow:0 14px 26px rgba(15,23,42,.08);background:linear-gradient(180deg,#fffdfb 0%,#faf5ee 100%)}
+.web-card{border-radius:14px;border:1.25px solid #C8B79F;box-shadow:0 1px 8px rgba(0,0,0,.06);background:#FFFBF2}
 .trail-r1{padding:14px 16px 0}
 .web-card-top{padding:12px 14px 0!important}
 .trail-r2{padding:10px 16px 14px;align-items:flex-start}
@@ -471,8 +471,8 @@ html.retreat-mode .sm-tab.active{color:#ffffff!important;border-bottom-color:var
 #cv-pull{color:#7a87a4}
 @media (max-width:420px){.cv-shell{padding-left:14px;padding-right:14px;gap:14px}.cv-title{font-size:25px}.cv-grid{gap:8px}.cv-btn{min-height:98px;padding:12px 9px 11px;border-radius:20px}.cv-btn-icon,.cv-btn-badge{width:40px;height:40px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;background:transparent!important;background-color:transparent!important;box-shadow:none!important;border:none!important}.cv-btn-label{font-size:12px}.cv-btn-meta{font-size:10px}}
 .web-cat-btn,.trail-tab{border-radius:14px;border:1px solid #e2e7f1;background:#f7f9fd;color:#657086;box-shadow:inset 0 1px 0 rgba(255,255,255,.7);font-weight:800}
-.trail-card{border-radius:18px;border:1px solid #e4e9f2;box-shadow:0 14px 30px rgba(24,32,51,.06)}
-.web-card{border-radius:13px!important;border:1px solid #DDD5C8!important;box-shadow:0 1px 8px rgba(0,0,0,.06)!important}
+.trail-card{border-radius:18px;border:1.25px solid #C8B79F;box-shadow:0 14px 30px rgba(24,32,51,.06)}
+.web-card{border-radius:13px!important;border:1.25px solid #C8B79F!important;box-shadow:0 1px 8px rgba(0,0,0,.06)!important;background:#FFFBF2!important}
 #cover::before,#cover::after,.cv-orbit,.cv-orbit-a,.cv-orbit-b{display:none!important;content:none}
 .cv-shell-stage{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;gap:10px;width:min(100%,560px);height:100dvh;min-height:100dvh;padding:calc(env(safe-area-inset-top,0) + 9vh) 0 calc(9vh + env(safe-area-inset-bottom,0));margin:0 auto;box-sizing:border-box}
 .cv-stage{position:relative;align-self:center;width:min(100%,calc((100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 124px) * .5625));aspect-ratio:9 / 16;min-height:0}
@@ -3760,7 +3760,7 @@ html:not(.ios-device) #ios-safari-guide-modal{
   word-break:keep-all!important;
 }
 
-/* v1-s 화면 흔들림 안정화
+/* V1-S 화면 흔들림 안정화
    - 첫 커버는 index.html에서 --cover-vh를 최초 1회만 고정한다.
    - 헤더가 있는 모듈/웹사이트 화면은 한 프레임 prepaint 후 보여서 헤더가 본문을 밀어내는 느낌을 줄인다.
    - 뒤로가기/카테고리 로직은 변경하지 않는다. */
@@ -3793,7 +3793,7 @@ html:not(.ios-device) #ios-safari-guide-modal{
 }
 
 
-/* v1-s 화면 흔들림 재수정
+/* V1-S 화면 흔들림 재수정
    - 커버는 실제 사용 중인 --cover-vh 고정값만 사용한다.
    - 외부 사이트 복귀/모듈 진입·닫힘 순간에는 아주 짧은 안정막으로 헤더 재배치가 보이지 않게 한다.
    - 뒤로가기 로직은 변경하지 않는다. */
@@ -3861,7 +3861,7 @@ html.oai-external-return-freeze body::after{
 @keyframes oaiStabilitySpin{to{transform:rotate(360deg)}}
 
 
-/* v1-s: 성지·성당·피정의집 첫 진입 깜빡임 방지
+/* V1-S: 성지·성당·피정의집 첫 진입 깜빡임 방지
    지도 로딩 전에 내 주변 아이보리 시트를 먼저 고정해, 지도/배경이 먼저 보이는 순간을 숨긴다. */
 .sheet.oai-preopen-nearby{
   transform:translate(0,0)!important;
@@ -3877,7 +3877,7 @@ html.oai-category-entering #sheet-nearby.oai-preopen-nearby{
 }
 
 
-/* v1-s: 커버 아이콘 하단 잘림 보정
+/* V1-S: 커버 아이콘 하단 잘림 보정
    V1-19에서 십자가 위치 안정화를 위해 overflow:hidden을 적용했지만,
    일부 emoji/폰트가 아이콘 박스 아래에서 잘렸다. 위치 안정화는 유지하고 클리핑만 해제한다. */
 #cc-1 .cover-emoji,
@@ -3905,7 +3905,7 @@ html.oai-category-entering #sheet-nearby.oai-preopen-nearby{
 }
 
 
-/* v1-s: 내 주변 제목은 원래 색상 유지.
+/* V1-S: 내 주변 제목은 원래 색상 유지.
    '정확한 거리를 계산 중입니다...' 문구만 검정 + 살짝 크게 표시한다. */
 #nearby-body .nearby-distance-loading,
 #sheet-nearby.oai-preopen-nearby .nearby-distance-loading{
@@ -3915,7 +3915,7 @@ html.oai-category-entering #sheet-nearby.oai-preopen-nearby{
 }
 
 
-/* v1-s: 모든 카테고리 첫 진입 appearance/enter 효과 통일
+/* V1-S: 모든 카테고리 첫 진입 appearance/enter 효과 통일
    - 안정막/뒤로가기 로직은 건드리지 않고 화면 자체를 짧게 fade-in 한다.
    - 위쪽/아래쪽 이동 효과는 넣지 않아 흔들림처럼 보이지 않게 한다. */
 #app.oai-enter-ready,

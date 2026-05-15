@@ -413,7 +413,7 @@ const COL = db.collection("qa_posts");
 
 /* ─── 상수 ─── */
 const CATEGORIES  = ["문의","수정제안","개선건의","칭찬"];
-const ANON_NAMES  = ["익명의 순례자","익명의 신자","익명의 형제","익명의 자매","익명의 교우","익명의 성도"];
+const ANON_NAMES  = ["익명의 순례자","익명의 신자","익명의 교우"];
 const FILTERS     = ["전체", ...CATEGORIES];
 
 /* ─── 상태 ─── */
@@ -813,7 +813,7 @@ subscribeList();
 <script id="oai-cache-lifecycle-V23">
 (function(){
   'use strict';
-  var APP_VERSION = 'v1-s';
+  var APP_VERSION = 'V1-S';
   if('serviceWorker' in navigator){
     try{ navigator.serviceWorker.register('./sw.js?v=' + encodeURIComponent(APP_VERSION)).then(function(reg){try{reg.update();}catch(e){}}).catch(function(){}); }catch(e){}
   }
