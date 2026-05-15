@@ -742,7 +742,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V2-7';
+    var target = btn.getAttribute('data-target-version') || 'V2-8';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -1041,7 +1041,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V2-7';
+    frame.src='diocese.html?v=V2-8';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -2329,7 +2329,7 @@ function _mkrImgRetreat(color,big){
 }
 function _mkrImg(color,big){
   const w=big?40:28,h=big?52:36;
-  // V2-7: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
+  // V2-8: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
   // This removes the purple emoji background and keeps a plain white cross.
   const crossBig = `<g fill="#fff" opacity="0.96"><rect x="18.45" y="10.5" width="3.1" height="18.5" rx="1.1"/><rect x="13.4" y="16.3" width="13.2" height="3.1" rx="1.1"/></g>`;
   const crossSmall = `<g fill="#fff" opacity="0.96"><rect x="12.85" y="7.8" width="2.3" height="12.8" rx="0.8"/><rect x="9.6" y="11.7" width="8.8" height="2.3" rx="0.8"/></g>`;
@@ -4178,8 +4178,9 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
     var pressActive = false;
     var cacheActionFired = false;
     var handledUntil = 0;
-    // 짧은 탭과 보통 길게 누른 뒤 놓기는 일반 새로고침, 더 오래 누르면 캐시 초기화.
-    var CACHE_HOLD_MS = 1350;
+    var activePointerId = null;
+    // 보통 길게 누르기에서 캐시 초기화 팝업을 띄운다. 너무 오래 기다리게 하지 않는다.
+    var CACHE_HOLD_MS = 950;
     function now(){ return Date.now ? Date.now() : new Date().getTime(); }
     function markHandled(ms){
       handledUntil = now() + (ms || 900);
@@ -4207,11 +4208,12 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
     }
     function armPress(e){
       try{ if(e && e.button !== undefined && e.button !== 0) return; }catch(_e){}
-      // 여기서 preventDefault를 걸면 일부 iPhone/Android에서 짧은 탭 click이 사라질 수 있어 막지 않는다.
-      stopEvent(e, false);
+      // 직접 짧은 탭/길게누름을 처리하므로 기본 길게누름 메뉴와 OS 햅틱을 최대한 막는다.
+      stopEvent(e, true);
       clearHoldOnly();
       pressActive = true;
       cacheActionFired = false;
+      try{ activePointerId = (e && e.pointerId != null) ? e.pointerId : null; }catch(_e){ activePointerId = null; }
       try{
         refreshBtn.style.webkitUserSelect = 'none';
         refreshBtn.style.userSelect = 'none';
@@ -4222,23 +4224,28 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
         if(!pressActive || recentlyHandled()) return;
         cacheActionFired = true;
         pressActive = false;
-        markHandled(1600);
-        try{ if(navigator.vibrate) navigator.vibrate(25); }catch(_e){}
+        markHandled(1700);
+        // 캐시 초기화 팝업이 뜨는 순간에만 한 번, 너무 짧지 않게 진동한다.
+        try{ if(navigator.vibrate) navigator.vibrate(90); }catch(_e){}
         if(typeof clearAppFilesCacheCompletely === 'function') clearAppFilesCacheCompletely();
       }, CACHE_HOLD_MS);
     }
     function releasePress(e){
+      try{ if(activePointerId != null && e && e.pointerId != null && e.pointerId !== activePointerId) return; }catch(_e){}
       stopEvent(e, true);
       if(recentlyHandled()){
         pressActive = false;
+        activePointerId = null;
         clearHoldOnly();
         return;
       }
       if(!pressActive){
+        activePointerId = null;
         clearHoldOnly();
         return;
       }
       pressActive = false;
+      activePointerId = null;
       clearHoldOnly();
       if(!cacheActionFired){
         markHandled(900);
@@ -4246,8 +4253,9 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
       }
     }
     function cancelPress(e){
-      stopEvent(e, false);
+      stopEvent(e, true);
       pressActive = false;
+      activePointerId = null;
       clearHoldOnly();
     }
     function preventNativePressMenu(e){
@@ -4255,18 +4263,20 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
       return false;
     }
 
-    on(refreshBtn, 'pointerdown', armPress, {passive:false});
-    on(refreshBtn, 'pointerup', releasePress, {passive:false});
-    on(refreshBtn, 'pointercancel', cancelPress, {passive:false});
-    // iPhone/Android에서는 손가락이 버튼 경계 밖으로 살짝 흔들려도 짧은 탭이 취소되지 않게 한다.
-    on(refreshBtn, 'pointerleave', function(e){ try{ if(e && e.pointerType === 'mouse') cancelPress(e); }catch(_e){} }, {passive:false});
-    // 포인터 이벤트가 불안정한 환경을 위해 터치/마우스 입력도 같은 컨트롤러에 연결한다.
-    on(refreshBtn, 'touchstart', armPress, {passive:false});
-    on(refreshBtn, 'touchend', releasePress, {passive:false});
-    on(refreshBtn, 'touchcancel', cancelPress, {passive:false});
-    on(refreshBtn, 'mousedown', armPress, {passive:false});
-    on(refreshBtn, 'mouseup', releasePress, {passive:false});
-    on(refreshBtn, 'mouseleave', cancelPress, {passive:false});
+    if(window.PointerEvent){
+      on(refreshBtn, 'pointerdown', armPress, {passive:false});
+      on(refreshBtn, 'pointerup', releasePress, {passive:false});
+      on(refreshBtn, 'pointercancel', cancelPress, {passive:false});
+      // 손가락은 버튼 경계 밖으로 아주 조금 나가도 취소하지 않고, 마우스만 취소한다.
+      on(refreshBtn, 'pointerleave', function(e){ try{ if(e && e.pointerType === 'mouse') cancelPress(e); }catch(_e){} }, {passive:false});
+    }else{
+      on(refreshBtn, 'touchstart', armPress, {passive:false});
+      on(refreshBtn, 'touchend', releasePress, {passive:false});
+      on(refreshBtn, 'touchcancel', cancelPress, {passive:false});
+      on(refreshBtn, 'mousedown', armPress, {passive:false});
+      on(refreshBtn, 'mouseup', releasePress, {passive:false});
+      on(refreshBtn, 'mouseleave', cancelPress, {passive:false});
+    }
     on(refreshBtn, 'contextmenu', preventNativePressMenu, {capture:true});
     on(refreshBtn, 'selectstart', preventNativePressMenu, {capture:true});
     on(refreshBtn, 'dragstart', preventNativePressMenu, {capture:true});
