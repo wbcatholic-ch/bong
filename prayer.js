@@ -424,14 +424,12 @@ function prOpenDetail(prayer){
   content.innerHTML = ((prayer.content||prayer.body||'')+'').replace(/class="symbol"/g,'class="pr-symbol"');
   detail.classList.add('show');
   try{
-    // 본문은 기도문 전용 뒤로가기 컨트롤러가 처리한다.
-    // 여기서 별도 detail history state를 쌓으면 목록 복귀 뒤 다음 Back이 앱 종료로 흐를 수 있어,
-    // 현재 위치를 기도문 전용 [root → trap] 구조로만 다시 고정한다.
-    if(typeof window._oaiArmPrayerBackTrap === 'function') window._oaiArmPrayerBackTrap('prayer-detail-open');
-    else if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-detail-open');
+    // 본문은 기도문 전용 history state(detail)만 추가한다.
+    // 공통 앱 back trap과 섞지 않는다.
+    if(typeof window._oaiPrayerPushDetailState === 'function') window._oaiPrayerPushDetailState('prayer-detail-open');
+    else if(typeof window._oaiArmPrayerBackTrap === 'function') window._oaiArmPrayerBackTrap('prayer-detail-open');
   }catch(e){
     console.warn('[가톨릭길동무]', e);
-    try{ if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-detail-fallback'); }catch(_e){}
   }
   // 현재 기도문 ID 저장 → 본문 즐겨찾기 버튼에 반영
   detail.dataset.pid = prayer.id || '';
@@ -451,11 +449,12 @@ window.prCloseDetail = function(opts){
   if(detail) detail.classList.remove('show');
   if(!(opts && opts.skipTrap)){
     try{
-      if(typeof window._oaiArmPrayerBackTrap === 'function') window._oaiArmPrayerBackTrap('prayer-detail-button-to-list');
-      else if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-list-close');
+      // 버튼으로 본문을 닫는 경우 현재 history state가 detail일 수 있으므로
+      // 현재 state만 list로 바꾼다. 새 state를 push하지 않는다.
+      if(typeof window._oaiPrayerReplaceListState === 'function') window._oaiPrayerReplaceListState('prayer-detail-button-to-list');
+      else if(typeof window._oaiArmPrayerBackTrap === 'function') window._oaiArmPrayerBackTrap('prayer-detail-button-to-list');
     }catch(e){
       console.warn('[가톨릭길동무]', e);
-      try{ if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-list-close-fallback'); }catch(_e){}
     }
   }
 };
