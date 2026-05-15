@@ -724,7 +724,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'v-1';
+    var target = btn.getAttribute('data-target-version') || 'v1';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -969,6 +969,15 @@ function _closePrayerAndReturn(){
   }
   function init(){
     var banner = document.getElementById('ios-kakao-safari-banner');
+    var modal = document.getElementById('ios-safari-guide-modal');
+    // Android에서는 iPhone 설치 안내 배너/팝업 보기 자체를 제거한다.
+    // iPhone/iPad 카카오톡 인앱 브라우저에서만 아래 안내가 동작한다.
+    if(!isIOS()){
+      document.documentElement.classList.remove('ios-kakao-inapp','ios-install-preview-mode');
+      if(banner && banner.parentNode) banner.parentNode.removeChild(banner);
+      if(modal && modal.parentNode) modal.parentNode.removeChild(modal);
+      return;
+    }
     if(!banner) return;
     var show = shouldShow();
     if(show){
@@ -1024,7 +1033,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=v-1';
+    frame.src='diocese.html?v=v1';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -2303,7 +2312,7 @@ function _mkrImgRetreat(color,big){
 }
 function _mkrImg(color,big){
   const w=big?40:28,h=big?52:36;
-  // v-1: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
+  // v1: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
   // This removes the purple emoji background and keeps a plain white cross.
   const crossBig = `<g fill="#fff" opacity="0.96"><rect x="18.45" y="10.5" width="3.1" height="18.5" rx="1.1"/><rect x="13.4" y="16.3" width="13.2" height="3.1" rx="1.1"/></g>`;
   const crossSmall = `<g fill="#fff" opacity="0.96"><rect x="12.85" y="7.8" width="2.3" height="12.8" rx="0.8"/><rect x="9.6" y="11.7" width="8.8" height="2.3" rx="0.8"/></g>`;
