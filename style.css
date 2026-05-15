@@ -3760,7 +3760,7 @@ html:not(.ios-device) #ios-safari-guide-modal{
   word-break:keep-all!important;
 }
 
-/* V1-17 화면 흔들림 안정화
+/* V1-18 화면 흔들림 안정화
    - 첫 커버는 index.html에서 --cover-vh를 최초 1회만 고정한다.
    - 헤더가 있는 모듈/웹사이트 화면은 한 프레임 prepaint 후 보여서 헤더가 본문을 밀어내는 느낌을 줄인다.
    - 뒤로가기/카테고리 로직은 변경하지 않는다. */
@@ -3793,7 +3793,7 @@ html:not(.ios-device) #ios-safari-guide-modal{
 }
 
 
-/* V1-17 화면 흔들림 재수정
+/* V1-18 화면 흔들림 재수정
    - 커버는 실제 사용 중인 --cover-vh 고정값만 사용한다.
    - 외부 사이트 복귀/모듈 진입·닫힘 순간에는 아주 짧은 안정막으로 헤더 재배치가 보이지 않게 한다.
    - 뒤로가기 로직은 변경하지 않는다. */
@@ -3859,3 +3859,19 @@ html.oai-external-return-freeze body::after{
   animation:oaiStabilitySpin .75s linear infinite!important;
 }
 @keyframes oaiStabilitySpin{to{transform:rotate(360deg)}}
+
+
+/* V1-18: 성지·성당·피정의집 첫 진입 깜빡임 방지
+   지도 로딩 전에 내 주변 아이보리 시트를 먼저 고정해, 지도/배경이 먼저 보이는 순간을 숨긴다. */
+.sheet.oai-preopen-nearby{
+  transform:translate(0,0)!important;
+  transition:none!important;
+  animation:none!important;
+  will-change:auto!important;
+}
+html.oai-category-entering #sheet-nearby.oai-preopen-nearby{
+  z-index:820!important;
+}
+#sheet-nearby.oai-preopen-nearby .sheet-body{
+  background:var(--ui-bg,#f7f4ee)!important;
+}
