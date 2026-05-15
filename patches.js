@@ -165,7 +165,7 @@
 
 
   /* ─────────────────────────────────────────────
-     V1-1 기도문 전용 뒤로가기 컨트롤러 — 재작성
+     V1-2 기도문 전용 뒤로가기 컨트롤러 — 재작성
 
      원칙:
      1) 기도문은 앱 내부 카테고리다. 매일미사·성가 외부사이트 복귀와 섞지 않는다.
@@ -239,13 +239,19 @@
     }catch(e){ console.warn('[가톨릭길동무]', e); }
   }
   function armPrayerPopupBackTrap(reason){
-    /* 빠른메뉴 → 기도문 → 목록 → 빠른메뉴 팝업으로 돌아온 직후에는
-       일반 기도문 list/detail state가 아니라, 커버 위 팝업 전용 root/trap을 다시 만든다.
-       이렇게 해야 다음 Android/PWA Back이 앱 종료로 빠지지 않고 반드시
-       handlePrayerBack()의 popup → cover 단계로 들어온다. */
+    /* V1-2: 기도문에서 빠른메뉴 팝업으로 돌아온 순간에는
+       기존 목록/list state 위에 '팝업 전용 trap'을 한 칸만 얹는다.
+       V1-1처럼 replaceState로 현재 항목을 root로 바꾸면 일부 Android/PWA에서
+       다음 Back이 JS popstate를 거치기 전에 앱 종료로 판단될 수 있었다.
+       그래서 팝업을 띄운 뒤에는 항상 현재 상태를 유지하고 pushState만 수행한다.
+       Back: popup-trap → 기존 list/root state(popstate 발생) → handlePrayerBack() → cover */
     try{
       var href = location.href.split('#')[0];
-      history.replaceState({_p:0, oai_prayer_popup_root:reason||'prayer-popup-root'}, '', href);
+      var st = history.state || {};
+      if(st && st.oai_prayer_popup_trap){
+        history.replaceState({_p:1, oai_prayer_popup_trap:reason||'prayer-popup-trap'}, '', href);
+        return;
+      }
       history.pushState({_p:1, oai_prayer_popup_trap:reason||'prayer-popup-trap'}, '', href);
     }catch(e){ console.warn('[가톨릭길동무]', e); }
   }
@@ -401,7 +407,7 @@
   window.addEventListener('popstate', function(){
     if(window._appExiting) return;
 
-    /* V1-1: 기도문은 공통 복원/종료 로직보다 먼저 전용 컨트롤러가 처리한다. */
+    /* V1-2: 기도문은 공통 복원/종료 로직보다 먼저 전용 컨트롤러가 처리한다. */
     if(handlePrayerBack('prayer-popstate')){
       _restoring = false;
       return;
@@ -685,7 +691,7 @@
   if(window.__APP_FONT_SCALE_GUARD__) return;
   window.__APP_FONT_SCALE_GUARD__=true;
   // V37: 문의·건의는 qa-firebase.html 한 경로로만 통일한다.
-  var QA_URL="qa-firebase.html?v=V1-1";
+  var QA_URL="qa-firebase.html?v=V1-2";
   var FONT_KEY='prayer_font_size', BASE=16, SIZES=[13,14,15,16,17,18,19,20,21,22,24,26,28,30];
   function el(id){return document.getElementById(id)}
   function getPx(){var px=parseInt(localStorage.getItem(FONT_KEY)||BASE,10);return (px>=13&&px<=30)?px:BASE;}
