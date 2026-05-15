@@ -76,16 +76,35 @@
   function closePrayerDetailToList(reason){
     try{
       var detail = $b('prayer-detail');
+      var prayer = $b('prayer-view');
+      var fromQuickPrayer = false;
+      try{ if(typeof window._shouldPrayerQuickReturn === 'function' && window._shouldPrayerQuickReturn()) fromQuickPrayer = true; }catch(_e){}
+      try{ if(prayer && prayer.dataset && prayer.dataset.quickSource === 'mass') fromQuickPrayer = true; }catch(_e){}
       window.__APP_PRAYER_DETAIL_TS__ = Date.now();
       if(typeof window.prCloseDetail === 'function') window.prCloseDetail({skipTrap:true});
       else if(detail) detail.classList.remove('show');
       if(typeof window.showPrayerListOnly === 'function') window.showPrayerListOnly();
-      if(typeof window._resetAppBackTrap === 'function') window._resetAppBackTrap(reason || 'prayer-detail-to-list');
-      else if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap(reason || 'prayer-detail-to-list');
+      if(fromQuickPrayer){
+        try{ if(typeof window._setPrayerQuickReturn === 'function') window._setPrayerQuickReturn(true); }catch(_e){}
+        try{ if(prayer && prayer.dataset) prayer.dataset.quickSource = 'mass'; }catch(_e){}
+      }
+      /* prOpenDetail()이 본문 전용 history state를 하나 더 쌓으므로,
+         본문 Back 직후의 현재 state는 이미 기도문 목록용 p1이다.
+         여기서 p0/p1을 다시 replace+push하면 다음 목록 Back이 앱 종료로 오판될 수 있어
+         p1이 없을 때만 보조 트랩을 복원한다. */
+      try{
+        var st = history.state;
+        if(!(st && st._p === 1)){
+          if(typeof window._resetAppBackTrap === 'function') window._resetAppBackTrap(reason || 'prayer-detail-to-list');
+          else if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap(reason || 'prayer-detail-to-list');
+        }
+      }catch(_e){
+        if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap(reason || 'prayer-detail-to-list');
+      }
       return true;
     }catch(e){
       console.warn('[가톨릭길동무]', e);
-      try{ if(typeof window._resetAppBackTrap === 'function') window._resetAppBackTrap('prayer-detail-to-list-fallback'); else if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-detail-to-list-fallback'); }catch(_e){}
+      try{ if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-detail-to-list-fallback'); }catch(_e){}
       return true;
     }
   }
@@ -99,7 +118,7 @@
       else missa.classList.remove('open');
       return true;
     }
-    /* 기도문: 본문이면 목록으로, 목록이면 커버로 */
+    /* 기도문: 본문이면 목록으로, 목록이면 _closePrayerAndReturn()에서 팝업/커버로 */
     var prayer = $b('prayer-view');
     if(prayer && prayer.classList.contains('open')){
       var prayerDetail = $b('prayer-detail');

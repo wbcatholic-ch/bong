@@ -606,7 +606,7 @@ window.addEventListener('focus', function(){
 if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(_tryResumeMassQuickSoon, 80); }, {once:true});
 else setTimeout(_tryResumeMassQuickSoon, 80);
 window.addEventListener('load', function(){ setTimeout(_tryResumeMassQuickSoon, 80); }, {once:true});
-try{ window._shouldMassQuickReturn=_shouldMassQuickReturn; window._shouldPrayerQuickReturn=_shouldPrayerQuickReturn; window._clearMassQuickReturnForReload=_clearMassQuickReturnForReload; window._clearPrayerQuickReturn=_clearPrayerQuickReturn; window._returnToMassQuickMenu=_returnToMassQuickMenu; window._closePrayerAndReturn=_closePrayerAndReturn; window._resetCoverExitReady=_resetCoverExitReady; window._clearCoverExitArmed=_clearCoverExitArmed; window._ensureCoverBackTrap=_ensureCoverBackTrap; window._ensureAppBackTrap=_ensureAppBackTrap; window._resetAppBackTrap=_resetAppBackTrap; window._hideMassQuickMenuOnly=_hideMassQuickMenuOnly; window._setPrayerPopupReturnSource=_setPrayerPopupReturnSource; window._isPrayerPopupReturnSource=_isPrayerPopupReturnSource; window._forceCoverAfterPrayerQuickPopup=_forceCoverAfterPrayerQuickPopup; window._resetCoverBackTrap=_resetCoverBackTrap; window._consumePrayerCoverNeedsFirstToast=_consumePrayerCoverNeedsFirstToast; window.openMassQuickMenu=openMassQuickMenu; window.closeMassQuickMenu=closeMassQuickMenu; }catch(e){ console.warn('[가톨릭길동무]', e); }
+try{ window._shouldMassQuickReturn=_shouldMassQuickReturn; window._shouldPrayerQuickReturn=_shouldPrayerQuickReturn; window._setPrayerQuickReturn=_setPrayerQuickReturn; window._clearMassQuickReturnForReload=_clearMassQuickReturnForReload; window._clearPrayerQuickReturn=_clearPrayerQuickReturn; window._returnToMassQuickMenu=_returnToMassQuickMenu; window._closePrayerAndReturn=_closePrayerAndReturn; window._resetCoverExitReady=_resetCoverExitReady; window._clearCoverExitArmed=_clearCoverExitArmed; window._ensureCoverBackTrap=_ensureCoverBackTrap; window._ensureAppBackTrap=_ensureAppBackTrap; window._resetAppBackTrap=_resetAppBackTrap; window._hideMassQuickMenuOnly=_hideMassQuickMenuOnly; window._setPrayerPopupReturnSource=_setPrayerPopupReturnSource; window._isPrayerPopupReturnSource=_isPrayerPopupReturnSource; window._forceCoverAfterPrayerQuickPopup=_forceCoverAfterPrayerQuickPopup; window._resetCoverBackTrap=_resetCoverBackTrap; window._consumePrayerCoverNeedsFirstToast=_consumePrayerCoverNeedsFirstToast; window.openMassQuickMenu=openMassQuickMenu; window.closeMassQuickMenu=closeMassQuickMenu; }catch(e){ console.warn('[가톨릭길동무]', e); }
 
 // 안정형 새로고침: 캐시/서비스워커를 지우지 않고 현재 화면만 다시 불러온다.
 // 즐겨찾기/localStorage는 물론, Service Worker와 Cache Storage도 건드리지 않는다.
@@ -1356,8 +1356,20 @@ function _kakaoKeywordFetch(query, size, page){
   if(page) params.page = String(page);
   return _kakaoRestFetch('keyword', params);
 }
-function _kakaoKeywordDocs(query, limit){
-  var max = Math.max(1, parseInt(limit || 10, 10) || 10);
+function _dedupeKakaoDocs(groups, max){
+  var seen = {};
+  var docs = [];
+  (groups || []).forEach(function(list){
+    (list || []).forEach(function(d){
+      var key = d.id || [d.place_name, d.x, d.y, d.road_address_name || d.address_name || ''].join('|');
+      if(seen[key]) return;
+      seen[key] = true;
+      docs.push(d);
+    });
+  });
+  return docs.slice(0, max);
+}
+function _kakaoKeywordDocsFromRest(query, max){
   var pages = Math.ceil(max / 15);
   var jobs = [];
   for(var page=1; page<=pages; page++){
@@ -1369,18 +1381,56 @@ function _kakaoKeywordDocs(query, limit){
         .catch(function(){ return []; })
     );
   }
-  return Promise.all(jobs).then(function(groups){
-    var seen = {};
-    var docs = [];
-    groups.forEach(function(list){
-      (list || []).forEach(function(d){
-        var key = d.id || [d.place_name, d.x, d.y, d.road_address_name || d.address_name || ''].join('|');
-        if(seen[key]) return;
-        seen[key] = true;
-        docs.push(d);
-      });
-    });
-    return docs.slice(0, max);
+  return Promise.all(jobs).then(function(groups){ return _dedupeKakaoDocs(groups, max); });
+}
+function _kakaoKeywordDocsFromJs(query, max){
+  return new Promise(function(resolve){
+    try{
+      if(!(window.kakao && kakao.maps && kakao.maps.services && kakao.maps.services.Places)){
+        resolve([]);
+        return;
+      }
+      var places = new kakao.maps.services.Places();
+      var all = [];
+      var wantedPages = Math.ceil(max / 15);
+      var receivedPages = 0;
+      function searchPage(page){
+        places.keywordSearch(query, function(data, status, pagination){
+          receivedPages++;
+          try{
+            var OK = kakao.maps.services.Status.OK;
+            if(status === OK && data && data.length){
+              all.push(data);
+              if(_dedupeKakaoDocs(all, max).length >= max){
+                resolve(_dedupeKakaoDocs(all, max));
+                return;
+              }
+              if(pagination && pagination.hasNextPage && receivedPages < wantedPages){
+                pagination.nextPage();
+                return;
+              }
+            }
+          }catch(e){ console.warn('[가톨릭길동무]', e); }
+          resolve(_dedupeKakaoDocs(all, max));
+        }, { size: Math.min(15, max), page: page || 1 });
+      }
+      searchPage(1);
+    }catch(e){
+      console.warn('[가톨릭길동무]', e);
+      resolve([]);
+    }
+  });
+}
+function _kakaoKeywordDocs(query, limit){
+  var max = Math.max(1, parseInt(limit || 10, 10) || 10);
+  return _kakaoKeywordDocsFromRest(query, max).then(function(restDocs){
+    /* Worker 프록시가 page 파라미터를 넘기지 않으면 30개 요청도 1페이지 15개로 중복될 수 있다.
+       그 경우 지도 SDK의 Places 검색으로 한 번 더 받아 실제 30개 후보를 확보한다. */
+    if(restDocs && restDocs.length >= max) return restDocs.slice(0, max);
+    return _kakaoKeywordDocsFromJs(query, max).then(function(jsDocs){
+      if(jsDocs && jsDocs.length > (restDocs || []).length) return jsDocs.slice(0, max);
+      return (restDocs || []).slice(0, max);
+    }).catch(function(){ return (restDocs || []).slice(0, max); });
   });
 }
 const TC    = {'성지':'#c0392b','순례지':'#1565c0','순교 사적지':'#1b7a3e'};
@@ -1856,7 +1906,7 @@ function _loadMap(){
     return;
   }
   const sc=document.createElement('script');
-  sc.src=`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${JSKEY}&autoload=false`;
+  sc.src=`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${JSKEY}&autoload=false&libraries=services`;
   const timer=setTimeout(()=>_mapError('카카오내비 로딩 시간 초과'),20000);
   sc.onload=()=>{clearTimeout(timer);try{kakao.maps.load(_onMapReady);}catch(e){_mapError(e.message);}};
   sc.onerror=()=>{clearTimeout(timer);_mapError(`도메인 등록 필요: ${location.hostname}`);};
