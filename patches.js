@@ -65,6 +65,30 @@
     }
   }
 
+  function isPrayerDetailOpen(){
+    try{
+      var prayer = $b('prayer-view');
+      var detail = $b('prayer-detail');
+      return !!(appActive() && prayer && prayer.classList.contains('open') && detail && detail.classList.contains('show'));
+    }catch(e){ return false; }
+  }
+
+  function closePrayerDetailToList(reason){
+    try{
+      var detail = $b('prayer-detail');
+      window.__APP_PRAYER_DETAIL_TS__ = Date.now();
+      if(typeof window.prCloseDetail === 'function') window.prCloseDetail();
+      else if(detail) detail.classList.remove('show');
+      if(typeof window.showPrayerListOnly === 'function') window.showPrayerListOnly();
+      if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap(reason || 'prayer-detail-to-list');
+      return true;
+    }catch(e){
+      console.warn('[가톨릭길동무]', e);
+      try{ if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-detail-to-list-fallback'); }catch(_e){}
+      return true;
+    }
+  }
+
   /* ── 외부·모듈 뷰 닫기 (닫으면 항상 goToCover) ── */
   function closeExtOrModule(){
     /* 매일미사 */
@@ -80,17 +104,9 @@
       var prayerDetail = $b('prayer-detail');
       if(prayerDetail && prayerDetail.classList.contains('show')){
         // 기도문 본문은 내부 레이어이므로 첫 뒤로가기는 본문만 닫고 목록을 유지한다.
-        // 닫은 뒤 다음 뒤로가기에서 목록 → 빠른메뉴 팝업 흐름을 탈 수 있도록 앱용 trap만 조용히 확인한다.
-        window.__APP_PRAYER_DETAIL_TS__ = Date.now();
-        if(typeof window.prCloseDetail === 'function') window.prCloseDetail();
-        else prayerDetail.classList.remove('show');
-        if(typeof window.showPrayerListOnly === 'function'){
-          try{ window.showPrayerListOnly(); }catch(e){ console.warn('[가톨릭길동무]', e); }
-        }
-        setTimeout(function(){
-          try{ if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-detail-to-list'); }catch(e){ console.warn('[가톨릭길동무]', e); }
-        }, 0);
-        return true;
+        // 이 처리는 closePrayerDetailToList() 한 곳에서만 수행해, 다음 Back이
+        // 목록 → 빠른메뉴 팝업 → 커버 흐름으로 이어질 수 있게 앱용 history trap을 즉시 복원한다.
+        return closePrayerDetailToList('closeExtOrModule');
       }
       if(typeof window._closePrayerAndReturn === 'function') window._closePrayerAndReturn();
       else {
@@ -260,6 +276,15 @@
       _restoring = false;
       closeGuideModals();
       try{ if(typeof window._ensureCoverBackTrap === 'function') window._ensureCoverBackTrap(); else history.replaceState({_p:1}, '', _href); }catch(e){ console.warn("[가톨릭길동무]", e); }
+      return;
+    }
+
+    /* 기도문 본문은 별도의 화면이 아니라 기도문 안쪽 레이어다.
+       여기서는 generic history.go(1) 복원 흐름을 타지 않고 바로 본문만 닫는다.
+       이렇게 해야 다음 Back이 반드시 기도문 목록 → 빠른메뉴 팝업 → 커버 순서로 들어온다. */
+    if(!_restoring && isPrayerDetailOpen()){
+      _restoring = false;
+      closePrayerDetailToList('prayer-detail-popstate');
       return;
     }
 
@@ -478,7 +503,7 @@
   if(window.__APP_FONT_SCALE_GUARD__) return;
   window.__APP_FONT_SCALE_GUARD__=true;
   // V37: 문의·건의는 qa-firebase.html 한 경로로만 통일한다.
-  var QA_URL="qa-firebase.html?v=V1";
+  var QA_URL="qa-firebase.html?v=v1";
   var FONT_KEY='prayer_font_size', BASE=16, SIZES=[13,14,15,16,17,18,19,20,21,22,24,26,28,30];
   function el(id){return document.getElementById(id)}
   function getPx(){var px=parseInt(localStorage.getItem(FONT_KEY)||BASE,10);return (px>=13&&px<=30)?px:BASE;}
