@@ -19,9 +19,6 @@ function hideCoverAndRun(callback) {
   var cv = document.getElementById('cover');
   if (cv) cv.style.display = 'none';
   document.documentElement.classList.add('app-active');
-  // 카테고리 진입 즉시 앱 내부 back trap을 확정한다.
-  // 커버에서 남은 history 상태에 의존하면 일부 Android/PWA에서 카테고리 Back이 앱 탈출로 빠진다.
-  try{ if(typeof _ensureAppBackTrap === 'function') _ensureAppBackTrap('enter-category'); }catch(e){ console.warn('[가톨릭길동무]', e); }
   // RAF로 커버 숨김 후 다음 프레임에 콜백 실행 → 버벅거림 방지
   if (callback) requestAnimationFrame(function(){ setTimeout(callback, 0); });
 }
@@ -200,22 +197,16 @@ function _isCoverExitArmed(){
     return !!(until && Date.now() < until);
   }catch(e){ return false; }
 }
-function _ensureCoverBackTrap(reason){
+function _ensureCoverBackTrap(){
   try{
     if(document.documentElement.classList.contains('app-active')) return;
-    if(window._appExiting) return;
-    /* 종료 안내가 이미 떠 있는 2.5초 동안에는 커버 history를 다시 만지지 않는다.
-       여기서 다시 replace/push 하면 두 번째 Back이 안내 상태를 잃고 앱 내부로 다시 잡힐 수 있다. */
-    try{ if(_exitReady || _isCoverExitArmed()) return; }catch(_e){}
     var modal=document.getElementById('mass-quick-modal');
     if(modal && modal.classList.contains('show')) return;
-    var st = history.state || {};
-    /* _p:1만 보고 안전하다고 판단하면 기도문/팝업에서 남은 trap을 커버 trap으로 오판한다.
-       커버에서는 반드시 oai_cover_trap 표식이 있는 상태만 유지하고, 아니면 커버 root→trap을 새로 확정한다. */
-    if(st._p === 1 && st.oai_cover_trap) return;
+    var st = history.state;
+    if(st && st._p === 1) return;
     var href = location.href.split('#')[0];
-    history.replaceState({_p:0, oai_cover_root:reason||'cover-ensure'}, '', href);
-    history.pushState({_p:1, oai_cover_trap:reason||'cover-ensure'}, '', href);
+    history.replaceState({_p:0}, '', href);
+    history.pushState({_p:1}, '', href);
   }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
 
@@ -400,13 +391,10 @@ function _forceCoverAfterPrayerQuickPopup(){
         if(document.documentElement.classList.contains('app-active')) return;
         var mq=document.getElementById('mass-quick-modal');
         if(mq && mq.classList.contains('show')) return;
-        /* 사용자가 커버에 도착하자마자 Back을 눌러 종료 안내가 뜬 경우,
-           뒤늦은 안정화 타이머가 안내 상태를 지우지 않도록 한다. */
-        try{ if(_exitReady || _isCoverExitArmed()) return; }catch(_e2){}
         _resetCoverExitReady();
         _clearCoverExitArmed();
         if(typeof _resetCoverBackTrap === 'function') _resetCoverBackTrap(reason);
-        else _ensureCoverBackTrap(reason);
+        else _ensureCoverBackTrap();
       }catch(_e){}
     }
     prime('prayer-popup-cover');
@@ -623,9 +611,8 @@ function _runRefreshAppFilesOnly(){
   var btn = document.getElementById('cover-update-btn');
   try{
     if(btn){
-      try{ btn.style.minWidth = Math.ceil(btn.getBoundingClientRect().width || btn.offsetWidth || 0) + 'px'; }catch(_e){}
       btn.disabled = true;
-      // 버튼 문구 변경은 action row 폭을 바꾸어 새로고침 직전 좌우 흔들림을 만들 수 있으므로 유지한다.
+      btn.textContent = '새로고침 중';
     }
     if(document.activeElement && document.activeElement.blur) document.activeElement.blur();
     // V37: 새로고침 전에는 레이아웃/스크롤/모달 DOM을 건드리지 않고,
@@ -745,7 +732,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V2-9';
+    var target = btn.getAttribute('data-target-version') || 'V2-2';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -801,7 +788,8 @@ window.addEventListener('load', syncCoverUpdateVersionState, true);
       if(!root) return;
       root.scrollTop=0;
       root.querySelectorAll('.guide-panel,.guide-card-list').forEach(function(el){ el.scrollTop=0; });
-      // scrollIntoView는 일부 모바일 브라우저에서 가로 정렬 재계산을 일으켜 좌우 흔들림처럼 보일 수 있다.
+      var panel=root.querySelector('.guide-panel');
+      if(panel) panel.scrollIntoView({block:'center', inline:'nearest'});
     }catch(e){ console.warn('[가톨릭길동무]', e); }
   }
   function showModal(id){
@@ -1044,7 +1032,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V2-9';
+    frame.src='diocese.html?v=V2-2';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -1639,13 +1627,10 @@ function attemptAppExit(){
   // Cordova/WebView 계열에서는 네이티브 종료를 우선 시도한다.
   try{ if(navigator.app && typeof navigator.app.exitApp === 'function'){ navigator.app.exitApp(); return; } }catch(e){ console.warn("[가톨릭길동무]", e); }
 
-  // 두 번째 Back에서는 앱 내부 trap을 다시 만들지 않고 실제 브라우저/PWA 뒤로가기로 넘긴다.
-  // window.close()가 허용되면 즉시 닫히고, Android Chrome/PWA처럼 무시되면 남은 루트 항목을 한 번 더 빠져나간다.
+  // 중요: 여기서 history.back()을 호출하면 외부사이트 방문 기록으로 되돌아갈 수 있다.
+  // 따라서 종료 시도는 window.close까지만 하고, 히스토리 트랩은 다시 심지 않는다.
   try{ window.open('', '_self'); window.close(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   try{ document.documentElement.classList.add('app-exiting'); }catch(e){ console.warn("[가톨릭길동무]", e); }
-  setTimeout(function(){
-    try{ if(history && history.length > 1) history.back(); }catch(e){ console.warn("[가톨릭길동무]", e); }
-  }, 60);
 }
 function closeExitDlg(){
   _exitReady=false;
@@ -1797,12 +1782,6 @@ function goToCover(){
   // 정상 카테고리뿐 아니라 팝업/기도문/외부복귀 경로에서도
   // 이전 _exitReady=true가 남아 커버 첫 뒤로가기에서 바로 종료되는 것을 막는다.
   try{ if(typeof _resetCoverExitReady === 'function') _resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }
-  try{ if(typeof _clearCoverExitArmed === 'function') _clearCoverExitArmed(); }catch(e){ console.warn('[가톨릭길동무]', e); }
-  // go(1) 복원 직후와 충돌하지 않도록 다음 틱에서만 커버 trap을 확인한다.
-  // 팝업이 열려 있으면 _ensureCoverBackTrap() 내부에서 건드리지 않는다.
-  setTimeout(function(){
-    try{ if(typeof _ensureCoverBackTrap === 'function') _ensureCoverBackTrap(); }catch(e){ console.warn('[가톨릭길동무]', e); }
-  }, 80);
 }
 
 function _loadMap(){
@@ -2332,7 +2311,7 @@ function _mkrImgRetreat(color,big){
 }
 function _mkrImg(color,big){
   const w=big?40:28,h=big?52:36;
-  // V2-9: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
+  // V2-2: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
   // This removes the purple emoji background and keeps a plain white cross.
   const crossBig = `<g fill="#fff" opacity="0.96"><rect x="18.45" y="10.5" width="3.1" height="18.5" rx="1.1"/><rect x="13.4" y="16.3" width="13.2" height="3.1" rx="1.1"/></g>`;
   const crossSmall = `<g fill="#fff" opacity="0.96"><rect x="12.85" y="7.8" width="2.3" height="12.8" rx="0.8"/><rect x="9.6" y="11.7" width="8.8" height="2.3" rx="0.8"/></g>`;
@@ -4181,9 +4160,8 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
     var pressActive = false;
     var cacheActionFired = false;
     var handledUntil = 0;
-    var activePointerId = null;
-    // 보통 길게 누르기에서 캐시 초기화 팝업을 띄운다. 너무 오래 기다리게 하지 않는다.
-    var CACHE_HOLD_MS = 950;
+    // 짧은 탭과 보통 길게 누른 뒤 놓기는 일반 새로고침, 더 오래 누르면 캐시 초기화.
+    var CACHE_HOLD_MS = 1350;
     function now(){ return Date.now ? Date.now() : new Date().getTime(); }
     function markHandled(ms){
       handledUntil = now() + (ms || 900);
@@ -4211,12 +4189,11 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
     }
     function armPress(e){
       try{ if(e && e.button !== undefined && e.button !== 0) return; }catch(_e){}
-      // 직접 짧은 탭/길게누름을 처리하므로 기본 길게누름 메뉴와 OS 햅틱을 최대한 막는다.
-      stopEvent(e, true);
+      // 여기서 preventDefault를 걸면 일부 iPhone/Android에서 짧은 탭 click이 사라질 수 있어 막지 않는다.
+      stopEvent(e, false);
       clearHoldOnly();
       pressActive = true;
       cacheActionFired = false;
-      try{ activePointerId = (e && e.pointerId != null) ? e.pointerId : null; }catch(_e){ activePointerId = null; }
       try{
         refreshBtn.style.webkitUserSelect = 'none';
         refreshBtn.style.userSelect = 'none';
@@ -4227,28 +4204,23 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
         if(!pressActive || recentlyHandled()) return;
         cacheActionFired = true;
         pressActive = false;
-        markHandled(1700);
-        // 캐시 초기화 팝업이 뜨는 순간에만 한 번, 너무 짧지 않게 진동한다.
-        try{ if(navigator.vibrate) navigator.vibrate(90); }catch(_e){}
+        markHandled(1600);
+        try{ if(navigator.vibrate) navigator.vibrate(25); }catch(_e){}
         if(typeof clearAppFilesCacheCompletely === 'function') clearAppFilesCacheCompletely();
       }, CACHE_HOLD_MS);
     }
     function releasePress(e){
-      try{ if(activePointerId != null && e && e.pointerId != null && e.pointerId !== activePointerId) return; }catch(_e){}
       stopEvent(e, true);
       if(recentlyHandled()){
         pressActive = false;
-        activePointerId = null;
         clearHoldOnly();
         return;
       }
       if(!pressActive){
-        activePointerId = null;
         clearHoldOnly();
         return;
       }
       pressActive = false;
-      activePointerId = null;
       clearHoldOnly();
       if(!cacheActionFired){
         markHandled(900);
@@ -4256,9 +4228,8 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
       }
     }
     function cancelPress(e){
-      stopEvent(e, true);
+      stopEvent(e, false);
       pressActive = false;
-      activePointerId = null;
       clearHoldOnly();
     }
     function preventNativePressMenu(e){
@@ -4266,20 +4237,18 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
       return false;
     }
 
-    if(window.PointerEvent){
-      on(refreshBtn, 'pointerdown', armPress, {passive:false});
-      on(refreshBtn, 'pointerup', releasePress, {passive:false});
-      on(refreshBtn, 'pointercancel', cancelPress, {passive:false});
-      // 손가락은 버튼 경계 밖으로 아주 조금 나가도 취소하지 않고, 마우스만 취소한다.
-      on(refreshBtn, 'pointerleave', function(e){ try{ if(e && e.pointerType === 'mouse') cancelPress(e); }catch(_e){} }, {passive:false});
-    }else{
-      on(refreshBtn, 'touchstart', armPress, {passive:false});
-      on(refreshBtn, 'touchend', releasePress, {passive:false});
-      on(refreshBtn, 'touchcancel', cancelPress, {passive:false});
-      on(refreshBtn, 'mousedown', armPress, {passive:false});
-      on(refreshBtn, 'mouseup', releasePress, {passive:false});
-      on(refreshBtn, 'mouseleave', cancelPress, {passive:false});
-    }
+    on(refreshBtn, 'pointerdown', armPress, {passive:false});
+    on(refreshBtn, 'pointerup', releasePress, {passive:false});
+    on(refreshBtn, 'pointercancel', cancelPress, {passive:false});
+    // iPhone/Android에서는 손가락이 버튼 경계 밖으로 살짝 흔들려도 짧은 탭이 취소되지 않게 한다.
+    on(refreshBtn, 'pointerleave', function(e){ try{ if(e && e.pointerType === 'mouse') cancelPress(e); }catch(_e){} }, {passive:false});
+    // 포인터 이벤트가 불안정한 환경을 위해 터치/마우스 입력도 같은 컨트롤러에 연결한다.
+    on(refreshBtn, 'touchstart', armPress, {passive:false});
+    on(refreshBtn, 'touchend', releasePress, {passive:false});
+    on(refreshBtn, 'touchcancel', cancelPress, {passive:false});
+    on(refreshBtn, 'mousedown', armPress, {passive:false});
+    on(refreshBtn, 'mouseup', releasePress, {passive:false});
+    on(refreshBtn, 'mouseleave', cancelPress, {passive:false});
     on(refreshBtn, 'contextmenu', preventNativePressMenu, {capture:true});
     on(refreshBtn, 'selectstart', preventNativePressMenu, {capture:true});
     on(refreshBtn, 'dragstart', preventNativePressMenu, {capture:true});
