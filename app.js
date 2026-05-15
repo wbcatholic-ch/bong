@@ -629,15 +629,15 @@ function _showRefreshContentDialog(onConfirm){
     wrap.setAttribute('role','dialog');
     wrap.setAttribute('aria-modal','true');
     wrap.setAttribute('aria-label','Refresh Content');
-    wrap.style.cssText = 'position:fixed;inset:0;z-index:10090;display:flex;align-items:center;justify-content:center;background:rgba(14,21,53,.36);padding:20px;box-sizing:border-box;-webkit-text-size-adjust:100%;text-size-adjust:100%;';
-    wrap.innerHTML = '<div style="width:min(94vw,390px);background:#fffaf2;border:1px solid rgba(212,170,106,.42);border-radius:20px;box-shadow:0 18px 42px rgba(14,21,53,.24);padding:21px 17px 16px;text-align:center;font-family:inherit;color:#1f2937;box-sizing:border-box;-webkit-text-size-adjust:100%;text-size-adjust:100%;word-break:keep-all;overflow-wrap:normal;">' +
-      '<div style="font-size:19px;font-weight:900;line-height:1.16;margin-bottom:9px;letter-spacing:-.02em;">Refresh Content</div>' +
-      '<div style="font-size:13px;font-weight:800;line-height:1.42;color:#475569;margin-bottom:9px;letter-spacing:-.03em;word-break:keep-all;overflow-wrap:normal;">앱 화면을 안정형으로 다시 불러옵니다.</div>' +
-      '<div style="font-size:12.5px;font-weight:700;line-height:1.42;color:#64748b;margin-bottom:11px;letter-spacing:-.03em;word-break:keep-all;overflow-wrap:normal;">캐시와 설치 상태는 삭제하지 않습니다.<br>글자 크기와 즐겨찾기도 그대로 유지됩니다.</div>' +
-      '<div style="font-size:11.8px;font-weight:800;line-height:1.38;color:#8A6A2F;background:#fff4d7;border:1px solid rgba(212,170,106,.45);border-radius:12px;padding:8px 9px;margin-bottom:15px;letter-spacing:-.035em;word-break:keep-all;overflow-wrap:normal;">문제가 계속되면 새로고침 버튼을 더 길게 눌러<br>앱 캐시 초기화를 실행할 수 있습니다.</div>' +
+    wrap.style.cssText = 'position:fixed;inset:0;z-index:10090;display:flex;align-items:center;justify-content:center;background:rgba(14,21,53,.36);padding:22px;box-sizing:border-box;';
+    wrap.innerHTML = '<div style="width:min(92vw,380px);background:#fffaf2;border:1px solid rgba(212,170,106,.42);border-radius:20px;box-shadow:0 18px 42px rgba(14,21,53,.24);padding:22px 18px 17px;text-align:center;font-family:inherit;color:#1f2937;box-sizing:border-box;">' +
+      '<div style="font-size:21px;font-weight:900;line-height:1.2;margin-bottom:10px;">Refresh Content</div>' +
+      '<div style="font-size:15px;font-weight:800;line-height:1.55;color:#475569;margin-bottom:10px;">앱 화면을 안정형으로 다시 불러옵니다.</div>' +
+      '<div style="font-size:14px;font-weight:700;line-height:1.55;color:#64748b;margin-bottom:12px;">캐시와 설치 상태는 삭제하지 않습니다.<br>글자 크기와 즐겨찾기도 그대로 유지됩니다.</div>' +
+      '<div style="font-size:12.5px;font-weight:800;line-height:1.45;color:#8A6A2F;background:#fff4d7;border:1px solid rgba(212,170,106,.45);border-radius:12px;padding:8px 10px;margin-bottom:16px;">문제가 계속되면 새로고침 버튼을 더 길게 눌러<br>앱 캐시 초기화를 실행할 수 있습니다.</div>' +
       '<div style="display:flex;gap:10px;justify-content:center;">' +
-      '<button type="button" data-oai-refresh-cancel="1" style="height:40px;min-width:94px;padding:0 15px;border:1px solid #d8d1c5;border-radius:999px;background:#fff;color:#475569;font-family:inherit;font-size:14px;font-weight:850;">취소</button>' +
-      '<button type="button" data-oai-refresh-ok="1" style="height:40px;min-width:94px;padding:0 17px;border:0;border-radius:999px;background:#1f2a44;color:#fff;font-family:inherit;font-size:14px;font-weight:900;">확인</button>' +
+      '<button type="button" data-oai-refresh-cancel="1" style="height:42px;min-width:96px;padding:0 16px;border:1px solid #d8d1c5;border-radius:999px;background:#fff;color:#475569;font-family:inherit;font-size:15px;font-weight:850;">취소</button>' +
+      '<button type="button" data-oai-refresh-ok="1" style="height:42px;min-width:96px;padding:0 18px;border:0;border-radius:999px;background:#1f2a44;color:#fff;font-family:inherit;font-size:15px;font-weight:900;">확인</button>' +
       '</div></div>';
     function close(){ try{ if(wrap && wrap.parentNode) wrap.parentNode.removeChild(wrap); }catch(_e){} }
     wrap.addEventListener('click', function(e){ if(e.target === wrap) close(); }, true);
@@ -724,7 +724,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'v1';
+    var target = btn.getAttribute('data-target-version') || 'V1';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -969,15 +969,6 @@ function _closePrayerAndReturn(){
   }
   function init(){
     var banner = document.getElementById('ios-kakao-safari-banner');
-    var modal = document.getElementById('ios-safari-guide-modal');
-    // Android에서는 iPhone 설치 안내 배너/팝업 보기 자체를 제거한다.
-    // iPhone/iPad 카카오톡 인앱 브라우저에서만 아래 안내가 동작한다.
-    if(!isIOS()){
-      document.documentElement.classList.remove('ios-kakao-inapp','ios-install-preview-mode');
-      if(banner && banner.parentNode) banner.parentNode.removeChild(banner);
-      if(modal && modal.parentNode) modal.parentNode.removeChild(modal);
-      return;
-    }
     if(!banner) return;
     var show = shouldShow();
     if(show){
@@ -1033,7 +1024,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=v1';
+    frame.src='diocese.html?v=V1';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -2312,7 +2303,7 @@ function _mkrImgRetreat(color,big){
 }
 function _mkrImg(color,big){
   const w=big?40:28,h=big?52:36;
-  // v1: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
+  // V1: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
   // This removes the purple emoji background and keeps a plain white cross.
   const crossBig = `<g fill="#fff" opacity="0.96"><rect x="18.45" y="10.5" width="3.1" height="18.5" rx="1.1"/><rect x="13.4" y="16.3" width="13.2" height="3.1" rx="1.1"/></g>`;
   const crossSmall = `<g fill="#fff" opacity="0.96"><rect x="12.85" y="7.8" width="2.3" height="12.8" rx="0.8"/><rect x="9.6" y="11.7" width="8.8" height="2.3" rx="0.8"/></g>`;
