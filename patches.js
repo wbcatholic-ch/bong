@@ -74,21 +74,22 @@
       else missa.classList.remove('open');
       return true;
     }
-    /* 기도문: 본문이면 목록으로, 목록이면 빠른메뉴 팝업 또는 커버로 */
+    /* 기도문: 본문이면 목록으로, 목록이면 커버로 */
     var prayer = $b('prayer-view');
     if(prayer && prayer.classList.contains('open')){
       var prayerDetail = $b('prayer-detail');
       if(prayerDetail && prayerDetail.classList.contains('show')){
         // 기도문 본문은 내부 레이어이므로 첫 뒤로가기는 본문만 닫고 목록을 유지한다.
-        // history trap 복원은 이 popstate 핸들러의 _restoring 구간에서만 담당한다.
-        // 여기서 replaceState/pushState를 다시 실행하면 history.go(1) 복원과 충돌해
-        // 두 번째 기도문 본문에서 Back 1회 무반응 또는 앱 탈출이 발생한다.
+        // 닫은 뒤 다음 뒤로가기에서 목록 → 빠른메뉴 팝업 흐름을 탈 수 있도록 앱용 trap만 조용히 확인한다.
         window.__APP_PRAYER_DETAIL_TS__ = Date.now();
-        if(typeof window.prCloseDetail === 'function') window.prCloseDetail({skipHistoryTrap:true});
+        if(typeof window.prCloseDetail === 'function') window.prCloseDetail();
         else prayerDetail.classList.remove('show');
         if(typeof window.showPrayerListOnly === 'function'){
           try{ window.showPrayerListOnly(); }catch(e){ console.warn('[가톨릭길동무]', e); }
         }
+        setTimeout(function(){
+          try{ if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-detail-to-list'); }catch(e){ console.warn('[가톨릭길동무]', e); }
+        }, 0);
         return true;
       }
       if(typeof window._closePrayerAndReturn === 'function') window._closePrayerAndReturn();
@@ -264,15 +265,7 @@
 
     if(_restoring){
       _restoring = false;
-      var _hadPopup = runPendingPrayerQuickPopup();
-      /* go(1) 복원 후 앱이 여전히 활성이면 트랩이 소멸된 상태이므로 반드시 재설정한다.
-         (closeExtOrModule이 본문닫기/레이어닫기 후 return true로 빠져나온 경우가 여기 해당) */
-      if(!_hadPopup && appActive()){
-        try{
-          history.replaceState({_p:0, oai_app_trap_from:'restoring'}, '', _href);
-          history.pushState({_p:1, oai_app_trap:'restoring'}, '', _href);
-        }catch(e){ console.warn('[가톨릭길동무]', e); }
-      }
+      runPendingPrayerQuickPopup();
       return;
     }
 
@@ -485,7 +478,7 @@
   if(window.__APP_FONT_SCALE_GUARD__) return;
   window.__APP_FONT_SCALE_GUARD__=true;
   // V37: 문의·건의는 qa-firebase.html 한 경로로만 통일한다.
-  var QA_URL="qa-firebase.html?v=V2-1";
+  var QA_URL="qa-firebase.html?v=V1";
   var FONT_KEY='prayer_font_size', BASE=16, SIZES=[13,14,15,16,17,18,19,20,21,22,24,26,28,30];
   function el(id){return document.getElementById(id)}
   function getPx(){var px=parseInt(localStorage.getItem(FONT_KEY)||BASE,10);return (px>=13&&px<=30)?px:BASE;}
