@@ -1403,34 +1403,43 @@ function _kakaoKeywordDocsFromJs(query, max){
         return;
       }
       var places = new kakao.maps.services.Places();
-      var pages = Math.ceil(max / 15);
+      var pageLimit = Math.ceil(max / 15);
       var groups = [];
-      var done = 0;
+      var pageCount = 0;
       var settled = false;
-      function finish(){
+
+      function done(){
         if(settled) return;
-        if(done >= pages){
-          settled = true;
-          resolve(_dedupeKakaoDocs(groups, max));
-        }
+        settled = true;
+        resolve(_dedupeKakaoDocs(groups, max));
       }
-      function ask(page){
-        places.keywordSearch(query, function(data, status){
-          try{
-            var OK = kakao.maps.services.Status.OK;
-            if(status === OK && data && data.length) groups.push(data);
-          }catch(e){ console.warn('[가톨릭길동무]', e); }
-          done++;
-          finish();
-        }, { size: Math.min(15, max), page: page });
-      }
-      for(var page=1; page<=pages; page++) ask(page);
-      setTimeout(function(){
-        if(!settled){
-          settled = true;
-          resolve(_dedupeKakaoDocs(groups, max));
+
+      /* Kakao JS Places는 병렬 page 옵션 호출보다 pagination.nextPage()가 안정적이다.
+         page=2가 무시되어 15개만 보이는 문제를 막기 위해 1페이지를 받은 뒤
+         pagination 객체로 다음 페이지를 순차 요청한다. */
+      var searchOpts = { size: 15 };
+      try{ if(kakao.maps.services.SortBy && kakao.maps.services.SortBy.ACCURACY) searchOpts.sort = kakao.maps.services.SortBy.ACCURACY; }catch(_e){}
+      places.keywordSearch(query, function(data, status, pagination){
+        try{
+          var OK = kakao.maps.services.Status.OK;
+          if(status === OK && data && data.length){
+            groups.push(data);
+            pageCount += 1;
+            if(_dedupeKakaoDocs(groups, max).length >= max){ done(); return; }
+            if(pagination && pagination.hasNextPage && pageCount < pageLimit){
+              setTimeout(function(){
+                try{ pagination.nextPage(); }catch(_e){ done(); }
+              }, 80);
+              return;
+            }
+          }
+        }catch(e){
+          console.warn('[가톨릭길동무]', e);
         }
-      }, 2800);
+        done();
+      }, searchOpts);
+
+      setTimeout(done, 4200);
     }catch(e){
       console.warn('[가톨릭길동무]', e);
       resolve([]);
@@ -4291,15 +4300,17 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
   (function bindCoverRefreshPressActions(){
     var refreshBtn = document.getElementById('cover-update-btn');
     if(!refreshBtn) return;
+
     var holdTimer = null;
     var pressActive = false;
-    var cacheActionFired = false;
+    var longActionFired = false;
     var handledUntil = 0;
-    // 짧은 탭과 보통 길게 누른 뒤 놓기는 일반 새로고침, 더 오래 누르면 캐시 초기화.
-    var CACHE_HOLD_MS = 1350;
+    var activePointerId = null;
+    var CACHE_HOLD_MS = 1200;
+
     function now(){ return Date.now ? Date.now() : new Date().getTime(); }
     function markHandled(ms){
-      handledUntil = now() + (ms || 900);
+      handledUntil = now() + (ms || 1000);
       try{ window.__OAI_REFRESH_PRESS_HANDLED_UNTIL__ = handledUntil; }catch(_e){}
     }
     function recentlyHandled(){
@@ -4319,17 +4330,35 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
         }
       }catch(_e){}
     }
+    function vibrateShort(){
+      try{ if(navigator.vibrate) navigator.vibrate(12); }catch(_e){}
+    }
+    function vibrateLong(){
+      try{ if(navigator.vibrate) navigator.vibrate([28, 24, 42]); }catch(_e){}
+    }
     function clearHoldOnly(){
       if(holdTimer){ clearTimeout(holdTimer); holdTimer = null; }
     }
+    function resetPress(){
+      var pid = activePointerId;
+      pressActive = false;
+      activePointerId = null;
+      clearHoldOnly();
+      try{ if(pid !== null && refreshBtn.releasePointerCapture) refreshBtn.releasePointerCapture(pid); }catch(_e){}
+    }
     function armPress(e){
       try{ if(e && e.button !== undefined && e.button !== 0) return; }catch(_e){}
-      // 여기서 preventDefault를 걸면 일부 iPhone/Android에서 짧은 탭 click이 사라질 수 있어 막지 않는다.
-      stopEvent(e, false);
+      if(recentlyHandled()){
+        stopEvent(e, true);
+        return;
+      }
+      stopEvent(e, true);
       clearHoldOnly();
       pressActive = true;
-      cacheActionFired = false;
+      longActionFired = false;
       try{
+        activePointerId = (e && e.pointerId !== undefined) ? e.pointerId : null;
+        if(activePointerId !== null && refreshBtn.setPointerCapture) refreshBtn.setPointerCapture(activePointerId);
         refreshBtn.style.webkitUserSelect = 'none';
         refreshBtn.style.userSelect = 'none';
         refreshBtn.style.webkitTouchCallout = 'none';
@@ -4337,61 +4366,66 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
       holdTimer = setTimeout(function(){
         holdTimer = null;
         if(!pressActive || recentlyHandled()) return;
-        cacheActionFired = true;
+        longActionFired = true;
         pressActive = false;
-        markHandled(1600);
-        try{ if(navigator.vibrate) navigator.vibrate(25); }catch(_e){}
+        markHandled(1800);
+        vibrateLong();
         if(typeof clearAppFilesCacheCompletely === 'function') clearAppFilesCacheCompletely();
       }, CACHE_HOLD_MS);
     }
     function releasePress(e){
       stopEvent(e, true);
       if(recentlyHandled()){
-        pressActive = false;
-        clearHoldOnly();
+        resetPress();
         return;
       }
       if(!pressActive){
-        clearHoldOnly();
+        resetPress();
         return;
       }
       pressActive = false;
       clearHoldOnly();
-      if(!cacheActionFired){
-        markHandled(900);
-        refreshAppFilesOnly();
+      if(!longActionFired){
+        markHandled(1000);
+        vibrateShort();
+        if(typeof refreshAppFilesOnly === 'function') refreshAppFilesOnly();
       }
     }
     function cancelPress(e){
       stopEvent(e, false);
-      pressActive = false;
-      clearHoldOnly();
+      resetPress();
     }
     function preventNativePressMenu(e){
       stopEvent(e, true);
       return false;
     }
 
-    on(refreshBtn, 'pointerdown', armPress, {passive:false});
-    on(refreshBtn, 'pointerup', releasePress, {passive:false});
-    on(refreshBtn, 'pointercancel', cancelPress, {passive:false});
-    // iPhone/Android에서는 손가락이 버튼 경계 밖으로 살짝 흔들려도 짧은 탭이 취소되지 않게 한다.
-    on(refreshBtn, 'pointerleave', function(e){ try{ if(e && e.pointerType === 'mouse') cancelPress(e); }catch(_e){} }, {passive:false});
-    // 포인터 이벤트가 불안정한 환경을 위해 터치/마우스 입력도 같은 컨트롤러에 연결한다.
-    on(refreshBtn, 'touchstart', armPress, {passive:false});
-    on(refreshBtn, 'touchend', releasePress, {passive:false});
-    on(refreshBtn, 'touchcancel', cancelPress, {passive:false});
-    on(refreshBtn, 'mousedown', armPress, {passive:false});
-    on(refreshBtn, 'mouseup', releasePress, {passive:false});
-    on(refreshBtn, 'mouseleave', cancelPress, {passive:false});
+    /* PointerEvent가 있는 Android/iPhone/데스크톱은 pointer 계열만 사용한다.
+       touch/mouse까지 동시에 묶으면 한 번 누름이 두 번 처리되어 진동·새로고침 타이밍이 어긋난다. */
+    if(window.PointerEvent){
+      on(refreshBtn, 'pointerdown', armPress, {passive:false});
+      on(refreshBtn, 'pointerup', releasePress, {passive:false});
+      on(refreshBtn, 'pointercancel', cancelPress, {passive:false});
+      on(refreshBtn, 'pointerleave', function(e){
+        try{ if(e && e.pointerType === 'mouse') cancelPress(e); }catch(_e){}
+      }, {passive:false});
+    }else{
+      on(refreshBtn, 'touchstart', armPress, {passive:false});
+      on(refreshBtn, 'touchend', releasePress, {passive:false});
+      on(refreshBtn, 'touchcancel', cancelPress, {passive:false});
+      on(refreshBtn, 'mousedown', armPress, {passive:false});
+      on(refreshBtn, 'mouseup', releasePress, {passive:false});
+      on(refreshBtn, 'mouseleave', cancelPress, {passive:false});
+    }
     on(refreshBtn, 'contextmenu', preventNativePressMenu, {capture:true});
     on(refreshBtn, 'selectstart', preventNativePressMenu, {capture:true});
     on(refreshBtn, 'dragstart', preventNativePressMenu, {capture:true});
-    on('cover-update-btn','click', function(e) {
+    on(refreshBtn, 'click', function(e) {
       stopEvent(e, true);
       if(recentlyHandled()) return;
-      markHandled(900);
-      refreshAppFilesOnly();
+      markHandled(1000);
+      vibrateShort();
+      if(typeof refreshAppFilesOnly === 'function') refreshAppFilesOnly();
     });
   })();
   on('qna-cover-btn',  'click', function() { openQnaView(); });
