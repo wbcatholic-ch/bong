@@ -423,10 +423,8 @@ function prOpenDetail(prayer){
   ttl.textContent = prayer.title;
   content.innerHTML = ((prayer.content||prayer.body||'')+'').replace(/class="symbol"/g,'class="pr-symbol"');
   detail.classList.add('show');
-  /* V1-9: 본문은 실제 history 한 칸을 만든다.
-     이렇게 해야 Android/PWA에서 본문 Back이 앱 종료로 빠지지 않고 반드시 본문 → 목록으로 처리된다. */
-  try{ if(typeof window._oaiPrayerPushDetailState === 'function') window._oaiPrayerPushDetailState('prayer-detail-open'); }
-  catch(e){ console.warn('[가톨릭길동무]', e); }
+  /* V1-10: 본문 열기는 화면 표시만 담당한다.
+     뒤로가기 history/trap은 patches.js의 단일 popstate 컨트롤러에서만 처리한다. */
   // 현재 기도문 ID 저장 → 본문 즐겨찾기 버튼에 반영
   detail.dataset.pid = prayer.id || '';
   var starBtn = prG('pr-detail-star');
@@ -443,15 +441,8 @@ function prOpenDetail(prayer){
 window.prCloseDetail = function(opts){
   const detail = prG('prayer-detail');
   if(detail) detail.classList.remove('show');
-  if(!(opts && opts.skipTrap)){
-    try{
-      // 본문 X 버튼은 브라우저 Back이 아니므로 현재 detail history를 list state로 바꾼다.
-      if(typeof window._oaiPrayerReplaceListState === 'function') window._oaiPrayerReplaceListState('prayer-detail-button-to-list');
-      else if(typeof window._oaiArmPrayerBackTrap === 'function') window._oaiArmPrayerBackTrap('prayer-detail-button-to-list');
-    }catch(e){
-      console.warn('[가톨릭길동무]', e);
-    }
-  }
+  /* V1-10: 본문 X 버튼도 history를 건드리지 않는다.
+     현재 목록 trap을 그대로 유지해 다음 Back이 목록 → 팝업/커버로 처리되게 한다. */
 };
 
 /* ── IIFE 스코프 외부 노출 ── */
