@@ -436,12 +436,19 @@ function _forceCoverAfterPrayerQuickPopup(){
     _clearPrayerQuickReturn();
     _resetCoverExitReady();
     _clearCoverExitArmed();
+    // 주요기도문 팝업에서 커버로 온 직후 첫 Back은 반드시 안내만 나오게 한다.
+    // _enterCoverBackMode()는 커버 독립화를 위해 이전 복귀 플래그를 모두 지우므로,
+    // 기도문 전용 첫 안내 플래그는 _enterCoverBackMode() 이후에 다시 세운다.
     _markPrayerCoverNeedsFirstToast(false);
     try{
       window.__OAI_PRAYER_POPUP_COVER_GUARD_UNTIL__ = 0;
       window.__OAI_PRAYER_COVER_FORCE_FIRST_TOAST_UNTIL__ = 0;
     }catch(_e){}
     try{ if(typeof _enterCoverBackMode === 'function') _enterCoverBackMode('prayer-popup-cover'); }catch(_e){}
+    try{
+      window.__OAI_COVER_FIRST_BACK_PROTECTED__ = true;
+      _markPrayerCoverNeedsFirstToast(true);
+    }catch(_e){}
     function prime(reason){
       try{
         if(document.documentElement.classList.contains('app-active')) return;
@@ -805,7 +812,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V1-9';
+    var target = btn.getAttribute('data-target-version') || 'V1-10';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -1133,7 +1140,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V1-9';
+    frame.src='diocese.html?v=V1-10';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
