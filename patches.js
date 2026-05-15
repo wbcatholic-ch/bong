@@ -1,5 +1,5 @@
 /* patches.js — 뒤로가기·스와이프·터치 UX 패치
-   V1-9: 뒤로가기 단일 컨트롤러 재작성.
+   V1-10: 뒤로가기 단일 컨트롤러 보강.
    핵심은 pushState를 계속 추가하는 방식이 아니라, Android/PWA가 앱을 닫기 전에
    history.go(1)로 현재 trap 위치를 복원한 뒤 화면 상태만 직접 정리하는 방식입니다.
 
@@ -25,6 +25,25 @@
 
   function resetExit(){ safe(function(){ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }); }
   function clearExit(){ safe(function(){ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }); }
+
+  function isQuickModalOpen(){ return has($('mass-quick-modal'),'show'); }
+  function coverVisible(){
+    var cv = $('cover');
+    if(!cv) return !appActive();
+    try{ return !appActive() && getComputedStyle(cv).display !== 'none'; }
+    catch(e){ return !appActive(); }
+  }
+  function primeTrapLater(reason){
+    function run(tag){
+      if(window._appExiting) return;
+      if(appActive()) return;
+      if(coverVisible() || isQuickModalOpen()) installTrap((reason||'cover') + (tag?('-'+tag):''));
+    }
+    run('now');
+    if(window.requestAnimationFrame) requestAnimationFrame(function(){ run('raf'); });
+    setTimeout(function(){ run('80'); }, 80);
+    setTimeout(function(){ run('220'); }, 220);
+  }
 
   function installTrap(reason){
     safe(function(){
@@ -65,12 +84,14 @@
       if(cv){ cv.style.display=''; cv.style.opacity=''; cv.style.pointerEvents=''; try{ cv.scrollTop=0; }catch(_e){} }
       resetExit(); clearExit();
     });
+    primeTrapLater(reason || 'show-cover');
   }
 
   function goCover(reason){
     if(typeof window.goToCover === 'function') safe(function(){ window.goToCover(); });
     else showCoverOnly(reason);
     resetExit(); clearExit();
+    primeTrapLater(reason || 'go-cover');
   }
 
   function clearQuickFlags(){
@@ -117,6 +138,7 @@
     showCoverOnly('quick-modal-cover');
     clearQuickFlags();
     resetExit(); clearExit();
+    primeTrapLater('quick-modal-cover');
     return true;
   }
 
@@ -216,7 +238,13 @@
 
   window.addEventListener('pageshow', function(){
     if(window._appExiting) return;
-    setTimeout(function(){ installTrap('pageshow'); }, 0);
+    setTimeout(function(){ primeTrapLater('pageshow'); }, 0);
+  }, true);
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'visible') setTimeout(function(){ primeTrapLater('visible'); }, 0);
+  }, true);
+  window.addEventListener('focus', function(){
+    setTimeout(function(){ primeTrapLater('focus'); }, 0);
   }, true);
 
   /* app.js/prayer.js에서 부르는 기존 이름들은 새 단일 컨트롤러로 흡수한다. */
@@ -227,6 +255,7 @@
   window._oaiPrayerListToPopupOrCover = function(){ return handlePrayer(); };
   window._oaiPrayerResetToCover = function(){ return closeAnyQuickModalToCover() || (goCover('prayer-reset'), true); };
   window._oaiHandleBackNow = function(){ return handleBack(); };
+  window._oaiPrimeBackTrapLater = primeTrapLater;
 })();
 
 
@@ -387,7 +416,7 @@
   if(window.__APP_FONT_SCALE_GUARD__) return;
   window.__APP_FONT_SCALE_GUARD__=true;
   // V37: 문의·건의는 qa-firebase.html 한 경로로만 통일한다.
-  var QA_URL="qa-firebase.html?v=V1-4";
+  var QA_URL="qa-firebase.html?v=V1-10";
   var FONT_KEY='prayer_font_size', BASE=16, SIZES=[13,14,15,16,17,18,19,20,21,22,24,26,28,30];
   function el(id){return document.getElementById(id)}
   function getPx(){var px=parseInt(localStorage.getItem(FONT_KEY)||BASE,10);return (px>=13&&px<=30)?px:BASE;}
