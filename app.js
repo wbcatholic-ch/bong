@@ -256,39 +256,24 @@ function _resetAppBackTrap(reason){
   }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
 function _armMassQuickHistoryTrap(opts){
-  try{
-    var href = location.href.split('#')[0];
-    if(opts && opts.skip){
-      // 주요기도문에서 빠른메뉴 팝업으로 되돌아온 경우에는 새 mq history state를 만들지 않는다.
-      // 이 팝업은 이미 커버 위에 떠 있어야 하며, 다음 Back은 기존 [root(0) → trap(1)] 구조에서
-      // 팝업만 닫고 커버를 확정하면 된다. 여기서 다시 oai_mass_quick state를 만들면
-      // history.go(1) 복원 타이밍과 충돌해 팝업 → 커버 단계가 앱 종료로 오판될 수 있다.
-      return;
-    }
-    history.pushState({_p:1, oai_mass_quick:1}, '', href);
-  }catch(e){ console.warn("[가톨릭길동무]", e); }
+  // V1-7: 단일 Back 컨트롤러가 빠른메뉴 뒤로가기를 관리한다.
+  return;
 }
 function _hideMassQuickMenuOnly(afterHidden, opts){
   const modal=document.getElementById('mass-quick-modal');
   var deferHideUntilAfter = !!(opts && opts.deferHideUntilAfter);
   _resetCoverExitReady();
   _clearCoverExitArmed();
-
   function hideQuickModal(){
     if(modal){
       modal.classList.remove('show');
       modal.setAttribute('aria-hidden','true');
     }
   }
-
-  // 주요기도문으로 들어갈 때는 팝업을 먼저 숨기면 커버가 잠깐 드러나며 화면이 흔들린다.
-  // 기도문 화면을 먼저 띄운 뒤 팝업을 한 프레임 늦게 숨겨, 전환 중 커버 노출을 막는다.
   if(!deferHideUntilAfter) hideQuickModal();
-
   function done(){
-    try{
-      if(typeof afterHidden === 'function') afterHidden();
-    }catch(e){ console.warn('[가톨릭길동무]', e); }
+    try{ if(typeof afterHidden === 'function') afterHidden(); }
+    catch(e){ console.warn('[가톨릭길동무]', e); }
     finally{
       if(deferHideUntilAfter){
         if(window.requestAnimationFrame) requestAnimationFrame(hideQuickModal);
@@ -296,11 +281,6 @@ function _hideMassQuickMenuOnly(afterHidden, opts){
       }
     }
   }
-
-  /* V1-10: 빠른메뉴에서 주요기도문으로 들어갈 때 기존 팝업 history를 pop하지 않는다.
-     기도문은 내부 카테고리이므로 스택을 그대로 두고 그 위에 prayer-list / prayer-detail을
-     쌓아야 목록 → 팝업 → 커버 흐름이 안정적으로 작동한다. */
-
   if(typeof afterHidden === 'function'){
     if(window.requestAnimationFrame) requestAnimationFrame(done);
     else setTimeout(done, 0);
@@ -515,8 +495,7 @@ function closeMassQuickMenu(opts){
     try{ delete modal.dataset.returnSource; }catch(e){ console.warn('[가톨릭길동무]', e); }
   }
   if(fromPrayerReturn){
-    if(typeof window._oaiPrayerResetToCover === 'function') window._oaiPrayerResetToCover('quick-close-prayer-popup');
-    else _forceCoverAfterPrayerQuickPopup();
+    _forceCoverAfterPrayerQuickPopup();
     return;
   }
   _ensureCoverBackTrap();
@@ -745,7 +724,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V1-10';
+    var target = btn.getAttribute('data-target-version') || 'V1-4';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -919,20 +898,21 @@ function openPrayerBook(opts){
   const cv=$('cover');
   if(cv){ cv.style.opacity='0'; cv.style.display='none'; }
   document.documentElement.classList.add('app-active');
-  if(typeof oaiSetMainMapLayerHidden==='function') oaiSetMainMapLayerHidden(true);
-  view.classList.add('open');
   try{
-    if(typeof window._oaiPrayerEnter==='function') window._oaiPrayerEnter(!!(opts && opts.fromMassQuick), 'prayer-open');
-    else if(typeof window._oaiArmPrayerBackTrap==='function') window._oaiArmPrayerBackTrap('prayer-open');
+    if(typeof window._oaiArmPrayerBackTrap==='function') window._oaiArmPrayerBackTrap('prayer-open');
     else if(typeof _ensureAppBackTrap==='function') _ensureAppBackTrap('prayer-open');
   }catch(e){ console.warn("[가톨릭길동무]", e); }
+  if(typeof oaiSetMainMapLayerHidden==='function') oaiSetMainMapLayerHidden(true);
+  view.classList.add('open');
   if(typeof oaiEnterView==='function') oaiEnterView(view);
   var setupDelay = (opts && opts.instant) ? 0 : 50;
   setTimeout(function(){
     if(typeof window.initPrayerView==='function') try{window.initPrayerView();}catch(e){ console.warn("[가톨릭길동무]", e); }
     if(!(opts&&opts.restore) && typeof showPrayerListOnly==='function') try{showPrayerListOnly();}catch(e){ console.warn("[가톨릭길동무]", e); }
-    /* 기도문 뒤로가기는 openPrayerBook() 진입 시 전용 컨트롤러가 한 번만 세운다.
-       여기서 다시 history state를 push하면 list 상태가 중복되어 뒤로가기 단계가 꼬일 수 있다. */
+    try{
+      if(typeof window._oaiArmPrayerBackTrap==='function') window._oaiArmPrayerBackTrap('prayer-list-ready');
+      else if(typeof _ensureAppBackTrap==='function') _ensureAppBackTrap('prayer-list-ready');
+    }catch(e){ console.warn("[가톨릭길동무]", e); }
     var list=document.getElementById('prayer-list-view'); if(list) list.scrollTop=0;
     var tabs=document.getElementById('prayer-tabs'); if(tabs) tabs.scrollLeft=0;
   }, setupDelay);
@@ -947,18 +927,15 @@ function closePrayerView(){
   }
 }
 function _closePrayerAndReturn(){
-  /* V1-10: 기도문 닫기는 기도문 전용 컨트롤러 한 곳으로만 보낸다.
-     예전 _returnToMassQuickMenu()/goToCover fallback이 같이 남아 있으면
-     목록→팝업 또는 본문→목록 단계에서 공통 뒤로가기와 다시 충돌한다. */
-  try{
-    if(typeof window._oaiPrayerListToPopupOrCover === 'function'){
-      window._oaiPrayerListToPopupOrCover('prayer-close-button');
-      return;
-    }
-  }catch(e){ console.warn('[가톨릭길동무]', e); }
-  closePrayerView();
-  try{ _clearPrayerQuickReturn(); }catch(e){ console.warn("[가톨릭길동무]", e); }
-  if(typeof goToCover==='function') goToCover();
+  if(typeof window._oaiHandleBackNow === 'function'){
+    window._oaiHandleBackNow();
+    return;
+  }
+  var pv = $('prayer-view');
+  var fromQuickPrayer = _shouldPrayerQuickReturn();
+  try{ if(pv && pv.dataset && pv.dataset.quickSource === 'mass') fromQuickPrayer = true; }catch(e){ console.warn('[가톨릭길동무]', e); }
+  if(fromQuickPrayer){ _returnToMassQuickMenu('prayer'); }
+  else { closePrayerView(); try{ _clearPrayerQuickReturn(); }catch(e){} if(typeof goToCover==='function') goToCover(); }
 }
 
 
@@ -1060,7 +1037,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V1-10';
+    frame.src='diocese.html?v=V1-4';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -1384,73 +1361,44 @@ function _kakaoKeywordDocsFromJs(query, max){
         resolve([]);
         return;
       }
-      var pageLimit = Math.max(1, Math.ceil(max / 15));
+      var places = new kakao.maps.services.Places();
+      var pageLimit = Math.ceil(max / 15);
       var groups = [];
-      var finished = 0;
+      var pageCount = 0;
       var settled = false;
 
-      function finishOne(){
-        finished += 1;
-        if(finished >= pageLimit){
-          /* 명시 page 요청이 먼저 끝나도 pagination.nextPage 보조 결과가 뒤늦게 올 수 있으므로
-             아주 짧게 기다린 뒤 마감한다. */
-          setTimeout(done, 700);
-        }
-      }
       function done(){
         if(settled) return;
         settled = true;
         resolve(_dedupeKakaoDocs(groups, max));
       }
-      function baseOpts(page){
-        var opts = { size: 15, page: page };
-        try{ if(kakao.maps.services.SortBy && kakao.maps.services.SortBy.ACCURACY) opts.sort = kakao.maps.services.SortBy.ACCURACY; }catch(_e){}
-        return opts;
-      }
 
-      /* 30개가 필요한 검색은 명시적으로 page=1, page=2를 각각 요청한다.
-         기존 pagination.nextPage() 방식은 일부 Android/WebView 조합에서 1페이지 15개에서 멈출 수 있어
-         명시 page 요청을 기본으로 삼고, 아래 pagination 방식은 보조로만 사용한다. */
-      for(var page=1; page<=pageLimit; page++){
-        (function(p){
-          try{
-            var places = new kakao.maps.services.Places();
-            places.keywordSearch(query, function(data, status){
-              try{
-                var OK = kakao.maps.services.Status.OK;
-                if(status === OK && data && data.length) groups.push(data);
-              }catch(e){ console.warn('[가톨릭길동무]', e); }
-              finishOne();
-            }, baseOpts(p));
-          }catch(e){
-            console.warn('[가톨릭길동무]', e);
-            finishOne();
-          }
-        })(page);
-      }
-
-      /* 보조: 명시 page 요청이 15개에서 멈추는 환경을 대비해 pagination.nextPage도 함께 시도한다.
-         중복은 _dedupeKakaoDocs에서 제거한다. */
-      try{
-        var seqPlaces = new kakao.maps.services.Places();
-        var seqPages = 0;
-        seqPlaces.keywordSearch(query, function(data, status, pagination){
-          try{
-            var OK = kakao.maps.services.Status.OK;
-            if(status === OK && data && data.length){
-              groups.push(data);
-              seqPages += 1;
-              var hasNext = false;
-              try{ hasNext = !!(pagination && (pagination.hasNextPage === true || (typeof pagination.hasNextPage === 'function' && pagination.hasNextPage()))); }catch(_e){ hasNext = !!(pagination && pagination.hasNextPage); }
-              if(_dedupeKakaoDocs(groups, max).length < max && hasNext && seqPages < pageLimit && pagination && typeof pagination.nextPage === 'function'){
-                setTimeout(function(){ try{ pagination.nextPage(); }catch(_e){} }, 60);
-              }
+      /* Kakao JS Places는 병렬 page 옵션 호출보다 pagination.nextPage()가 안정적이다.
+         page=2가 무시되어 15개만 보이는 문제를 막기 위해 1페이지를 받은 뒤
+         pagination 객체로 다음 페이지를 순차 요청한다. */
+      var searchOpts = { size: 15 };
+      try{ if(kakao.maps.services.SortBy && kakao.maps.services.SortBy.ACCURACY) searchOpts.sort = kakao.maps.services.SortBy.ACCURACY; }catch(_e){}
+      places.keywordSearch(query, function(data, status, pagination){
+        try{
+          var OK = kakao.maps.services.Status.OK;
+          if(status === OK && data && data.length){
+            groups.push(data);
+            pageCount += 1;
+            if(_dedupeKakaoDocs(groups, max).length >= max){ done(); return; }
+            if(pagination && pagination.hasNextPage && pageCount < pageLimit){
+              setTimeout(function(){
+                try{ pagination.nextPage(); }catch(_e){ done(); }
+              }, 80);
+              return;
             }
-          }catch(e){ console.warn('[가톨릭길동무]', e); }
-        }, baseOpts(1));
-      }catch(e){ console.warn('[가톨릭길동무]', e); }
+          }
+        }catch(e){
+          console.warn('[가톨릭길동무]', e);
+        }
+        done();
+      }, searchOpts);
 
-      setTimeout(done, 5200);
+      setTimeout(done, 4200);
     }catch(e){
       console.warn('[가톨릭길동무]', e);
       resolve([]);
@@ -1459,13 +1407,16 @@ function _kakaoKeywordDocsFromJs(query, max){
 }
 function _kakaoKeywordDocs(query, limit){
   var max = Math.max(1, parseInt(limit || 10, 10) || 10);
-  var restPromise = _kakaoKeywordDocsFromRest(query, max).catch(function(){ return []; });
-  var jsPromise = _kakaoKeywordDocsFromJs(query, max).catch(function(){ return []; });
-
-  /* REST 프록시가 page=2를 넘기지 못하거나, JS SDK가 특정 WebView에서 1페이지만 주는 경우를 대비해
-     두 경로를 항상 병합한다. 어느 한쪽이 15개에서 멈춰도 다른 경로의 page=2 결과가 들어오면 30개까지 표시된다. */
-  return Promise.all([restPromise, jsPromise]).then(function(groups){
-    return _dedupeKakaoDocs(groups, max);
+  return _kakaoKeywordDocsFromRest(query, max).then(function(restDocs){
+    restDocs = restDocs || [];
+    /* 30개 후보가 필요한 지역검색/일반장소 검색은 REST 프록시와 Kakao JS Places를 합쳐서 채운다.
+       프록시가 page=2를 전달하지 못해 1페이지 15개만 돌아와도 JS 2페이지 결과를 합쳐 최대 30개까지 확보한다. */
+    if(restDocs.length >= max) return restDocs.slice(0, max);
+    return _kakaoKeywordDocsFromJs(query, max).then(function(jsDocs){
+      return _dedupeKakaoDocs([restDocs, jsDocs || []], max);
+    }).catch(function(){ return restDocs.slice(0, max); });
+  }).catch(function(){
+    return _kakaoKeywordDocsFromJs(query, max).then(function(jsDocs){ return (jsDocs || []).slice(0, max); });
   });
 }
 const TC    = {'성지':'#c0392b','순례지':'#1565c0','순교 사적지':'#1b7a3e'};
@@ -4264,7 +4215,7 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
   on('pr-sm-btn-2',   'click', function() { prAdjustFont(-1); });
   on('pr-lg-btn-2',   'click', function() { prAdjustFont(1); });
   on('pr-detail-star','click', function(e) { prToggleDetailFav(e); });
-  on('pr-back-btn',   'click', function() { prCloseDetail(); });
+  on('pr-back-btn',   'click', function() { if(typeof window._oaiHandleBackNow==='function') window._oaiHandleBackNow(); else prCloseDetail(); });
 
   // ── 커버 글자크기 ──
   on('cover-sm-btn',  'click', function(e) { e.stopPropagation(); prAdjustFont(-1); });
