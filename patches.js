@@ -165,7 +165,7 @@
 
 
   /* ─────────────────────────────────────────────
-     V1-8 기도문 전용 뒤로가기 컨트롤러 — history 단계 분리 제거
+     V1-9 기도문 전용 뒤로가기 컨트롤러 — history 단계 분리 제거
 
      원칙:
      1) 다른 정상 카테고리처럼 실제 history는 공통 root/trap 한 쌍만 사용한다.
@@ -190,7 +190,8 @@
   function isPrayerQuickSource(){
     var pv = prayerView();
     var yes = false;
-    try{ if(pv && pv.dataset && pv.dataset.quickSource === 'mass') yes = true; }catch(_e){}
+    try{ if(pv && pv.dataset && (pv.dataset.quickSource === 'prayer' || pv.dataset.quickSource === 'mass')) yes = true; }catch(_e){}
+    try{ if(window.__PRAYER_QUICK_RETURN__ === true) yes = true; }catch(_e){}
     try{ if(window.__OAI_PRAYER_FROM_QUICK_LOCK__ === true) yes = true; }catch(_e){}
     try{ if(sessionStorage.getItem('oai_prayer_from_quick_lock') === '1') yes = true; }catch(_e){}
     try{ if(typeof window._shouldPrayerQuickReturn === 'function' && window._shouldPrayerQuickReturn()) yes = true; }catch(_e){}
@@ -198,12 +199,14 @@
   }
   function keepPrayerQuickSource(on){
     try{ if(typeof window._setPrayerQuickReturn === 'function') window._setPrayerQuickReturn(!!on); }catch(_e){}
+    try{ window.__PRAYER_QUICK_RETURN__ = !!on; }catch(_e){}
+    try{ window.__MASS_QUICK_FROM_PRAYER__ = false; }catch(_e){}
     try{ window.__OAI_PRAYER_FROM_QUICK_LOCK__ = !!on; }catch(_e){}
     try{ if(on) sessionStorage.setItem('oai_prayer_from_quick_lock','1'); else sessionStorage.removeItem('oai_prayer_from_quick_lock'); }catch(_e){}
     try{
       var pv = prayerView();
       if(pv && pv.dataset){
-        if(on) pv.dataset.quickSource = 'mass';
+        if(on) pv.dataset.quickSource = 'prayer';
         else delete pv.dataset.quickSource;
       }
     }catch(_e){}
@@ -217,7 +220,7 @@
     return !!yes;
   }
   function armPrayerBackTrap(reason){
-    /* 호환용 함수. V1-8부터 기도문 detail/list용 별도 pushState는 만들지 않는다.
+    /* 호환용 함수. V1-9부터 기도문 detail/list용 별도 pushState는 만들지 않는다.
        공통 컨트롤러가 이미 갖고 있는 root/trap을 유지하는 것만 필요하다. */
     try{
       if(isPrayerOpen() && typeof window._ensureAppBackTrap === 'function'){
@@ -255,10 +258,11 @@
     try{ if(typeof window._setPrayerPopupReturnSource === 'function') window._setPrayerPopupReturnSource(false); }catch(_e){}
     try{ if(typeof window._clearPrayerQuickReturn === 'function') window._clearPrayerQuickReturn(); }catch(_e){}
     try{ if(typeof window._clearMassQuickReturnForReload === 'function') window._clearMassQuickReturnForReload(); }catch(_e){}
+    try{ window.__PRAYER_QUICK_RETURN__ = false; }catch(_e){}
+    try{ window.__MASS_QUICK_FROM_PRAYER__ = false; }catch(_e){}
     try{ window.__OAI_PRAYER_FROM_QUICK_LOCK__ = false; }catch(_e){}
     try{ sessionStorage.removeItem('oai_prayer_from_quick_lock'); }catch(_e){}
     try{ window.__OAI_PRAYER_POPUP_COVER_GUARD_UNTIL__ = 0; }catch(_e){}
-    try{ window.__OAI_PRAYER_COVER_FORCE_FIRST_TOAST_UNTIL__ = 0; }catch(_e){}
   }
   function ensureCoverTrapAfterPrayer(reason){
     try{
@@ -284,6 +288,8 @@
       resetPrayerFlags();
       try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(_e){}
       try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(_e){}
+      // 기도문 팝업에서 커버로 온 직후 첫 Back은 반드시 종료 안내가 되게 한다.
+      try{ window.__OAI_PRAYER_COVER_FORCE_FIRST_TOAST_UNTIL__ = Date.now() + 10000; }catch(_e){}
       ensureCoverTrapAfterPrayer(reason || 'prayer-cover-reset');
       return true;
     }catch(e){ console.warn('[가톨릭길동무]', e); return true; }
@@ -303,7 +309,7 @@
       var fromQuick = isPrayerQuickSource();
       if(!fromQuick) return resetPrayerToCover(reason || 'prayer-list-cover');
 
-      /* V1-8: 기도문 목록 → 빠른메뉴 팝업 복귀는 직접 팝업을 띄우지 않는다.
+      /* V1-9: 기도문 목록 → 빠른메뉴 팝업 복귀는 직접 팝업을 띄우지 않는다.
          사용자의 Back으로 공통 trap이 일단 소비된 직후라, 이 자리에서 openMassQuickMenu()를
          바로 호출하면 Android/PWA에서 history.go(1) 복원 타이밍과 겹쳐 팝업 Back이 앱 종료로
          먹힐 수 있다. 기존 안정 함수 _returnToMassQuickMenu('prayer')에게 맡기면,
@@ -404,8 +410,17 @@
       return;
     }
 
-    /* 커버: 토스트 → 두 번째에 종료. */
+    /* 커버: 토스트 → 두 번째에 종료.
+       기도문 팝업에서 막 커버로 온 경우에는 첫 Back이 무조건 안내가 되도록 강제한다. */
     if(!appActive()){
+      try{
+        var forceFirstToastUntil = Number(window.__OAI_PRAYER_COVER_FORCE_FIRST_TOAST_UNTIL__ || 0);
+        if(forceFirstToastUntil && Date.now() < forceFirstToastUntil){
+          window.__OAI_PRAYER_COVER_FORCE_FIRST_TOAST_UNTIL__ = 0;
+          if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
+          if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
+        }
+      }catch(e){ console.warn('[가톨릭길동무]', e); }
       var exiting = false;
       if(typeof window._showBackToast==='function') exiting = window._showBackToast() === true;
       if(!exiting){ try{ history.pushState({_p:1}, '', _href); }catch(e){ console.warn("[가톨릭길동무]", e); } }
@@ -604,7 +619,7 @@
   if(window.__APP_FONT_SCALE_GUARD__) return;
   window.__APP_FONT_SCALE_GUARD__=true;
   // V37: 문의·건의는 qa-firebase.html 한 경로로만 통일한다.
-  var QA_URL="qa-firebase.html?v=V1-8";
+  var QA_URL="qa-firebase.html?v=V1-9";
   var FONT_KEY='prayer_font_size', BASE=16, SIZES=[13,14,15,16,17,18,19,20,21,22,24,26,28,30];
   function el(id){return document.getElementById(id)}
   function getPx(){var px=parseInt(localStorage.getItem(FONT_KEY)||BASE,10);return (px>=13&&px<=30)?px:BASE;}
