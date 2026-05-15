@@ -1605,8 +1605,9 @@ html.retreat-mode #sm-tab-bar .sm-tab.active{
 .app-pressing{transition:transform .16s ease,filter .16s ease;will-change:transform}
 .app-touchable{transition:transform .16s ease,filter .16s ease;will-change:transform}
 .tab.on,.tab.on:active{transform:none}
-.oai-enter-ready{opacity:0;transform:none!important}
-.oai-enter-ready.oai-enter-show{opacity:1;transform:none!important;transition:opacity .24s cubic-bezier(.22,.61,.36,1)}
+.oai-enter-ready{opacity:1;transform:none!important;transition:none!important}
+.oai-enter-ready.oai-enter-show{opacity:1;transform:none!important;transition:none!important}
+.oai-prepaint-view{visibility:hidden!important;opacity:1!important;transform:none!important;transition:none!important}
 html.oai-returning .oai-enter-ready{opacity:1;transform:none!important;transition:none!important}
 #oai-category-entry-veil{position:fixed;left:0;right:0;top:var(--tab-h,72px);bottom:0;z-index:790;display:none;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity .22s cubic-bezier(.22,.61,.36,1);transform:translateZ(0);backface-visibility:hidden}
 html.oai-category-entering #oai-category-entry-veil{display:flex;opacity:1}
@@ -3757,4 +3758,36 @@ html:not(.ios-device) #ios-safari-guide-modal{
   font-weight:800!important;
   line-height:1.5!important;
   word-break:keep-all!important;
+}
+
+/* V1-16 화면 흔들림 안정화
+   - 첫 커버는 index.html에서 --cover-vh를 최초 1회만 고정한다.
+   - 헤더가 있는 모듈/웹사이트 화면은 한 프레임 prepaint 후 보여서 헤더가 본문을 밀어내는 느낌을 줄인다.
+   - 뒤로가기/카테고리 로직은 변경하지 않는다. */
+#web-view.module-view.open,
+#trail-view.module-view.open,
+#qna-view.module-view.open,
+#diocese-view.open,
+#prayer-view.open,
+#missa-view.open{
+  transform:none!important;
+  transition:none!important;
+  animation:none!important;
+  contain:layout paint!important;
+  will-change:auto!important;
+}
+#web-view .module-bar,
+#trail-view .module-bar,
+#qna-view .module-bar,
+#diocese-view .module-bar,
+#prayer-bar{
+  flex:0 0 calc(var(--oai-std-header-h,70px) + env(safe-area-inset-top,0px))!important;
+}
+#web-view .web-body,
+#trail-view .trail-body,
+#qna-view .qna-body,
+#prayer-list-view{
+  transform:none!important;
+  transition:none!important;
+  animation:none!important;
 }

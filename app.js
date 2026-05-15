@@ -764,7 +764,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V1-15';
+    var target = btn.getAttribute('data-target-version') || 'V1-16';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -1092,7 +1092,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V1-15';
+    frame.src='diocese.html?v=V1-16';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -1803,13 +1803,16 @@ function oaiEnterView(el){
   try{
     var root=document.documentElement;
     if(root.classList.contains('oai-returning')) return;
-    el.classList.remove('oai-enter-ready','oai-enter-show');
-    el.classList.add('oai-enter-ready');
+    // 헤더가 있는 모듈은 open 직후 한 프레임 동안 prepaint 상태로 두어
+    // 상단 헤더 높이가 잡히기 전 본문이 아래로 밀려 보이는 흔들림을 막는다.
+    el.classList.remove('oai-enter-ready','oai-enter-show','oai-prepaint-view');
+    el.classList.add('oai-prepaint-view');
     requestAnimationFrame(function(){
+      el.classList.remove('oai-prepaint-view');
       el.classList.add('oai-enter-show');
       setTimeout(function(){
-        try{ el.classList.remove('oai-enter-ready','oai-enter-show'); }catch(e){ console.warn("[가톨릭길동무]", e); }
-      }, 280);
+        try{ el.classList.remove('oai-enter-ready','oai-enter-show','oai-prepaint-view'); }catch(e){ console.warn("[가톨릭길동무]", e); }
+      }, 120);
     });
   }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
