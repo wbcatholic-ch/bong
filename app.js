@@ -237,6 +237,17 @@ function _ensureAppBackTrap(reason){
     history.pushState({_p:1, oai_app_trap:reason||'app'}, '', href);
   }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
+function _resetAppBackTrap(reason){
+  /* 기도문 본문을 닫아 목록으로 돌아온 직후에는 방금 Back으로 p1 트랩이 소비된 상태일 수 있다.
+     이때 목록에서 한 번 더 Back을 눌러도 앱이 바로 닫히지 않고
+     목록 → 빠른메뉴 팝업/커버 순서로 공통 컨트롤러가 다시 받도록 트랩을 새로 세운다. */
+  try{
+    if(!document.documentElement.classList.contains('app-active')) return;
+    var href = location.href.split('#')[0];
+    history.replaceState({_p:0, oai_app_root:reason||'app-reset'}, '', href);
+    history.pushState({_p:1, oai_app_trap:reason||'app-reset'}, '', href);
+  }catch(e){ console.warn("[가톨릭길동무]", e); }
+}
 function _armMassQuickHistoryTrap(opts){
   try{
     var href = location.href.split('#')[0];
@@ -595,7 +606,7 @@ window.addEventListener('focus', function(){
 if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(_tryResumeMassQuickSoon, 80); }, {once:true});
 else setTimeout(_tryResumeMassQuickSoon, 80);
 window.addEventListener('load', function(){ setTimeout(_tryResumeMassQuickSoon, 80); }, {once:true});
-try{ window._shouldMassQuickReturn=_shouldMassQuickReturn; window._shouldPrayerQuickReturn=_shouldPrayerQuickReturn; window._clearMassQuickReturnForReload=_clearMassQuickReturnForReload; window._clearPrayerQuickReturn=_clearPrayerQuickReturn; window._returnToMassQuickMenu=_returnToMassQuickMenu; window._closePrayerAndReturn=_closePrayerAndReturn; window._resetCoverExitReady=_resetCoverExitReady; window._clearCoverExitArmed=_clearCoverExitArmed; window._ensureCoverBackTrap=_ensureCoverBackTrap; window._ensureAppBackTrap=_ensureAppBackTrap; window._hideMassQuickMenuOnly=_hideMassQuickMenuOnly; window._setPrayerPopupReturnSource=_setPrayerPopupReturnSource; window._isPrayerPopupReturnSource=_isPrayerPopupReturnSource; window._forceCoverAfterPrayerQuickPopup=_forceCoverAfterPrayerQuickPopup; window._resetCoverBackTrap=_resetCoverBackTrap; window._consumePrayerCoverNeedsFirstToast=_consumePrayerCoverNeedsFirstToast; window.openMassQuickMenu=openMassQuickMenu; window.closeMassQuickMenu=closeMassQuickMenu; }catch(e){ console.warn('[가톨릭길동무]', e); }
+try{ window._shouldMassQuickReturn=_shouldMassQuickReturn; window._shouldPrayerQuickReturn=_shouldPrayerQuickReturn; window._clearMassQuickReturnForReload=_clearMassQuickReturnForReload; window._clearPrayerQuickReturn=_clearPrayerQuickReturn; window._returnToMassQuickMenu=_returnToMassQuickMenu; window._closePrayerAndReturn=_closePrayerAndReturn; window._resetCoverExitReady=_resetCoverExitReady; window._clearCoverExitArmed=_clearCoverExitArmed; window._ensureCoverBackTrap=_ensureCoverBackTrap; window._ensureAppBackTrap=_ensureAppBackTrap; window._resetAppBackTrap=_resetAppBackTrap; window._hideMassQuickMenuOnly=_hideMassQuickMenuOnly; window._setPrayerPopupReturnSource=_setPrayerPopupReturnSource; window._isPrayerPopupReturnSource=_isPrayerPopupReturnSource; window._forceCoverAfterPrayerQuickPopup=_forceCoverAfterPrayerQuickPopup; window._resetCoverBackTrap=_resetCoverBackTrap; window._consumePrayerCoverNeedsFirstToast=_consumePrayerCoverNeedsFirstToast; window.openMassQuickMenu=openMassQuickMenu; window.closeMassQuickMenu=closeMassQuickMenu; }catch(e){ console.warn('[가톨릭길동무]', e); }
 
 // 안정형 새로고침: 캐시/서비스워커를 지우지 않고 현재 화면만 다시 불러온다.
 // 즐겨찾기/localStorage는 물론, Service Worker와 Cache Storage도 건드리지 않는다.
@@ -1340,8 +1351,37 @@ function _kakaoRestFetch(endpoint, params){
 function _kakaoDirectionsFetch(origin, destination){
   return _kakaoRestFetch('directions', { origin: origin, destination: destination, priority:'RECOMMEND' });
 }
-function _kakaoKeywordFetch(query, size){
-  return _kakaoRestFetch('keyword', { query: query, size: String(size || 10) });
+function _kakaoKeywordFetch(query, size, page){
+  var params = { query: query, size: String(size || 10) };
+  if(page) params.page = String(page);
+  return _kakaoRestFetch('keyword', params);
+}
+function _kakaoKeywordDocs(query, limit){
+  var max = Math.max(1, parseInt(limit || 10, 10) || 10);
+  var pages = Math.ceil(max / 15);
+  var jobs = [];
+  for(var page=1; page<=pages; page++){
+    var size = Math.min(15, max - ((page - 1) * 15));
+    jobs.push(
+      _kakaoKeywordFetch(query, size, page)
+        .then(function(r){ return r.json(); })
+        .then(function(data){ return (data && data.documents) ? data.documents : []; })
+        .catch(function(){ return []; })
+    );
+  }
+  return Promise.all(jobs).then(function(groups){
+    var seen = {};
+    var docs = [];
+    groups.forEach(function(list){
+      (list || []).forEach(function(d){
+        var key = d.id || [d.place_name, d.x, d.y, d.road_address_name || d.address_name || ''].join('|');
+        if(seen[key]) return;
+        seen[key] = true;
+        docs.push(d);
+      });
+    });
+    return docs.slice(0, max);
+  });
 }
 const TC    = {'성지':'#c0392b','순례지':'#1565c0','순교 사적지':'#1b7a3e'};
 const _DIOS=[['all','전체'],['서울대교구','서울'],['인천교구','인천'],['수원교구','수원'],['의정부교구','의정부'],['춘천교구','춘천'],['원주교구','원주'],['대전교구','대전'],['청주교구','청주'],['대구대교구','대구'],['안동교구','안동'],['부산교구','부산'],['마산교구','마산'],['광주대교구','광주'],['전주교구','전주'],['제주교구','제주']];
@@ -2039,7 +2079,7 @@ function _resetTabWork(name){
     _routeRegionStart=null;
     const ri=$('region-inp'); if(ri) ri.value='';
     const rb=$('region-body');
-    if(rb) rb.innerHTML='<div class="empty-msg">🏞 여행지나 숙박 지역을 검색하면<br>근처 성지/성당 목록이 나타납니다</div>';
+    if(rb) rb.innerHTML=_regionGuideHtml();
   }
   _scrollSheetTop(name);
 }
@@ -2055,7 +2095,7 @@ function toggleTab(name){
       _regionLat=null;_regionLng=null;_regionCache=[];
       const ri=$('region-inp'); if(ri) ri.value='';
       const rb=$('region-body');
-      if(rb) rb.innerHTML='<div class="empty-msg">🏞 여행지나 숙박 지역을 검색하면<br>근처 성지/성당 목록이 나타납니다</div>';
+      if(rb) rb.innerHTML=_regionGuideHtml();
     }
     else if(name==='route'){ resetRoute({fresh:true}); _enterRouteMode(); }
     setTimeout(()=>_scrollSheetTop(name),30);
@@ -3297,6 +3337,13 @@ function setDioFilter(v,btn){
   }
 }
 
+function _regionModeLabel(){
+  return _mode==='parish' ? '성당' : (_mode==='retreat' ? '피정의 집' : '성지');
+}
+function _regionGuideHtml(){
+  return '<div class="empty-msg region-guide-empty">🏞 여행지나 숙소 지역을 검색하면<br>근처 ' + _regionModeLabel() + ' 목록이 나타납니다</div>';
+}
+
 const DIOCESE_CENTER={
   '서울대교구':{lat:37.53,lng:126.97,mob:10},'인천교구':{lat:37.60,lng:126.55,mob:10},
   '수원교구':{lat:37.20,lng:127.05,mob:10},'의정부교구':{lat:37.85,lng:127.05,mob:10},
@@ -3312,8 +3359,7 @@ function onRegionInp(v){
   // 입력 중 현재 모드에 맞는 안내 표시
   const body=$('region-body');
   if(!v.trim()){
-    const mode=_mode==='shrine'?'성지':_mode==='parish'?'성당':'피정의 집';
-    body.innerHTML=`<div class="empty-msg">🏞 여행지나 숙박 지역을 입력하면<br>근처 ${mode} 목록이 나타납니다</div>`;
+    body.innerHTML=_regionGuideHtml();
   }
 }
 function doRegionSearch(){
@@ -3323,9 +3369,8 @@ function doRegionSearch(){
   inp.blur();
   const body=$('region-body');
   body.innerHTML='<div class="empty-msg">🔍 장소 검색 중...</div>';
-  _kakaoKeywordFetch(q, 8)
-  .then(r=>r.json()).then(data=>{
-    const docs=data.documents||[];
+  _kakaoKeywordDocs(q, 30)
+  .then(docs=>{
     if(!docs.length){ _showRegionFallback(q); return; }
     let html='<div style="padding:8px 14px 4px;font-size:11px;font-weight:700;color:#888;background:#f8f9fc;border-bottom:1px solid #eee;">📍 지역을 선택하세요</div>';
     docs.forEach(d=>{
@@ -3807,9 +3852,8 @@ function onSmInp(v){
 }
 
 function _searchKakaoPlace(q){
-  _kakaoKeywordFetch(q, 10)
-  .then(r=>r.json()).then(data=>{
-    const docs=data.documents||[];
+  _kakaoKeywordDocs(q, 30)
+  .then(docs=>{
     const body=$('sm-body-place');
     if(!body) return;
     if(!docs.length){ body.innerHTML='<div class="sm-place-loading">검색 결과가 없습니다</div>'; return; }

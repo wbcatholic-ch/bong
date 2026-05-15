@@ -3748,3 +3748,13 @@ html:not(.ios-device) #ios-kakao-safari-banner,
 html:not(.ios-device) #ios-safari-guide-modal{
   display:none!important;
 }
+
+
+/* V1: 지역검색 안내문 — 카테고리별 문구를 더 크게, 검정 계열로 표시 */
+#region-body .empty-msg.region-guide-empty{
+  color:#111827!important;
+  font-size:calc(15px * var(--app-inner-font-scale,1))!important;
+  font-weight:800!important;
+  line-height:1.5!important;
+  word-break:keep-all!important;
+}

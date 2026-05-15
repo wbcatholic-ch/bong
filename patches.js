@@ -77,14 +77,15 @@
     try{
       var detail = $b('prayer-detail');
       window.__APP_PRAYER_DETAIL_TS__ = Date.now();
-      if(typeof window.prCloseDetail === 'function') window.prCloseDetail();
+      if(typeof window.prCloseDetail === 'function') window.prCloseDetail({skipTrap:true});
       else if(detail) detail.classList.remove('show');
       if(typeof window.showPrayerListOnly === 'function') window.showPrayerListOnly();
-      if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap(reason || 'prayer-detail-to-list');
+      if(typeof window._resetAppBackTrap === 'function') window._resetAppBackTrap(reason || 'prayer-detail-to-list');
+      else if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap(reason || 'prayer-detail-to-list');
       return true;
     }catch(e){
       console.warn('[가톨릭길동무]', e);
-      try{ if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-detail-to-list-fallback'); }catch(_e){}
+      try{ if(typeof window._resetAppBackTrap === 'function') window._resetAppBackTrap('prayer-detail-to-list-fallback'); else if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-detail-to-list-fallback'); }catch(_e){}
       return true;
     }
   }
