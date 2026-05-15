@@ -535,7 +535,8 @@ function closeMassQuickMenu(opts){
     try{ delete modal.dataset.returnSource; }catch(e){ console.warn('[가톨릭길동무]', e); }
   }
   if(fromPrayerReturn){
-    _forceCoverAfterPrayerQuickPopup();
+    if(typeof window._oaiPrayerResetToCover === 'function') window._oaiPrayerResetToCover('quick-close-prayer-popup');
+    else _forceCoverAfterPrayerQuickPopup();
     return;
   }
   _ensureCoverBackTrap();
@@ -938,21 +939,20 @@ function openPrayerBook(opts){
   const cv=$('cover');
   if(cv){ cv.style.opacity='0'; cv.style.display='none'; }
   document.documentElement.classList.add('app-active');
-  try{
-    if(typeof window._oaiArmPrayerBackTrap==='function') window._oaiArmPrayerBackTrap('prayer-open');
-    else if(typeof _ensureAppBackTrap==='function') _ensureAppBackTrap('prayer-open');
-  }catch(e){ console.warn("[가톨릭길동무]", e); }
   if(typeof oaiSetMainMapLayerHidden==='function') oaiSetMainMapLayerHidden(true);
   view.classList.add('open');
+  try{
+    if(typeof window._oaiPrayerEnter==='function') window._oaiPrayerEnter(!!(opts && opts.fromMassQuick), 'prayer-open');
+    else if(typeof window._oaiArmPrayerBackTrap==='function') window._oaiArmPrayerBackTrap('prayer-open');
+    else if(typeof _ensureAppBackTrap==='function') _ensureAppBackTrap('prayer-open');
+  }catch(e){ console.warn("[가톨릭길동무]", e); }
   if(typeof oaiEnterView==='function') oaiEnterView(view);
   var setupDelay = (opts && opts.instant) ? 0 : 50;
   setTimeout(function(){
     if(typeof window.initPrayerView==='function') try{window.initPrayerView();}catch(e){ console.warn("[가톨릭길동무]", e); }
     if(!(opts&&opts.restore) && typeof showPrayerListOnly==='function') try{showPrayerListOnly();}catch(e){ console.warn("[가톨릭길동무]", e); }
-    try{
-      if(typeof window._oaiArmPrayerBackTrap==='function') window._oaiArmPrayerBackTrap('prayer-list-ready');
-      else if(typeof _ensureAppBackTrap==='function') _ensureAppBackTrap('prayer-list-ready');
-    }catch(e){ console.warn("[가톨릭길동무]", e); }
+    /* 기도문 뒤로가기는 openPrayerBook() 진입 시 전용 컨트롤러가 한 번만 세운다.
+       여기서 다시 history state를 push하면 list 상태가 중복되어 뒤로가기 단계가 꼬일 수 있다. */
     var list=document.getElementById('prayer-list-view'); if(list) list.scrollTop=0;
     var tabs=document.getElementById('prayer-tabs'); if(tabs) tabs.scrollLeft=0;
   }, setupDelay);
