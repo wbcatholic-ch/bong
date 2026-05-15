@@ -239,6 +239,8 @@
     var pv = prayerView();
     var yes = false;
     try{ if(pv && pv.dataset && pv.dataset.quickSource === 'mass') yes = true; }catch(_e){}
+    try{ if(window.__OAI_PRAYER_FROM_QUICK_LOCK__ === true) yes = true; }catch(_e){}
+    try{ if(sessionStorage.getItem('oai_prayer_from_quick_lock') === '1') yes = true; }catch(_e){}
     try{ if(typeof window._shouldPrayerQuickReturn === 'function' && window._shouldPrayerQuickReturn()) yes = true; }catch(_e){}
     return !!yes;
   }
@@ -252,6 +254,7 @@
   }
   function armPrayerBackTrap(reason){
     try{
+      if(!appActive() && !isPrayerReturnPopupOpen()) return;
       var href = location.href.split('#')[0];
       history.replaceState({_p:0, oai_prayer_root:reason||'prayer'}, '', href);
       history.pushState({_p:1, oai_prayer_trap:reason||'prayer'}, '', href);
@@ -259,6 +262,8 @@
   }
   function keepPrayerQuickSource(on){
     try{ if(typeof window._setPrayerQuickReturn === 'function') window._setPrayerQuickReturn(!!on); }catch(_e){}
+    try{ window.__OAI_PRAYER_FROM_QUICK_LOCK__ = !!on; }catch(_e){}
+    try{ if(on) sessionStorage.setItem('oai_prayer_from_quick_lock','1'); else sessionStorage.removeItem('oai_prayer_from_quick_lock'); }catch(_e){}
     try{
       var pv = prayerView();
       if(pv && pv.dataset){
@@ -295,6 +300,8 @@
     try{ if(typeof window._setPrayerPopupReturnSource === 'function') window._setPrayerPopupReturnSource(false); }catch(_e){}
     try{ if(typeof window._clearPrayerQuickReturn === 'function') window._clearPrayerQuickReturn(); }catch(_e){}
     try{ if(typeof window._clearMassQuickReturnForReload === 'function') window._clearMassQuickReturnForReload(); }catch(_e){}
+    try{ window.__OAI_PRAYER_FROM_QUICK_LOCK__ = false; }catch(_e){}
+    try{ sessionStorage.removeItem('oai_prayer_from_quick_lock'); }catch(_e){}
     try{ window.__OAI_PRAYER_POPUP_COVER_GUARD_UNTIL__ = 0; }catch(_e){}
     try{ window.__OAI_PRAYER_COVER_FORCE_FIRST_TOAST_UNTIL__ = 0; }catch(_e){}
   }
@@ -329,7 +336,7 @@
       var d = prayerDetail();
       if(d) d.classList.remove('show');
       if(typeof window.showPrayerListOnly === 'function') window.showPrayerListOnly();
-      if(fromQuick) keepPrayerQuickSource(true);
+      keepPrayerQuickSource(!!fromQuick);
       armPrayerBackTrap(reason || 'prayer-detail-to-list');
       return true;
     }catch(e){ console.warn('[가톨릭길동무]', e); return true; }
@@ -342,7 +349,8 @@
       hidePrayerOnly();
       showCoverOnlyForPrayer();
       try{ if(typeof window._setPrayerPopupReturnSource === 'function') window._setPrayerPopupReturnSource(true); }catch(_e){}
-      try{ if(typeof window._clearPrayerQuickReturn === 'function') window._clearPrayerQuickReturn(); }catch(_e){}
+      // 팝업이 커버로 닫히기 전까지는 기도문 출처를 유지한다.
+      try{ window.__OAI_PRAYER_FROM_QUICK_LOCK__ = true; sessionStorage.setItem('oai_prayer_from_quick_lock','1'); }catch(_e){}
       try{ if(typeof window._clearMassQuickReturnForReload === 'function') window._clearMassQuickReturnForReload(); }catch(_e){}
       try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(_e){}
       try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(_e){}

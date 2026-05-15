@@ -424,12 +424,11 @@ function prOpenDetail(prayer){
   content.innerHTML = ((prayer.content||prayer.body||'')+'').replace(/class="symbol"/g,'class="pr-symbol"');
   detail.classList.add('show');
   try{
-    var href = location.href.split('#')[0];
-    var st = history.state || {_p:1};
-    if(!(st && st.oai_prayer_detail)){
-      var detailState = Object.assign({}, st, {_p:1, oai_prayer_detail:1});
-      history.pushState(detailState, '', href);
-    }
+    // 본문은 기도문 전용 뒤로가기 컨트롤러가 처리한다.
+    // 여기서 별도 detail history state를 쌓으면 목록 복귀 뒤 다음 Back이 앱 종료로 흐를 수 있어,
+    // 현재 위치를 기도문 전용 [root → trap] 구조로만 다시 고정한다.
+    if(typeof window._oaiArmPrayerBackTrap === 'function') window._oaiArmPrayerBackTrap('prayer-detail-open');
+    else if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-detail-open');
   }catch(e){
     console.warn('[가톨릭길동무]', e);
     try{ if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-detail-fallback'); }catch(_e){}
@@ -452,20 +451,8 @@ window.prCloseDetail = function(opts){
   if(detail) detail.classList.remove('show');
   if(!(opts && opts.skipTrap)){
     try{
-      var href = location.href.split('#')[0];
-      var st = history.state || {};
-      if(st && st.oai_prayer_detail){
-        var listState = Object.assign({}, st);
-        delete listState.oai_prayer_detail;
-        listState._p = 1;
-        listState.oai_app_trap = 'prayer-list-close';
-        history.replaceState(listState, '', href);
-      }else if(typeof window._ensureAppBackTrap === 'function'){
-        window._ensureAppBackTrap('prayer-list-close');
-      }
-      if(typeof window._oaiArmPrayerBackTrap === 'function'){
-        window._oaiArmPrayerBackTrap('prayer-detail-button-to-list');
-      }
+      if(typeof window._oaiArmPrayerBackTrap === 'function') window._oaiArmPrayerBackTrap('prayer-detail-button-to-list');
+      else if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-list-close');
     }catch(e){
       console.warn('[가톨릭길동무]', e);
       try{ if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-list-close-fallback'); }catch(_e){}

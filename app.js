@@ -105,16 +105,20 @@ function _setMassQuickReturn(on){
 }
 function _setPrayerQuickReturn(on){
   // 빠른메뉴 → 주요기도문은 내부 카테고리 이동이다.
-  // pageshow/focus 외부 복귀 정리 과정에서 지워지지 않도록 별도 상태로 둔다.
+  // 매일미사·성가의 외부 복귀값과 분리하고, 본문을 다녀와도 목록 → 팝업 흐름이 유지되도록
+  // 전용 잠금값을 함께 둔다. 이 값은 팝업에서 커버로 돌아갈 때만 지운다.
   try{
     window.__MASS_QUICK_FROM_PRAYER__ = !!on;
+    window.__OAI_PRAYER_FROM_QUICK_LOCK__ = !!on;
     if(on){
       var stamp = String(Date.now());
       sessionStorage.setItem('oai_prayer_quick_return','1');
       sessionStorage.setItem('oai_prayer_quick_return_ts', stamp);
+      sessionStorage.setItem('oai_prayer_from_quick_lock','1');
     }else{
       sessionStorage.removeItem('oai_prayer_quick_return');
       sessionStorage.removeItem('oai_prayer_quick_return_ts');
+      sessionStorage.removeItem('oai_prayer_from_quick_lock');
     }
   }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
@@ -144,8 +148,11 @@ function _shouldMassQuickReturn(){
 }
 function _shouldPrayerQuickReturn(){
   try{
-    return window.__MASS_QUICK_FROM_PRAYER__ === true || _isFreshPrayerQuickReturn();
-  }catch(e){ console.warn("[가톨릭길동무]", e); return window.__MASS_QUICK_FROM_PRAYER__ === true; }
+    return window.__MASS_QUICK_FROM_PRAYER__ === true ||
+      window.__OAI_PRAYER_FROM_QUICK_LOCK__ === true ||
+      sessionStorage.getItem('oai_prayer_from_quick_lock') === '1' ||
+      _isFreshPrayerQuickReturn();
+  }catch(e){ console.warn("[가톨릭길동무]", e); return window.__MASS_QUICK_FROM_PRAYER__ === true || window.__OAI_PRAYER_FROM_QUICK_LOCK__ === true; }
 }
 function _isPageReloadNavigation(){
   try{
@@ -916,6 +923,8 @@ function openPrayerBook(opts){
   if(opts && opts.fromMassQuick){
     try{
       _setPrayerQuickReturn(true);
+      window.__OAI_PRAYER_FROM_QUICK_LOCK__ = true;
+      sessionStorage.setItem('oai_prayer_from_quick_lock','1');
     }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
   try{ if(typeof _resetCoverExitReady==='function') _resetCoverExitReady(); }catch(e){ console.warn("[가톨릭길동무]", e); }
@@ -4302,131 +4311,82 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
     if(!refreshBtn) return;
 
     var holdTimer = null;
-    var pressActive = false;
+    var pressStarted = false;
     var longActionFired = false;
-    var handledUntil = 0;
-    var activePointerId = null;
+    var suppressClickUntil = 0;
     var CACHE_HOLD_MS = 1200;
 
     function now(){ return Date.now ? Date.now() : new Date().getTime(); }
-    function markHandled(ms){
-      handledUntil = now() + (ms || 1000);
-      try{ window.__OAI_REFRESH_PRESS_HANDLED_UNTIL__ = handledUntil; }catch(_e){}
-    }
-    function recentlyHandled(){
-      var t = now();
-      try{
-        return t < handledUntil ||
-          (window.__OAI_REFRESH_PRESS_HANDLED_UNTIL__ && t < window.__OAI_REFRESH_PRESS_HANDLED_UNTIL__);
-      }catch(_e){
-        return t < handledUntil;
-      }
-    }
     function stopEvent(e, preventDefault){
       try{
-        if(e){
-          e.stopPropagation();
-          if(preventDefault && e.cancelable) e.preventDefault();
-        }
+        if(!e) return;
+        e.stopPropagation();
+        if(preventDefault && e.cancelable) e.preventDefault();
       }catch(_e){}
     }
-    function vibrateShort(){
-      try{ if(navigator.vibrate) navigator.vibrate(12); }catch(_e){}
-    }
-    function vibrateLong(){
-      try{ if(navigator.vibrate) navigator.vibrate([28, 24, 42]); }catch(_e){}
-    }
-    function clearHoldOnly(){
-      if(holdTimer){ clearTimeout(holdTimer); holdTimer = null; }
-    }
-    function resetPress(){
-      var pid = activePointerId;
-      pressActive = false;
-      activePointerId = null;
-      clearHoldOnly();
-      try{ if(pid !== null && refreshBtn.releasePointerCapture) refreshBtn.releasePointerCapture(pid); }catch(_e){}
-    }
-    function armPress(e){
+    function vibrateShort(){ try{ if(navigator.vibrate) navigator.vibrate(12); }catch(_e){} }
+    function vibrateLong(){ try{ if(navigator.vibrate) navigator.vibrate([32, 22, 48]); }catch(_e){} }
+    function clearHold(){ if(holdTimer){ clearTimeout(holdTimer); holdTimer = null; } }
+    function beginPress(e){
       try{ if(e && e.button !== undefined && e.button !== 0) return; }catch(_e){}
-      if(recentlyHandled()){
-        stopEvent(e, true);
-        return;
-      }
-      stopEvent(e, true);
-      clearHoldOnly();
-      pressActive = true;
+      /* 짧은 누름은 click 이벤트가 가장 안정적이다. 여기서 preventDefault를 걸면
+         Android/iPhone WebView에서 click이 사라져 새로고침이 실행되지 않을 수 있다. */
+      stopEvent(e, false);
+      clearHold();
+      pressStarted = true;
       longActionFired = false;
-      try{
-        activePointerId = (e && e.pointerId !== undefined) ? e.pointerId : null;
-        if(activePointerId !== null && refreshBtn.setPointerCapture) refreshBtn.setPointerCapture(activePointerId);
-        refreshBtn.style.webkitUserSelect = 'none';
-        refreshBtn.style.userSelect = 'none';
-        refreshBtn.style.webkitTouchCallout = 'none';
-      }catch(_e){}
       holdTimer = setTimeout(function(){
         holdTimer = null;
-        if(!pressActive || recentlyHandled()) return;
+        if(!pressStarted || longActionFired) return;
         longActionFired = true;
-        pressActive = false;
-        markHandled(1800);
+        pressStarted = false;
+        suppressClickUntil = now() + 1600;
         vibrateLong();
         if(typeof clearAppFilesCacheCompletely === 'function') clearAppFilesCacheCompletely();
       }, CACHE_HOLD_MS);
     }
-    function releasePress(e){
-      stopEvent(e, true);
-      if(recentlyHandled()){
-        resetPress();
-        return;
-      }
-      if(!pressActive){
-        resetPress();
-        return;
-      }
-      pressActive = false;
-      clearHoldOnly();
-      if(!longActionFired){
-        markHandled(1000);
-        vibrateShort();
-        if(typeof refreshAppFilesOnly === 'function') refreshAppFilesOnly();
-      }
+    function endPress(e){
+      stopEvent(e, false);
+      pressStarted = false;
+      clearHold();
     }
     function cancelPress(e){
       stopEvent(e, false);
-      resetPress();
+      pressStarted = false;
+      clearHold();
     }
-    function preventNativePressMenu(e){
+    function shortRefresh(e){
       stopEvent(e, true);
-      return false;
+      if(now() < suppressClickUntil || longActionFired){
+        longActionFired = false;
+        return;
+      }
+      pressStarted = false;
+      clearHold();
+      vibrateShort();
+      if(typeof refreshAppFilesOnly === 'function') refreshAppFilesOnly();
     }
+    function preventNativePressMenu(e){ stopEvent(e, true); return false; }
 
-    /* PointerEvent가 있는 Android/iPhone/데스크톱은 pointer 계열만 사용한다.
-       touch/mouse까지 동시에 묶으면 한 번 누름이 두 번 처리되어 진동·새로고침 타이밍이 어긋난다. */
     if(window.PointerEvent){
-      on(refreshBtn, 'pointerdown', armPress, {passive:false});
-      on(refreshBtn, 'pointerup', releasePress, {passive:false});
+      on(refreshBtn, 'pointerdown', beginPress, {passive:false});
+      on(refreshBtn, 'pointerup', endPress, {passive:false});
       on(refreshBtn, 'pointercancel', cancelPress, {passive:false});
       on(refreshBtn, 'pointerleave', function(e){
         try{ if(e && e.pointerType === 'mouse') cancelPress(e); }catch(_e){}
       }, {passive:false});
     }else{
-      on(refreshBtn, 'touchstart', armPress, {passive:false});
-      on(refreshBtn, 'touchend', releasePress, {passive:false});
-      on(refreshBtn, 'touchcancel', cancelPress, {passive:false});
-      on(refreshBtn, 'mousedown', armPress, {passive:false});
-      on(refreshBtn, 'mouseup', releasePress, {passive:false});
+      on(refreshBtn, 'touchstart', beginPress, {passive:true});
+      on(refreshBtn, 'touchend', endPress, {passive:true});
+      on(refreshBtn, 'touchcancel', cancelPress, {passive:true});
+      on(refreshBtn, 'mousedown', beginPress, {passive:false});
+      on(refreshBtn, 'mouseup', endPress, {passive:false});
       on(refreshBtn, 'mouseleave', cancelPress, {passive:false});
     }
+    on(refreshBtn, 'click', shortRefresh, {capture:true});
     on(refreshBtn, 'contextmenu', preventNativePressMenu, {capture:true});
     on(refreshBtn, 'selectstart', preventNativePressMenu, {capture:true});
     on(refreshBtn, 'dragstart', preventNativePressMenu, {capture:true});
-    on(refreshBtn, 'click', function(e) {
-      stopEvent(e, true);
-      if(recentlyHandled()) return;
-      markHandled(1000);
-      vibrateShort();
-      if(typeof refreshAppFilesOnly === 'function') refreshAppFilesOnly();
-    });
   })();
   on('qna-cover-btn',  'click', function() { openQnaView(); });
   on('pwa-install-btn','click', function() { triggerPwaInstall(); });
