@@ -165,7 +165,7 @@
 
 
   /* ─────────────────────────────────────────────
-     V1-18 기도문 전용 뒤로가기 컨트롤러 — history 단계 분리 제거
+     V1-19 기도문 전용 뒤로가기 컨트롤러 — history 단계 분리 제거
 
      원칙:
      1) 다른 정상 카테고리처럼 실제 history는 공통 root/trap 한 쌍만 사용한다.
@@ -217,7 +217,7 @@
     return !!yes;
   }
   function armPrayerBackTrap(reason){
-    /* 호환용 함수. V1-18부터 기도문 detail/list용 별도 pushState는 만들지 않는다.
+    /* 호환용 함수. V1-19부터 기도문 detail/list용 별도 pushState는 만들지 않는다.
        공통 컨트롤러가 이미 갖고 있는 root/trap을 유지하는 것만 필요하다. */
     try{
       if(isPrayerOpen() && typeof window._ensureAppBackTrap === 'function'){
@@ -272,26 +272,27 @@
     }catch(e){ console.warn('[가톨릭길동무]', e); }
   }
   function settleCoverTrapAfterPrayer(reason){
-    // V1-18: 기도문 팝업 Back은 이미 trap을 한 번 소비한 직후라,
-    // popstate 안에서 즉시 push한 trap이 Android/PWA에서 안정적으로 남지 않는 경우가 있었다.
-    // 그래서 커버 DOM을 확정한 뒤, popstate가 끝난 다음 프레임에서 커버 trap을 다시 한 번 확정한다.
-    function run(tag, force){
+    // V1-19: 기도문 팝업 → 커버 후에는 이미 공통 컨트롤러가 history.go(1)로 trap을 복원한 상태다.
+    // 여기서 replaceState/pushState를 강제로 반복하면 Android/PWA에서 다음 Back이 앱 종료로 오판될 수 있다.
+    // 따라서 현재 trap이 살아 있으면 그대로 두고, 없을 때만 최소한으로 보강한다.
+    function run(tag){
       try{
         if(document.documentElement.classList.contains('app-active')) return;
         var mq = prayerPopup();
         if(mq && mq.classList.contains('show')) return;
         if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
         if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
-        if(force && typeof window._resetCoverBackTrap === 'function') window._resetCoverBackTrap((reason||'prayer-cover') + '-' + tag);
-        else if(typeof window._ensureCoverBackTrap === 'function') window._ensureCoverBackTrap((reason||'prayer-cover') + '-' + tag);
-        else ensureCoverTrapAfterPrayer((reason||'prayer-cover') + '-' + tag);
+        if(typeof window._ensureCoverBackTrap === 'function') window._ensureCoverBackTrap((reason||'prayer-cover') + '-' + tag);
+        else {
+          var st = history.state;
+          if(!(st && st._p === 1)) ensureCoverTrapAfterPrayer((reason||'prayer-cover') + '-' + tag);
+        }
       }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
-    run('now', true);
-    setTimeout(function(){ run('after-popstate', true); }, 0);
-    if(window.requestAnimationFrame) window.requestAnimationFrame(function(){ run('raf', false); });
-    setTimeout(function(){ run('settle-80', false); }, 80);
-    setTimeout(function(){ run('settle-240', false); }, 240);
+    run('now');
+    setTimeout(function(){ run('after-popstate'); }, 0);
+    if(window.requestAnimationFrame) window.requestAnimationFrame(function(){ run('raf'); });
+    setTimeout(function(){ run('settle-80'); }, 80);
   }
   function resetPrayerToCover(reason){
     try{
@@ -325,7 +326,7 @@
       var fromQuick = isPrayerQuickSource();
       if(!fromQuick) return resetPrayerToCover(reason || 'prayer-list-cover');
 
-      /* V1-18: 기도문 목록 → 빠른메뉴 팝업 복귀는 직접 팝업을 띄우지 않는다.
+      /* V1-19: 기도문 목록 → 빠른메뉴 팝업 복귀는 직접 팝업을 띄우지 않는다.
          사용자의 Back으로 공통 trap이 일단 소비된 직후라, 이 자리에서 openMassQuickMenu()를
          바로 호출하면 Android/PWA에서 history.go(1) 복원 타이밍과 겹쳐 팝업 Back이 앱 종료로
          먹힐 수 있다. 기존 안정 함수 _returnToMassQuickMenu('prayer')에게 맡기면,
@@ -668,7 +669,7 @@
   if(window.__APP_FONT_SCALE_GUARD__) return;
   window.__APP_FONT_SCALE_GUARD__=true;
   // V37: 문의·건의는 qa-firebase.html 한 경로로만 통일한다.
-  var QA_URL="qa-firebase.html?v=V1-18";
+  var QA_URL="qa-firebase.html?v=V1-19";
   var FONT_KEY='prayer_font_size', BASE=16, SIZES=[13,14,15,16,17,18,19,20,21,22,24,26,28,30];
   function el(id){return document.getElementById(id)}
   function getPx(){var px=parseInt(localStorage.getItem(FONT_KEY)||BASE,10);return (px>=13&&px<=30)?px:BASE;}
