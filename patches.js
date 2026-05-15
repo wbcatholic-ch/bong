@@ -190,8 +190,7 @@
   function isPrayerQuickSource(){
     var pv = prayerView();
     var yes = false;
-    try{ if(pv && pv.dataset && (pv.dataset.quickSource === 'prayer' || pv.dataset.quickSource === 'mass')) yes = true; }catch(_e){}
-    try{ if(window.__PRAYER_QUICK_RETURN__ === true) yes = true; }catch(_e){}
+    try{ if(pv && pv.dataset && pv.dataset.quickSource === 'mass') yes = true; }catch(_e){}
     try{ if(window.__OAI_PRAYER_FROM_QUICK_LOCK__ === true) yes = true; }catch(_e){}
     try{ if(sessionStorage.getItem('oai_prayer_from_quick_lock') === '1') yes = true; }catch(_e){}
     try{ if(typeof window._shouldPrayerQuickReturn === 'function' && window._shouldPrayerQuickReturn()) yes = true; }catch(_e){}
@@ -199,14 +198,12 @@
   }
   function keepPrayerQuickSource(on){
     try{ if(typeof window._setPrayerQuickReturn === 'function') window._setPrayerQuickReturn(!!on); }catch(_e){}
-    try{ window.__PRAYER_QUICK_RETURN__ = !!on; }catch(_e){}
-    try{ window.__MASS_QUICK_FROM_PRAYER__ = false; }catch(_e){}
     try{ window.__OAI_PRAYER_FROM_QUICK_LOCK__ = !!on; }catch(_e){}
     try{ if(on) sessionStorage.setItem('oai_prayer_from_quick_lock','1'); else sessionStorage.removeItem('oai_prayer_from_quick_lock'); }catch(_e){}
     try{
       var pv = prayerView();
       if(pv && pv.dataset){
-        if(on) pv.dataset.quickSource = 'prayer';
+        if(on) pv.dataset.quickSource = 'mass';
         else delete pv.dataset.quickSource;
       }
     }catch(_e){}
@@ -258,11 +255,10 @@
     try{ if(typeof window._setPrayerPopupReturnSource === 'function') window._setPrayerPopupReturnSource(false); }catch(_e){}
     try{ if(typeof window._clearPrayerQuickReturn === 'function') window._clearPrayerQuickReturn(); }catch(_e){}
     try{ if(typeof window._clearMassQuickReturnForReload === 'function') window._clearMassQuickReturnForReload(); }catch(_e){}
-    try{ window.__PRAYER_QUICK_RETURN__ = false; }catch(_e){}
-    try{ window.__MASS_QUICK_FROM_PRAYER__ = false; }catch(_e){}
     try{ window.__OAI_PRAYER_FROM_QUICK_LOCK__ = false; }catch(_e){}
     try{ sessionStorage.removeItem('oai_prayer_from_quick_lock'); }catch(_e){}
     try{ window.__OAI_PRAYER_POPUP_COVER_GUARD_UNTIL__ = 0; }catch(_e){}
+    try{ window.__OAI_PRAYER_COVER_FORCE_FIRST_TOAST_UNTIL__ = 0; }catch(_e){}
   }
   function ensureCoverTrapAfterPrayer(reason){
     try{
@@ -286,11 +282,14 @@
       hidePrayerOnly();
       showCoverOnlyForPrayer();
       resetPrayerFlags();
-      try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(_e){}
-      try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(_e){}
-      // 기도문 팝업에서 커버로 온 직후 첫 Back은 반드시 종료 안내가 되게 한다.
-      try{ window.__OAI_PRAYER_COVER_FORCE_FIRST_TOAST_UNTIL__ = Date.now() + 10000; }catch(_e){}
-      ensureCoverTrapAfterPrayer(reason || 'prayer-cover-reset');
+      try{
+        if(typeof window._enterCoverBackMode === 'function') window._enterCoverBackMode(reason || 'prayer-cover-reset');
+        else {
+          if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
+          if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
+          ensureCoverTrapAfterPrayer(reason || 'prayer-cover-reset');
+        }
+      }catch(_e){}
       return true;
     }catch(e){ console.warn('[가톨릭길동무]', e); return true; }
   }
@@ -410,17 +409,8 @@
       return;
     }
 
-    /* 커버: 토스트 → 두 번째에 종료.
-       기도문 팝업에서 막 커버로 온 경우에는 첫 Back이 무조건 안내가 되도록 강제한다. */
+    /* 커버: 토스트 → 두 번째에 종료. */
     if(!appActive()){
-      try{
-        var forceFirstToastUntil = Number(window.__OAI_PRAYER_COVER_FORCE_FIRST_TOAST_UNTIL__ || 0);
-        if(forceFirstToastUntil && Date.now() < forceFirstToastUntil){
-          window.__OAI_PRAYER_COVER_FORCE_FIRST_TOAST_UNTIL__ = 0;
-          if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
-          if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
-        }
-      }catch(e){ console.warn('[가톨릭길동무]', e); }
       var exiting = false;
       if(typeof window._showBackToast==='function') exiting = window._showBackToast() === true;
       if(!exiting){ try{ history.pushState({_p:1}, '', _href); }catch(e){ console.warn("[가톨릭길동무]", e); } }
