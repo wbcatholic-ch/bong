@@ -564,9 +564,9 @@ function _resumeMassQuickReturnIfNeeded(){
         }
       }catch(e){ console.warn("[가톨릭길동무]", e); }
       finally{
-        setTimeout(function(){ _massQuickResumeBusy = false; }, 250);
+        setTimeout(function(){ _massQuickResumeBusy = false; }, 420);
       }
-    }, 0);
+    }, 160);
     return true;
   }catch(e){ console.warn("[가톨릭길동무]", e); return false; }
 }
@@ -612,7 +612,7 @@ function _runRefreshAppFilesOnly(){
   try{
     if(btn){
       btn.disabled = true;
-      btn.textContent = '새로고침 중';
+      btn.setAttribute('aria-busy','true');
     }
     if(document.activeElement && document.activeElement.blur) document.activeElement.blur();
     // V37: 새로고침 전에는 레이아웃/스크롤/모달 DOM을 건드리지 않고,
@@ -661,8 +661,9 @@ function _showRefreshContentDialog(onConfirm){
   }
 }
 function refreshAppFilesOnly(){
-  // 브라우저 기본 confirm은 도메인/저장소 이름이 제목처럼 붙을 수 있어 앱 내부 팝업으로 대체한다.
-  _showRefreshContentDialog(_runRefreshAppFilesOnly);
+  // 짧게 누르기는 확인 팝업 없이 바로 새로고침한다.
+  // 캐시 초기화 확인창은 새로고침 버튼을 길게 누를 때만 사용한다.
+  _runRefreshAppFilesOnly();
 }
 window.refreshAppFilesOnly = refreshAppFilesOnly;
 
@@ -732,7 +733,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V2-3';
+    var target = btn.getAttribute('data-target-version') || 'V2-2A';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -1032,7 +1033,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V2-3';
+    frame.src='diocese.html?v=V2-2A';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -1782,17 +1783,6 @@ function goToCover(){
   // 정상 카테고리뿐 아니라 팝업/기도문/외부복귀 경로에서도
   // 이전 _exitReady=true가 남아 커버 첫 뒤로가기에서 바로 종료되는 것을 막는다.
   try{ if(typeof _resetCoverExitReady === 'function') _resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }
-
-  // 커버에서는 반드시 [커버 루트(0) → 커버 트랩(1)] 구조를 다시 세운다.
-  // 현재 state가 _p:1처럼 보여도 바로 뒤 항목이 외부/브라우저 루트일 수 있으므로
-  // goToCover 진입마다 커버용 트랩을 확정해야 첫 Back에서 종료 안내가 뜬다.
-  try{
-    var restoringUntil = Number(window.__OAI_BACK_RESTORING_UNTIL__ || 0);
-    if(!(restoringUntil && Date.now() < restoringUntil) && typeof _resetCoverBackTrap === 'function'){
-      if(window.requestAnimationFrame) requestAnimationFrame(function(){ _resetCoverBackTrap('go-to-cover'); });
-      else setTimeout(function(){ _resetCoverBackTrap('go-to-cover'); }, 0);
-    }
-  }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
 
 function _loadMap(){
@@ -2322,7 +2312,7 @@ function _mkrImgRetreat(color,big){
 }
 function _mkrImg(color,big){
   const w=big?40:28,h=big?52:36;
-  // V2-3: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
+  // V2-2A: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
   // This removes the purple emoji background and keeps a plain white cross.
   const crossBig = `<g fill="#fff" opacity="0.96"><rect x="18.45" y="10.5" width="3.1" height="18.5" rx="1.1"/><rect x="13.4" y="16.3" width="13.2" height="3.1" rx="1.1"/></g>`;
   const crossSmall = `<g fill="#fff" opacity="0.96"><rect x="12.85" y="7.8" width="2.3" height="12.8" rx="0.8"/><rect x="9.6" y="11.7" width="8.8" height="2.3" rx="0.8"/></g>`;
@@ -4171,8 +4161,8 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
     var pressActive = false;
     var cacheActionFired = false;
     var handledUntil = 0;
-    // 짧게 누르면 일반 새로고침, 길게 누르면 캐시 초기화 팝업을 바로 연다.
-    var CACHE_HOLD_MS = 900;
+    // 짧은 탭과 보통 길게 누른 뒤 놓기는 일반 새로고침, 더 오래 누르면 캐시 초기화.
+    var CACHE_HOLD_MS = 1350;
     function now(){ return Date.now ? Date.now() : new Date().getTime(); }
     function markHandled(ms){
       handledUntil = now() + (ms || 900);
@@ -4216,7 +4206,6 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
         cacheActionFired = true;
         pressActive = false;
         markHandled(1600);
-        // 캐시 팝업 직전 별도 진동은 주지 않는다. Android 기본 롱프레스 진동과 겹쳐 혼란을 줄 수 있다.
         if(typeof clearAppFilesCacheCompletely === 'function') clearAppFilesCacheCompletely();
       }, CACHE_HOLD_MS);
     }
