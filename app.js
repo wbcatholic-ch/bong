@@ -220,14 +220,23 @@ function _ensureCoverBackTrap(){
 function _resetCoverBackTrap(reason){
   /* 주요기도문 → 빠른메뉴 팝업 → 커버로 돌아온 직후에는 현재 history.state가 _p:1처럼 보여도
      바로 뒤 항목이 앱 내부 루트(_p:0)라고 보장할 수 없다. 커버에서 첫 Back이 앱 종료로 빠지지 않도록
-     현재 항목을 커버 루트로 바꾸고 새 트랩을 한 칸 다시 심는다. */
+     현재 항목을 커버 루트로 바꾸고 새 트랩을 다시 심는다.
+
+     V1-12: 일반 카테고리 흐름은 건드리지 않고, prayer 경로에서만 커버 트랩을 한 칸 더 둔다.
+     Android/PWA에서 기도문 팝업을 닫은 직후 첫 trap이 소비되거나 무시되어도,
+     다음 Back이 바로 앱 종료로 빠지지 않고 반드시 _showBackToast()까지 도달하게 하기 위함이다. */
   try{
     if(document.documentElement.classList.contains('app-active')) return;
     var modal=document.getElementById('mass-quick-modal');
     if(modal && modal.classList.contains('show')) return;
     var href = location.href.split('#')[0];
-    history.replaceState({_p:0, oai_cover_root:reason||'cover'}, '', href);
-    history.pushState({_p:1, oai_cover_trap:reason||'cover'}, '', href);
+    var label = reason || 'cover';
+    var isPrayerCover = /prayer/i.test(String(label));
+    history.replaceState({_p:0, oai_cover_root:label}, '', href);
+    if(isPrayerCover){
+      history.pushState({_p:1, oai_prayer_cover_mid:label}, '', href);
+    }
+    history.pushState({_p:1, oai_cover_trap:label}, '', href);
   }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
 function _ensureAppBackTrap(reason){
@@ -398,7 +407,6 @@ function _forceCoverAfterPrayerQuickPopup(){
     _resetCoverExitReady();
     _clearCoverExitArmed();
     // 기도문 팝업에서 커버로 온 직후 첫 Back은 반드시 안내만 표시한다.
-    // V1-10처럼 goToCover 전체 흐름은 건드리지 않고, 기도문 팝업 종료 지점에서만 보호한다.
     _markPrayerCoverNeedsFirstToast(true);
     try{
       window.__OAI_PRAYER_POPUP_COVER_GUARD_UNTIL__ = 0;
@@ -766,7 +774,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V1-11';
+    var target = btn.getAttribute('data-target-version') || 'V1-12';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -1094,7 +1102,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V1-11';
+    frame.src='diocese.html?v=V1-12';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
