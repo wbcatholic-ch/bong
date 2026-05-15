@@ -359,6 +359,7 @@
         }
       }catch(e){ console.warn('[가톨릭길동무]', e); }
       if(typeof window._showBackToast==='function') window._showBackToast();
+      else if(typeof window._scheduleCoverBackTrap === 'function') window._scheduleCoverBackTrap('cover-popstate-fallback');
       return;
     }
 
@@ -384,9 +385,13 @@
   }, false);
 
   // 외부 사이트 방문 후 복귀 시 history 트랩 강제 재확립.
-  // 트랩이 소실되면 다음 뒤로가기에서 앱이 탈출된다.
+  // 커버에서는 반드시 커버 전용 trap을 세워 첫 Back이 앱 종료로 바로 빠지지 않게 한다.
   window.addEventListener('pageshow', function(){
     try{
+      if(!appActive() && typeof window._scheduleCoverBackTrap === 'function'){
+        window._scheduleCoverBackTrap('pageshow-cover');
+        return;
+      }
       var st = history.state;
       if(st && st._p === 1) return;  // 트랩 유지 중이면 스킵
       history.replaceState({_p:0}, '', _href);
@@ -552,7 +557,7 @@
   if(window.__APP_FONT_SCALE_GUARD__) return;
   window.__APP_FONT_SCALE_GUARD__=true;
   // V37: 문의·건의는 qa-firebase.html 한 경로로만 통일한다.
-  var QA_URL="qa-firebase.html?v=V2-4";
+  var QA_URL="qa-firebase.html?v=V2-5";
   var FONT_KEY='prayer_font_size', BASE=16, SIZES=[13,14,15,16,17,18,19,20,21,22,24,26,28,30];
   function el(id){return document.getElementById(id)}
   function getPx(){var px=parseInt(localStorage.getItem(FONT_KEY)||BASE,10);return (px>=13&&px<=30)?px:BASE;}
@@ -994,18 +999,11 @@
     try{ sessionStorage.removeItem('oai_force_cover_after_reload'); }catch(e){ console.warn('[가톨릭길동무]', e); }
     try{ if(typeof window._clearMassQuickReturnForReload === 'function') window._clearMassQuickReturnForReload(); }catch(e){ console.warn('[가톨릭길동무]', e); }
     try{
-      document.documentElement.classList.remove('app-active','parish-mode','retreat-mode','oai-returning');
-      closeTransientViews();
-      closeGuideModals();
-      if(cover){
-        cover.style.display='';
-        cover.style.opacity='';
-        cover.style.pointerEvents='';
-        cover.classList.remove('pulling','refreshing');
-        cover.scrollTop=0;
-      }
-      window.scrollTo(0,0);
+      // 당겨서 새로고침 종료 순간에 app-active/class/scroll을 건드리면 커버 전체가 좌우로 흔들려 보일 수 있다.
+      // 현재 커버 DOM은 그대로 두고 표시기만 정리한다.
+      if(cover) cover.classList.remove('pulling','refreshing');
       hideIndicator(ind);
+      if(typeof window._scheduleCoverBackTrap === 'function') window._scheduleCoverBackTrap('soft-cover-refresh');
     }catch(e){ console.warn('[가톨릭길동무]', e); }
   };
 
@@ -1096,6 +1094,7 @@
     if(now && !lastCover){
       clearNativeExitToast();
       try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(e){ console.warn("[가톨릭길동무]", e); }
+      try{ if(typeof window._scheduleCoverBackTrap === 'function') window._scheduleCoverBackTrap('cover-entry'); }catch(e){ console.warn("[가톨릭길동무]", e); }
     }
     lastCover=now;
   }
@@ -1111,7 +1110,8 @@
       // '커버가 아니었다가 커버가 됨' 조건에만 의존하면 첫 뒤로가기에서 바로 종료될 수 있다.
       clearNativeExitToast();
       try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(e){ console.warn("[가톨릭길동무]", e); }
-      setTimeout(function(){fixRetreatTabLabel();resetNativeExitToastIfCover();},0);
+      try{ if(typeof window._scheduleCoverBackTrap === 'function') window._scheduleCoverBackTrap('goToCover-wrapper'); }catch(e){ console.warn("[가톨릭길동무]", e); }
+      setTimeout(function(){fixRetreatTabLabel();resetNativeExitToastIfCover(); if(typeof window._scheduleCoverBackTrap === 'function') window._scheduleCoverBackTrap('goToCover-wrapper-settle');},0);
       return r;
     };
   }
@@ -1124,7 +1124,7 @@
       return r;
     };
   }
-  function boot(){fixRetreatTabLabel();resetNativeExitToastOnCoverEntry();}
+  function boot(){fixRetreatTabLabel();resetNativeExitToastOnCoverEntry();try{if(isCover()&&typeof window._scheduleCoverBackTrap==='function')window._scheduleCoverBackTrap('boot-cover');}catch(e){console.warn('[가톨릭길동무]',e);}}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
   window.addEventListener('load',function(){boot();setTimeout(boot,200);},{once:true});
   // pageshow에서 종료 대기값을 지우지 않는다. 커버 진입/복귀 시에는 goToCover와 class 변화 감지에서만 초기화한다.
