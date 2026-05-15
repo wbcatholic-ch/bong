@@ -423,7 +423,7 @@ function prOpenDetail(prayer){
   ttl.textContent = prayer.title;
   content.innerHTML = ((prayer.content||prayer.body||'')+'').replace(/class="symbol"/g,'class="pr-symbol"');
   detail.classList.add('show');
-  /* V1-8: 본문은 실제 history 한 칸을 만든다.
+  /* V1-9: 본문은 실제 history 한 칸을 만든다.
      이렇게 해야 Android/PWA에서 본문 Back이 앱 종료로 빠지지 않고 반드시 본문 → 목록으로 처리된다. */
   try{ if(typeof window._oaiPrayerPushDetailState === 'function') window._oaiPrayerPushDetailState('prayer-detail-open'); }
   catch(e){ console.warn('[가톨릭길동무]', e); }

@@ -297,7 +297,7 @@ function _hideMassQuickMenuOnly(afterHidden, opts){
     }
   }
 
-  /* V1-8: 빠른메뉴에서 주요기도문으로 들어갈 때 기존 팝업 history를 pop하지 않는다.
+  /* V1-9: 빠른메뉴에서 주요기도문으로 들어갈 때 기존 팝업 history를 pop하지 않는다.
      기도문은 내부 카테고리이므로 스택을 그대로 두고 그 위에 prayer-list / prayer-detail을
      쌓아야 목록 → 팝업 → 커버 흐름이 안정적으로 작동한다. */
 
@@ -745,7 +745,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V1-8';
+    var target = btn.getAttribute('data-target-version') || 'V1-9';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -947,7 +947,7 @@ function closePrayerView(){
   }
 }
 function _closePrayerAndReturn(){
-  /* V1-8: 기도문 닫기는 기도문 전용 컨트롤러 한 곳으로만 보낸다.
+  /* V1-9: 기도문 닫기는 기도문 전용 컨트롤러 한 곳으로만 보낸다.
      예전 _returnToMassQuickMenu()/goToCover fallback이 같이 남아 있으면
      목록→팝업 또는 본문→목록 단계에서 공통 뒤로가기와 다시 충돌한다. */
   try{
@@ -1060,7 +1060,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V1-8';
+    frame.src='diocese.html?v=V1-9';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }

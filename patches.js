@@ -162,7 +162,7 @@
   var _restoring = false;
 
   /* ─────────────────────────────────────────────
-     V1-8 기도문 전용 뒤로가기 컨트롤러 — 기존 트랩 덮어쓰기 제거형
+     V1-9 기도문 전용 뒤로가기 컨트롤러 — 기존 트랩 덮어쓰기 제거형
 
      이번 구조의 핵심:
      - 기도문은 앱 내부 카테고리이므로 매일미사/성가 외부 복귀와 분리한다.
@@ -213,18 +213,19 @@
     try{ window.__OAI_PRAYER_STEP = step || ''; }catch(_e){}
     try{ if(step) sessionStorage.setItem('oai_prayer_step', step); else sessionStorage.removeItem('oai_prayer_step'); }catch(_e){}
   }
-  function pushPrayerState(step, reason){
+  function resetPrayerTrap(step, reason){
+    /* V1-9: 기도문은 이전 히스토리 상태에 덧붙이지 않고,
+       각 화면 단계마다 현재 위치를 루트로 바꾼 뒤 새 트랩 한 칸만 심는다.
+       이렇게 해야 본문→목록, 목록→팝업, 팝업→커버 다음 Back이
+       브라우저 기본 종료로 빠지지 않고 반드시 이 컨트롤러로 들어온다. */
     try{
       var href=location.href.split('#')[0];
+      history.replaceState({_p:0, oai_prayer_root:step, oai_prayer_reason:reason||step}, '', href);
       history.pushState({_p:1, oai_prayer_step:step, oai_prayer_reason:reason||step}, '', href);
     }catch(e){ console.warn('[가톨릭길동무]', e); }
   }
-  function replacePrayerState(step, reason){
-    try{
-      var href=location.href.split('#')[0];
-      history.replaceState({_p:1, oai_prayer_step:step, oai_prayer_reason:reason||step}, '', href);
-    }catch(e){ console.warn('[가톨릭길동무]', e); }
-  }
+  function pushPrayerState(step, reason){ resetPrayerTrap(step, reason); }
+  function replacePrayerState(step, reason){ resetPrayerTrap(step, reason); }
   function hidePrayerOnly(){
     try{ var d=prayerDetail(); if(d) d.classList.remove('show'); }catch(_e){}
     try{
@@ -279,6 +280,7 @@
       if(typeof window.showPrayerListOnly === 'function') window.showPrayerListOnly();
       setPrayerQuickSource(!!fromQuick);
       setPrayerStep('list');
+      resetPrayerTrap('list', reason || 'prayer-detail-list');
       return true;
     }catch(e){ console.warn('[가톨릭길동무]', e); return true; }
   }
@@ -297,9 +299,9 @@
       try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(_e){}
       var mq=prayerPopup();
       if(mq){ try{ mq.dataset.returnSource='prayer'; }catch(_e){} mq.classList.add('show'); mq.setAttribute('aria-hidden','false'); }
-      /* 팝업 단계도 실제 history 한 칸을 만들어 둔다. 그래야 다음 Back이 앱 종료로 빠지지 않고
-         반드시 popstate를 발생시켜 popup → cover를 처리한다. */
-      pushPrayerState('popup', reason || 'prayer-list-popup');
+      /* 팝업도 커버 위의 실제 앱 내부 단계다. 현재 위치를 루트로 바꾸고
+         새 트랩을 다시 심어 다음 Back이 반드시 popup → cover로 들어오게 한다. */
+      resetPrayerTrap('popup', reason || 'prayer-list-popup');
       return true;
     }catch(e){ console.warn('[가톨릭길동무]', e); return true; }
   }
@@ -336,7 +338,7 @@
   }
   try{
     window._oaiPrayerEnter = enterPrayerFlow;
-    window._oaiArmPrayerBackTrap = function(reason){ setPrayerStep('list'); replacePrayerState('list', reason || 'prayer-list'); };
+    window._oaiArmPrayerBackTrap = function(reason){ setPrayerStep('list'); resetPrayerTrap('list', reason || 'prayer-list'); };
     window._oaiPrayerPushDetailState = function(reason){ markPrayerDetail(reason || 'prayer-detail'); };
     window._oaiPrayerReplaceListState = function(reason){ replaceListState(reason || 'prayer-detail-button-to-list'); };
     window._oaiPrayerBackActive = function(){ return (isPrayerPopupOpen() && isPrayerPopupSource()) || isPrayerDetailShowing() || isPrayerOpen(); };
@@ -367,7 +369,7 @@
   window.addEventListener('popstate', function(){
     if(window._appExiting) return;
 
-    /* V1-8: 기도문은 _restoring 값과 무관하게 항상 최우선으로 처리한다.
+    /* V1-9: 기도문은 _restoring 값과 무관하게 항상 최우선으로 처리한다.
        이전 버전에서는 다른 화면의 history.go(1) 복원 플래그(_restoring)가 남아 있으면
        기도문 전용 핸들러가 건너뛰어졌고, 그 결과 기도문 목록/본문에서 다음 Back이
        브라우저 기본 뒤로가기로 빠져 앱 종료가 발생했다.
@@ -380,7 +382,7 @@
       }
     }
 
-    /* V1-8: 기존 기도문 팝업/커버 보정 블록은 사용하지 않는다.
+    /* V1-9: 기존 기도문 팝업/커버 보정 블록은 사용하지 않는다.
        기도문 단계는 위의 단독 컨트롤러만 처리한다. */
 
     /* 빠른메뉴에서 주요기도문으로 진입하기 위해 팝업용 mq history state를
@@ -628,7 +630,7 @@
   if(window.__APP_FONT_SCALE_GUARD__) return;
   window.__APP_FONT_SCALE_GUARD__=true;
   // V37: 문의·건의는 qa-firebase.html 한 경로로만 통일한다.
-  var QA_URL="qa-firebase.html?v=V1-8";
+  var QA_URL="qa-firebase.html?v=V1-9";
   var FONT_KEY='prayer_font_size', BASE=16, SIZES=[13,14,15,16,17,18,19,20,21,22,24,26,28,30];
   function el(id){return document.getElementById(id)}
   function getPx(){var px=parseInt(localStorage.getItem(FONT_KEY)||BASE,10);return (px>=13&&px<=30)?px:BASE;}
