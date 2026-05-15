@@ -197,16 +197,22 @@ function _isCoverExitArmed(){
     return !!(until && Date.now() < until);
   }catch(e){ return false; }
 }
-function _ensureCoverBackTrap(){
+function _ensureCoverBackTrap(reason){
   try{
     if(document.documentElement.classList.contains('app-active')) return;
+    if(window._appExiting) return;
+    /* 종료 안내가 이미 떠 있는 2.5초 동안에는 커버 history를 다시 만지지 않는다.
+       여기서 다시 replace/push 하면 두 번째 Back이 안내 상태를 잃고 앱 내부로 다시 잡힐 수 있다. */
+    try{ if(_exitReady || _isCoverExitArmed()) return; }catch(_e){}
     var modal=document.getElementById('mass-quick-modal');
     if(modal && modal.classList.contains('show')) return;
-    var st = history.state;
-    if(st && st._p === 1) return;
+    var st = history.state || {};
+    /* _p:1만 보고 안전하다고 판단하면 기도문/팝업에서 남은 trap을 커버 trap으로 오판한다.
+       커버에서는 반드시 oai_cover_trap 표식이 있는 상태만 유지하고, 아니면 커버 root→trap을 새로 확정한다. */
+    if(st._p === 1 && st.oai_cover_trap) return;
     var href = location.href.split('#')[0];
-    history.replaceState({_p:0}, '', href);
-    history.pushState({_p:1}, '', href);
+    history.replaceState({_p:0, oai_cover_root:reason||'cover-ensure'}, '', href);
+    history.pushState({_p:1, oai_cover_trap:reason||'cover-ensure'}, '', href);
   }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
 
@@ -391,10 +397,13 @@ function _forceCoverAfterPrayerQuickPopup(){
         if(document.documentElement.classList.contains('app-active')) return;
         var mq=document.getElementById('mass-quick-modal');
         if(mq && mq.classList.contains('show')) return;
+        /* 사용자가 커버에 도착하자마자 Back을 눌러 종료 안내가 뜬 경우,
+           뒤늦은 안정화 타이머가 안내 상태를 지우지 않도록 한다. */
+        try{ if(_exitReady || _isCoverExitArmed()) return; }catch(_e2){}
         _resetCoverExitReady();
         _clearCoverExitArmed();
         if(typeof _resetCoverBackTrap === 'function') _resetCoverBackTrap(reason);
-        else _ensureCoverBackTrap();
+        else _ensureCoverBackTrap(reason);
       }catch(_e){}
     }
     prime('prayer-popup-cover');
@@ -733,7 +742,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V2-6';
+    var target = btn.getAttribute('data-target-version') || 'V2-7';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -1032,7 +1041,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V2-6';
+    frame.src='diocese.html?v=V2-7';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -2320,7 +2329,7 @@ function _mkrImgRetreat(color,big){
 }
 function _mkrImg(color,big){
   const w=big?40:28,h=big?52:36;
-  // V2-6: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
+  // V2-7: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
   // This removes the purple emoji background and keeps a plain white cross.
   const crossBig = `<g fill="#fff" opacity="0.96"><rect x="18.45" y="10.5" width="3.1" height="18.5" rx="1.1"/><rect x="13.4" y="16.3" width="13.2" height="3.1" rx="1.1"/></g>`;
   const crossSmall = `<g fill="#fff" opacity="0.96"><rect x="12.85" y="7.8" width="2.3" height="12.8" rx="0.8"/><rect x="9.6" y="11.7" width="8.8" height="2.3" rx="0.8"/></g>`;
