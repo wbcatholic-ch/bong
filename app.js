@@ -765,7 +765,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V1-4';
+    var target = btn.getAttribute('data-target-version') || 'V1-5';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -1087,7 +1087,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V1-4';
+    frame.src='diocese.html?v=V1-5';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -1411,44 +1411,73 @@ function _kakaoKeywordDocsFromJs(query, max){
         resolve([]);
         return;
       }
-      var places = new kakao.maps.services.Places();
-      var pageLimit = Math.ceil(max / 15);
+      var pageLimit = Math.max(1, Math.ceil(max / 15));
       var groups = [];
-      var pageCount = 0;
+      var finished = 0;
       var settled = false;
 
+      function finishOne(){
+        finished += 1;
+        if(finished >= pageLimit){
+          /* 명시 page 요청이 먼저 끝나도 pagination.nextPage 보조 결과가 뒤늦게 올 수 있으므로
+             아주 짧게 기다린 뒤 마감한다. */
+          setTimeout(done, 700);
+        }
+      }
       function done(){
         if(settled) return;
         settled = true;
         resolve(_dedupeKakaoDocs(groups, max));
       }
+      function baseOpts(page){
+        var opts = { size: 15, page: page };
+        try{ if(kakao.maps.services.SortBy && kakao.maps.services.SortBy.ACCURACY) opts.sort = kakao.maps.services.SortBy.ACCURACY; }catch(_e){}
+        return opts;
+      }
 
-      /* Kakao JS Places는 병렬 page 옵션 호출보다 pagination.nextPage()가 안정적이다.
-         page=2가 무시되어 15개만 보이는 문제를 막기 위해 1페이지를 받은 뒤
-         pagination 객체로 다음 페이지를 순차 요청한다. */
-      var searchOpts = { size: 15 };
-      try{ if(kakao.maps.services.SortBy && kakao.maps.services.SortBy.ACCURACY) searchOpts.sort = kakao.maps.services.SortBy.ACCURACY; }catch(_e){}
-      places.keywordSearch(query, function(data, status, pagination){
-        try{
-          var OK = kakao.maps.services.Status.OK;
-          if(status === OK && data && data.length){
-            groups.push(data);
-            pageCount += 1;
-            if(_dedupeKakaoDocs(groups, max).length >= max){ done(); return; }
-            if(pagination && pagination.hasNextPage && pageCount < pageLimit){
-              setTimeout(function(){
-                try{ pagination.nextPage(); }catch(_e){ done(); }
-              }, 80);
-              return;
-            }
+      /* 30개가 필요한 검색은 명시적으로 page=1, page=2를 각각 요청한다.
+         기존 pagination.nextPage() 방식은 일부 Android/WebView 조합에서 1페이지 15개에서 멈출 수 있어
+         명시 page 요청을 기본으로 삼고, 아래 pagination 방식은 보조로만 사용한다. */
+      for(var page=1; page<=pageLimit; page++){
+        (function(p){
+          try{
+            var places = new kakao.maps.services.Places();
+            places.keywordSearch(query, function(data, status){
+              try{
+                var OK = kakao.maps.services.Status.OK;
+                if(status === OK && data && data.length) groups.push(data);
+              }catch(e){ console.warn('[가톨릭길동무]', e); }
+              finishOne();
+            }, baseOpts(p));
+          }catch(e){
+            console.warn('[가톨릭길동무]', e);
+            finishOne();
           }
-        }catch(e){
-          console.warn('[가톨릭길동무]', e);
-        }
-        done();
-      }, searchOpts);
+        })(page);
+      }
 
-      setTimeout(done, 4200);
+      /* 보조: 명시 page 요청이 15개에서 멈추는 환경을 대비해 pagination.nextPage도 함께 시도한다.
+         중복은 _dedupeKakaoDocs에서 제거한다. */
+      try{
+        var seqPlaces = new kakao.maps.services.Places();
+        var seqPages = 0;
+        seqPlaces.keywordSearch(query, function(data, status, pagination){
+          try{
+            var OK = kakao.maps.services.Status.OK;
+            if(status === OK && data && data.length){
+              groups.push(data);
+              seqPages += 1;
+              var hasNext = false;
+              try{ hasNext = !!(pagination && (pagination.hasNextPage === true || (typeof pagination.hasNextPage === 'function' && pagination.hasNextPage()))); }catch(_e){ hasNext = !!(pagination && pagination.hasNextPage); }
+              if(_dedupeKakaoDocs(groups, max).length < max && hasNext && seqPages < pageLimit && pagination && typeof pagination.nextPage === 'function'){
+                setTimeout(function(){ try{ pagination.nextPage(); }catch(_e){} }, 60);
+              }
+            }
+          }catch(e){ console.warn('[가톨릭길동무]', e); }
+        }, baseOpts(1));
+      }catch(e){ console.warn('[가톨릭길동무]', e); }
+
+      setTimeout(done, 5200);
     }catch(e){
       console.warn('[가톨릭길동무]', e);
       resolve([]);
@@ -1457,16 +1486,13 @@ function _kakaoKeywordDocsFromJs(query, max){
 }
 function _kakaoKeywordDocs(query, limit){
   var max = Math.max(1, parseInt(limit || 10, 10) || 10);
-  return _kakaoKeywordDocsFromRest(query, max).then(function(restDocs){
-    restDocs = restDocs || [];
-    /* 30개 후보가 필요한 지역검색/일반장소 검색은 REST 프록시와 Kakao JS Places를 합쳐서 채운다.
-       프록시가 page=2를 전달하지 못해 1페이지 15개만 돌아와도 JS 2페이지 결과를 합쳐 최대 30개까지 확보한다. */
-    if(restDocs.length >= max) return restDocs.slice(0, max);
-    return _kakaoKeywordDocsFromJs(query, max).then(function(jsDocs){
-      return _dedupeKakaoDocs([restDocs, jsDocs || []], max);
-    }).catch(function(){ return restDocs.slice(0, max); });
-  }).catch(function(){
-    return _kakaoKeywordDocsFromJs(query, max).then(function(jsDocs){ return (jsDocs || []).slice(0, max); });
+  var restPromise = _kakaoKeywordDocsFromRest(query, max).catch(function(){ return []; });
+  var jsPromise = _kakaoKeywordDocsFromJs(query, max).catch(function(){ return []; });
+
+  /* REST 프록시가 page=2를 넘기지 못하거나, JS SDK가 특정 WebView에서 1페이지만 주는 경우를 대비해
+     두 경로를 항상 병합한다. 어느 한쪽이 15개에서 멈춰도 다른 경로의 page=2 결과가 들어오면 30개까지 표시된다. */
+  return Promise.all([restPromise, jsPromise]).then(function(groups){
+    return _dedupeKakaoDocs(groups, max);
   });
 }
 const TC    = {'성지':'#c0392b','순례지':'#1565c0','순교 사적지':'#1b7a3e'};

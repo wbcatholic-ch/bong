@@ -163,7 +163,7 @@
 
 
   /* ─────────────────────────────────────────────
-     V1-4 기도문 전용 뒤로가기 컨트롤러 — 단순 트랩 방식
+     V1-5 기도문 전용 뒤로가기 컨트롤러 — 단순 트랩 방식
 
      핵심 원칙:
      - 기도문은 앱 내부 화면이다. 매일미사/성가의 외부 복귀 흐름과 섞지 않는다.
@@ -217,13 +217,10 @@
   function armSinglePrayerTrap(reason){
     try{
       var href=location.href.split('#')[0];
-      var st=history.state;
-      if(st && st._p === 1){
-        try{ st.oai_prayer_trap = reason || 'prayer'; }catch(_e){}
-        history.replaceState(st || {_p:1, oai_prayer_trap:reason||'prayer'}, '', href);
-      }else{
-        history.pushState({_p:1, oai_prayer_trap:reason||'prayer'}, '', href);
-      }
+      /* 기도문은 다른 공통 히스토리 흔적 위에 덧쌓지 않고, 단계마다 [root(0) → trap(1)]만 다시 만든다.
+         이것이 없으면 본문→목록 또는 목록→팝업 뒤 다음 Back에서 앱이 바로 종료될 수 있다. */
+      history.replaceState({_p:0, oai_prayer_root:reason||'prayer'}, '', href);
+      history.pushState({_p:1, oai_prayer_trap:reason||'prayer'}, '', href);
     }catch(e){ console.warn('[가톨릭길동무]', e); }
   }
   function hidePrayerOnly(){
@@ -331,6 +328,7 @@
     window._oaiArmPrayerBackTrap = function(reason){ setPrayerStep('list'); armSinglePrayerTrap(reason || 'prayer-list'); };
     window._oaiPrayerPushDetailState = function(reason){ markPrayerDetail(reason || 'prayer-detail'); };
     window._oaiPrayerReplaceListState = function(reason){ detailToList(reason || 'prayer-detail-button-to-list'); };
+    window._oaiPrayerBackActive = function(){ return (isPrayerPopupOpen() && isPrayerPopupSource()) || isPrayerDetailShowing() || isPrayerOpen(); };
     window._oaiPrayerBackHandle = handlePrayerBack;
     window._oaiPrayerListToPopupOrCover = listToPopupOrCover;
     window._oaiPrayerResetToCover = prayerToCover;
@@ -358,13 +356,20 @@
   window.addEventListener('popstate', function(){
     if(window._appExiting) return;
 
-    /* V1-4: 기도문은 공통 복원/종료 로직보다 먼저 전용 컨트롤러가 처리한다. */
-    if(typeof window._oaiPrayerBackHandle === 'function' && window._oaiPrayerBackHandle('prayer-popstate')){
+    /* V1-5: 기도문은 공통 복원/종료 로직보다 먼저 전용 컨트롤러가 처리한다.
+       Back으로 p0에 내려온 직후 처리하면 Android/PWA에서 앱 종료가 앞설 수 있어
+       기존 공통 컨트롤러와 같은 방식으로 먼저 go(1) 복원을 걸고 화면 단계만 처리한다. */
+    if(!_restoring && typeof window._oaiPrayerBackActive === 'function' && window._oaiPrayerBackActive()){
+      _restoring = true;
+      try{ history.go(1); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      if(typeof window._oaiPrayerBackHandle === 'function' && window._oaiPrayerBackHandle('prayer-popstate')){
+        setTimeout(function(){ _restoring = false; }, 160);
+        return;
+      }
       _restoring = false;
-      return;
     }
 
-    /* V1-4: 기존 기도문 팝업/커버 보정 블록은 제거했다.
+    /* V1-5: 기존 기도문 팝업/커버 보정 블록은 제거했다.
        기도문 단계는 위의 단독 컨트롤러만 처리한다. */
 
     /* 빠른메뉴에서 주요기도문으로 진입하기 위해 팝업용 mq history state를
@@ -609,7 +614,7 @@
   if(window.__APP_FONT_SCALE_GUARD__) return;
   window.__APP_FONT_SCALE_GUARD__=true;
   // V37: 문의·건의는 qa-firebase.html 한 경로로만 통일한다.
-  var QA_URL="qa-firebase.html?v=V1-4";
+  var QA_URL="qa-firebase.html?v=V1-5";
   var FONT_KEY='prayer_font_size', BASE=16, SIZES=[13,14,15,16,17,18,19,20,21,22,24,26,28,30];
   function el(id){return document.getElementById(id)}
   function getPx(){var px=parseInt(localStorage.getItem(FONT_KEY)||BASE,10);return (px>=13&&px<=30)?px:BASE;}
