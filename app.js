@@ -757,7 +757,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'v1';
+    var target = btn.getAttribute('data-target-version') || 'V1-4';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -929,7 +929,10 @@ function openPrayerBook(opts){
   const cv=$('cover');
   if(cv){ cv.style.opacity='0'; cv.style.display='none'; }
   document.documentElement.classList.add('app-active');
-  try{ if(typeof _ensureAppBackTrap==='function') _ensureAppBackTrap('prayer-open'); }catch(e){ console.warn("[가톨릭길동무]", e); }
+  try{
+    if(typeof window._oaiArmPrayerBackTrap==='function') window._oaiArmPrayerBackTrap('prayer-open');
+    else if(typeof _ensureAppBackTrap==='function') _ensureAppBackTrap('prayer-open');
+  }catch(e){ console.warn("[가톨릭길동무]", e); }
   if(typeof oaiSetMainMapLayerHidden==='function') oaiSetMainMapLayerHidden(true);
   view.classList.add('open');
   if(typeof oaiEnterView==='function') oaiEnterView(view);
@@ -937,7 +940,10 @@ function openPrayerBook(opts){
   setTimeout(function(){
     if(typeof window.initPrayerView==='function') try{window.initPrayerView();}catch(e){ console.warn("[가톨릭길동무]", e); }
     if(!(opts&&opts.restore) && typeof showPrayerListOnly==='function') try{showPrayerListOnly();}catch(e){ console.warn("[가톨릭길동무]", e); }
-    try{ if(typeof _ensureAppBackTrap==='function') _ensureAppBackTrap('prayer-list-ready'); }catch(e){ console.warn("[가톨릭길동무]", e); }
+    try{
+      if(typeof window._oaiArmPrayerBackTrap==='function') window._oaiArmPrayerBackTrap('prayer-list-ready');
+      else if(typeof _ensureAppBackTrap==='function') _ensureAppBackTrap('prayer-list-ready');
+    }catch(e){ console.warn("[가톨릭길동무]", e); }
     var list=document.getElementById('prayer-list-view'); if(list) list.scrollTop=0;
     var tabs=document.getElementById('prayer-tabs'); if(tabs) tabs.scrollLeft=0;
   }, setupDelay);
@@ -952,6 +958,12 @@ function closePrayerView(){
   }
 }
 function _closePrayerAndReturn(){
+  try{
+    if(typeof window._oaiPrayerListToPopupOrCover === 'function'){
+      window._oaiPrayerListToPopupOrCover('prayer-close-button');
+      return;
+    }
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
   var pv = $('prayer-view');
   var fromQuickPrayer = _shouldPrayerQuickReturn();
   try{ if(pv && pv.dataset && pv.dataset.quickSource === 'mass') fromQuickPrayer = true; }catch(e){ console.warn("[가톨릭길동무]", e); }
@@ -1066,7 +1078,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=v1';
+    frame.src='diocese.html?v=V1-4';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -1391,30 +1403,34 @@ function _kakaoKeywordDocsFromJs(query, max){
         return;
       }
       var places = new kakao.maps.services.Places();
-      var all = [];
-      var wantedPages = Math.ceil(max / 15);
-      var receivedPages = 0;
-      function searchPage(page){
-        places.keywordSearch(query, function(data, status, pagination){
-          receivedPages++;
+      var pages = Math.ceil(max / 15);
+      var groups = [];
+      var done = 0;
+      var settled = false;
+      function finish(){
+        if(settled) return;
+        if(done >= pages){
+          settled = true;
+          resolve(_dedupeKakaoDocs(groups, max));
+        }
+      }
+      function ask(page){
+        places.keywordSearch(query, function(data, status){
           try{
             var OK = kakao.maps.services.Status.OK;
-            if(status === OK && data && data.length){
-              all.push(data);
-              if(_dedupeKakaoDocs(all, max).length >= max){
-                resolve(_dedupeKakaoDocs(all, max));
-                return;
-              }
-              if(pagination && pagination.hasNextPage && receivedPages < wantedPages){
-                pagination.nextPage();
-                return;
-              }
-            }
+            if(status === OK && data && data.length) groups.push(data);
           }catch(e){ console.warn('[가톨릭길동무]', e); }
-          resolve(_dedupeKakaoDocs(all, max));
-        }, { size: Math.min(15, max), page: page || 1 });
+          done++;
+          finish();
+        }, { size: Math.min(15, max), page: page });
       }
-      searchPage(1);
+      for(var page=1; page<=pages; page++) ask(page);
+      setTimeout(function(){
+        if(!settled){
+          settled = true;
+          resolve(_dedupeKakaoDocs(groups, max));
+        }
+      }, 2800);
     }catch(e){
       console.warn('[가톨릭길동무]', e);
       resolve([]);
@@ -1424,13 +1440,15 @@ function _kakaoKeywordDocsFromJs(query, max){
 function _kakaoKeywordDocs(query, limit){
   var max = Math.max(1, parseInt(limit || 10, 10) || 10);
   return _kakaoKeywordDocsFromRest(query, max).then(function(restDocs){
-    /* Worker 프록시가 page 파라미터를 넘기지 않으면 30개 요청도 1페이지 15개로 중복될 수 있다.
-       그 경우 지도 SDK의 Places 검색으로 한 번 더 받아 실제 30개 후보를 확보한다. */
-    if(restDocs && restDocs.length >= max) return restDocs.slice(0, max);
+    restDocs = restDocs || [];
+    /* 30개 후보가 필요한 지역검색/일반장소 검색은 REST 프록시와 Kakao JS Places를 합쳐서 채운다.
+       프록시가 page=2를 전달하지 못해 1페이지 15개만 돌아와도 JS 2페이지 결과를 합쳐 최대 30개까지 확보한다. */
+    if(restDocs.length >= max) return restDocs.slice(0, max);
     return _kakaoKeywordDocsFromJs(query, max).then(function(jsDocs){
-      if(jsDocs && jsDocs.length > (restDocs || []).length) return jsDocs.slice(0, max);
-      return (restDocs || []).slice(0, max);
-    }).catch(function(){ return (restDocs || []).slice(0, max); });
+      return _dedupeKakaoDocs([restDocs, jsDocs || []], max);
+    }).catch(function(){ return restDocs.slice(0, max); });
+  }).catch(function(){
+    return _kakaoKeywordDocsFromJs(query, max).then(function(jsDocs){ return (jsDocs || []).slice(0, max); });
   });
 }
 const TC    = {'성지':'#c0392b','순례지':'#1565c0','순교 사적지':'#1b7a3e'};

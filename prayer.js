@@ -463,6 +463,9 @@ window.prCloseDetail = function(opts){
       }else if(typeof window._ensureAppBackTrap === 'function'){
         window._ensureAppBackTrap('prayer-list-close');
       }
+      if(typeof window._oaiArmPrayerBackTrap === 'function'){
+        window._oaiArmPrayerBackTrap('prayer-detail-button-to-list');
+      }
     }catch(e){
       console.warn('[가톨릭길동무]', e);
       try{ if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('prayer-list-close-fallback'); }catch(_e){}
