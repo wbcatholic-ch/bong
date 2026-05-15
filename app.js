@@ -19,6 +19,9 @@ function hideCoverAndRun(callback) {
   var cv = document.getElementById('cover');
   if (cv) cv.style.display = 'none';
   document.documentElement.classList.add('app-active');
+  // 카테고리 진입 즉시 앱 내부 back trap을 확정한다.
+  // 커버에서 남은 history 상태에 의존하면 일부 Android/PWA에서 카테고리 Back이 앱 탈출로 빠진다.
+  try{ if(typeof _ensureAppBackTrap === 'function') _ensureAppBackTrap('enter-category'); }catch(e){ console.warn('[가톨릭길동무]', e); }
   // RAF로 커버 숨김 후 다음 프레임에 콜백 실행 → 버벅거림 방지
   if (callback) requestAnimationFrame(function(){ setTimeout(callback, 0); });
 }
@@ -742,7 +745,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V2-8';
+    var target = btn.getAttribute('data-target-version') || 'V2-9';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -1041,7 +1044,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V2-8';
+    frame.src='diocese.html?v=V2-9';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -2329,7 +2332,7 @@ function _mkrImgRetreat(color,big){
 }
 function _mkrImg(color,big){
   const w=big?40:28,h=big?52:36;
-  // V2-8: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
+  // V2-9: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
   // This removes the purple emoji background and keeps a plain white cross.
   const crossBig = `<g fill="#fff" opacity="0.96"><rect x="18.45" y="10.5" width="3.1" height="18.5" rx="1.1"/><rect x="13.4" y="16.3" width="13.2" height="3.1" rx="1.1"/></g>`;
   const crossSmall = `<g fill="#fff" opacity="0.96"><rect x="12.85" y="7.8" width="2.3" height="12.8" rx="0.8"/><rect x="9.6" y="11.7" width="8.8" height="2.3" rx="0.8"/></g>`;

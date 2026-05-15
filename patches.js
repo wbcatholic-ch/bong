@@ -364,9 +364,9 @@
       return;
     }
 
-    /* 앱 활성: go(1) 복원 후 처리 */
-    _restoring = true;
-    history.go(1);
+    /* 앱 활성: 브라우저가 방금 pop한 루트 상태에서 바로 앱 내부 trap을 다시 심고 화면만 한 단계 닫는다.
+       기존 history.go(1) 복원 방식은 Android/PWA에서 실패하면 카테고리에서 앱이 바로 탈출할 수 있었다. */
+    try{ history.pushState({_p:1, oai_app_trap:'active-back'}, '', _href); }catch(e){ console.warn('[가톨릭길동무]', e); }
 
     if(closeExtOrModule()) return;  /* 닫으면서 goToCover() 이미 호출됨 */
     if(closeLayer()) return;        /* 레이어만 닫기, 앱 유지 */
@@ -554,7 +554,7 @@
   if(window.__APP_FONT_SCALE_GUARD__) return;
   window.__APP_FONT_SCALE_GUARD__=true;
   // V37: 문의·건의는 qa-firebase.html 한 경로로만 통일한다.
-  var QA_URL="qa-firebase.html?v=V2-8";
+  var QA_URL="qa-firebase.html?v=V2-9";
   var FONT_KEY='prayer_font_size', BASE=16, SIZES=[13,14,15,16,17,18,19,20,21,22,24,26,28,30];
   function el(id){return document.getElementById(id)}
   function getPx(){var px=parseInt(localStorage.getItem(FONT_KEY)||BASE,10);return (px>=13&&px<=30)?px:BASE;}
