@@ -1,6 +1,7 @@
 /* patches.js — 뒤로가기·스와이프·터치 UX 패치
-   V1-7: 기존 중복 history/기도문/팝업 뒤로가기 컨트롤러를 제거하고
-   모든 카테고리를 한 개의 단일 Back 컨트롤러에서 처리합니다. */
+   V1-8: 단일 Back 컨트롤러 유지.
+   빠른메뉴/기도문 팝업과 커버 복귀 후 history trap을 반드시 다시 심어
+   팝업 탈출과 커버 1회 종료를 막습니다. */
 
 (function(){
   'use strict';
@@ -42,6 +43,10 @@
     });
   }
   installTrap('init');
+  try{
+    window._oaiInstallBackTrap = installTrap;
+    window._oaiPushBackTrap = pushTrap;
+  }catch(_e){}
 
   function showCoverOnly(reason){
     safe(function(){
@@ -61,6 +66,8 @@
     if(typeof window.goToCover === 'function') safe(function(){ window.goToCover(); });
     else showCoverOnly(reason);
     resetExitReady(); clearExitArmed();
+    /* 어떤 경로로 커버에 도착하더라도 다음 Back은 종료가 아니라 토스트가 되도록 새 root/trap을 확정한다. */
+    installTrap(reason || 'cover-clean');
   }
 
   function isPrayerOpen(){ return has($('prayer-view'), 'open'); }
@@ -117,6 +124,7 @@
         mq.setAttribute('aria-hidden','false');
       }
       resetExitReady(); clearExitArmed();
+      installTrap('prayer-return-popup-open');
       return true;
     }
     goCoverClean('prayer-list-cover');
@@ -131,6 +139,7 @@
       safe(function(){ delete mq.dataset.returnSource; });
       clearQuickFlags();
       resetExitReady(); clearExitArmed();
+      installTrap('quick-modal-close');
       return true;
     }
     var modals = document.querySelectorAll('.guide-modal.show');
@@ -138,6 +147,7 @@
       modals.forEach(function(el){ el.classList.remove('show'); el.setAttribute('aria-hidden','true'); });
       safe(function(){ if(typeof window.resetGuideManualScroll === 'function') window.resetGuideManualScroll(); });
       resetExitReady(); clearExitArmed();
+      installTrap('guide-modal-close');
       return true;
     }
     return false;
@@ -212,8 +222,10 @@
     handleBack('popstate');
   }, false);
 
-  document.addEventListener('backbutton', function(){
-    handleBack('hardware');
+  document.addEventListener('backbutton', function(e){
+    try{ if(e && e.preventDefault) e.preventDefault(); }catch(_e){}
+    var handled = handleBack('hardware');
+    if(handled && !appActive()) installTrap('hardware-cover');
   }, false);
 
   window.addEventListener('pageshow', function(){

@@ -256,8 +256,14 @@ function _resetAppBackTrap(reason){
   }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
 function _armMassQuickHistoryTrap(opts){
-  // V1-7: 단일 Back 컨트롤러가 빠른메뉴 뒤로가기를 관리한다.
-  return;
+  // V1-8: 빠른메뉴 팝업이 열린 순간 반드시 Back trap을 새로 심는다.
+  // V1-8에서 이 함수가 비어 있어 매일미사/기도문/성가 팝업에서 Android/PWA가 바로 앱을 종료할 수 있었다.
+  try{
+    if(typeof window._oaiInstallBackTrap === 'function'){ window._oaiInstallBackTrap('mass-quick-open'); return; }
+    var href = location.href.split('#')[0];
+    history.replaceState({oai_back_root:'mass-quick-open'}, '', href);
+    history.pushState({oai_back_trap:'mass-quick-open'}, '', href);
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
 function _hideMassQuickMenuOnly(afterHidden, opts){
   const modal=document.getElementById('mass-quick-modal');
@@ -498,7 +504,7 @@ function closeMassQuickMenu(opts){
     _forceCoverAfterPrayerQuickPopup();
     return;
   }
-  _ensureCoverBackTrap();
+  try{ if(typeof window._oaiInstallBackTrap === 'function') window._oaiInstallBackTrap('mass-quick-close-cover'); else _ensureCoverBackTrap(); }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
 function openCatholicHymn(){
   const url='https://maria.catholic.or.kr/mobile/sungga/sungga.asp';
