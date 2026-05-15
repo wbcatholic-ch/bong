@@ -732,7 +732,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V2-3';
+    var target = btn.getAttribute('data-target-version') || 'V2-4';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -1032,7 +1032,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V2-3';
+    frame.src='diocese.html?v=V2-4';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -1612,6 +1612,14 @@ function _showBackToast(){
     _exitReady=false;
     _clearCoverExitArmed();
     if(t.parentNode)t.remove();
+    // 첫 Back 뒤에는 현재 history가 커버 루트(_p:0)에 머문다.
+    // 안내 시간이 지나면 다시 커버 trap을 심어 다음 Back이 즉시 종료되지 않고 안내부터 나오게 한다.
+    try{
+      if(!window._appExiting && !document.documentElement.classList.contains('app-active')){
+        var mq=document.getElementById('mass-quick-modal');
+        if(!(mq && mq.classList.contains('show')) && typeof _ensureCoverBackTrap === 'function') _ensureCoverBackTrap();
+      }
+    }catch(e){ console.warn('[가톨릭길동무]', e); }
   },2500);
   return false; // 첫 번째 뒤로가기: 토스트만 표시
 }
@@ -2321,7 +2329,7 @@ function _mkrImgRetreat(color,big){
 }
 function _mkrImg(color,big){
   const w=big?40:28,h=big?52:36;
-  // V2-3: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
+  // V2-4: iPhone/Android marker cross uses SVG bars, not an emoji/text glyph.
   // This removes the purple emoji background and keeps a plain white cross.
   const crossBig = `<g fill="#fff" opacity="0.96"><rect x="18.45" y="10.5" width="3.1" height="18.5" rx="1.1"/><rect x="13.4" y="16.3" width="13.2" height="3.1" rx="1.1"/></g>`;
   const crossSmall = `<g fill="#fff" opacity="0.96"><rect x="12.85" y="7.8" width="2.3" height="12.8" rx="0.8"/><rect x="9.6" y="11.7" width="8.8" height="2.3" rx="0.8"/></g>`;

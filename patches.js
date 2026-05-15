@@ -345,7 +345,8 @@
       return;
     }
 
-    /* 커버: 토스트 → 두 번째에 종료. go(1) 재복원 없이 바로 트랩만 다시 심어 2번으로 끝낸다. */
+    /* 커버: 첫 Back은 안내만 띄우고, 두 번째 Back은 브라우저/Android/PWA의 기본 종료에 맡긴다.
+       여기서 다시 pushState를 심으면 두 번째 Back도 JS popstate로 잡혀 앱이 실제로 나가지 못한다. */
     if(!appActive()){
       try{
         var forceFirstToastUntil = Number(window.__OAI_PRAYER_COVER_FORCE_FIRST_TOAST_UNTIL__ || 0);
@@ -354,13 +355,10 @@
           if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
           if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
           if(typeof window._showBackToast === 'function') window._showBackToast();
-          try{ history.pushState({_p:1, oai_cover_trap:'prayer-first-toast'}, '', _href); }catch(_e){}
           return;
         }
       }catch(e){ console.warn('[가톨릭길동무]', e); }
-      var exiting = false;
-      if(typeof window._showBackToast==='function') exiting = window._showBackToast() === true;
-      if(!exiting){ try{ history.pushState({_p:1}, '', _href); }catch(e){ console.warn("[가톨릭길동무]", e); } }
+      if(typeof window._showBackToast==='function') window._showBackToast();
       return;
     }
 
@@ -554,7 +552,7 @@
   if(window.__APP_FONT_SCALE_GUARD__) return;
   window.__APP_FONT_SCALE_GUARD__=true;
   // V37: 문의·건의는 qa-firebase.html 한 경로로만 통일한다.
-  var QA_URL="qa-firebase.html?v=V2-3";
+  var QA_URL="qa-firebase.html?v=V2-4";
   var FONT_KEY='prayer_font_size', BASE=16, SIZES=[13,14,15,16,17,18,19,20,21,22,24,26,28,30];
   function el(id){return document.getElementById(id)}
   function getPx(){var px=parseInt(localStorage.getItem(FONT_KEY)||BASE,10);return (px>=13&&px<=30)?px:BASE;}
