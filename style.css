@@ -7,101 +7,82 @@
    파일 분리 시 누락됐던 --bg-color, --bg-unified, --oai-ivory,
    --text-main, --card-bg, --oai-gold, --oai-shrine-header 등 복원.
    ============================================================ */
-:root{
-  --navy2:#1a2456;--navy3:#243070;
-  --cream:#f5f0e8;--ink:#1F2937;--border:#dde3f2;
-  --pilgrim:#1f2a44;--martyr:#1b7a3e;
-  --parish-active:#466b92;--parish-accent:#e7f1fb;
-  --retreat-active:#6366f1;--retreat-accent:#eef2ff;
-  --addr-color:#6B7280;--dist-parish:#466b92;--dist-retreat:#4f46e5;
-  --sb:env(safe-area-inset-bottom,0);--st:env(safe-area-inset-top,0);
-  --stone:#f3eee5;--stone-2:#ebe3d7;--paper:#fffdf9;--panel:#fffaf2;
-  --line-soft:#e7ddcf;
-  --shadow-soft:0 12px 30px rgba(14,21,53,.10);
-  --shadow-card:0 16px 34px rgba(17,24,39,.11);
-  --ui-ink:#141b2d;--ui-ink-soft:#4d5a75;--ui-line:#e6dfd3;
-  --ui-panel:#ffffff;--ui-bg:#f7f4ee;
-  --ui-blue:#3563ff;--ui-indigo:#6d4df4;--ui-rose:#d94f70;
-  --ui-teal:#118a7e;--ui-amber:#f59e0b;
-  --bg-unified:#f5f0e8;                 /* 목록/시트 배경 */
-  --pink-start:#E8397A;--pink-end:#f0609a;
-  --header-h:calc(52px + env(safe-area-inset-top,0));
-  --module-tab-h:48px;
-  --mod-header-h:calc(56px + env(safe-area-inset-top,0px));
-  --mod-tabbar-h:52px;--tab-btn-h:40px;
-  /* OAI 표준 컴포넌트 (완전판) */
-  --oai-shrine-header:#1f2a44;
-  --oai-parish-header:#4f6f90;
-  --oai-retreat-header:#7fb39a;
-  --oai-gold:#d4aa6a;
-  --oai-gold-border:#c49a57;
-  --oai-btn:#eef1f4;--oai-btn-border:#cfd6dd;--oai-btn-text:#334155;
-  --oai-ivory:#e9deca;                  /* 검색바·필터바 배경 */
-  --oai-ivory-border:#d6c6a8;
-  --oai-std-scale:var(--app-font-scale,1);
-  --oai-std-header-h:72px;
-  --app-fs-title:calc(16px * var(--app-inner-font-scale,1));
-  --app-fs-sub:calc(12px * var(--app-inner-font-scale,1));
-  --app-fs-body:calc(16px * var(--app-inner-font-scale,1));
-  /* 성지/성당/피정 모드 소프트 팔레트 */
-  --shrine-soft-2:#f5f7fc;
-  --church-soft-2:#f4f7fb;
-  --retreat-soft-2:#f5faf7;             /* 피정 sm-tab-bar 배경 */
-  /* 커버 테마 */
-  --bg-color:#F7F0E5;                   /* #cover 배경 */
-  --text-main:#3E362E;                  /* 커버 텍스트 */
-  --text-sub:#7A7065;
-  --card-bg:#FFFFFF;                    /* .cover-card 배경 */
-  /* UI 표면 */
-  --ui-surface:#fbfaf7;--ui-card:#ffffff;
-  --ui-line-strong:#d9cfbf;--ui-text:#1f2937;--ui-sub:#7b8794;
-}
-
-/* ============================================================
-   :root — 앱 전역 CSS 변수 (파일 분리 시 옮겨진 기존 블록)
-   ※ 위 블록과 중복되는 변수는 아래가 마지막이므로 최종값으로 적용됨.
-   ============================================================ */
-:root{
+:root {
   /* ── 기본 팔레트 ─────────────────────────── */
   --navy:    #0e1535;          /* 앱 주 배경 */
   --navy2:   #1f2a44;          /* 보조 헤더·바 배경 */
+  --navy3:   #243070;
   --gold:    #d4aa6a;          /* 포인트 금색 */
   --gold2:   #b8965a;          /* 진한 금색 */
   --d:       #1F2A44;          /* 범용 다크 컬러 */
+  --cream:   #f5f0e8;
+  --ink:     #1F2937;
+  --border:  #dde3f2;
 
   /* ── 레이아웃 ──────────────────────────────── */
   --tab-h:         72px;       /* 상단 탭바 높이 (safe-area 제외) */
   --mod-header-h:  70px;       /* 모듈 뷰 헤더 높이 */
   --sb:            0px;        /* safe-area-inset-bottom (JS가 덮어씀) */
+  --st:            env(safe-area-inset-top,0);
+  --header-h:      calc(52px + env(safe-area-inset-top,0));
+  --module-tab-h:  48px;
+  --mod-tabbar-h:  52px;
+  --tab-btn-h:     40px;
 
   /* ── 타이포그래피 ───────────────────────── */
-  --fs-header:          22px;
-  --fs-tab:             15px;
-  --cover-emoji-size:   34px;
-  --app-font-scale:     1;
-  --ios-inner-font-scale:1;
-  --app-inner-font-scale:calc(var(--app-font-scale,1) * var(--ios-inner-font-scale,1));
-  --pr-item-fs:         15px;
-  --pr-body-fs:         16px;
-  --pr-detail-fs:       17px;
-  --pr-icon-fs:         17px;
-  --pr-icon-sz:         36px;
-  --pull-scale:         .74;
+  --fs-header:           22px;
+  --fs-tab:              15px;
+  --cover-emoji-size:    34px;
+  --app-font-scale:      1;
+  --ios-inner-font-scale: 1;
+  --app-inner-font-scale: calc(var(--app-font-scale,1) * var(--ios-inner-font-scale,1));
+  --pr-item-fs:          15px;
+  --pr-body-fs:          16px;
+  --pr-detail-fs:        17px;
+  --pr-icon-fs:          17px;
+  --pr-icon-sz:          36px;
+  --pull-scale:          .74;
+  --app-fs-title:        calc(16px * var(--app-inner-font-scale,1));
+  --app-fs-sub:          calc(12px * var(--app-inner-font-scale,1));
+  --app-fs-body:         calc(16px * var(--app-inner-font-scale,1));
 
   /* ── OAI 표준 컴포넌트 ─────────────────── */
-  --oai-std-header-h:  70px;   /* module-bar 높이 표준 */
-  --oai-std-tab-h:     36px;   /* 내부 탭(prayer/trail/web/qna) 높이 */
-  --oai-std-btn-h:     36px;   /* 버튼 높이 표준 */
-  --oai-std-radius:    10px;   /* 기본 border-radius */
-  --oai-std-gap:       8px;    /* flex gap 표준 */
-  --oai-std-btn-fs:    13px;   /* 버튼 폰트 크기 */
-  --oai-std-title-fs:  20px;   /* 모듈 헤더 타이틀 폰트 크기 */
-  --oai-std-sub-fs:    11px;   /* 모듈 헤더 서브타이틀 폰트 크기 */
+  --oai-std-header-h:   70px;  /* module-bar 높이 표준 */
+  --oai-std-tab-h:      36px;  /* 내부 탭 높이 */
+  --oai-std-tabbar-h:   52px;  /* 탭바 wrapper (탭 36 + 상하 패딩 8) */
+  --oai-std-btn-h:      36px;  /* 버튼 높이 */
+  --oai-std-title-fs:   20px;  /* 모듈 헤더 타이틀 */
+  --oai-std-sub-fs:     11px;  /* 모듈 헤더 서브타이틀 */
+  --oai-std-btn-fs:     14px;  /* 버튼 폰트 크기 */
+  --oai-std-radius:     14px;  /* 기본 border-radius */
+  --oai-std-gap:        8px;   /* flex gap 표준 */
+  --oai-std-scale:      var(--app-font-scale,1);
+  --oai-std-icon-sz:    28px;  /* 헤더 이모지 폰트 크기 */
+  --oai-std-close-sz:   36px;  /* 닫기 버튼 크기 */
+  --oai-std-hdr-pad:    calc(10px + env(safe-area-inset-top,0px)); /* 헤더 상단 패딩 */
 
-  /* ── 지도 마커 점 색상 (범례) ──────────── */
-  --shrine:  #c0392b;          /* 성지 — 빨강 */
-  --pilgrim: #1565c0;          /* 순례지 — 파랑 */
-  --martyr:  #1b7a3e;          /* 순교사적지 — 초록 */
+  /* ── 공통 헤더 변수 ─────────────────────── */
+  --oai-common-header:           #1f2a44;
+  --oai-common-title-fs:         20px;
+  --oai-common-sub-fs:           11px;
+  --oai-pilgrimage-header-solid: #1f2a44;
+
+  /* ── 지도 마커 색상 (범례) ──────────────── */
+  --shrine:   #c0392b;         /* 성지 — 빨강 */
+  --pilgrim:  #1565c0;         /* 순례지 — 파랑 */
+  --martyr:   #1b7a3e;         /* 순교사적지 — 초록 */
+
+  /* ── OAI 컴포넌트 색상 ─────────────────── */
+  --oai-shrine-header:  #1f2a44;
+  --oai-parish-header:  #4f6f90;
+  --oai-retreat-header: #7fb39a;
+  --oai-gold:           #d4aa6a;
+  --oai-gold-border:    #c49a57;
+  --oai-btn:            #eef1f4;
+  --oai-btn-border:     #cfd6dd;
+  --oai-btn-text:       #334155;
+  --oai-ivory:          #e9deca;  /* 검색바·필터바 배경 */
+  --oai-ivory-border:   #d6c6a8;
 
   /* ── 성지 모드 ─────────────────────────── */
   --shrine-main:    #1f2a44;
@@ -112,11 +93,12 @@
   /* ── 성당 / 교구 모드 ───────────────────── */
   --parish-bg:      #2f4f6d;
   --parish-active:  #446e93;
+  --parish-accent:  #e7f1fb;
   --church-main:    #4f6f90;
   --church-main-2:  #3f5d7b;
   --church-soft:    #e8eff6;
 
-  /* ── 피정의집 모드 (html.retreat-mode 에서 !important 재정의) ── */
+  /* ── 피정의집 모드 ──────────────────────── */
   --retreat-bg:      #3F7E5B;
   --retreat-main:    #3F7E5B;
   --retreat-main-2:  #2e6b4a;
@@ -125,16 +107,66 @@
   --retreat-accent:  #E8F3EC;
   --dist-retreat:    #3F7E5B;
 
-  /* ── 표지 카드 아이콘 배경색 (#cc-1 ~ #cc-8) ── */
-  --color-1: #8b2020;   /* 매일미사 — 버건디 */
-  --color-2: #1f2a44;   /* 주요기도문 — 네이비 */
-  --color-3: #b8965a;   /* 성지순례 — 금빛 (커버 서브타이틀에도 사용) */
-  --color-4: #2f4f6d;   /* 성당찾기 — 스틸블루 */
-  --color-5: #3F7E5B;   /* 피정의집 — 포레스트그린 */
-  --color-6: #5c4a37;   /* 순례길 — 어스브라운 */
-  --color-7: #1a3560;   /* 가톨릭 웹사이트 — 딥인디고 */
-  --color-8: #374151;   /* 관구·교구 — 슬레이트 */
+  /* ── 거리 표시 색상 ─────────────────────── */
+  --addr-color:   #6B7280;
+  --dist-parish:  #466b92;
+
+  /* ── 커버 카드 아이콘 배경색 ────────────── */
+  --color-1: #8b2020;  /* 매일미사 — 버건디 */
+  --color-2: #1f2a44;  /* 주요기도문 — 네이비 */
+  --color-3: #b8965a;  /* 성지순례 — 금빛 */
+  --color-4: #2f4f6d;  /* 성당찾기 — 스틸블루 */
+  --color-5: #3F7E5B;  /* 피정의집 — 포레스트그린 */
+  --color-6: #5c4a37;  /* 순례길 — 어스브라운 */
+  --color-7: #1a3560;  /* 가톨릭 웹사이트 — 딥인디고 */
+  --color-8: #374151;  /* 관구·교구 — 슬레이트 */
+
+  /* ── 커버 테마 ─────────────────────────── */
+  --bg-color:   #F7F0E5;  /* #cover 배경 */
+  --text-main:  #3E362E;  /* 커버 텍스트 */
+  --text-sub:   #7A7065;
+  --card-bg:    #FFFFFF;  /* .cover-card 배경 */
+
+  /* ── 공통 표면 팔레트 ───────────────────── */
+  --bg-unified:  #f5f0e8;      /* 목록/시트 배경 */
+  --stone:       #f3eee5;
+  --stone-2:     #ebe3d7;
+  --paper:       #fffdf9;
+  --panel:       #fffaf2;
+  --line-soft:   #e7ddcf;
+  --pink-start:  #E8397A;
+  --pink-end:    #f0609a;
+
+  /* ── 소프트 팔레트 ─────────────────────── */
+  --church-soft-2:  #f4f7fb;
+  --retreat-soft-2: #f5faf7;  /* 피정 sm-tab-bar 배경 */
+
+  /* ── 그림자 ────────────────────────────── */
+  --shadow-soft: 0 12px 30px rgba(14,21,53,.10);
+  --shadow-card: 0 16px 34px rgba(17,24,39,.11);
+
+  /* ── UI 색상 ───────────────────────────── */
+  --ui-ink:         #141b2d;
+  --ui-ink-soft:    #4d5a75;
+  --ui-line:        #e6dfd3;
+  --ui-panel:       #ffffff;
+  --ui-bg:          #f7f4ee;
+  --ui-blue:        #3563ff;
+  --ui-indigo:      #6d4df4;
+  --ui-rose:        #d94f70;
+  --ui-teal:        #118a7e;
+  --ui-amber:       #f59e0b;
+  --ui-surface:     #fbfaf7;
+  --ui-card:        #ffffff;
+  --ui-line-strong: #d9cfbf;
+  --ui-text:        #1f2937;
+  --ui-sub:         #7b8794;
 }
+
+/* ============================================================
+   :root — 앱 전역 CSS 변수 (파일 분리 시 옮겨진 기존 블록)
+   ※ 위 블록과 중복되는 변수는 아래가 마지막이므로 최종값으로 적용됨.
+   ============================================================ */
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;background:var(--navy)!important;font-family:'Noto Sans KR',sans-serif;overscroll-behavior:none;overscroll-behavior-x:none!important;overflow:hidden!important;-webkit-text-size-adjust:100%;text-size-adjust:100%}
@@ -1529,7 +1561,7 @@ html.retreat-mode #sm-tab-bar .sm-tab.active{
 
 
 /* remove header gradients and unify key headers with pilgrimage-route header color */
-:root{--oai-pilgrimage-header-solid:#1f2a44;}
+
 #prayer-bar,
 #diocese-bar,
 .module-bar,
@@ -1562,7 +1594,7 @@ html.retreat-mode #sm-tab-bar .sm-tab.active{
 
 
 /* 주요기도문·순례길·웹사이트·관구교구·문의건의 헤더 최종 표준화 */
-:root{--oai-common-header:#1f2a44;--oai-common-title-fs:20px;--oai-common-sub-fs:11px;}
+
 #prayer-view.open,
 #web-view.module-view.open,
 #trail-view.module-view.open,
@@ -1891,20 +1923,7 @@ html.app-active #cv-pull-modern{
    ================================================================ */
 
 /* ── 1. :root 토큰 확정 ──────────────────────────────────────────── */
-:root {
-  --oai-std-header-h : 70px;
-  --oai-std-tab-h    : 36px;
-  --oai-std-tabbar-h : 52px;   /* 탭바 wrapper 고정 높이 (탭 36 + 상하 패딩 8) */
-  --oai-std-btn-h    : 36px;
-  --oai-std-title-fs : 20px;
-  --oai-std-sub-fs   : 11px;
-  --oai-std-btn-fs   : 14px;
-  --oai-std-radius   : 14px;
-  --oai-std-gap      : 8px;
-  --oai-std-icon-sz  : 28px;   /* 헤더 이모지 폰트 크기 */
-  --oai-std-close-sz : 36px;   /* 닫기 버튼 크기 */
-  --oai-std-hdr-pad  : calc(10px + env(safe-area-inset-top, 0px)); /* 헤더 상단 패딩 */
-}
+
 
 /* 헤더 장식 요소 제거 (이전 패치 잔재) */
 #prayer-bar::before, #prayer-bar::after,

@@ -65,7 +65,6 @@ function oaiClearExternalNavigationState(){
   try{
     var html = document.documentElement;
     html.classList.remove('oai-navigating-out','oai-external-return-prepaint','oai-external-return-stabilize','oai-missa-return-stabilize','oai-external-return-freeze','oai-external-leaving','oai-stability-veil');
-    sessionStorage.removeItem('oai_external_return_stabilize');
     sessionStorage.removeItem('oai_external_nav_started_at');
     sessionStorage.removeItem('oai_external_nav_pagehide');
     sessionStorage.removeItem('oai_external_nav_kind');
@@ -1475,24 +1474,6 @@ function restoreCoreReturnState(){
   return true;
 }
 window.addEventListener('pageshow', function(e){
-  // 기도문에서 복귀 → 커버로
-  try{
-    if(sessionStorage.getItem('_prayerReturn')==='1'){
-      sessionStorage.removeItem('_prayerReturn');
-      // 커버 표시, 앱 비활성화
-      document.documentElement.classList.remove('app-active','parish-mode','retreat-mode');
-      const cv=document.getElementById('cover');
-      if(cv){ cv.style.display=''; cv.style.opacity='1'; }
-      return;
-    }
-  }catch(ex){ console.warn("[가톨릭길동무]", ex); }
-  // sessionStorage 플래그 확인 → _noAutoNearby 세팅
-  try{
-    if(sessionStorage.getItem('_noAutoNearby_flag')==='1'){
-      window._noAutoNearby = true;
-      sessionStorage.removeItem('_noAutoNearby_flag');
-    }
-  }catch(ex){ console.warn("[가톨릭길동무]", ex); }
   setTimeout(()=>{
     if(restoreCoreReturnState()) return;
     if(_screen==='map' && (!_map || !$('map')?.children.length)){
@@ -1996,7 +1977,6 @@ function attemptAppExit(){
   const bt=$('_bt'); if(bt) bt.remove();
   try{ sessionStorage.removeItem('catholic_core_return_v1'); }catch(e){ console.warn("[가톨릭길동무]", e); }
   try{ sessionStorage.removeItem('catholic_integrated_return_v2'); }catch(e){ console.warn("[가톨릭길동무]", e); }
-  try{ sessionStorage.removeItem('oai_force_cover_after_reload'); }catch(e){ console.warn("[가톨릭길동무]", e); }
 
   // Cordova/WebView 계열에서는 네이티브 종료를 우선 시도한다.
   try{ if(navigator.app && typeof navigator.app.exitApp === 'function'){ navigator.app.exitApp(); return; } }catch(e){ console.warn("[가톨릭길동무]", e); }

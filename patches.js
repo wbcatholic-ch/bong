@@ -1086,7 +1086,6 @@
 
   window.__oaiSoftCoverRefresh = function(){
     var cover=$('cover'), ind=$('cv-pull-modern');
-    try{ sessionStorage.removeItem('oai_force_cover_after_reload'); }catch(e){ console.warn('[가톨릭길동무]', e); }
     try{ if(typeof window._clearMassQuickReturnForReload === 'function') window._clearMassQuickReturnForReload(); }catch(e){ console.warn('[가톨릭길동무]', e); }
     try{
       document.documentElement.classList.remove('app-active','parish-mode','retreat-mode','oai-returning');
