@@ -531,9 +531,8 @@
     blurActive();
     var d=el('prayer-detail');
     if(d) d.classList.remove('show');
-    var lv=el('prayer-list-view');
-    if(lv){
-      try{ lv.style.scrollBehavior='auto'; lv.scrollTop=0; lv.style.scrollBehavior=''; }catch(_){ console.warn("[가톨릭길동무] silent catch"); }
+    if(typeof window.prRestoreListPosition === 'function'){
+      try{ window.prRestoreListPosition(); }catch(_){ console.warn("[가톨릭길동무] silent catch"); }
     }
   }
   try{ window.showPrayerListOnly = showPrayerListOnly; }catch(_){ console.warn("[가톨릭길동무] silent catch"); }
@@ -826,29 +825,8 @@
       setTimeout(function(){ try{ el.classList.remove('oai-swipe-left','oai-swipe-right'); }catch(e){ console.warn("[가톨릭길동무]", e); } }, 180);
     });
   };
-  var DIO_KEY = 'oai_diocese_return_state_v3';
-  window.openDioceseExternal = function(url, state){
-    if(!url) return;
-    var payload = state || {};
-    try{ var frame = document.getElementById('diocese-frame'); if(frame && frame.contentWindow && typeof frame.contentWindow.getDioceseReturnState === 'function'){ payload = frame.contentWindow.getDioceseReturnState(payload.source || 'link') || payload; } }catch(e){ console.warn("[가톨릭길동무]", e); }
-    try{ sessionStorage.setItem(DIO_KEY, JSON.stringify(payload)); }catch(e){ console.warn("[가톨릭길동무]", e); }
-    // location.href 방식: PWA/모바일 팝업 차단 우회, 뒤로가기로 복귀 가능
-    location.href = url;
-  };
-  function restoreDioceseIfNeeded(){
-    var raw=null; try{ raw=sessionStorage.getItem(DIO_KEY); }catch(e){ console.warn("[가톨릭길동무]", e); }
-    if(!raw) return;
-    var state=null; try{ state=JSON.parse(raw); }catch(e){ console.warn("[가톨릭길동무]", e); }
-    try{ sessionStorage.removeItem(DIO_KEY); }catch(e){ console.warn("[가톨릭길동무]", e); }
-    if(!state) return;
-    if(typeof window.openDioceseView === 'function') window.openDioceseView({restore:true});
-    var tries=0, timer=setInterval(function(){
-      tries++; var frame=document.getElementById('diocese-frame');
-      try{ if(frame && frame.contentWindow && typeof frame.contentWindow.restoreDioceseReturnState === 'function'){ frame.contentWindow.restoreDioceseReturnState(state); clearInterval(timer); } }catch(e){ console.warn("[가톨릭길동무]", e); }
-      if(tries>25) clearInterval(timer);
-    },120);
-  }
-  window.addEventListener('pageshow', function(){ restoreDioceseIfNeeded(); setTimeout(restoreDioceseIfNeeded, 40); });
+  /* V1-S: 관구·교구 외부 홈페이지 복귀는 app.js의 openDioceseExternal/restoreDioceseExternalState 한 경로만 사용한다.
+     여기서 다시 덮어쓰면 pageshow/focus 복원이 중복되어 복귀 화면이 여러 번 깜빡인다. */
 })();
 (function(){
   'use strict';
