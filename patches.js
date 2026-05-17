@@ -37,7 +37,7 @@
   }
   function closeGuideModals(){
     try{
-      var mq = $b('mass-quick-modal');
+      var mq = $('mass-quick-modal');
       if(mq && mq.classList.contains('show') && typeof window.closeMassQuickMenu === 'function'){
         var fromPrayer = false;
         try{ fromPrayer = !!(mq.dataset && mq.dataset.returnSource === 'prayer'); }catch(e){}
@@ -717,50 +717,29 @@
 
 // ── PWA 설치 버튼 로직 ──
 (function(){
-  /* PWA 설치 버튼 통합 컨트롤러
-     ① standalone(설치된 앱) 상태이면 버튼 즉시 숨기고 종료
-     ② 아닌 경우: beforeinstallprompt 감지 → 버튼 표시
-        app-active 클래스·matchMedia 변화 → 즉시 재평가 */
-  if(window.__APP_PWA_INSTALL_GUARD__) return;
-  window.__APP_PWA_INSTALL_GUARD__ = true;
+  // 이미 설치된 앱(standalone)이면 버튼 절대 표시 안 함
+  var isStandalone =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true;
+  if(isStandalone) return;
 
+  var btn = null;
   var prompt = null;
 
-  function isStandaloneNow(){
-    return window.matchMedia('(display-mode: standalone)').matches ||
-           window.navigator.standalone === true ||
-           document.documentElement.classList.contains('app-active');
-  }
+  function getBtn(){ return btn || (btn = document.getElementById('pwa-install-btn')); }
 
-  function getBtn(){ return document.getElementById('pwa-install-btn'); }
-
-  function hideInstallBtn(){
-    var btn = getBtn();
-    if(btn) btn.style.setProperty('display','none','important');
-  }
-
-  function applyVisibility(){
-    if(isStandaloneNow()){
-      hideInstallBtn();
-    }
-  }
-
-  // standalone이면 아예 시작 안 함
-  if(isStandaloneNow()){ hideInstallBtn(); return; }
-
-  // 크롬: 설치 가능 판단 시 버튼 표시
+  // 크롬이 설치 가능 판단 시 버튼 표시
   window.addEventListener('beforeinstallprompt', function(e){
     e.preventDefault();
     prompt = e;
-    if(!isStandaloneNow()){
-      var btn = getBtn();
-      if(btn) btn.style.display = 'flex';
-    }
+    var b = getBtn();
+    if(b) b.style.display = 'flex';
   });
 
   // 설치 완료 시 버튼 숨김
   window.addEventListener('appinstalled', function(){
-    hideInstallBtn();
+    var b = getBtn();
+    if(b) b.style.display = 'none';
     prompt = null;
   });
 
@@ -769,23 +748,13 @@
     if(!prompt) return;
     prompt.prompt();
     prompt.userChoice.then(function(r){
-      if(r.outcome === 'accepted') hideInstallBtn();
+      if(r.outcome === 'accepted'){
+        var b = getBtn();
+        if(b) b.style.display = 'none';
+      }
       prompt = null;
     });
   };
-
-  // app-active 클래스 변화 감지 (앱 진입 시 즉시 숨김)
-  new MutationObserver(applyVisibility)
-    .observe(document.documentElement, {attributes:true, attributeFilter:['class']});
-
-  // matchMedia 변화 감지
-  try{
-    window.matchMedia('(display-mode: standalone)').addEventListener('change', applyVisibility);
-  }catch(e){ console.warn("[가톨릭길동무]", e); }
-
-  // load / pageshow 후 재평가
-  window.addEventListener('load', applyVisibility);
-  window.addEventListener('pageshow', applyVisibility);
 })();
 
 /* ====== 성능 최적화 JS 패치 ====== */
@@ -820,20 +789,33 @@
 })();
 
 /* OAI removed duplicate route-sheet observer: 경로삭제가 아닌 닫기/복귀에서 노란마커로 강제 이동하지 않도록 제거. */
-
 (function(){
-  'use strict';
-  window.oaiSwipeAction = function(el, dir){
-    if(!el) return;
-    el.classList.remove('oai-swipe-left','oai-swipe-right');
-    requestAnimationFrame(function(){
-      el.classList.add(dir === 'right' ? 'oai-swipe-right' : 'oai-swipe-left');
-      setTimeout(function(){ try{ el.classList.remove('oai-swipe-left','oai-swipe-right'); }catch(e){ console.warn("[가톨릭길동무]", e); } }, 180);
-    });
-  };
-  /* V1-S: 관구·교구 외부 홈페이지 복귀는 app.js의 openDioceseExternal/restoreDioceseExternalState 한 경로만 사용한다.
-     여기서 다시 덮어쓰면 pageshow/focus 복원이 중복되어 복귀 화면이 여러 번 깜빡인다. */
+  // 설치 버튼: standalone 감지 즉시 숨김 (CSS 외 JS 보강)
+  function hideInstallIfStandalone(){
+    var isStandalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.navigator.standalone === true ||
+      document.documentElement.classList.contains('app-active');
+    if(isStandalone){
+      var btn = document.getElementById('pwa-install-btn');
+      if(btn) btn.style.setProperty('display','none','important');
+    }
+  }
+  hideInstallIfStandalone();
+  // app-active 클래스 변화 감지
+  var htmlEl = document.documentElement;
+  var htmlObs = new MutationObserver(function(){ hideInstallIfStandalone(); });
+  htmlObs.observe(htmlEl, {attributes:true, attributeFilter:['class']});
+  // matchMedia 변화 감지
+  try{
+    window.matchMedia('(display-mode: standalone)').addEventListener('change', hideInstallIfStandalone);
+  }catch(e){ console.warn("[가톨릭길동무]", e); }
+  // load 후 한번 더
+  window.addEventListener('load', hideInstallIfStandalone);
+  window.addEventListener('pageshow', hideInstallIfStandalone);
 })();
+
+/* IIFE10 oaiSwipeAction 초기 정의 제거: IIFE11(flash 방식)·IIFE17(overlay 방식)에 의해 즉시 덮어쓰여 dead code였음 */
 (function(){
   'use strict';
   if(window.__APP_BACK_ROUTE_GUARD__) return;
@@ -847,7 +829,7 @@
     el.classList.add(dir==='right'?'oai-swipe-right':'oai-swipe-left');
     setTimeout(function(){try{el.classList.remove('oai-swipe-left','oai-swipe-right');}catch(e){ console.warn("[가톨릭길동무]", e); }},240);
   }
-  window.oaiSwipeAction = function(el, dir){ flash(el, dir); };
+  /* oaiSwipeAction: IIFE17에서 overlay div 방식으로 최종 정의 - 여기서 flash 방식 정의 제거 */
 
   /* 가로로 밀 때 브라우저/웹뷰 자체 화면이 옆으로 밀리는 현상 차단 */
   function bindHorizontalGuard(el){
@@ -1062,7 +1044,7 @@
   }
   function closeGuideModals(){
     try{
-      var mq = $b('mass-quick-modal');
+      var mq = $('mass-quick-modal');
       if(mq && mq.classList.contains('show') && typeof window.closeMassQuickMenu === 'function'){
         window.closeMassQuickMenu();
       } else {

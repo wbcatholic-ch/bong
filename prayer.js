@@ -586,7 +586,7 @@ window.prCloseDetail = window.prCloseDetail;
     if (dx < 0) goNext(); else goPrev();
   }, { passive: true });
 })();
-lyTabColors = prApplyTabColors;
+/* lyTabColors: 미선언 전역 변수 - 참조하는 코드 없음, 제거 */
 
 window.initPrayerView = function(){
   prLoadPrefs();
