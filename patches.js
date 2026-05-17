@@ -846,9 +846,11 @@
   /* oaiSwipeAction: IIFE17에서 overlay div 방식으로 최종 정의 - 여기서 flash 방식 정의 제거 */
 
   /* 가로로 밀 때 브라우저/웹뷰 자체 화면이 옆으로 밀리는 현상 차단 */
+  /* bindHorizontalGuard: guardHorizontal(__APP_PRECISE_GUARD__, IIFE13)과 동일 로직
+     플래그를 __oaiPreciseGuard로 통일 → IIFE13 init() 실행 시 이미 붙은 요소는 자동 skip */
   function bindHorizontalGuard(el){
-    if(!el || el.__oaiFinalHorizontalGuard) return;
-    el.__oaiFinalHorizontalGuard = true;
+    if(!el || el.__oaiPreciseGuard) return;
+    el.__oaiPreciseGuard = true;
     var sx=0, sy=0, horizontal=false;
     el.addEventListener('touchstart', function(e){
       if(!e.touches || !e.touches[0]) return;
