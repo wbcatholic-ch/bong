@@ -1,20 +1,28 @@
-/* 가톨릭길동무 Service Worker - V1-S-A17
+/* 가톨릭길동무 Service Worker - V1-S
    캐시를 매번 삭제하지 않고, 버전 변경 시 오래된 캐시만 정리합니다.
    localStorage/사용자 설정은 건드리지 않습니다. */
-const CACHE_VERSION = 'catholic-way-V1-S-A17';
+const CACHE_VERSION = 'catholic-way-V1-S-dio-websame3';
 const APP_SHELL = [
   './',
   './index.html',
   './diocese.html',
-  './style.css?v=V1-S-A17',
-  './app.js?v=V1-S-A17',
-  './web.js?v=V1-S-A17',
-  './patches.js?v=V1-S-A17',
-  './sw-update.js?v=V1-S-A17',
-  './manifest.json?v=V1-S-A17',
+  './qa-firebase.html',
+  './parishes.js?v=V1-S-dio-websame3',
+  './style.css?v=V1-S-dio-websame3',
+  './app.js?v=V1-S-dio-websame3',
+  './web.js?v=V1-S-dio-websame3',
+  './prayer.js?v=V1-S-dio-websame3',
+  './patches.js?v=V1-S-dio-websame3',
+  './sw-update.js?v=V1-S-dio-websame3',
+  './manifest.json?v=V1-S-dio-websame3',
   './icon-192x192.png',
   './icon-512x512.png',
   './icon-512x512-maskable.png',
+  './ios-install-step1-kakao-bottom-buttons.png',
+  './ios-install-step2-safari-open.png',
+  './KakaoTalk_20260514_134255658_04.jpg',
+  './ios-install-step3-share-menu.png',
+  './ios-install-step4-home-screen.png'
 ];
 
 self.addEventListener('install', (event) => {
