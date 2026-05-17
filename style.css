@@ -46,7 +46,7 @@
   /* ── 타이포그래피 */
   --fs-header:   22px;
   --fs-tab:      15px;
-  --cover-emoji-size: 34px;
+  --cover-emoji-size: 40px;
   --app-font-scale:      1;
   --ios-inner-font-scale: 1;
   --app-inner-font-scale: calc(var(--app-font-scale) * var(--ios-inner-font-scale));
@@ -169,6 +169,8 @@
   --ui-teal:        #118a7e;
   --ui-amber:       #f59e0b;
   --pilgrim:        #1565c0;
+  --shrine:        #c0392b;
+  --martyr:        #1b7a3e;
 }
 
 /* ── 성당 모드 변수 재정의 */
@@ -1082,7 +1084,7 @@ html.parish-mode #srch-modal #sm-tab-bar {
 html.retreat-mode #srch-modal #sm-tab-bar {
   background: linear-gradient(135deg, #3f7e5b, #4f8f6a);
 }
-/* 비활성 탭: 어두운 헤더 위 반투명 흰색 → 글자 잘 보임 */
+/* 비활성 탭: 밝은 버튼 + 어두운 글자 + 조금 더 진한 테두리 */
 html #srch-modal #sm-tab-bar .sm-tab,
 html.parish-mode #srch-modal #sm-tab-bar .sm-tab,
 html.retreat-mode #srch-modal #sm-tab-bar .sm-tab {
@@ -1096,18 +1098,30 @@ html.retreat-mode #srch-modal #sm-tab-bar .sm-tab {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255,255,255,.22);
-  color: rgba(255,255,255,.88);
-  border: 1.5px solid rgba(255,255,255,.34);
+  background: #fff;
+  color: #1f2937;
+  border: 1.5px solid #9ca3af;
   box-shadow: none;
 }
-/* 활성 탭: 금색 */
-html #srch-modal #sm-tab-bar .sm-tab.active,
-html.parish-mode #srch-modal #sm-tab-bar .sm-tab.active,
+/* 활성 탭: 현재 카테고리 색상 */
+html:not(.parish-mode):not(.retreat-mode) #srch-modal #sm-tab-bar .sm-tab.active {
+  background: linear-gradient(135deg, var(--shrine-main), var(--shrine-main-2));
+  color: #fff;
+  border-color: transparent;
+  box-shadow: none;
+  font-weight: 900;
+}
+html.parish-mode #srch-modal #sm-tab-bar .sm-tab.active {
+  background: var(--parish-active, #446e93);
+  color: #fff;
+  border-color: var(--parish-active, #446e93);
+  box-shadow: none;
+  font-weight: 900;
+}
 html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {
-  background: var(--gold, #d4aa6a);
-  color: #1f2937;
-  border-color: var(--gold2, #b8965a);
+  background: var(--retreat-active, #3f7e5b);
+  color: #fff;
+  border-color: var(--retreat-active, #3f7e5b);
   box-shadow: none;
   font-weight: 900;
 }
@@ -2890,7 +2904,7 @@ html.ios-device #cover-main-block {
   padding-bottom: 4px;
 }
 html.ios-device #cover .cover-card, html.ios-device #cover .cv-btn { padding: 7px; gap: 8px; }
-html.ios-device #cover .cover-emoji, html.ios-device #cover .cover-icon-wrap { font-size: 29px; }
+html.ios-device #cover .cover-emoji, html.ios-device #cover .cover-icon-wrap { font-size: 34px; }
 html.ios-device #cover .cover-name { font-size: calc(14px * var(--app-font-scale)); line-height: 1.14; letter-spacing: -.035em; }
 html.ios-device #cover #cover-action-row { margin-top: 6px; }
 html.ios-device #cover #cover-update-btn,
@@ -2976,7 +2990,7 @@ html.oai-font-global .dd, html.oai-font-global .sg { font-size: calc(12px * var(
 html.oai-font-global #cover .cover-title { font-size: clamp(28px, 8.2vw, 38px); }
 html.oai-font-global #cover .cover-subtitle { font-size: 16px; }
 html.oai-font-global #cover .cover-name { font-size: calc(16px * var(--app-font-scale)); }
-html.oai-font-global #cover .cover-emoji { font-size: calc(34px * var(--app-font-scale)); background: transparent; box-shadow: none; }
+html.oai-font-global #cover .cover-emoji { font-size: calc(40px * var(--app-font-scale)); background: transparent; box-shadow: none; }
 html.oai-font-global #prayer-bar-ttl, html.oai-font-global .module-bar-title { font-size: 20px; line-height: 1.24; }
 
 /* 지역검색 목록 폰트 연동 */
@@ -3032,7 +3046,7 @@ html.oai-font-global #region-body .dio-hd { font-size: calc(17px * var(--app-inn
   #cover .cover-subtitle { font-size: 10px; }
   #cover .cover-grid { row-gap: clamp(2px, .5vh, 4px); }
   #cover .cover-card { padding: clamp(4px, .8vh, 8px) 6px; }
-  #cover .cover-emoji { font-size: 18px; }
+  #cover .cover-emoji { font-size: 22px; }
   #cover .cover-name { font-size: 12px; }
   #cover #qna-cover-btn { min-height: 34px; font-size: calc(10.5px * var(--app-font-scale)); }
   #cover #cover-update-btn { min-height: 34px; height: 34px; font-size: calc(10.5px * var(--app-font-scale)); padding: 0 12px; }
@@ -3272,8 +3286,6 @@ html:not(.parish-mode):not(.retreat-mode) .sm-tab.active{background:linear-gradi
 .trail-tab,
 .region-search-btn{height:46px!important;min-height:46px!important;padding:0 16px!important;display:flex!important;align-items:center!important;justify-content:center;border-radius:16px!important;font-size:16px!important;line-height:1.2!important;white-space:nowrap}
 /* ===== /OAI ===== */
-/* srch-modal sm-tab 비활성: 밝은 배경에서도 보이도록 흰 배경 + 어두운 글자 */
-#srch-modal #sm-tab-bar .sm-tab:not(.active){background:#fff!important;color:#1f2937!important;border-color:#d8dee6!important;box-shadow:none!important}
 .nearby-name,.li-name,.sm-name,.sm-place-name{font-size:16px;font-weight:800;line-height:1.35;letter-spacing:-.03em;white-space:normal;overflow:visible;word-break:keep-all}
 .nearby-addr,.li-sub,.sm-sub,.sm-place-addr{font-size:13px;line-height:1.45;letter-spacing:-.02em;white-space:normal;overflow:visible;word-break:keep-all}
 .ic-sub,.ic-type-badge,.ic-addr-lbl{font-size:12px!important}
