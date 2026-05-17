@@ -609,10 +609,24 @@
   }, true);
   document.addEventListener('DOMContentLoaded', function(){ setTimeout(syncPrayerTabOn, 300); });
   window.addEventListener('load', function(){ setTimeout(syncPrayerTabOn, 300); });
-  setInterval(function(){
+  // setInterval → MutationObserver: prayer-view의 class 변화(open/close)시에만 실행
+  // 기존 500ms 폴링은 앱 수명 동안 영구 실행되어 불필요한 CPU 낭비였음
+  (function(){
     var pv = document.getElementById('prayer-view');
-    if(pv && pv.classList.contains('open')) syncPrayerTabOn();
-  }, 500);
+    if(!pv){
+      // DOM 준비 전이면 DOMContentLoaded 후 재시도
+      document.addEventListener('DOMContentLoaded', function(){
+        var el = document.getElementById('prayer-view');
+        if(el) new MutationObserver(function(){
+          if(el.classList.contains('open')) syncPrayerTabOn();
+        }).observe(el, {attributes:true, attributeFilter:['class']});
+      }, {once:true});
+      return;
+    }
+    new MutationObserver(function(){
+      if(pv.classList.contains('open')) syncPrayerTabOn();
+    }).observe(pv, {attributes:true, attributeFilter:['class']});
+  })();
 })();
 
 
