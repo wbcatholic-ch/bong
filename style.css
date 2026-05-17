@@ -22,7 +22,7 @@
   /* ── 레이아웃 */
   --tab-h:          72px;
   --mod-header-h:   70px;
-  /* --sb 제거: JS 측정 없이 각 규칙에서 env(safe-area-inset-bottom,0px) 직접 참조 */
+  --sb:             0px;
   --st:             env(safe-area-inset-top, 0);
   --header-h:       calc(52px + env(safe-area-inset-top, 0));
   --module-tab-h:   48px;
@@ -1353,8 +1353,6 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #2d4a0a, #3d5c1a
   align-items: stretch;
   will-change: auto;
 }
-/* 모듈뷰 열기: oaiEnterView()의 opacity fade-in(.22s)과 연동.
-   닫기: oaiExitView()로 fade-out 후 display:none 처리 */
 .module-view.open {
   display: flex;
   left: 0;
@@ -1367,16 +1365,9 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #2d4a0a, #3d5c1a
   max-width: none;
   overflow: hidden;
   transform: none;
-  transition: opacity .18s ease-in;
+  transition: none;
   animation: none;
   contain: layout paint size;
-  opacity: 1;
-}
-/* 닫힘 직전 상태: JS에서 .oai-view-closing 추가 후 transitionend에서 open 제거 */
-.module-view.oai-view-closing {
-  opacity: 0;
-  transition: opacity .18s ease-in;
-  pointer-events: none;
 }
 #web-view.module-view.open,
 #trail-view.module-view.open,
@@ -1385,27 +1376,8 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #2d4a0a, #3d5c1a
 /* 모듈 헤더 표준 */
 .module-bar,
 #prayer-bar,
-#diocese-bar {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  height: calc(var(--oai-std-header-h) + env(safe-area-inset-top, 0px));
-  min-height: calc(var(--oai-std-header-h) + env(safe-area-inset-top, 0px));
-  max-height: calc(var(--oai-std-header-h) + env(safe-area-inset-top, 0px));
-  padding: var(--oai-std-hdr-pad) 16px 10px;
-  box-sizing: border-box;
-  flex-shrink: 0;
-  width: 100%;
-  max-width: none;
-  background: #0e1535;
-  color: #fff;
-  border-bottom: 2px solid var(--gold);
-  box-shadow: 0 4px 16px rgba(14,21,53,.22);
-  contain: layout;
-}
 .module-bar::before, .module-bar::after,
 #prayer-bar::before, #prayer-bar::after,
-#diocese-bar::before, #diocese-bar::after { content: none; display: none; }
 
 .module-bar-main {
   display: flex;
@@ -1860,33 +1832,6 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #2d4a0a, #3d5c1a
   animation: none;
   contain: layout paint size;
 }
-#diocese-bar {
-  padding: env(safe-area-inset-top, 0) 14px 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: calc(52px + env(safe-area-inset-top, 0));
-}
-#diocese-bar-title { font-size: 16px; font-weight: 700; color: var(--gold); letter-spacing: .05em; }
-#diocese-close {
-  position: fixed;
-  top: calc(env(safe-area-inset-top, 0px) + 10px);
-  right: 14px;
-  background: rgba(15,21,53,.72);
-  border: 1px solid rgba(255,255,255,.28);
-  border-radius: 50%;
-  color: rgba(212,170,106,.9);
-  font-size: 28px;
-  font-weight: 900;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 2100;
-  flex-shrink: 0;
-}
 #diocese-loading {
   position: absolute;
   left: 0; right: 0; bottom: 0;
@@ -1928,8 +1873,6 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #2d4a0a, #3d5c1a
   contain: layout paint size;
 }
 #prayer-bar { background: #0e1535; border-bottom: 2px solid var(--gold); gap: 12px; }
-#prayer-bar-brand { display: flex; align-items: center; gap: 10px; }
-#prayer-bar-ico { width: 44px; height: 44px; border-radius: 14px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
 #prayer-bar-ttl { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -.02em; }
 #prayer-bar-sub { font-size: 11px; color: rgba(255,255,255,.6); margin-top: 1px; }
 #prayer-tabs {
@@ -2748,18 +2691,7 @@ html.oai-category-entering #sheet-nearby.oai-preopen-nearby { z-index: 820; }
 #sheet-nearby.oai-preopen-nearby .sheet-body { background: var(--ui-bg); }
 
 /* swipe 오버레이 */
-#oai-swipe-overlay {
-  position: fixed; top: 50%; z-index: 9500;
-  transform: translateY(-50%); pointer-events: none;
-  width: 48px; height: 48px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(14,21,53,.82); color: #d4aa6a;
-  font-size: 24px; font-weight: 700;
-  box-shadow: 0 4px 18px rgba(0,0,0,.35);
-  opacity: 0; transition: none;
-}
 @keyframes oaiSwipeShow { 0%{opacity:0;transform:translateY(-50%) scale(.75);}35%{opacity:1;transform:translateY(-50%) scale(1.08);}100%{opacity:0;transform:translateY(-50%) scale(1);} }
-#oai-swipe-overlay.active { animation: oaiSwipeShow .38s ease forwards; }
 
 /* 당겨서 새로고침 */
 #cv-pull-modern {
@@ -2930,8 +2862,7 @@ html.ios-device #web-view .module-bar-title,
 html.ios-device #trail-view .module-bar-title,
 html.ios-device #qna-view .module-bar-title,
 html.ios-device #diocese-view .module-bar-title,
-html.ios-device #diocese-bar-title { font-size: calc(18px * var(--app-font-scale)); line-height: 1.18; letter-spacing: -.025em; }
-html.ios-device #prayer-bar-sub,
+html.ios-device html.ios-device #prayer-bar-sub,
 html.ios-device #prayer-bar .module-bar-sub,
 html.ios-device #web-view .module-bar-sub,
 html.ios-device #trail-view .module-bar-sub,
@@ -3035,7 +2966,7 @@ html.oai-font-global #region-body .dio-hd { font-size: calc(17px * var(--app-inn
     height: calc((var(--cover-vh, 1dvh) * 100) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - clamp(166px, calc(var(--cover-vh, 1dvh) * 20), 204px));
   }
   #cover-bottom-note { padding-left: 110px; padding-right: 110px; }
-  #prayer-bar, #diocese-bar, .module-bar { width: 100vw; max-width: 100vw; }
+  #prayer-bar, .module-bar { width: 100vw; max-width: 100vw; }
 }
 @media (max-height: 720px) {
   #cover .cover-header { padding-bottom: 12px; }
@@ -3145,7 +3076,6 @@ html:not(.app-active), html:not(.app-active) body { scroll-behavior: auto; }
 .cv-btn-icon,.cv-btn-badge{width:40px;height:40px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;background:transparent;background-color:transparent;box-shadow:none;border:none}
 .cv-btn-desc,.cv-btn-top{display:none}
 .cv-stats{padding:12px 16px;border-radius:18px;background:rgba(255,255,255,.76);border:1px solid rgba(228,232,241,.96);box-shadow:0 14px 28px rgba(31,36,49,.07);font-size:12px;font-weight:800;color:#5c6578;letter-spacing:.01em;text-align:center}
-#cv-pull{color:#7a87a4}
 @media (max-width:420px){.cv-shell{padding-left:14px;padding-right:14px;gap:14px}.cv-title{font-size:25px}.cv-grid{gap:8px}.cv-btn{min-height:98px;padding:12px 9px 11px;border-radius:20px}.cv-btn-icon,.cv-btn-badge{width:40px;height:40px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;background:transparent!important;background-color:transparent!important;box-shadow:none!important;border:none!important}.cv-btn-label{font-size:12px}.cv-btn-meta{font-size:10px}}
 .web-cat-btn,.trail-tab{border-radius:14px;border:1px solid #e2e7f1;background:#f7f9fd;color:#657086;box-shadow:inset 0 1px 0 rgba(255,255,255,.7);font-weight:800}
 .trail-card{border-radius:18px;border:1.25px solid #C8B79F;box-shadow:0 14px 30px rgba(24,32,51,.06)}
@@ -3233,14 +3163,9 @@ html.retreat-mode .region-item .nearby-num{background:#4f46e5!important}
 .sheet.exit-right{transform:translateX(100%)}
 #diocese-view{display:none;position:fixed;inset:0;z-index:10000;background:#F8F6F2;flex-direction:column}
 #diocese-view.open{display:flex;inset:0;bottom:0;height:auto;min-height:0}
-#diocese-bar{background:linear-gradient(135deg,#1f2a44,#2f4167);padding:env(safe-area-inset-top,0) 14px 0;display:flex;align-items:center;justify-content:space-between;min-height:calc(52px + env(safe-area-inset-top,0));flex-shrink:0;border-bottom:2px solid var(--gold)}
-#diocese-bar-title{font-size:16px;font-weight:700;color:var(--gold);letter-spacing:.05em}
-#diocese-close{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);right:14px;background:rgba(15,21,53,.72);border:1px solid rgba(255,255,255,.28);border-radius:50%;color:rgba(212,170,106,.9);font-size:28px;font-weight:900;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2100;flex-shrink:0}
 #prayer-view{display:none;position:fixed;inset:0;z-index:20000;flex-direction:column;background:#EDE8E0;font-family:'Noto Sans KR',sans-serif}
 #prayer-view.open{display:flex;left:0!important;right:0!important;width:100vw!important;position:fixed;top:0!important;bottom:0!important;height:auto!important;min-height:0!important;transform:none!important}
 #prayer-bar{background:#0e1535;border-bottom:2px solid var(--gold);gap:12px}
-#prayer-bar-brand{display:flex;align-items:center;gap:10px}
-#prayer-bar-ico{width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
 #prayer-bar-ttl{font-size:18px;font-weight:800;color:#fff;letter-spacing:-.02em}
 #prayer-bar-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:1px}
 #prayer-close{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:50%;color:rgba(212,170,106,.9);font-size:28px;font-weight:900;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;flex:0 0 auto!important}
@@ -3353,8 +3278,7 @@ html.oai-font-global .trail-nm,html.oai-font-global .trail-sh-name{font-size:cal
 html.oai-font-global .trail-reg,html.oai-font-global .trail-url,html.oai-font-global .trail-sh-sub,html.oai-font-global .trail-sh-url{font-size:calc(12px * var(--app-inner-font-scale,1))!important}
 .lv-parish-count,.oai-parish-count{font-size:calc(8px * var(--app-inner-font-scale,1))!important;font-weight:400!important;letter-spacing:0;white-space:nowrap;gap:0!important}
 .lv-parish-count b,.oai-parish-count b{font-weight:400!important;margin:0!important}
-/* #qna-cover-btn 전역 fixed 정의 제거: #cover #qna-cover-btn(position:relative)과 충돌해서
-   새로고침 시 버튼이 위로 튕기는 문제의 원인이었음. #cover 안에서 relative로만 정의. */
+#qna-cover-btn{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:40;border:none;border-radius:999px;background:linear-gradient(135deg,#1f2a44,#31446c);color:#fff;padding:9px 13px;font-family:inherit;font-size:12.5px;font-weight:800;box-shadow:0 10px 24px rgba(31,42,68,.22);display:flex;align-items:center;gap:7px}
 html.app-active #qna-cover-btn{display:none}
 .qna-body{background:#F8FAFC;display:flex;flex-direction:column}
 .qna-tabs{display:flex;gap:8px;padding:12px 14px;background:#fff;border-bottom:1px solid #E5E7EB}
