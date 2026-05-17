@@ -333,6 +333,32 @@ html.app-active #app { display: block; }
   border-color: var(--gold2);
   box-shadow: none;
 }
+
+/* 상부탭 모드별 활성 색상 */
+html:not(.parish-mode):not(.retreat-mode) #tabbar .tab-btn.active {
+  background: linear-gradient(135deg, #243a83, #1f2f6b);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(31,47,107,.18);
+}
+html.parish-mode #tabbar .tab-btn.active {
+  background: var(--parish-active, #446e93);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: none;
+}
+html.retreat-mode #tabbar .tab-btn {
+  background: #ffffff;
+  color: #0f766e;
+  border: 1.5px solid #dde3ee;
+  box-shadow: none;
+}
+html.retreat-mode #tabbar .tab-btn.active {
+  background: #3f7e5b;
+  color: #ffffff;
+  border-color: #c49a57;
+  box-shadow: none;
+}
 .tab-icon {
   font-size: 20px;
   line-height: 1;
@@ -950,15 +976,45 @@ html.retreat-mode #region-body { overflow-x: hidden; }
 .sm-badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; white-space: nowrap; }
 .sm-place-item {
   padding: 11px 14px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--ui-line);
   cursor: pointer;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
+  background: rgba(255,255,255,.9);
+  min-height: 62px;
+  box-sizing: border-box;
 }
-.sm-place-item.app-pressing { background: #f0f5ff; }
+.sm-place-item.app-pressing { background: #fcfaf6; }
 .sm-place-icon { width: 32px; height: 32px; border-radius: 8px; background: #f0f5ff; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-.sm-place-info { flex: 1; min-width: 0; }
+.sm-place-info { flex: 1; min-width: 0; overflow: visible; }
+.sm-place-name {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--ui-text);
+  line-height: 1.35;
+  letter-spacing: -.03em;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  word-break: keep-all;
+  display: block;
+  overflow-wrap: anywhere;
+}
+.sm-place-addr {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ui-sub);
+  line-height: 1.45;
+  letter-spacing: -.02em;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  word-break: keep-all;
+  display: block;
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
 .sm-place-loading { padding: 20px; text-align: center; color: #aaa; font-size: 13px; }
 
 /* sm 탭바 */
@@ -1004,6 +1060,54 @@ html.retreat-mode #region-body { overflow-x: hidden; }
   background: var(--gold);
   color: #1f2937;
   border-color: var(--gold2);
+  box-shadow: none;
+  font-weight: 900;
+}
+
+/* srch-modal 내부 sm-tab-bar — 모드별 배경 */
+#srch-modal #sm-tab-bar {
+  height: 50px;
+  min-height: 50px;
+  padding: 6px 10px;
+  gap: 8px;
+  align-items: center;
+  border-bottom: 2px solid var(--oai-gold, #d4aa6a);
+}
+html:not(.parish-mode):not(.retreat-mode) #srch-modal #sm-tab-bar {
+  background: linear-gradient(135deg, #1f2f6b, #243a83);
+}
+html.parish-mode #srch-modal #sm-tab-bar {
+  background: linear-gradient(135deg, #3f5d7b, #4f6f90);
+}
+html.retreat-mode #srch-modal #sm-tab-bar {
+  background: linear-gradient(135deg, #3f7e5b, #4f8f6a);
+}
+/* 비활성 탭: 어두운 헤더 위 반투명 흰색 → 글자 잘 보임 */
+html #srch-modal #sm-tab-bar .sm-tab,
+html.parish-mode #srch-modal #sm-tab-bar .sm-tab,
+html.retreat-mode #srch-modal #sm-tab-bar .sm-tab {
+  min-height: 38px;
+  height: 38px;
+  max-height: 38px;
+  padding: 0 12px;
+  border-radius: 13px;
+  font-size: 14px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,.22);
+  color: rgba(255,255,255,.88);
+  border: 1.5px solid rgba(255,255,255,.34);
+  box-shadow: none;
+}
+/* 활성 탭: 금색 */
+html #srch-modal #sm-tab-bar .sm-tab.active,
+html.parish-mode #srch-modal #sm-tab-bar .sm-tab.active,
+html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {
+  background: var(--gold, #d4aa6a);
+  color: #1f2937;
+  border-color: var(--gold2, #b8965a);
   box-shadow: none;
   font-weight: 900;
 }
@@ -3167,14 +3271,13 @@ html:not(.parish-mode):not(.retreat-mode) .sm-tab.active{background:linear-gradi
 .trail-tab,
 .region-search-btn{height:46px!important;min-height:46px!important;padding:0 16px!important;display:flex!important;align-items:center!important;justify-content:center;border-radius:16px!important;font-size:16px!important;line-height:1.2!important;white-space:nowrap}
 /* ===== /OAI ===== */
-#srch-modal #sm-tab-bar .sm-tab:not(.active){background:rgba(255,255,255,.16);color:rgba(255,255,255,.92)!important;border-color:rgba(255,255,255,.38)!important;font-weight:800!important}
-.nearby-name,.li-name{font-size:16px!important;font-weight:700!important}
-.nearby-addr,.li-sub{font-size:12px!important}
+/* srch-modal sm-tab 비활성 → 상단에서 모드별로 정의됨 */
+.nearby-name,.li-name,.sm-name,.sm-place-name{font-size:16px;font-weight:800;line-height:1.35;letter-spacing:-.03em;white-space:normal;overflow:visible;word-break:keep-all}
+.nearby-addr,.li-sub,.sm-sub,.sm-place-addr{font-size:13px;line-height:1.45;letter-spacing:-.02em;white-space:normal;overflow:visible;word-break:keep-all}
 .ic-sub,.ic-type-badge,.ic-addr-lbl{font-size:12px!important}
 .ic-tel-btn,.ic-route-btn,.ic-link-btn,.btn-kakao-nav{font-size:16px!important}
 #sm-tab-bar{display:flex;gap:10px;padding:10px 12px;height:55px;align-items:center;background:#f5efe5;border-bottom:1px solid var(--ui-line);box-sizing:border-box}
-html.parish-mode #sm-tab-bar{background:var(--church-soft-2);border-bottom-color:#d4b896!important}
-html.retreat-mode #sm-tab-bar{background:var(--retreat-soft-2)!important;border-bottom-color:#a5b4fc!important}
+/* 일반 sm-tab-bar (srch-modal 밖) 배경 */
 #trail-panel-list:not(.on){display:none}
 @media (min-width:600px){.sm-tab{font-size:16px!important}.tab-btn{font-size:13px!important}#sm-tab-bar{height:60px!important}}
 html:not(.parish-mode):not(.retreat-mode) #tabbar,html.parish-mode #tabbar,html.retreat-mode #tabbar{background:rgba(255,255,255,.96)!important;border-bottom:1px solid #d8dee6!important}
@@ -3186,8 +3289,7 @@ html.parish-mode .sheet-hd,html.parish-mode .filter-bar,html.parish-mode .region
 .sm-x{color:#c49b56!important;border-color:rgba(212,170,106,.58)!important;background:rgba(14,21,53,.88)!important;border:1px solid rgba(212,170,106,.58)!important}
 .filter-btn,.sm-fb{background:#fff!important;color:#7b8794!important;border:1.5px solid var(--ui-line-strong)!important;box-shadow:none!important}
 .filter-btn.active,.sm-fb.on,html:not(.parish-mode):not(.retreat-mode) .filter-btn.active,html:not(.parish-mode):not(.retreat-mode) .sm-fb.on,html.parish-mode .filter-btn.active,html.parish-mode .sm-fb.on,html.retreat-mode .filter-btn.active,html.retreat-mode .sm-fb.on{background:var(--oai-gold)!important;color:#1f2937!important;border-color:var(--oai-gold-border)!important}
-#sm-tab-bar,html:not(.parish-mode):not(.retreat-mode) #sm-tab-bar,html.parish-mode #sm-tab-bar,html.retreat-mode #sm-tab-bar{background:inherit!important;border-bottom:1px solid rgba(255,255,255,.14)!important;padding:10px 14px!important;height:55px!important;align-items:center!important;gap:8px!important}
-.sm-tab.active,html:not(.parish-mode):not(.retreat-mode) .sm-tab.active,html.parish-mode .sm-tab.active,html.retreat-mode .sm-tab.active{background:var(--oai-gold)!important;color:#1f2937!important;border-color:var(--oai-gold-border)!important}
+/* sm-tab-bar 레이아웃은 상단에서 정의됨 */
 html.retreat-mode .region-list-hd,html.retreat-mode .ric-lbl,html.retreat-mode .dio-hd,html.retreat-mode .li-name,html.retreat-mode .nearby-name,html.retreat-mode .nearby-dist{color:#4e7f67!important}
 html.retreat-mode .li-badge,html.retreat-mode .nearby-type,html.retreat-mode .ic-type-badge{background:var(--retreat-soft)!important;color:#5f8b74!important}
 /* 지역검색 리스트 제목 글자 = 내주변 리스트 제목 글자, 전역 글자크기와 연동 */
