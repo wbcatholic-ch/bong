@@ -1241,8 +1241,16 @@ function normalizeCatholicExternalUrl(url){
     return u.toString();
   }catch(e){ return url; }
 }
+// 외부 URL 이동 함수들의 공통 전처리:
+//   1) normalizeCatholicExternalUrl 호출  2) 빈 URL이면 null 반환
+function prepareExternalUrl(url){
+  url = (typeof normalizeCatholicExternalUrl === 'function')
+        ? normalizeCatholicExternalUrl(url)
+        : String(url || '').trim();
+  return url || null;
+}
 function openCoreExternalUrl(url, extra){
-  url = normalizeCatholicExternalUrl(url);
+  url = prepareExternalUrl(url);
   if(!url) return;
   saveCoreReturnState(extra);
   // location.href 방식: PWA/모바일에서 팝업 차단 우회, 뒤로가기로 복귀 가능
@@ -1251,7 +1259,7 @@ function openCoreExternalUrl(url, extra){
 
 const DIOCESE_RETURN_KEY='catholic_diocese_external_return_v1';
 function openDioceseExternal(url, state){
-  url = normalizeCatholicExternalUrl(url);
+  url = prepareExternalUrl(url);
   if(!url) return;
   try{
     var payload=JSON.stringify(state || {});
