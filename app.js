@@ -837,7 +837,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-    var target = btn.getAttribute('data-target-version') || 'V1-S';
+    var target = btn.getAttribute('data-target-version') || 'V1-S-A16';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -1172,7 +1172,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V1-S';
+    frame.src='diocese.html?v=V1-S-A16';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -4436,7 +4436,7 @@ function openSearchModal(role){
   _smTab='cat';
   // 탭 이름 카테고리별 설정
   const catTab=$('sm-tab-cat');
-  if(catTab) catTab.textContent=_mode==='shrine'?'✝ 성지':_mode==='parish'?'⛪ 성당':'🏔 피정의 집';
+  if(catTab) catTab.textContent=_mode==='shrine'?'성지':_mode==='parish'?'성당':'피정의 집';
   if($('sm-tab-cat')) $('sm-tab-cat').classList.add('active');
   if($('sm-tab-place')) $('sm-tab-place').classList.remove('active');
   requestAnimationFrame(function(){
