@@ -1172,7 +1172,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V1-S-dio-websame3';
+    frame.src='diocese.html?v=V1-S';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -1241,8 +1241,16 @@ function normalizeCatholicExternalUrl(url){
     return u.toString();
   }catch(e){ return url; }
 }
+// 외부 URL 이동 함수들의 공통 전처리:
+//   1) normalizeCatholicExternalUrl 호출  2) 빈 URL이면 null 반환
+function prepareExternalUrl(url){
+  url = (typeof normalizeCatholicExternalUrl === 'function')
+        ? normalizeCatholicExternalUrl(url)
+        : String(url || '').trim();
+  return url || null;
+}
 function openCoreExternalUrl(url, extra){
-  url = normalizeCatholicExternalUrl(url);
+  url = prepareExternalUrl(url);
   if(!url) return;
   saveCoreReturnState(extra);
   // location.href 방식: PWA/모바일에서 팝업 차단 우회, 뒤로가기로 복귀 가능
@@ -1251,7 +1259,7 @@ function openCoreExternalUrl(url, extra){
 
 const DIOCESE_RETURN_KEY='catholic_diocese_external_return_v1';
 function openDioceseExternal(url, state){
-  url = normalizeCatholicExternalUrl(url);
+  url = prepareExternalUrl(url);
   if(!url) return;
   try{
     var payload=JSON.stringify(state || {});
@@ -2566,6 +2574,10 @@ function _fitRouteBounds(bounds, opts){
   const pad = _getRouteBoundsPadding();
   try{
     _map.setBounds(bounds, pad.top, pad.right, pad.bottom, pad.left);
+    if(opts && opts.repeat){
+      setTimeout(function(){ try{ const p=_getRouteBoundsPadding(); _map.setBounds(bounds, p.top, p.right, p.bottom, p.left); }catch(e){ console.warn('[가톨릭길동무]', e); } }, 90);
+      setTimeout(function(){ try{ const p=_getRouteBoundsPadding(); _map.setBounds(bounds, p.top, p.right, p.bottom, p.left); }catch(e){ console.warn('[가톨릭길동무]', e); } }, 260);
+    }
     return true;
   }catch(e1){
     try{ _map.setBounds(bounds); return true; }
@@ -2727,7 +2739,10 @@ function openInAppRoute(){
   if(!item.lat||!item.lng) return;
 
   function doRoute(spLat, spLng, spName){
-  closeInfoCard();
+  // 길찾기 시작 시 인포카드 닫힘 때문에 지도 중심이 먼저 움직이면,
+  // 곧바로 이어지는 경로 bounds 보정과 겹쳐 화면이 크게 흔들린다.
+  // 길찾기 흐름에서는 지도를 움직이지 않고 카드만 닫는다.
+  closeInfoCard({keepMap:true});
   openTab('route');
   _rS={idx:-1, name:spName, lat:spLat, lng:spLng};
   _rE={idx, name:item.name, lat:item.lat, lng:item.lng};
@@ -3135,6 +3150,17 @@ function _parishDioCodeOf(p){
   return p && p.diocese ? (_PARISH_DIO_CODE_MAP[p.diocese] || null) : null;
 }
 
+function _isParishDioBoundsOutlier(p, code){
+  if(!p) return false;
+  const name=String(p.name||'');
+  const addr=String(p.addr||'');
+  // 교구 전체 보기의 중심/범위 계산에서만 섬 지역을 제외한다.
+  // 목록·검색·개별 성당 선택·길찾기 데이터는 그대로 유지한다.
+  if(code==='IC' && (name.indexOf('백령')>=0 || addr.indexOf('백령')>=0)) return true;
+  if(code==='DG' && (addr.indexOf('울릉')>=0 || name.indexOf('울릉')>=0)) return true;
+  return false;
+}
+
 // 교구별 성당 목록 (코드 기준 분류)
 const _PA_BY_DIO = (function(){
   const m={};
@@ -3165,10 +3191,7 @@ function _parishDioCenter(code){
   let minLat=Infinity,maxLat=-Infinity,minLng=Infinity,maxLng=-Infinity,count=0;
   parishes.forEach(function(p){
     if(!p||!p.lat||!p.lng||p.lat===0||p.lng===0) return;
-    // 인천교구 백령도(서해 최북단 외딴 섬, lng ≈124.6)와
-    // 대구대교구 울릉도(동해 외딴 섬, lng ≈130.9)는 교구 중심 계산에서 제외한다.
-    if(code==='IC' && p.lng < 125.2) return;
-    if(code==='DG' && p.lng > 130.5) return;
+    if(_isParishDioBoundsOutlier(p, code)) return;
     minLat=Math.min(minLat,p.lat); maxLat=Math.max(maxLat,p.lat);
     minLng=Math.min(minLng,p.lng); maxLng=Math.max(maxLng,p.lng);
     count++;
@@ -3259,7 +3282,14 @@ function _buildParishDioSystem(){
   });
 }
 
+function _isParishRouteLineActive(){
+  return _mode==='parish' && !!_polyline;
+}
 function _showDioOverlays(){
+  if(_isParishRouteLineActive()){
+    _hideDioOverlays();
+    return;
+  }
   Object.values(_dioOverlays).forEach(ov=>{ try{ov.setMap(_map);}catch(e){ console.warn("[가톨릭길동무]", e); } });
 }
 function _hideDioOverlays(){
@@ -3268,6 +3298,12 @@ function _hideDioOverlays(){
 
 function _syncParishDioLabels(){
   if(_mode!=='parish' || !_map) return;
+  // 성당 길찾기 경로가 지도에 표시된 동안에는 출발/도착 마커와 경로선만 보이도록
+  // 교구 라벨을 다시 띄우지 않는다. 지도 idle/복귀 보정에서 이 함수가 재호출되어도 유지된다.
+  if(_isParishRouteLineActive()){
+    _hideDioOverlays();
+    return;
+  }
   if(!_parishSysInited){ try{ _buildParishDioSystem(); }catch(e){ console.warn('[가톨릭길동무]',e); } }
   Object.entries(_dioOverlays||{}).forEach(function(pair){
     const code=pair[0], ov=pair[1];
@@ -3316,9 +3352,7 @@ function _fitParishDioBounds(code, opts){
   try{
     parishes.forEach(function(p){
       if(!p||!p.lat||!p.lng||p.lat===0||p.lng===0) return;
-      // 교구 bounds 계산에서도 백령도(IC)와 울릉도(DG)를 제외한다.
-      if(code==='IC' && p.lng < 125.2) return;
-      if(code==='DG' && p.lng > 130.5) return;
+      if(_isParishDioBoundsOutlier(p, code)) return;
       only=p;
       const pos=new _LL(p.lat,p.lng);
       if(!bounds) bounds=new _LB();
@@ -3370,6 +3404,10 @@ function _ensureParishMarkerZoom(){
   }catch(e){ console.warn('[가톨릭길동무]',e); }
 }
 function _showParishDioMkrs(code){
+  if(_isParishRouteLineActive()){
+    try{ _hideParishDioMkrs(code); }catch(e){ console.warn('[가톨릭길동무]',e); }
+    return;
+  }
   // 교구를 선택했을 때는 해당 교구 성당 마커가 반드시 보이도록 한다.
   // 지도 줌/중심은 _focusParishDio()의 교구 전체 bounds를 우선한다.
   // 여기서 줌을 강제로 당기면 넓은 교구의 일부 마커만 보일 수 있으므로 건드리지 않는다.
@@ -3415,6 +3453,12 @@ function _showParishDioMkrs(code){
 function _updateParishViewport(code){
   const mkrs=_dioMkrs[code];
   if(!mkrs||!_map) return;
+  if(_isParishRouteLineActive()){
+    mkrs.forEach(mk=>{
+      try{ mk.setMap(null); }catch(e){ console.warn('[가톨릭길동무]',e); }
+    });
+    return;
+  }
   mkrs.forEach(mk=>{
     try{ mk.setMap(_map); }catch(e){ console.warn('[가톨릭길동무]',e); }
   });
@@ -3748,6 +3792,20 @@ function setDioFilter(v,btn){
   renderList();
   setTimeout(()=>_scrollSheetTop('list'),0);
   if(v!=='all'&&DIOCESE_CENTER[v]&&_map){
+  // 성당 카테고리는 고정 중심값 대신 교구별 실제 성당 bounds를 사용한다.
+  // 이 계산에서 인천교구 백령도, 대구대교구 울릉도는 _isParishDioBoundsOutlier()로 제외된다.
+  if(_mode==='parish'){
+    const code=_PARISH_DIO_CODE_MAP[v]||null;
+    if(code){
+      try{
+        if(_activeDio && _activeDio!==code) _hideParishDioMkrs(_activeDio);
+        _activeDio=code;
+        _showParishDioMkrs(code);
+        _syncParishDioLabels();
+        if(_fitParishDioBounds(code,{reason:'list-filter'})) return;
+      }catch(e){ console.warn('[가톨릭길동무]',e); }
+    }
+  }
   const dc=DIOCESE_CENTER[v];
   _map.setLevel(dc.mob||10);
   if(typeof _setMapCenterByInfoCardStandard==='function') _setMapCenterByInfoCardStandard(new _LL(dc.lat,dc.lng));
@@ -3757,6 +3815,15 @@ function setDioFilter(v,btn){
   if(typeof _setMapCenterByInfoCardStandard==='function') _setMapCenterByInfoCardStandard(new _LL(36.2,127.9));
   else _map.setCenter(new _LL(36.2,127.9));
   }
+}
+
+function _regionHtmlEsc(v){
+  return String(v == null ? '' : v).replace(/[&<>"]/g, function(ch){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];
+  });
+}
+function _regionAttrEsc(v){
+  return _regionHtmlEsc(v).replace(/'/g, '&#39;');
 }
 
 function _regionModeLabel(){
@@ -3796,8 +3863,9 @@ function doRegionSearch(){
     if(!docs.length){ _showRegionFallback(q); return; }
     let html='<div style="padding:8px 14px 4px;font-size:11px;font-weight:700;color:#888;background:#f8f9fc;border-bottom:1px solid #eee;">📍 지역을 선택하세요</div>';
     docs.forEach(d=>{
-      const nm=d.place_name, ad=d.road_address_name||d.address_name;
-      html+=`<div class="region-place-cand nearby-item" data-lat="${parseFloat(d.y)}" data-lng="${parseFloat(d.x)}" data-name="${nm.replace(/"/g,'&quot;')}"><div class="nearby-num" style="background:#e5e7eb;color:#374151;font-size:18px;width:34px;height:34px">📍</div><div class="nearby-info"><div class="nearby-name">${nm}</div><div class="nearby-addr">${ad}</div></div></div>`;
+      const nm=d.place_name||'', ad=d.road_address_name||d.address_name||'';
+      const cat=d.category_name||'', url=d.place_url||'';
+      html+=`<div class="region-place-cand nearby-item" data-lat="${parseFloat(d.y)}" data-lng="${parseFloat(d.x)}" data-name="${_regionAttrEsc(nm)}" data-addr="${_regionAttrEsc(ad)}" data-cat="${_regionAttrEsc(cat)}" data-url="${_regionAttrEsc(url)}"><div class="sm-place-icon" aria-hidden="true">📍</div><div class="nearby-info"><div class="nearby-name">${_regionHtmlEsc(nm)}</div>${ad?`<div class="nearby-addr">${_regionHtmlEsc(ad)}</div>`:''}</div></div>`;
     });
     body.innerHTML=html;
     body.onclick=function(e){
@@ -3805,9 +3873,10 @@ function doRegionSearch(){
       if(!cand) return;
       body.onclick=null;
       const clat=parseFloat(cand.dataset.lat),clng=parseFloat(cand.dataset.lng),cname=cand.dataset.name;
+      const caddr=cand.dataset.addr||'', ccat=cand.dataset.cat||'', curl=cand.dataset.url||'';
       _regionLat=clat;_regionLng=clng;_regionName=cname;_regionPlaceName=cname;
       body.innerHTML='<div class="empty-msg">🚗 자동차 거리 계산 중...</div>';
-      _showRegionResults(cname,clat,clng,{place_name:cname,road_address_name:'',address_name:'',category_name:'',place_url:''});
+      _showRegionResults(cname,clat,clng,{place_name:cname,road_address_name:caddr,address_name:caddr,category_name:ccat,place_url:curl});
       if(_map){
         if(typeof _setMapCenterByInfoCardStandard==='function') _setMapCenterByInfoCardStandard(new _LL(clat,clng));
         else _map.setCenter(new _LL(clat,clng));
@@ -3825,9 +3894,13 @@ function _showRegionResults(q,lat,lng,doc){
   const placeCat=doc.category_name?doc.category_name.split(' > ').pop():'';
   const placeUrl=doc.place_url||'';
   const isParish=_mode==='parish',isRetreat=_mode==='retreat';
-  const infoCard=`<div class="region-info-card"><div class="ric-hd"><div class="ric-icon">📍</div><div class="ric-name-wrap"><div class="ric-name">${placeName}</div>${placeCat?`<div class="ric-cat">${placeCat}</div>`:''}</div>${placeUrl?`<a class="ric-map-link" href="${placeUrl}" target="_blank">지도 ↗</a>`:''}</div><div class="ric-body">${placeAddr?`<div class="ric-row"><span class="ric-lbl">주소</span><span>${placeAddr}</span></div>`:''}</div></div>`;
+  const safePlaceName=_regionHtmlEsc(placeName);
+  const safePlaceAddr=_regionHtmlEsc(placeAddr);
+  const safePlaceCat=_regionHtmlEsc(placeCat);
+  const safePlaceUrl=_regionAttrEsc(placeUrl);
+  const infoCard=`<div class="region-info-card"><div class="ric-hd"><div class="ric-icon">📍</div><div class="ric-name-wrap"><div class="ric-name">${safePlaceName}</div>${placeAddr?`<div class="ric-addr">${safePlaceAddr}</div>`:''}${placeCat?`<div class="ric-cat">${safePlaceCat}</div>`:''}</div>${placeUrl?`<a class="ric-map-link" href="${safePlaceUrl}" target="_blank" rel="noopener">지도 ↗</a>`:''}</div></div>`;
   const listHd=`<div class="region-list-hd">${isParish?'⛪ 근처 성당':(isRetreat?'🏔 근처 피정의 집':'✝ 근처 성지')} <span style="font-size:13px;font-weight:500;color:#aaa">· 자동차 거리순 10곳</span></div>`;
-  $('region-body').innerHTML=infoCard+listHd+'<div id="rg-loading" class="empty-msg" style="padding:16px">🚗 정확한 거리 계산 중입니다…</div><div id="rg-list"></div>';
+  $('region-body').innerHTML=infoCard+listHd+'<div id="rg-loading" style="text-align:center;padding:10px;font-size:12px;color:#888;">🚗 정확한 거리 계산 중입니다…</div><div id="rg-list" style="background:#fff"></div>';
   const results=new Array(prelim.length).fill(null);let done=0;
   prelim.forEach((x,i)=>{
     _navFetch(`${lng},${lat}`,`${x.s.lng},${x.s.lat}`)
@@ -3844,7 +3917,7 @@ function _showRegionResults(q,lat,lng,doc){
         if(rgl) rgl.innerHTML=sorted.map((o,i)=>{
           const idx=items.indexOf(o.x.s);const c=_getModeMarkerColor(o.x.s);const lbl=_getModeTypeLabel(o.x.s);
           const km=o.r.km.toFixed(1);const dur=o.r.dur?`<span style="font-size:10px;color:#aaa;font-weight:400;margin-left:3px">${_fmtTime(o.r.dur)}</span>`:'';
-          return `<div class="region-item" onclick="selectItem(${idx},{fromRegion:true})"><div class="nearby-num" style="background:${c};width:32px;height:32px;font-size:13px">${i+1}</div><div class="nearby-info"><div class="nearby-name">${o.x.s.name}</div><div class="nearby-addr">${o.x.s.addr}</div></div><div class="nearby-meta"><div class="nearby-type" style="background:${c}18;color:${c}">${lbl}</div><div class="nearby-dist" style="color:${c}">🚗${km}km<span style="font-size:11px;color:#aaa;font-weight:400;margin-left:3px">${o.r.dur?_fmtTime(o.r.dur):''}</span></div></div></div>`;
+          return `<div class="region-item" onclick="selectItem(${idx},{fromRegion:true})"><div class="nearby-num" style="background:${c}!important;width:28px;height:28px;font-size:12px">${i+1}</div><div class="nearby-info"><div class="nearby-name">${o.x.s.name}</div><div class="nearby-addr">${o.x.s.addr.substring(0,26)}${o.x.s.addr.length>26?'…':''}</div></div><div class="nearby-meta"><div class="nearby-type" style="background:${c}18!important;color:${c}!important">${lbl}</div><div class="nearby-dist" style="color:${c}!important">🚗${km}km${dur}</div></div></div>`;
         }).join('');
       }
     });
@@ -3875,7 +3948,11 @@ function _showRegionFallback(q){
   const list=matched.map((s,i)=>{
   const idx=items2.indexOf(s);
   const c=_getModeMarkerColor(s);
-  return `<div class="region-item" onclick="selectItem(${idx},{fromRegion:true})"><div class="nearby-num" style="background:${c};width:32px;height:32px;font-size:13px">${i+1}</div><div class="nearby-info"><div class="nearby-name">${s.name}</div><div class="nearby-addr">${s.addr}</div></div><div class="nearby-meta"><div class="nearby-type" style="background:${c}18;color:${c}">${_mode==='shrine'?s.type:(_mode==='retreat'?'피정의 집':'성당')}</div></div></div>`;
+  return `<div class="region-item" onclick="selectItem(${idx},{fromRegion:true})">
+   <div class="nearby-num" style="background:${c}!important;width:26px;height:26px;font-size:12px">${i+1}</div>
+   <div class="nearby-info"><div class="nearby-name">${s.name}</div><div class="nearby-addr">${s.addr.substring(0,26)}…</div></div>
+   <div class="nearby-meta"><div class="nearby-type" style="background:${c}18!important;color:${c}!important">${_mode==='shrine'?s.type:(_mode==='retreat'?'피정의 집':'성당')}</div></div>
+  </div>`;
   }).join('');
   $('region-body').innerHTML=
   `<div style="padding:10px 16px 8px;font-size:12px;font-weight:700;color:#1565c0;background:#fff;border-bottom:1px solid #eee">검색결과 ${matched.length}곳</div>${list}`;
@@ -4107,6 +4184,41 @@ function _selectRouteItem(idx){
   }
 }
 
+function _hideParishMarkersForRouteDisplay(){
+  if(_mode!=='parish') return;
+  try{ _clearParishNearbyMarkers(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+  try{ _hideDioOverlays(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+  try{
+    Object.keys(_dioMkrs||{}).forEach(function(code){
+      (_dioMkrs[code]||[]).forEach(function(mk){
+        try{ mk.setMap(null); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      });
+    });
+    if(_parishIdleListener){
+      try{ kakao.maps.event.removeListener(_parishIdleListener); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      _parishIdleListener=null;
+    }
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+  try{ if(_paSelMkr) _paSelMkr.setMap(null); }catch(e){ console.warn('[가톨릭길동무]', e); }
+}
+
+function _hideRetreatMarkersForRouteDisplay(){
+  if(_mode!=='retreat') return;
+  try{
+    (_retreatMarkers||[]).forEach(function(o){
+      if(!o || !o.marker) return;
+      // 피정의집 길찾기는 성당과 동일하게 출발/도착 임시 마커와 경로선만 남긴다.
+      // 원래 초록 마커들은 경로 표시 중 숨기고, resetRoute/closeTab의 기존 복구 흐름에 맡긴다.
+      o.marker.setMap(null);
+    });
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+}
+
+function _hideCategoryMarkersForRouteDisplay(){
+  if(_mode==='parish') _hideParishMarkersForRouteDisplay();
+  else if(_mode==='retreat') _hideRetreatMarkersForRouteDisplay();
+}
+
 async function _calcRoute(){
   if(!_rS||!_rE) return;
   _hideRouteGuide();
@@ -4127,6 +4239,10 @@ async function _calcRoute(){
   } else {
   note.textContent='';note.style.display='none';
   }
+
+  // API 응답 전 임시 직선은 지도 중심을 움직이지 않는다.
+  // 실제 경로 또는 추정 경로 확정 시 한 번만 bounds를 맞춰 화면 흔들림을 줄인다.
+  _drawLine(_rS, navDest, null, {fit:false});
 
   try{
   const res=await _kakaoDirectionsFetch(`${_rS.lng},${_rS.lat}`, `${navDest.lng},${navDest.lat}`);
@@ -4149,15 +4265,15 @@ async function _calcRoute(){
   const d=calcDist(_rS.lat,_rS.lng,navDest.lat,navDest.lng)*1.4;
   $('rs-km').textContent=d.toFixed(1);
   $('rs-time').textContent=_fmtTime(d/70*3600);
-  // API 실패 시에만 직선으로 표시
-  _drawLine(_rS, navDest, null);
   if(!isJuk){
    note.textContent='* 직선거리 기반 추정값';note.style.display='block';
   }
+  _drawLine(_rS, navDest, null, {fit:true});
   }
 }
 
-function _drawLine(s1,s2,path){
+function _drawLine(s1,s2,path,opts){
+  opts = opts || {};
   _hideRouteGuide();
   if(_polyline) _polyline.setMap(null);
   _clearRouteTmpMarkers();
@@ -4167,6 +4283,7 @@ function _drawLine(s1,s2,path){
   strokeOpacity:path?0.88:0.7,strokeStyle:path?'solid':'dashed'});
   _polyline.setMap(_map);
   _refreshRouteTmpMarkers();
+  _hideCategoryMarkersForRouteDisplay();
 
   if(path){
   _markers.forEach((m,i)=>{
@@ -4177,8 +4294,6 @@ function _drawLine(s1,s2,path){
   if(_mode==='parish'){
     _hideDioOverlays();
     if(_activeDio) _hideParishDioMkrs(_activeDio);
-    // 출·도 마커 이외의 모든 마커를 숨기기 위해 선택 마커도 제거
-    if(_paSelMkr){ try{_paSelMkr.setMap(null);}catch(e){ console.warn('[가톨릭길동무]',e); } }
   } else if(_mode==='retreat'){
     _retreatMarkers.forEach(o=>{
       const isRoute=(_rS&&_rS.idx===o.index)||(_rE&&_rE.idx===o.index);
@@ -4195,8 +4310,12 @@ function _drawLine(s1,s2,path){
   if(_endTmpMkr) bounds.extend(new _LL(s2.lat,s2.lng));
   // 길찾기 결과는 아래 route 시트에 가려지기 쉬우므로,
   // 일반 인포카드 중심 보정 대신 실제 route 시트 높이를 반영한 전용 bounds를 사용한다.
-  if(typeof _fitRouteBounds==='function') _fitRouteBounds(bounds);
-  else { try{_map.setBounds(bounds,80,52,190,52);}catch(e){ console.warn("[가톨릭길동무]", e); } }
+  // 단, 여러 번 setBounds를 반복하면 성당/피정의집 경로 표시 순간 화면이 크게 흔들린다.
+  // 경로가 확정되는 시점에 한 번만 맞추고, API 대기용 임시 직선은 fit:false로 넘긴다.
+  if(opts.fit !== false){
+    if(typeof _fitRouteBounds==='function') _fitRouteBounds(bounds, {repeat:false});
+    else { try{_map.setBounds(bounds,80,52,190,52);}catch(e){ console.warn("[가톨릭길동무]", e); } }
+  }
 }
 
 function _showJukrimgulParkingMkr(show){
