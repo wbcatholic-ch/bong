@@ -43,7 +43,6 @@
       sessionStorage.removeItem('oai_prayer_quick_return');
       sessionStorage.removeItem('oai_prayer_quick_return_ts');
       sessionStorage.removeItem('oai_prayer_from_quick_lock');
-      sessionStorage.removeItem('oai_external_return_stabilize');
       sessionStorage.removeItem('oai_external_nav_pending');
       sessionStorage.removeItem('oai_external_nav_started_at');
       sessionStorage.removeItem('oai_external_nav_pagehide');
