@@ -1241,16 +1241,8 @@ function normalizeCatholicExternalUrl(url){
     return u.toString();
   }catch(e){ return url; }
 }
-// 외부 URL 이동 함수들의 공통 전처리:
-//   1) normalizeCatholicExternalUrl 호출  2) 빈 URL이면 null 반환
-function prepareExternalUrl(url){
-  url = (typeof normalizeCatholicExternalUrl === 'function')
-        ? normalizeCatholicExternalUrl(url)
-        : String(url || '').trim();
-  return url || null;
-}
 function openCoreExternalUrl(url, extra){
-  url = prepareExternalUrl(url);
+  url = normalizeCatholicExternalUrl(url);
   if(!url) return;
   saveCoreReturnState(extra);
   // location.href 방식: PWA/모바일에서 팝업 차단 우회, 뒤로가기로 복귀 가능
@@ -1259,7 +1251,7 @@ function openCoreExternalUrl(url, extra){
 
 const DIOCESE_RETURN_KEY='catholic_diocese_external_return_v1';
 function openDioceseExternal(url, state){
-  url = prepareExternalUrl(url);
+  url = normalizeCatholicExternalUrl(url);
   if(!url) return;
   try{
     var payload=JSON.stringify(state || {});
@@ -3177,6 +3169,10 @@ function _parishDioCenter(code){
   let minLat=Infinity,maxLat=-Infinity,minLng=Infinity,maxLng=-Infinity,count=0;
   parishes.forEach(function(p){
     if(!p||!p.lat||!p.lng||p.lat===0||p.lng===0) return;
+    // 인천교구 백령도(서해 최북단 외딴 섬, lng ≈124.6)와
+    // 대구대교구 울릉도(동해 외딴 섬, lng ≈130.9)는 교구 중심 계산에서 제외한다.
+    if(code==='IC' && p.lng < 125.2) return;
+    if(code==='DG' && p.lng > 130.5) return;
     minLat=Math.min(minLat,p.lat); maxLat=Math.max(maxLat,p.lat);
     minLng=Math.min(minLng,p.lng); maxLng=Math.max(maxLng,p.lng);
     count++;
@@ -3324,6 +3320,9 @@ function _fitParishDioBounds(code, opts){
   try{
     parishes.forEach(function(p){
       if(!p||!p.lat||!p.lng||p.lat===0||p.lng===0) return;
+      // 교구 bounds 계산에서도 백령도(IC)와 울릉도(DG)를 제외한다.
+      if(code==='IC' && p.lng < 125.2) return;
+      if(code==='DG' && p.lng > 130.5) return;
       only=p;
       const pos=new _LL(p.lat,p.lng);
       if(!bounds) bounds=new _LB();
@@ -4186,6 +4185,8 @@ function _drawLine(s1,s2,path){
   if(_mode==='parish'){
     _hideDioOverlays();
     if(_activeDio) _hideParishDioMkrs(_activeDio);
+    // 출·도 마커 이외의 모든 마커를 숨기기 위해 선택 마커도 제거
+    if(_paSelMkr){ try{_paSelMkr.setMap(null);}catch(e){ console.warn('[가톨릭길동무]',e); } }
   } else if(_mode==='retreat'){
     _retreatMarkers.forEach(o=>{
       const isRoute=(_rS&&_rS.idx===o.index)||(_rE&&_rE.idx===o.index);
