@@ -103,6 +103,23 @@
         .catch(function(){});
     }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', registerServiceWorker, {once:true});
-  else registerServiceWorker();
+
+  /* build marker / cover-update-btn 버전 동기화
+     index.html의 ?v= query string은 SW 캐시가 처리하므로 건드리지 않습니다.
+     화면에 표시되는 버전 텍스트와 data-target-version만 여기서 세팅합니다. */
+  function updateVersionUI(){
+    try{
+      var marker = document.getElementById('oai-build-marker');
+      if(marker) marker.textContent = APP_VERSION;
+      var btn = document.getElementById('cover-update-btn');
+      if(btn) btn.setAttribute('data-target-version', APP_VERSION);
+    }catch(e){ console.warn("[가톨릭길동무]", e); }
+  }
+
+  function init(){
+    updateVersionUI();
+    registerServiceWorker();
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, {once:true});
+  else init();
 })();
