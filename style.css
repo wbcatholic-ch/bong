@@ -22,7 +22,7 @@
   /* ── 레이아웃 */
   --tab-h:          72px;
   --mod-header-h:   70px;
-  --sb:             0px;
+  /* --sb 제거: JS 측정 없이 각 규칙에서 env(safe-area-inset-bottom,0px) 직접 참조 */
   --st:             env(safe-area-inset-top, 0);
   --header-h:       calc(52px + env(safe-area-inset-top, 0));
   --module-tab-h:   48px;
@@ -1353,6 +1353,8 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #2d4a0a, #3d5c1a
   align-items: stretch;
   will-change: auto;
 }
+/* 모듈뷰 열기: oaiEnterView()의 opacity fade-in(.22s)과 연동.
+   닫기: oaiExitView()로 fade-out 후 display:none 처리 */
 .module-view.open {
   display: flex;
   left: 0;
@@ -1365,9 +1367,16 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #2d4a0a, #3d5c1a
   max-width: none;
   overflow: hidden;
   transform: none;
-  transition: none;
+  transition: opacity .18s ease-in;
   animation: none;
   contain: layout paint size;
+  opacity: 1;
+}
+/* 닫힘 직전 상태: JS에서 .oai-view-closing 추가 후 transitionend에서 open 제거 */
+.module-view.oai-view-closing {
+  opacity: 0;
+  transition: opacity .18s ease-in;
+  pointer-events: none;
 }
 #web-view.module-view.open,
 #trail-view.module-view.open,
@@ -3344,7 +3353,8 @@ html.oai-font-global .trail-nm,html.oai-font-global .trail-sh-name{font-size:cal
 html.oai-font-global .trail-reg,html.oai-font-global .trail-url,html.oai-font-global .trail-sh-sub,html.oai-font-global .trail-sh-url{font-size:calc(12px * var(--app-inner-font-scale,1))!important}
 .lv-parish-count,.oai-parish-count{font-size:calc(8px * var(--app-inner-font-scale,1))!important;font-weight:400!important;letter-spacing:0;white-space:nowrap;gap:0!important}
 .lv-parish-count b,.oai-parish-count b{font-weight:400!important;margin:0!important}
-#qna-cover-btn{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:40;border:none;border-radius:999px;background:linear-gradient(135deg,#1f2a44,#31446c);color:#fff;padding:9px 13px;font-family:inherit;font-size:12.5px;font-weight:800;box-shadow:0 10px 24px rgba(31,42,68,.22);display:flex;align-items:center;gap:7px}
+/* #qna-cover-btn 전역 fixed 정의 제거: #cover #qna-cover-btn(position:relative)과 충돌해서
+   새로고침 시 버튼이 위로 튕기는 문제의 원인이었음. #cover 안에서 relative로만 정의. */
 html.app-active #qna-cover-btn{display:none}
 .qna-body{background:#F8FAFC;display:flex;flex-direction:column}
 .qna-tabs{display:flex;gap:8px;padding:12px 14px;background:#fff;border-bottom:1px solid #E5E7EB}

@@ -171,10 +171,20 @@
   function ig$(id){ return document.getElementById(id); }
   function esc(s){ return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
   function shortUrl(url){ return String(url||'').replace(/^https?:\/\//,'').replace(/\/$/,''); }
-  function hideIntegratedViews(){
-    ig$('web-view')?.classList.remove('open');
-    ig$('trail-view')?.classList.remove('open');
+  function hideIntegratedViews(onDone){
+    var webV = ig$('web-view');
+    var trailV = ig$('trail-view');
+    if(typeof window.oaiCloseModuleView === 'function'){
+      if(webV && webV.classList.contains('open')) window.oaiCloseModuleView(webV);
+      else if(webV) webV.classList.remove('open','oai-view-closing');
+      if(trailV && trailV.classList.contains('open')) window.oaiCloseModuleView(trailV);
+      else if(trailV) trailV.classList.remove('open','oai-view-closing');
+    } else {
+      if(webV) webV.classList.remove('open');
+      if(trailV) trailV.classList.remove('open');
+    }
     if(typeof trailCloseSheet === 'function') trailCloseSheet();
+    if(typeof onDone === 'function') onDone();
   }
   function saveReturnState(state){
     try{ sessionStorage.setItem(RETURN_KEY, JSON.stringify(state)); }catch(e){ console.warn("[가톨릭길동무]", e); }
