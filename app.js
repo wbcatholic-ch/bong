@@ -2566,10 +2566,6 @@ function _fitRouteBounds(bounds, opts){
   const pad = _getRouteBoundsPadding();
   try{
     _map.setBounds(bounds, pad.top, pad.right, pad.bottom, pad.left);
-    if(opts && opts.repeat){
-      setTimeout(function(){ try{ const p=_getRouteBoundsPadding(); _map.setBounds(bounds, p.top, p.right, p.bottom, p.left); }catch(e){ console.warn('[가톨릭길동무]', e); } }, 90);
-      setTimeout(function(){ try{ const p=_getRouteBoundsPadding(); _map.setBounds(bounds, p.top, p.right, p.bottom, p.left); }catch(e){ console.warn('[가톨릭길동무]', e); } }, 260);
-    }
     return true;
   }catch(e1){
     try{ _map.setBounds(bounds); return true; }
@@ -3801,7 +3797,7 @@ function doRegionSearch(){
     let html='<div style="padding:8px 14px 4px;font-size:11px;font-weight:700;color:#888;background:#f8f9fc;border-bottom:1px solid #eee;">📍 지역을 선택하세요</div>';
     docs.forEach(d=>{
       const nm=d.place_name, ad=d.road_address_name||d.address_name;
-      html+=`<div class="region-place-cand" data-lat="${parseFloat(d.y)}" data-lng="${parseFloat(d.x)}" data-name="${nm.replace(/"/g,'&quot;')}" style="padding:11px 14px;border-bottom:1px solid #f0f0f0;cursor:pointer;background:#fff;display:flex;align-items:center;gap:10px;"><div style="font-size:20px">📍</div><div><div style="font-size:14px;font-weight:600;color:#1F2937">${nm}</div><div style="font-size:12px;color:#888;margin-top:2px">${ad}</div></div></div>`;
+      html+=`<div class="region-place-cand nearby-item" data-lat="${parseFloat(d.y)}" data-lng="${parseFloat(d.x)}" data-name="${nm.replace(/"/g,'&quot;')}"><div class="nearby-num" style="background:#e5e7eb;color:#374151;font-size:18px;width:34px;height:34px">📍</div><div class="nearby-info"><div class="nearby-name">${nm}</div><div class="nearby-addr">${ad}</div></div></div>`;
     });
     body.innerHTML=html;
     body.onclick=function(e){
@@ -3831,7 +3827,7 @@ function _showRegionResults(q,lat,lng,doc){
   const isParish=_mode==='parish',isRetreat=_mode==='retreat';
   const infoCard=`<div class="region-info-card"><div class="ric-hd"><div class="ric-icon">📍</div><div class="ric-name-wrap"><div class="ric-name">${placeName}</div>${placeCat?`<div class="ric-cat">${placeCat}</div>`:''}</div>${placeUrl?`<a class="ric-map-link" href="${placeUrl}" target="_blank">지도 ↗</a>`:''}</div><div class="ric-body">${placeAddr?`<div class="ric-row"><span class="ric-lbl">주소</span><span>${placeAddr}</span></div>`:''}</div></div>`;
   const listHd=`<div class="region-list-hd">${isParish?'⛪ 근처 성당':(isRetreat?'🏔 근처 피정의 집':'✝ 근처 성지')} <span style="font-size:13px;font-weight:500;color:#aaa">· 자동차 거리순 10곳</span></div>`;
-  $('region-body').innerHTML=infoCard+listHd+'<div id="rg-loading" style="text-align:center;padding:10px;font-size:12px;color:#888;">🚗 정확한 거리 계산 중입니다…</div><div id="rg-list" style="background:#fff"></div>';
+  $('region-body').innerHTML=infoCard+listHd+'<div id="rg-loading" class="empty-msg" style="padding:16px">🚗 정확한 거리 계산 중입니다…</div><div id="rg-list"></div>';
   const results=new Array(prelim.length).fill(null);let done=0;
   prelim.forEach((x,i)=>{
     _navFetch(`${lng},${lat}`,`${x.s.lng},${x.s.lat}`)
@@ -3848,7 +3844,7 @@ function _showRegionResults(q,lat,lng,doc){
         if(rgl) rgl.innerHTML=sorted.map((o,i)=>{
           const idx=items.indexOf(o.x.s);const c=_getModeMarkerColor(o.x.s);const lbl=_getModeTypeLabel(o.x.s);
           const km=o.r.km.toFixed(1);const dur=o.r.dur?`<span style="font-size:10px;color:#aaa;font-weight:400;margin-left:3px">${_fmtTime(o.r.dur)}</span>`:'';
-          return `<div class="region-item" onclick="selectItem(${idx},{fromRegion:true})"><div class="nearby-num" style="background:${c}!important;width:28px;height:28px;font-size:12px">${i+1}</div><div class="nearby-info"><div class="nearby-name">${o.x.s.name}</div><div class="nearby-addr">${o.x.s.addr.substring(0,26)}${o.x.s.addr.length>26?'…':''}</div></div><div class="nearby-meta"><div class="nearby-type" style="background:${c}18!important;color:${c}!important">${lbl}</div><div class="nearby-dist" style="color:${c}!important">🚗${km}km${dur}</div></div></div>`;
+          return `<div class="region-item" onclick="selectItem(${idx},{fromRegion:true})"><div class="nearby-num" style="background:${c};width:32px;height:32px;font-size:13px">${i+1}</div><div class="nearby-info"><div class="nearby-name">${o.x.s.name}</div><div class="nearby-addr">${o.x.s.addr}</div></div><div class="nearby-meta"><div class="nearby-type" style="background:${c}18;color:${c}">${lbl}</div><div class="nearby-dist" style="color:${c}">🚗${km}km<span style="font-size:11px;color:#aaa;font-weight:400;margin-left:3px">${o.r.dur?_fmtTime(o.r.dur):''}</span></div></div></div>`;
         }).join('');
       }
     });
@@ -3879,11 +3875,7 @@ function _showRegionFallback(q){
   const list=matched.map((s,i)=>{
   const idx=items2.indexOf(s);
   const c=_getModeMarkerColor(s);
-  return `<div class="region-item" onclick="selectItem(${idx},{fromRegion:true})">
-   <div class="nearby-num" style="background:${c}!important;width:26px;height:26px;font-size:12px">${i+1}</div>
-   <div class="nearby-info"><div class="nearby-name">${s.name}</div><div class="nearby-addr">${s.addr.substring(0,26)}…</div></div>
-   <div class="nearby-meta"><div class="nearby-type" style="background:${c}18!important;color:${c}!important">${_mode==='shrine'?s.type:(_mode==='retreat'?'피정의 집':'성당')}</div></div>
-  </div>`;
+  return `<div class="region-item" onclick="selectItem(${idx},{fromRegion:true})"><div class="nearby-num" style="background:${c};width:32px;height:32px;font-size:13px">${i+1}</div><div class="nearby-info"><div class="nearby-name">${s.name}</div><div class="nearby-addr">${s.addr}</div></div><div class="nearby-meta"><div class="nearby-type" style="background:${c}18;color:${c}">${_mode==='shrine'?s.type:(_mode==='retreat'?'피정의 집':'성당')}</div></div></div>`;
   }).join('');
   $('region-body').innerHTML=
   `<div style="padding:10px 16px 8px;font-size:12px;font-weight:700;color:#1565c0;background:#fff;border-bottom:1px solid #eee">검색결과 ${matched.length}곳</div>${list}`;
@@ -4136,8 +4128,6 @@ async function _calcRoute(){
   note.textContent='';note.style.display='none';
   }
 
-  _drawLine(_rS, navDest, null);
-
   try{
   const res=await _kakaoDirectionsFetch(`${_rS.lng},${_rS.lat}`, `${navDest.lng},${navDest.lat}`);
   if(!res.ok) throw new Error(res.status);
@@ -4159,6 +4149,8 @@ async function _calcRoute(){
   const d=calcDist(_rS.lat,_rS.lng,navDest.lat,navDest.lng)*1.4;
   $('rs-km').textContent=d.toFixed(1);
   $('rs-time').textContent=_fmtTime(d/70*3600);
+  // API 실패 시에만 직선으로 표시
+  _drawLine(_rS, navDest, null);
   if(!isJuk){
    note.textContent='* 직선거리 기반 추정값';note.style.display='block';
   }
@@ -4203,7 +4195,7 @@ function _drawLine(s1,s2,path){
   if(_endTmpMkr) bounds.extend(new _LL(s2.lat,s2.lng));
   // 길찾기 결과는 아래 route 시트에 가려지기 쉬우므로,
   // 일반 인포카드 중심 보정 대신 실제 route 시트 높이를 반영한 전용 bounds를 사용한다.
-  if(typeof _fitRouteBounds==='function') _fitRouteBounds(bounds, {repeat:true});
+  if(typeof _fitRouteBounds==='function') _fitRouteBounds(bounds);
   else { try{_map.setBounds(bounds,80,52,190,52);}catch(e){ console.warn("[가톨릭길동무]", e); } }
 }
 
