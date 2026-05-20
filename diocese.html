@@ -97,8 +97,8 @@ header{flex-shrink:0;background:var(--d);border-bottom:none;z-index:30;
 .c-gw{font-size:9px;font-weight:700;letter-spacing:.7px;opacity:.85;margin-bottom:3px;}
 .c-nm{font-size:18px;font-weight:700;line-height:1.2;margin-bottom:3px;}
 .c-rg{font-size:11px;opacity:.75;line-height:1.4;}
-.c-x{position:absolute;top:8px;right:8px;width:19px;height:19px;border-radius:50%;
-  background:rgba(0,0,0,0.15);border:none;cursor:pointer;font-size:10px;color:white;
+.c-x{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;
+  background:rgba(0,0,0,0.15);border:none;cursor:pointer;font-size:18px;font-weight:900;line-height:1;color:white;
   display:flex;align-items:center;justify-content:center;}
 .c-x:hover{background:rgba(0,0,0,0.3);}
 .c-bd{padding:10px 13px 12px;background:white;}
@@ -242,7 +242,7 @@ body > header{display:none!important;visibility:hidden!important;height:0!import
 
 html.oai-dio-external-stabilize *,
 html.oai-dio-external-return *{transition:none!important;animation:none!important;scroll-behavior:auto!important;}
-/* V1-S: 부모 앱에서 복귀 상태를 복원하므로 iframe 자체 전체 덮개는 만들지 않는다. */
+/* V3-S: 부모 앱에서 복귀 상태를 복원하므로 iframe 자체 전체 덮개는 만들지 않는다. */
 
 </style>
 <style id="oai-diocese-tab-standard-20260504">
@@ -298,7 +298,7 @@ html.oai-dio-external-return *{transition:none!important;animation:none!importan
 </style>
 
 <style id="oai-diocese-smooth-entry-20260506">
-/* OAI 20260506: 관구·교구 첫 표시/탭 전환 부드럽게 */
+/* 관구·교구 첫 표시/탭 전환 부드럽게 */
 #map-view.on,#list-view.on,#search-view.on{animation:oaiDioFadeIn .22s ease both;}
 @keyframes oaiDioFadeIn{from{opacity:.01}to{opacity:1}}
 html.oai-dio-returning #map-view.on,html.oai-dio-returning #list-view.on,html.oai-dio-returning #search-view.on{animation:none!important;}
@@ -306,7 +306,7 @@ html.oai-dio-returning #map-view.on,html.oai-dio-returning #list-view.on,html.oa
 
 
 <style id="oai-ios-ui-density-v22">
-/* V37: iPhone 관구·교구 iframe 내부 UI 밀도 보정 */
+/* iPhone 관구·교구 iframe 내부 UI 밀도 보정 */
 html.ios-device{--ios-dio-ui-scale:.96;}
 html.ios-device .tab-bar{height:46px!important;padding:7px 10px!important;gap:6px!important;align-items:center!important;}
 html.ios-device .tab{height:32px!important;min-height:32px!important;border-radius:10px!important;font-size:calc(14px * var(--dio-effective-font-scale,1))!important;line-height:1!important;}
@@ -315,7 +315,7 @@ html.ios-device .gb{min-height:34px!important;padding:0 10px!important;border-ra
 html.ios-device #card{width:170px!important;border-radius:13px!important;}
 html.ios-device .c-hd{padding:12px 13px!important;}
 html.ios-device .c-bd{padding:10px 13px 12px!important;}
-html.ios-device .c-x{width:28px!important;height:28px!important;}
+html.ios-device .c-x{width:26px!important;height:26px!important;font-size:18px!important;}
 html.ios-device .c-dtbtn,
 html.ios-device .c-btn{min-height:38px!important;border-radius:10px!important;}
 html.ios-device #search-view .ss{padding:10px 11px!important;}
@@ -341,8 +341,8 @@ html.ios-device .cb{width:34px!important;height:34px!important;border-radius:10p
 </header>
 <div class="tab-bar">
   <div class="tab on" data-tab="gwangu">관구별 보기</div>
-  <div class="tab" data-tab="list">📋 목록</div>
-  <div class="tab" data-tab="search">🔍 지역 검색</div>
+  <div class="tab" data-tab="list">목록</div>
+  <div class="tab" data-tab="search">지역 검색</div>
 </div>
 <div id="main">
   <div id="map-view" class="on">
@@ -441,7 +441,7 @@ html.ios-device .cb{width:34px!important;height:34px!important;border-radius:10p
   <div id="search-view">
     <div class="ss">
       <div class="sr">
-        <input id="si" type="text" placeholder="지역명 검색 (예 : 서울, 전주, 평창, 제주)">
+        <input id="si" type="text" placeholder="지역명 검색 (예 : 서울, 전주, 평창, 제주)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="search" enterkeyhint="done">
         <button id="sb" onclick="doSearch()">검색</button>
       </div>
       <div class="sh">도 · 시 · 군 이름으로 검색 &nbsp;|&nbsp; 3개 관구 · 16개 교구</div>
@@ -1345,10 +1345,12 @@ document.querySelectorAll('.tab').forEach(function(t){
     if(tab==='search'){
       var si=document.getElementById('si');
       if(si){
-        setTimeout(function(){
+        var focusSearchInput=function(){
           try{ si.focus({preventScroll:true}); }
           catch(e){ try{ si.focus(); }catch(_){} }
-        },120);
+        };
+        focusSearchInput();
+        setTimeout(focusSearchInput,60);
       }
     }
     if(tab!=='list'){
@@ -1987,7 +1989,7 @@ window.addEventListener('pageshow',function(){
   window.resetDioceseFirstPage = function(){
     try{ sessionStorage.removeItem('listScroll'); }catch(e){}
     var si=document.getElementById('si'); if(si) si.value='';
-    var sres=document.getElementById('sres'); if(sres) sres.innerHTML='<div class="se">교구명, 지역명, 홈페이지 주소로 검색하세요</div>';
+    var sres=document.getElementById('sres'); if(sres) sres.innerHTML='<div class="se">교구명, 지역명, 주소로 검색하세요</div>';
     var lv=document.getElementById('list-view'); if(lv) lv.scrollTop=0;
     var sv=document.getElementById('search-view'); if(sv) sv.scrollTop=0;
     var btn=document.querySelector('.tab[data-tab="gwangu"]'); if(btn) btn.click();
@@ -2038,17 +2040,43 @@ window.addEventListener('pageshow',function(){
   window.addEventListener('focus', function(){ if(!inParentApp()) setTimeout(clearDioceseStandaloneExternal, 180); }, true);
   document.addEventListener('visibilitychange', function(){ if(!inParentApp() && document.visibilityState==='visible') setTimeout(clearDioceseStandaloneExternal, 180); }, true);
   window.openDioceseUrl = function(url, source, extra){
-    if(!url || window.__OAI_DIO_EXTERNAL_LEAVING__) return;
-    window.__OAI_DIO_EXTERNAL_LEAVING__ = true;
+    if(!url) return;
+    try{
+      var now = Date.now ? Date.now() : new Date().getTime();
+      var leavingTs = Number(window.__OAI_DIO_EXTERNAL_LEAVING_TS__ || 0);
+      if(window.__OAI_DIO_EXTERNAL_LEAVING__ && leavingTs && now - leavingTs < 3500) return;
+      if(window.__OAI_DIO_EXTERNAL_LEAVING__ && leavingTs && now - leavingTs >= 3500){
+        window.__OAI_DIO_EXTERNAL_LEAVING__ = false;
+      }
+      window.__OAI_DIO_EXTERNAL_LEAVING__ = true;
+      window.__OAI_DIO_EXTERNAL_LEAVING_TS__ = now;
+    }catch(e){ window.__OAI_DIO_EXTERNAL_LEAVING__ = true; }
     var state=window.getDioceseReturnState(source||'link', extra || {});
     try{ sessionStorage.setItem('oai_diocese_last_return_state', JSON.stringify(state)); localStorage.setItem('oai_diocese_last_return_state', JSON.stringify(state)); }catch(e){}
-    // 부모 앱 안에서는 입장/복귀 순간의 큰 흔들림을 만들던 iframe 안정막과 부모 보호막을 쓰지 않는다.
-    // 위치 상태 저장 후 웹사이트 모듈처럼 바로 이동한다.
-    if(window.parent && window.parent!==window && typeof window.parent.openDioceseExternal==='function'){
-      // 부모 앱에서는 안정막/복원 타이머를 정리하지 않고 바로 이동한다.
-      // clear 함수가 focus/pageshow 타이머와 겹치면 진입 직전 화면이 한 번 흔들린다.
+    if(window.parent && window.parent!==window){
+      // V3-S: iframe 내부 클릭은 부모의 지연 이동에 맡기지 않고, 클릭 흐름 안에서 top을 즉시 이동한다.
+      // 이렇게 해야 웹페이지 카테고리처럼 Android/PWA에서도 외부 교구 홈페이지가 바로 열린다.
+      try{
+        if(typeof window.parent.prepareExternalUrl === 'function') url = window.parent.prepareExternalUrl(url) || url;
+      }catch(e){}
+      try{
+        var payload = JSON.stringify(state || {});
+        window.parent.sessionStorage.setItem('catholic_diocese_external_return_v1', payload);
+        window.parent.localStorage.setItem('catholic_diocese_external_return_v1', payload);
+        window.parent.__OAI_DIOCESE_EXTERNAL_LEAVING__ = true;
+      }catch(e){}
+      try{
+        if(typeof window.parent.markExternalReturnStabilize === 'function') window.parent.markExternalReturnStabilize('diocese-external');
+      }catch(e){}
       document.documentElement.classList.remove('oai-dio-external-stabilize','oai-dio-external-return','oai-dio-returning');
-      window.parent.openDioceseExternal(url,state);
+      try{ window.top.location.assign(url); }
+      catch(e){ try{ window.top.location.href = url; }catch(_e){ window.__OAI_DIO_EXTERNAL_LEAVING__ = false; } }
+      setTimeout(function(){
+        try{
+          if(document.visibilityState !== 'hidden') window.__OAI_DIO_EXTERNAL_LEAVING__ = false;
+        }catch(e){ window.__OAI_DIO_EXTERNAL_LEAVING__ = false; }
+      }, 3800);
+      return;
     }
     else { try{ sessionStorage.setItem('oai_diocese_standalone_return',JSON.stringify(state)); }catch(e){} markDioceseStandaloneExternal(); try{ location.href=url; }catch(_e){ location.assign(url); } }
   };

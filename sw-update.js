@@ -9,8 +9,8 @@
   // APP_VERSION:      화면 표시용 단축 버전 (build marker, data-target-version)
   // SW_BUILD_VERSION:  SW 등록·캐시 키용 전체 버전 (sw.js BUILD_VERSION과 일치해야 함)
   // ★ 버전 업그레이드 시 두 값 모두 수정, sw.js BUILD_VERSION과 SW_BUILD_VERSION을 동일하게 맞출 것
-  var APP_VERSION = 'V1-S';
-  var SW_BUILD_VERSION = 'V1-S-dio-websame3';
+  var APP_VERSION = 'V3-S';
+  var SW_BUILD_VERSION = 'V3-S';
   window.APP_VERSION = APP_VERSION;
 
   function now(){ return Date.now ? Date.now() : new Date().getTime(); }
@@ -36,7 +36,9 @@
   function stableReload(reason){
     if(!canBackgroundRefresh()) return false;
     try{ sessionStorage.setItem('oai_stable_auto_reload_reason', reason || 'maintenance'); }catch(e){ console.warn("[가톨릭길동무]", e); }
-    try{ location.reload(); }catch(e){ location.href = location.href; }
+    try{ if(typeof window.oaiPrepareRefreshVeil === 'function') window.oaiPrepareRefreshVeil(reason || 'background-reload', 1000, 12000); }catch(e){ console.warn("[가톨릭길동무]", e); }
+    try{ if(typeof window.oaiMarkRefreshHistoryCompact === 'function') window.oaiMarkRefreshHistoryCompact(reason || 'background-reload'); }catch(e){ console.warn("[가톨릭길동무]", e); }
+    setTimeout(function(){ try{ location.reload(); }catch(e){ location.href = location.href; } }, 120);
     return true;
   }
   function clearReturnFlagsForBackground(){
@@ -101,7 +103,7 @@
   function registerServiceWorker(){
     if(!('serviceWorker' in navigator)) return;
     try{
-      navigator.serviceWorker.register('./sw.js?v=' + encodeURIComponent(SW_BUILD_VERSION || APP_VERSION))
+      navigator.serviceWorker.register('./sw.js?v=' + encodeURIComponent(SW_BUILD_VERSION || APP_VERSION), { updateViaCache: 'none' })
         .then(function(reg){ try{ reg.update(); }catch(e){ console.warn("[가톨릭길동무]", e); } })
         .catch(function(){});
     }catch(e){ console.warn("[가톨릭길동무]", e); }
