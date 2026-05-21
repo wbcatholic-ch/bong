@@ -1267,11 +1267,7 @@ window.addEventListener('load', syncCoverUpdateVersionState, true);
     // 주요 기능을 확인한 사용자는 일주일간 자동 안내를 다시 띄우지 않는다.
     setVal(KEY_HIDE_UNTIL, now() + HIDE_DAYS*24*60*60*1000);
   }
-  function closeGuideManual(){
-    hideModal('guide-manual-modal');
-    // 확인/X 버튼으로 닫을 때도 커버 back trap을 재설정한다.
-    try{ if(typeof window._ensureCoverBackTrap === 'function') window._ensureCoverBackTrap('guide-manual-close'); }catch(e){ console.warn('[가톨릭길동무]', e); }
-  }
+  function closeGuideManual(){ hideModal('guide-manual-modal'); }
   function closeIntroLater(){
     hideModal('guide-intro-modal');
     var count = getInt(KEY_COUNT) + 1;
@@ -1370,7 +1366,6 @@ window.addEventListener('load', syncCoverUpdateVersionState, true);
       });
     });
 
-    // 커버 메뉴 popstate 처리는 patches.js 메인 컨트롤러에서 isCoverMenuPopupOpen 체크로 통합
     document.addEventListener('keydown', function(e){
       if(e.key !== 'Escape') return;
       hideModal('guide-intro-modal');
@@ -5816,7 +5811,7 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
       modal.classList.add('show');
       modal.setAttribute('aria-hidden', 'false');
       try{ document.body.classList.add('modal-open'); }catch(e){}
-      // pushState 없음: patches.js isCoverMenuPopupOpen 체크로 뒤로가기를 단일 처리한다.
+      // pushState 없음: patches.js isCoverMenuPopupOpen 체크로 단일 처리
     }
     function closeMenu(){
       modal.classList.remove('show');
@@ -5851,12 +5846,11 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
     on('cover-menu-qna-btn', 'click', function(e){
       if(e && e.preventDefault) e.preventDefault();
       closeMenu();
-      try{ sessionStorage.setItem('oai_cover_nav_out', '1'); }catch(_e){}
       try{ openQnaView(); }catch(err){ console.warn('[가톨릭길동무]', err); }
     });
     on('cover-menu-privacy-link', 'click', function(){
       closeMenu();
-      try{ sessionStorage.setItem('oai_cover_nav_out', '1'); }catch(_e){}
+      try{ sessionStorage.setItem('oai_nav_returning', '1'); }catch(_e){}
     });
     document.addEventListener('keydown', function(e){
       if(e && e.key === 'Escape' && modal.classList.contains('show')) closeMenu();
@@ -5954,6 +5948,4 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
 });
 
 
-// 커버 메뉴 popstate 처리는 patches.js 메인 popstate 컨트롤러로 통합
-// (isCoverMenuPopupOpen 체크로 단일 처리)
 
