@@ -525,6 +525,24 @@
       return;
     }
 
+    /* 개인정보/문의 등 내부 페이지 이동 후 복귀 감지 (bfcache 포함).
+       bfcache 복귀 시 popstate가 사용자 뒤로가기보다 먼저 발생하므로
+       sessionStorage 플래그로 navigation 복귀를 구분해 종료 토스트를 막는다. */
+    try{
+      if(sessionStorage.getItem('oai_cover_nav_out') === '1'){
+        sessionStorage.removeItem('oai_cover_nav_out');
+        if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
+        if(!appActive()){ armCoverBackTrap('cover-nav-return'); return; }
+      }
+    }catch(_e){}
+
+    /* 커버 메뉴 팝업이 열려 있으면 먼저 닫고 커버 trap 재설정. */
+    if(window.isCoverMenuPopupOpen && window.isCoverMenuPopupOpen()){
+      try{ if(typeof window.closeCoverMenuPopup === 'function') window.closeCoverMenuPopup(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      try{ armCoverBackTrap('cover-menu-close'); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      return;
+    }
+
     /* 빠른메뉴에서 주요기도문으로 진입하기 위해 팝업용 mq history state를
        직접 pop하는 중이면, 이것은 사용자의 뒤로가기 명령이 아니다. */
     try{
@@ -581,15 +599,6 @@
 
     /* 커버: 토스트 → 두 번째에 종료. */
     if(!appActive()){
-      /* 개인정보/문의 등 내부 페이지에서 bfcache로 복귀할 때
-         popstate가 사용자 뒤로가기보다 먼저 발생하며 coverMenuOpen 상태로 도착한다.
-         이것은 사용자 액션이 아니므로 종료 토스트 없이 트랩만 재설정하고 빠져나간다. */
-      var _navReturnSt = history.state;
-      if(_navReturnSt && _navReturnSt.coverMenuOpen){
-        try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }
-        armCoverBackTrap('cover-menu-nav-return');
-        return;
-      }
       var exiting = false;
       if(typeof window._showBackToast==='function') exiting = window._showBackToast() === true;
       if(!exiting){ armCoverBackTrap('cover-toast'); }
@@ -613,6 +622,11 @@
   document.addEventListener('backbutton', function(){
     if(handlePrayerBack('prayer-hardware-back')) return;
     if(closeRefreshDialog()){ try{ armCoverBackTrap('refresh-dialog-hardware', {force:true}); }catch(e){} return; }
+    if(window.isCoverMenuPopupOpen && window.isCoverMenuPopupOpen()){
+      try{ if(typeof window.closeCoverMenuPopup === 'function') window.closeCoverMenuPopup(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      try{ armCoverBackTrap('cover-menu-close'); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      return;
+    }
     if(isGuideModalOpen()){ closeGuideModals(); return; }
     if(!appActive()){
       if(typeof window._showBackToast==='function') window._showBackToast();
@@ -628,6 +642,12 @@
   // 트랩이 소실되면 다음 뒤로가기에서 앱이 탈출된다.
   window.addEventListener('pageshow', function(){
     try{
+      /* non-bfcache 복귀 시 popstate 없이 여기서만 처리됨.
+         bfcache 복귀는 이미 popstate에서 처리되고 플래그가 지워진 상태. */
+      if(sessionStorage.getItem('oai_cover_nav_out') === '1'){
+        sessionStorage.removeItem('oai_cover_nav_out');
+        if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
+      }
       var st = history.state;
       if(st && st._p === 1) return;  // 트랩 유지 중이면 스킵
       if(!appActive()) armCoverBackTrap('pageshow-cover');

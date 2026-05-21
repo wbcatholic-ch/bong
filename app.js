@@ -1269,8 +1269,7 @@ window.addEventListener('load', syncCoverUpdateVersionState, true);
   }
   function closeGuideManual(){
     hideModal('guide-manual-modal');
-    // 확인/X 버튼으로 닫을 때도 커버 back trap을 재설정해
-    // 메뉴 경유 시 남는 coverMenuOpen 히스토리 항목이 종료 흐름을 방해하지 않도록 한다.
+    // 확인/X 버튼으로 닫을 때도 커버 back trap을 재설정한다.
     try{ if(typeof window._ensureCoverBackTrap === 'function') window._ensureCoverBackTrap('guide-manual-close'); }catch(e){ console.warn('[가톨릭길동무]', e); }
   }
   function closeIntroLater(){
@@ -1371,12 +1370,7 @@ window.addEventListener('load', syncCoverUpdateVersionState, true);
       });
     });
 
-    // V1-37 cover menu popstate close
-    window.addEventListener('popstate', function(){
-      if(modal.classList.contains('show')){
-        closeMenu();
-      }
-    });
+    // 커버 메뉴 popstate 처리는 patches.js 메인 컨트롤러에서 isCoverMenuPopupOpen 체크로 통합
     document.addEventListener('keydown', function(e){
       if(e.key !== 'Escape') return;
       hideModal('guide-intro-modal');
@@ -5822,11 +5816,7 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
       modal.classList.add('show');
       modal.setAttribute('aria-hidden', 'false');
       try{ document.body.classList.add('modal-open'); }catch(e){}
-      try{
-        if(history && history.pushState && !(history.state && history.state.coverMenuOpen)){
-          history.pushState({coverMenuOpen:true}, '', location.href);
-        }
-      }catch(_e){}
+      // pushState 없음: patches.js isCoverMenuPopupOpen 체크로 뒤로가기를 단일 처리한다.
     }
     function closeMenu(){
       modal.classList.remove('show');
@@ -5861,9 +5851,13 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
     on('cover-menu-qna-btn', 'click', function(e){
       if(e && e.preventDefault) e.preventDefault();
       closeMenu();
+      try{ sessionStorage.setItem('oai_cover_nav_out', '1'); }catch(_e){}
       try{ openQnaView(); }catch(err){ console.warn('[가톨릭길동무]', err); }
     });
-    on('cover-menu-privacy-link', 'click', function(){ closeMenu(); });
+    on('cover-menu-privacy-link', 'click', function(){
+      closeMenu();
+      try{ sessionStorage.setItem('oai_cover_nav_out', '1'); }catch(_e){}
+    });
     document.addEventListener('keydown', function(e){
       if(e && e.key === 'Escape' && modal.classList.contains('show')) closeMenu();
     });
@@ -5960,14 +5954,6 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
 });
 
 
-// V1-37 cover menu hardware back guard
-(function(){
-  window.addEventListener('popstate', function(){
-    try{
-      if(window.isCoverMenuPopupOpen && window.isCoverMenuPopupOpen()){
-        if(window.closeCoverMenuPopup) window.closeCoverMenuPopup();
-      }
-    }catch(e){ console.warn('[가톨릭길동무]', e); }
-  }, true);
-})();
+// 커버 메뉴 popstate 처리는 patches.js 메인 popstate 컨트롤러로 통합
+// (isCoverMenuPopupOpen 체크로 단일 처리)
 
