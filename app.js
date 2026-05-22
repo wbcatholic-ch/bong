@@ -1264,6 +1264,13 @@ window.addEventListener('load', syncCoverUpdateVersionState, true);
   function openGuideManual(){
     hideModal('guide-intro-modal');
     showModal('guide-manual-modal');
+    // 뒤로가기가 커버 trap을 소비하지 않도록 전용 state를 쌓는다.
+    // back → 이 state 소비 → trap 그대로 살아있음 → 커버 back → toast 정상
+    try{
+      if(history && history.pushState && !(history.state && history.state.guideManualOpen)){
+        history.pushState({guideManualOpen:true}, '', location.href);
+      }
+    }catch(_e){}
     // 주요 기능을 확인한 사용자는 일주일간 자동 안내를 다시 띄우지 않는다.
     setVal(KEY_HIDE_UNTIL, now() + HIDE_DAYS*24*60*60*1000);
   }
@@ -1366,7 +1373,12 @@ window.addEventListener('load', syncCoverUpdateVersionState, true);
       });
     });
 
-
+    // V1-37 cover menu popstate close
+    window.addEventListener('popstate', function(){
+      if(modal.classList.contains('show')){
+        closeMenu();
+      }
+    });
     document.addEventListener('keydown', function(e){
       if(e.key !== 'Escape') return;
       hideModal('guide-intro-modal');
@@ -5812,7 +5824,11 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
       modal.classList.add('show');
       modal.setAttribute('aria-hidden', 'false');
       try{ document.body.classList.add('modal-open'); }catch(e){}
-      // pushState 없음: patches.js isCoverMenuPopupOpen 체크로 단일 처리
+      try{
+        if(history && history.pushState && !(history.state && history.state.coverMenuOpen)){
+          history.pushState({coverMenuOpen:true}, '', location.href);
+        }
+      }catch(_e){}
     }
     function closeMenu(){
       modal.classList.remove('show');
@@ -5946,5 +5962,14 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
 });
 
 
-
+// V1-37 cover menu hardware back guard
+(function(){
+  window.addEventListener('popstate', function(){
+    try{
+      if(window.isCoverMenuPopupOpen && window.isCoverMenuPopupOpen()){
+        if(window.closeCoverMenuPopup) window.closeCoverMenuPopup();
+      }
+    }catch(e){ console.warn('[가톨릭길동무]', e); }
+  }, true);
+})();
 
