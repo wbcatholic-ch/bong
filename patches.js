@@ -580,6 +580,16 @@
       return;
     }
 
+    /* 커버 메뉴 팝업 — guide-modal 클래스가 없어 isGuideModalOpen에 안 잡힘.
+       openMenu에 pushState 없으므로 back 시 커버 trap이 소비된 상태로 도착한다.
+       !appActive() 체크 전에 처리해야 토스트가 잘못 발동되지 않는다. */
+    if(window.isCoverMenuPopupOpen && window.isCoverMenuPopupOpen()){
+      try{ if(typeof window.closeCoverMenuPopup === 'function') window.closeCoverMenuPopup(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      armCoverBackTrap('cover-menu-close');
+      return;
+    }
+
     /* 커버: 토스트 → 두 번째에 종료. */
     if(!appActive()){
       var exiting = false;
@@ -605,7 +615,16 @@
   document.addEventListener('backbutton', function(){
     if(handlePrayerBack('prayer-hardware-back')) return;
     if(closeRefreshDialog()){ try{ armCoverBackTrap('refresh-dialog-hardware', {force:true}); }catch(e){} return; }
-    if(isGuideModalOpen()){ closeGuideModals(); return; }
+    if(isGuideModalOpen()){
+      closeGuideModals();
+      try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(e){}
+      return;
+    }
+    if(window.isCoverMenuPopupOpen && window.isCoverMenuPopupOpen()){
+      try{ if(typeof window.closeCoverMenuPopup === 'function') window.closeCoverMenuPopup(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(e){}
+      return;
+    }
     if(!appActive()){
       if(typeof window._showBackToast==='function') window._showBackToast();
       return;
@@ -761,7 +780,7 @@
   window.__APP_FONT_SCALE_GUARD__=true;
   // V3-S: 커버 글자 크기 조절은 prayer.js에 의존하지 않는 공통 함수가 담당한다.
   // prayer.js는 기도문 화면이 열렸을 때 같은 localStorage 값을 읽어 자체 UI를 맞춘다.
-  var QA_URL="qa-firebase.html?v=V1-42";
+  var QA_URL="qa-firebase.html?v=V1-41";
   var FONT_KEY='prayer_font_size';
   var BASE=16;
   var FONT_SIZES=[13,14,15,16,17,18,19,20,21,22,24,26,28,30];
