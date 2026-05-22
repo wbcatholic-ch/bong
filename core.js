@@ -185,3 +185,8 @@ window._showBackToast         = _showBackToast;
 window.attemptAppExit         = attemptAppExit;
 window.closeExitDlg           = closeExitDlg;
 window.doExit                 = doExit;
+
+/* ── 초기화: 앱 로드 시 종료 상태 리셋 ── */
+window._exitReady = false;
+window.__oaiCoverExitUntil = 0;
+try{ sessionStorage.removeItem('oai_cover_exit_armed_until'); }catch(_e){}

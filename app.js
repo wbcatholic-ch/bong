@@ -909,7 +909,7 @@ function _runRefreshAppFilesOnly(){
   try{
     if(btn){
       btn.disabled = true;
-      btn.textContent = ((btn.getAttribute('data-target-version') || 'V1-52') + ' 새로고침 중');
+      btn.textContent = ((btn.getAttribute('data-target-version') || 'V1-53') + ' 새로고침 중');
     }
     if(document.activeElement && document.activeElement.blur) document.activeElement.blur();
     // V37: 새로고침 전에는 레이아웃/스크롤/모달 DOM을 건드리지 않고,
@@ -1071,7 +1071,7 @@ function syncCoverUpdateVersionState(){
     var box = document.getElementById('cover-update-box');
     var marker = document.getElementById('oai-build-marker');
     if(!btn || !box) return;
-        var target = btn.getAttribute('data-target-version') || 'V1-52';
+        var target = btn.getAttribute('data-target-version') || 'V1-53';
     var current = '';
     if(window.APP_VERSION) current = String(window.APP_VERSION).trim();
     if(!current && marker) current = String(marker.textContent || '').trim();
@@ -1080,7 +1080,7 @@ function syncCoverUpdateVersionState(){
     btn.textContent = mismatch ? (target + ' 업데이트 필요') : (target + ' 새로고침');
     box.classList.toggle('update-needed', mismatch);
     if(marker){
-      marker.textContent = target || 'V1-52';
+      marker.textContent = target || 'V1-53';
       marker.setAttribute('hidden', 'hidden');
       marker.setAttribute('aria-hidden','true');
       marker.style.display = 'none';
@@ -1175,12 +1175,6 @@ window.addEventListener('load', syncCoverUpdateVersionState, true);
   }
   function closeGuideManual(){
     hideModal('guide-manual-modal');
-    // 확인버튼으로 닫을 때: oai_guide_manual state가 히스토리에 남지 않도록 trap state로 교체
-    try{
-      if(history.state && history.state.oai_guide_manual){
-        history.replaceState({_p:1, oai_cover_trap:'guide-confirm'}, '', location.href);
-      }
-    }catch(_e){}
   }
   function closeIntroLater(){
     hideModal('guide-intro-modal');
@@ -1424,7 +1418,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V1-52';
+    frame.src='diocese.html?v=V1-53';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -1821,7 +1815,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V1-52';
+const _PARISH_ASSET_VERSION='V1-53';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -1984,7 +1978,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V1-52';
+const _PRAYER_ASSET_VERSION='V1-53';
 let _prayerModuleLoadPromise=null;
 function _isPrayerModuleReady(){
   return typeof window.initPrayerView === 'function' &&
@@ -2029,7 +2023,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V1-52';
+const _RETREAT_ASSET_VERSION='V1-53';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2277,7 +2271,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V1-52';
+const _SHRINE_ASSET_VERSION='V1-53';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -5738,10 +5732,6 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
     on('cover-menu-guide-btn', 'click', function(e){
       if(e && e.preventDefault) e.preventDefault();
       closeMenu();
-      try{
-        // 뒤로가기가 커버 trap을 소비하지 않도록 전용 state를 쌓는다
-        if(history && history.pushState) history.pushState({_p:1, oai_guide_manual:true}, '', location.href);
-      }catch(_e){}
       try{
         if(window.openGuideManual) window.openGuideManual();
         else if(typeof openGuideManual === 'function') openGuideManual();
