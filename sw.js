@@ -8,6 +8,7 @@ const APP_SHELL = [
   './',
   './index.html',
   './constants.js?v=V1-41',
+  './core.js?v=V1-41',
   './style.css?v=V1-41',
   './app.js?v=V1-41',
   './web.js?v=V1-41',
