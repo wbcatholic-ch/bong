@@ -57,6 +57,43 @@ function _isAppScreenActive(){
   try{ return document.documentElement.classList.contains('app-active'); }catch(e){ return false; }
 }
 
+/* ── Back Trap 공통 관리 ───────────────────────────────
+   Google Play/WebView 안정화용 정리:
+   - 이미 _p:1 trap 위치에 있을 때는 pushState를 새로 쌓지 않는다.
+   - 다른 trap 상태에서 커버/앱 trap으로 바꿔야 할 때는 replaceState만 사용한다.
+   - _p:0 root 상태일 때만 root → trap 한 쌍을 만든다.
+   이렇게 해서 커버 복귀·기도문 복귀·빠른메뉴 복귀가 반복되어도 history 스택이
+   root/trap/root/trap으로 계속 누적되지 않게 한다. */
+function _oaiBaseHref(){
+  try{ return location.href.split('#')[0]; }catch(_e){ return location.href; }
+}
+function _oaiTrapPayload(kind, reason, root){
+  var r = reason || (kind === 'cover' ? 'cover' : 'app');
+  if(kind === 'cover'){
+    return root ? {_p:0, oai_cover_root:r} : {_p:1, oai_cover_trap:r};
+  }
+  return root ? {_p:0, oai_app_root:r} : {_p:1, oai_app_trap:r};
+}
+function _oaiNormalizeTrapState(kind, reason, forceReset){
+  try{
+    var href = _oaiBaseHref();
+    var st = history.state || null;
+    var trapKey = kind === 'cover' ? 'oai_cover_trap' : 'oai_app_trap';
+
+    if(st && st._p === 1 && st[trapKey] && !forceReset) return;
+
+    if(st && st._p === 1){
+      // 현재 위치가 이미 trap이면 새 항목을 만들지 않고 역할만 교체한다.
+      history.replaceState(_oaiTrapPayload(kind, reason, false), '', href);
+      return;
+    }
+
+    // root 또는 빈 상태에서만 trap 한 칸을 만든다.
+    history.replaceState(_oaiTrapPayload(kind, reason, true), '', href);
+    history.pushState(_oaiTrapPayload(kind, reason, false), '', href);
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+}
+
 /* ── 커버 Back Trap 관리 ─────────────────────────────── */
 
 function _ensureCoverBackTrap(reason){
@@ -64,15 +101,7 @@ function _ensureCoverBackTrap(reason){
     if(_isAppScreenActive()) return;
     var modal = document.getElementById('mass-quick-modal');
     if(modal && modal.classList.contains('show')) return;
-    if(typeof window._oaiArmCoverBackTrap === 'function'){
-      window._oaiArmCoverBackTrap(reason || 'app-cover-ensure');
-      return;
-    }
-    var st = history.state;
-    if(st && st._p === 1 && st.oai_cover_trap) return;
-    var href = location.href.split('#')[0];
-    history.replaceState({_p:0, oai_cover_root:reason||'app-cover-ensure'}, '', href);
-    history.pushState({_p:1, oai_cover_trap:reason||'app-cover-ensure'}, '', href);
+    _oaiNormalizeTrapState('cover', reason || 'app-cover-ensure', false);
   }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
 function _resetCoverBackTrap(reason){
@@ -80,15 +109,7 @@ function _resetCoverBackTrap(reason){
     if(_isAppScreenActive()) return;
     var modal = document.getElementById('mass-quick-modal');
     if(modal && modal.classList.contains('show')) return;
-    if(typeof window._oaiArmCoverBackTrap === 'function'){
-      window._oaiArmCoverBackTrap(reason || 'app-cover-reset');
-      return;
-    }
-    var st = history.state;
-    if(st && st._p === 1 && st.oai_cover_trap) return;
-    var href = location.href.split('#')[0];
-    history.replaceState({_p:0, oai_cover_root:reason||'app-cover-reset'}, '', href);
-    history.pushState({_p:1, oai_cover_trap:reason||'app-cover-reset'}, '', href);
+    _oaiNormalizeTrapState('cover', reason || 'app-cover-reset', true);
   }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
 
@@ -97,19 +118,13 @@ function _resetCoverBackTrap(reason){
 function _ensureAppBackTrap(reason){
   try{
     if(!_isAppScreenActive()) return;
-    var href = location.href.split('#')[0];
-    var st = history.state;
-    if(st && st._p === 1) return;
-    history.replaceState({_p:0, oai_app_trap_from:reason||'app'}, '', href);
-    history.pushState({_p:1, oai_app_trap:reason||'app'}, '', href);
+    _oaiNormalizeTrapState('app', reason || 'app', false);
   }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
 function _resetAppBackTrap(reason){
   try{
     if(!_isAppScreenActive()) return;
-    var href = location.href.split('#')[0];
-    history.replaceState({_p:0, oai_app_root:reason||'app-reset'}, '', href);
-    history.pushState({_p:1, oai_app_trap:reason||'app-reset'}, '', href);
+    _oaiNormalizeTrapState('app', reason || 'app-reset', true);
   }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
 
@@ -177,6 +192,7 @@ window._armCoverExitWindow    = _armCoverExitWindow;
 window._isCoverExitArmed      = _isCoverExitArmed;
 window._isCoverScreenVisible  = _isCoverScreenVisible;
 window._isAppScreenActive     = _isAppScreenActive;
+window._oaiNormalizeTrapState = _oaiNormalizeTrapState;
 window._ensureCoverBackTrap   = _ensureCoverBackTrap;
 window._resetCoverBackTrap    = _resetCoverBackTrap;
 window._ensureAppBackTrap     = _ensureAppBackTrap;
