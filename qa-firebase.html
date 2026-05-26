@@ -321,14 +321,6 @@
   #qna-cross-icon::after{ content:""; position:absolute; left:50%; background:#fff; border-radius:2px; display:block; }
   #qna-cross-icon::before{ top:50%; width:3px; height:24px; transform:translate(-50%,-50%); }
   #qna-cross-icon::after{ top:42%; width:14px; height:3px; transform:translate(-50%,-50%); }
-
-  /* V1-83 qna no return effect */
-  html.returning-to-cover *,
-  body.returning-to-cover * {
-    transition: none !important;
-    animation: none !important;
-  }
-
 </style>
 
 
@@ -421,7 +413,7 @@ const COL = db.collection("qa_posts");
 
 /* ─── 상수 ─── */
 const CATEGORIES  = ["문의","수정제안","개선건의","칭찬"];
-const QA_LIST_LIMIT = 30; // V1-10: 처음 30개를 빠르게 표시하고, 더보기로 이전 글을 30개씩 추가한다.
+const QA_LIST_LIMIT = 30; // V3-5: 처음 30개를 빠르게 표시하고, 더보기로 이전 글을 30개씩 추가한다.
 const ANON_NAMES  = ["익명의 순례자","익명의 신자","익명의 교우"];
 const FILTERS     = ["전체", ...CATEGORIES];
 
@@ -822,10 +814,10 @@ showView('list-view', { historyMode:'replace' });
 subscribeList();
 </script>
 
-<script id="oai-cache-lifecycle-V1-10">
+<script id="oai-cache-lifecycle-V23">
 (function(){
   'use strict';
-  var APP_VERSION = 'V1-10';
+  var APP_VERSION = 'V3-5';
   if('serviceWorker' in navigator){
     try{ navigator.serviceWorker.register('./sw.js?v=' + encodeURIComponent(APP_VERSION)).then(function(reg){try{reg.update();}catch(e){}}).catch(function(){}); }catch(e){}
   }
