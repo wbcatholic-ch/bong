@@ -161,6 +161,16 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
+  .list-limit-note {
+    flex: 0 0 auto;
+    padding: 8px 14px 6px;
+    font-size: 12px;
+    line-height: 1.35;
+    color: #64748B;
+    background: var(--card);
+    border-bottom: 1px solid rgba(221,213,200,.7);
+    text-align: center;
+  }
   .card {
     background: #fffaf2; border:1px solid #e6dccb; border-radius: var(--radius); padding: 14px 16px;
     margin-bottom: 10px; box-shadow: var(--shadow); cursor: pointer;
@@ -287,14 +297,6 @@
   #qna-cross-icon::after{ content:""; position:absolute; left:50%; background:#fff; border-radius:2px; display:block; }
   #qna-cross-icon::before{ top:50%; width:3px; height:24px; transform:translate(-50%,-50%); }
   #qna-cross-icon::after{ top:42%; width:14px; height:3px; transform:translate(-50%,-50%); }
-
-  /* V1-76 qna no return effect */
-  html.returning-to-cover *,
-  body.returning-to-cover * {
-    transition: none !important;
-    animation: none !important;
-  }
-
 </style>
 
 
@@ -326,6 +328,7 @@
 <!-- 목록 뷰 -->
 <div id="list-view" class="view active">
   <div id="filter-bar"></div>
+  <div id="list-limit-note" class="list-limit-note">최근 30개 글만 표시합니다.</div>
   <div id="post-list"><div class="loading-box"><div class="spinner"></div>불러오는 중…</div></div>
 </div>
 
@@ -386,6 +389,7 @@ const COL = db.collection("qa_posts");
 
 /* ─── 상수 ─── */
 const CATEGORIES  = ["문의","수정제안","개선건의","칭찬"];
+const QA_LIST_LIMIT = 30; // V3-1: 문의 게시판은 최근 글만 구독해 사용자 증가 시 읽기 부하를 줄인다.
 const ANON_NAMES  = ["익명의 순례자","익명의 신자","익명의 교우"];
 const FILTERS     = ["전체", ...CATEGORIES];
 
@@ -562,6 +566,7 @@ function subscribeList() {
 
   unsubscribe = COL
     .orderBy('createdAt', 'desc')
+    .limit(QA_LIST_LIMIT)
     .onSnapshot(snap => {
       const posts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderList(posts);
@@ -709,7 +714,7 @@ subscribeList();
 <script id="oai-cache-lifecycle-V23">
 (function(){
   'use strict';
-  var APP_VERSION = 'V1-76';
+  var APP_VERSION = 'V3-1';
   if('serviceWorker' in navigator){
     try{ navigator.serviceWorker.register('./sw.js?v=' + encodeURIComponent(APP_VERSION)).then(function(reg){try{reg.update();}catch(e){}}).catch(function(){}); }catch(e){}
   }
