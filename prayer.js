@@ -255,7 +255,7 @@ function prApplyTabColors(){
   try{ if(typeof window.oaiKeepActiveTabsVisible === 'function') window.oaiKeepActiveTabsVisible('prayer'); }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
 
-// V3: 주요기도문 탭 표시 안전장치.
+// V3-S: 주요기도문 탭 표시 안전장치.
 // 일부 화면 전환/캐시 조합에서 목록은 렌더링되지만 탭 컨테이너가 비어 보이는 경우를 막는다.
 function prEnsureTabsVisible(){
   const wrap = prG('prayer-tabs');
@@ -642,5 +642,28 @@ window.initPrayerView = function(){
     listView.style.scrollBehavior = '';
   }
 };
+
+/* ─── 굿뉴스 기도문 버튼: 외부복귀 안정화 경로로 연결 ───────────────
+   index.html의 <a target="_blank">를 JS로 오버라이드하여
+   oaiSmoothNavigate() → markExternalReturnStabilize() → pageshow 복귀 흐름을 탄다.
+   prayer.js는 동적 로드(첫 기도문 진입 시 1회)되므로 여기서 한 번만 바인딩한다. */
+(function(){
+  try{
+    var btn = document.getElementById('goodnews-prayer-btn');
+    if(!btn || btn.__oaiHandled) return;
+    btn.__oaiHandled = true;
+    btn.removeAttribute('target');
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      var url = btn.getAttribute('href') || 'https://maria.catholic.or.kr/mobile/prayer/';
+      if(typeof oaiSmoothNavigate === 'function'){
+        oaiSmoothNavigate(url, 'prayer-goodnews');
+      } else {
+        try{ location.assign(url); }catch(_e){ location.href = url; }
+      }
+    });
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+})();
 
 })();
