@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="ko" class="oai-font-global" style="background:#f5f0e8;">
+<html lang="ko" class="oai-font-global" style="background:#0e1535;">
 <head>
-<style id="oai-first-entry-bg">html,body{margin:0;width:100%;min-height:100%;background:#f5f0e8;color-scheme:light;}body{background:#f5f0e8;}</style>
-<link rel="preload" href="entry-cross-gold.png?v=V3-1" as="image" fetchpriority="high">
+<style id="oai-first-entry-bg">html,body{margin:0;width:100%;min-height:100%;background:#0e1535;color-scheme:light;}body{background:#0e1535;}</style>
 <style id="oai-refresh-veil-early-style">
 /* 새로고침 직후 style.css가 아직 도착하지 않은 첫 페인트도 아이보리 보호막으로 덮는다. */
 html.oai-stability-veil { background:#f5f0e8 !important; }
@@ -13,17 +12,6 @@ html.oai-stability-veil::after { content:""; position:fixed; left:50%; top:50%; 
 @keyframes oaiStabilityVeilIn { from { opacity:0; } to { opacity:1; } }
 @keyframes oaiStabilityVeilOut { from { opacity:1; } to { opacity:0; } }
 @keyframes oaiStabilitySpin { to { transform:rotate(360deg); } }
-</style>
-<style id="oai-first-entry-intro-style">
-html.oai-first-entry-intro,
-html.oai-first-entry-intro body,
-html.oai-first-entry-intro #cover { background:#f5f0e8 !important; }
-html.oai-first-entry-intro #cover > * { opacity:0 !important; visibility:hidden !important; transition:none !important; animation:none !important; }
-html.oai-first-entry-intro::before { content:""; position:fixed; inset:0; z-index:2147483400; background:#f5f0e8; pointer-events:none; opacity:1; }
-html.oai-first-entry-intro::after { content:""; position:fixed; left:50%; top:50%; z-index:2147483401; width:clamp(286px,81vw,456px); height:clamp(286px,81vw,456px); transform:translate(-50%,-50%) scale(.92); background:url("entry-cross-gold.png?v=V3-1") center/contain no-repeat; filter:drop-shadow(0 14px 34px rgba(156,104,24,.18)) drop-shadow(0 0 10px rgba(255,232,163,.12)); pointer-events:none; opacity:0; animation:oaiFirstIntroCross 1.66s ease-in-out both; }
-html.oai-cover-first-reveal #cover > * { animation:oaiCoverFirstReveal .34s ease-out both !important; }
-@keyframes oaiFirstIntroCross { 0%{opacity:.18; transform:translate(-50%,-50%) scale(.88);} 20%{opacity:1; transform:translate(-50%,-50%) scale(1);} 74%{opacity:1; transform:translate(-50%,-50%) scale(1);} 100%{opacity:0; transform:translate(-50%,-50%) scale(1.035);} }
-@keyframes oaiCoverFirstReveal { 0%{opacity:0; transform:translateY(4px);} 100%{opacity:1; transform:translateY(0);} }
 </style>
 
 <script>
@@ -44,7 +32,7 @@ html.oai-cover-first-reveal #cover > * { animation:oaiCoverFirstReveal .34s ease
 })();
 </script>
 <script>
-/* V3-1: patches.js가 로드되기 전 첫 커버 Back도 먼저 잡는 최소 조기 가드.
+/* V3-2: patches.js가 로드되기 전 첫 커버 Back도 먼저 잡는 최소 조기 가드.
    실패했던 hash/query URL trap은 사용하지 않고, 같은 URL의 root/trap 한 쌍만 만든다. */
 (function(){
   'use strict';
@@ -220,47 +208,12 @@ html.oai-cover-first-reveal #cover > * { animation:oaiCoverFirstReveal .34s ease
   }catch(e){}
 })();
 </script>
-
-<script>
-/* V3-1: PWA 첫 진입 화면에만 금빛 십자가를 보여 준다.
-   새로고침 보호막, 외부사이트 복귀, 같은 세션의 재진입에는 반복 표시하지 않는다. */
-(function(){
-  'use strict';
-  var root = document.documentElement;
-  if(!root || !root.classList) return;
-  function now(){ return Date.now ? Date.now() : new Date().getTime(); }
-  function ssGet(k){ try{ return sessionStorage.getItem(k) || ''; }catch(_e){ return ''; } }
-  function lsGet(k){ try{ return localStorage.getItem(k) || ''; }catch(_e){ return ''; } }
-  function shouldShow(){
-    try{
-      if(ssGet('oai_first_intro_seen_session') === '1') return false;
-      var refreshUntil = parseInt(ssGet('oai_refresh_veil_until') || '0', 10) || 0;
-      if(refreshUntil && refreshUntil > now()) return false;
-      var extPending = ssGet('oai_external_nav_pending') === '1' || ssGet('oai_external_nav_pagehide') === '1' || lsGet('oai_external_nav_pending') === '1' || lsGet('oai_external_nav_pagehide') === '1';
-      if(extPending) return false;
-      return true;
-    }catch(_e){ return true; }
-  }
-  if(!shouldShow()) return;
-  try{ sessionStorage.setItem('oai_first_intro_seen_session', '1'); }catch(_e){}
-  root.classList.add('oai-first-entry-intro');
-  setTimeout(function(){
-    try{
-      root.classList.remove('oai-first-entry-intro');
-      root.classList.add('oai-cover-first-reveal');
-      setTimeout(function(){
-        try{ root.classList.remove('oai-cover-first-reveal'); }catch(_e){}
-      }, 520);
-    }catch(_e){}
-  }, 1680);
-})();
-</script>
 <script>
 /* 커버 실제 화면 높이 고정: 모바일/PWA 첫 실행·새로고침 때 첫 화면과 로딩 후 화면의 기준 높이가 달라지는 현상을 줄인다. */
 (function(){
   try{ if('scrollRestoration' in history) history.scrollRestoration = 'manual'; }catch(e){}
-  var KEY = 'oai_cover_vh_px_v31';
-  var WIDTH_KEY = 'oai_cover_width_px_v31';
+  var KEY = 'oai_cover_vh_px_v48';
+  var WIDTH_KEY = 'oai_cover_width_px_v48';
   var root = document.documentElement;
   root.classList.add('oai-cover-booting');
   function now(){ return Date.now ? Date.now() : new Date().getTime(); }
@@ -283,7 +236,7 @@ html.oai-cover-first-reveal #cover > * { animation:oaiCoverFirstReveal .34s ease
     }
     add(docH); add(innerH); add(vvH);
     if(!values.length) return 0;
-    // V3-1: iOS/Android에서 저장된 작은 viewport 또는 visualViewport 값 때문에
+    // V3-2: iOS/Android에서 저장된 작은 viewport 또는 visualViewport 값 때문에
     // 커버 하단이 위로 뜨는 현상을 줄인다. 키보드가 열린 것으로 보이는 경우만
     // visualViewport 축소값을 제외하고, 일반 커버 화면은 가장 넓은 높이 기준을 쓴다.
     var keyboardLikely = !!(vvH && innerH && vvH / innerH < 0.78);
@@ -374,7 +327,7 @@ html.oai-cover-first-reveal #cover > * { animation:oaiCoverFirstReveal .34s ease
 })();
 </script>
 <script>
-/* V3-1: iPhone/PWA 전체 화면 높이 안정화.
+/* V3-2: iPhone/PWA 전체 화면 높이 안정화.
    iOS에서 visualViewport가 일시적으로 작아진 값을 오래 붙잡아
    기도문·목록·관구교구 지도 하단에 큰 빈 공간이 생기는 현상을 줄인다.
    상태바 색상과 Android 레이아웃은 건드리지 않는다. */
@@ -382,8 +335,8 @@ html.oai-cover-first-reveal #cover > * { animation:oaiCoverFirstReveal .34s ease
   var root = document.documentElement;
   if(!root || !root.classList || !root.classList.contains('ios-device')) return;
 
-  var KEY = 'oai_ios_app_h_px_v31';
-  var WIDTH_KEY = 'oai_ios_app_w_px_v31';
+  var KEY = 'oai_ios_app_h_px_v3s';
+  var WIDTH_KEY = 'oai_ios_app_w_px_v3s';
   var lastApplied = 0;
   var lastWidth = 0;
   var settleTimer = 0;
@@ -533,21 +486,21 @@ window.APP_CONFIG = {
 <meta name="application-name" content="가톨릭길동무">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0e1535">
-<link rel="manifest" href="manifest.json?v=V3-1">
-<link rel="apple-touch-icon" href="icon-192x192.png?v=V3-1">
+<link rel="manifest" href="manifest.json?v=V3-2">
+<link rel="apple-touch-icon" href="icon-192x192.png?v=V3-2">
 <meta name="format-detection" content="telephone=no">
 <meta name="description" content="가톨릭길동무 - 가톨릭 신앙생활 종합 앱">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="가톨릭길동무">
 <meta property="og:title" content="가톨릭길동무">
 <meta property="og:description" content="성지 · 성당 · 기도문 · 순례길 · 가톨릭 웹사이트 안내">
-<meta property="og:image" content="icon-512x512.png?v=V3-1">
+<meta property="og:image" content="icon-512x512.png?v=V3-2">
 <meta property="og:image:width" content="512">
 <meta property="og:image:height" content="512">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="가톨릭길동무">
 <meta name="twitter:description" content="성지 · 성당 · 기도문 · 순례길 · 가톨릭 웹사이트 안내">
-<meta name="twitter:image" content="icon-512x512.png?v=V3-1">
+<meta name="twitter:image" content="icon-512x512.png?v=V3-2">
 <title>가톨릭길동무</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 fill=%22%230e1535%22/%3E%3Ctext x=%226%22 y=%2226%22 font-size=%2224%22 fill=%22%23d4aa6a%22%3E%E2%9C%9D%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -555,7 +508,7 @@ window.APP_CONFIG = {
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style id="oai-initial-bg">html,body{margin:0;width:100%;height:100%;min-height:100%;background:#0e1535;overflow:hidden;color-scheme:light;}#cover{background:#0e1535;min-height:100%;}#app{background:#f8f6f2;display:none;}</style>
-<link rel="stylesheet" href="style.css?v=V3-1">
+<link rel="stylesheet" href="style.css?v=V3-2">
 </head>
 <body>
 <div id="missa-view" role="dialog" aria-modal="true" aria-label="매일미사">
@@ -699,8 +652,8 @@ window.APP_CONFIG = {
       <!-- 커버 하단 작업줄: 새로고침 + 문의·건의 -->
       <div id="cover-action-row" aria-label="커버 보조 기능">
         <div id="cover-update-box">
-          <button id="cover-update-btn" type="button" data-target-version="V3-1" aria-label="짧게 누르면 새로고침, 더 길게 누르면 앱 캐시 초기화">
-            <span class="oai-version-main">V3</span><span class="oai-version-sub">-1</span> 새로고침
+          <button id="cover-update-btn" type="button" data-target-version="V3-2" aria-label="짧게 누르면 새로고침, 더 길게 누르면 앱 캐시 초기화">
+            <span class="oai-cover-version-main">V3</span><span class="oai-cover-version-sub">-2</span> 새로고침
           </button>
           <div id="cover-update-hint" aria-live="polite">아래 버전과 다릅니다. 눌러서 최신 파일을 다시 받아 주세요.</div>
         </div>
@@ -729,30 +682,30 @@ window.APP_CONFIG = {
         <div class="ios-safari-step">
           <b>1</b>
           <span>카카오톡 하단 버튼 4개 중 <strong>오른쪽 끝 버튼</strong>을 누르세요.</span>
-          <img data-src="ios-install-step1-kakao-bottom-buttons.png?v=V3-1" alt="카카오톡 오른쪽 아래 버튼 모양" width="945" height="248" loading="lazy" decoding="async">
+          <img data-src="ios-install-step1-kakao-bottom-buttons.png?v=V3-2" alt="카카오톡 오른쪽 아래 버튼 모양" width="945" height="248" loading="lazy" decoding="async">
         </div>
         <div class="ios-safari-step">
           <b>2</b>
           <span>공유 화면에서 <strong>Safari로 열기</strong>를 누르세요.</span>
-          <img data-src="ios-install-step2-safari-open.png?v=V3-1" alt="Safari로 열기 버튼" width="880" height="755" loading="lazy" decoding="async" fetchpriority="low">
+          <img data-src="ios-install-step2-safari-open.png?v=V3-2" alt="Safari로 열기 버튼" width="880" height="755" loading="lazy" decoding="async" fetchpriority="low">
         </div>
         <div class="ios-safari-step">
           <b>3</b>
           <span>Safari로 열린 뒤, 화면 <strong>오른쪽 아래 ··· 버튼</strong>을 누르세요.</span>
           <div class="ios-safari-shot ios-safari-shot-more">
-            <img data-src="KakaoTalk_20260514_134255658_04.jpg?v=V3-1" alt="Safari 오른쪽 아래 더보기 버튼" width="960" height="307" loading="lazy" decoding="async">
+            <img data-src="KakaoTalk_20260514_134255658_04.jpg?v=V3-2" alt="Safari 오른쪽 아래 더보기 버튼" width="960" height="307" loading="lazy" decoding="async">
             <i class="ios-gold-highlight" aria-hidden="true"></i>
           </div>
         </div>
         <div class="ios-safari-step">
           <b>4</b>
           <span>열린 메뉴에서 <strong>공유</strong>를 누르세요.</span>
-          <img data-src="ios-install-step3-share-menu.png?v=V3-1" alt="Safari 공유 버튼" width="750" height="580" loading="lazy" decoding="async" fetchpriority="low">
+          <img data-src="ios-install-step3-share-menu.png?v=V3-2" alt="Safari 공유 버튼" width="750" height="580" loading="lazy" decoding="async" fetchpriority="low">
         </div>
         <div class="ios-safari-step">
           <b>5</b>
           <span>목록을 아래로 내려 <strong>홈 화면에 추가</strong>를 누르세요.</span>
-          <img data-src="ios-install-step4-home-screen.png?v=V3-1" alt="홈 화면에 추가 버튼" width="865" height="750" loading="lazy" decoding="async" fetchpriority="low">
+          <img data-src="ios-install-step4-home-screen.png?v=V3-2" alt="홈 화면에 추가 버튼" width="865" height="750" loading="lazy" decoding="async" fetchpriority="low">
         </div>
       </div>
     </div>
@@ -817,7 +770,7 @@ window.APP_CONFIG = {
   📲 홈 화면에 앱 설치하기
 </button>
 </div>
-<script src="app.js?v=V3-1"></script>
+<script src="app.js?v=V3-2"></script>
 <div id="oai-category-entry-veil" aria-hidden="true"></div>
 <div id="app"><div id="tabbar"><button id="tab-btn-nearby" class="tab-btn" data-tab="nearby"><span class="tab-icon">📍</span><span id="tab-nearby-lbl">내주변</span></button><button id="tab-btn-list" class="tab-btn" data-tab="list"><span class="tab-icon">📋</span><span id="tab-list-lbl">목록</span></button><button id="tab-btn-region" class="tab-btn" data-tab="region"><span class="tab-icon">🔍</span>지역검색
     </button><button id="tab-btn-route" class="tab-btn" data-tab="route"><span class="tab-icon">🧭</span>길찾기
@@ -893,13 +846,13 @@ window.APP_CONFIG = {
     </div>
   </div>
 </div>
-<script src="web.js?v=V3-1"></script>
+<script src="web.js?v=V3-2"></script>
 
 <div id="qna-view" role="dialog" aria-modal="true" aria-label="문의·건의" class="module-view"><div class="module-bar qna"><div class="module-bar-main"><div class="module-bar-ico">✝</div><div class="module-bar-txt"><div class="module-bar-title">문의·건의</div><div class="module-bar-sub">질문, 오류, 수정요청을 남겨주세요</div></div></div><button id="qna-close-btn" class="module-close" aria-label="문의·건의 닫기">×</button></div><div class="qna-body"><div class="qna-tabs"><button id="qna-tab-write" class="qna-tab on" type="button">작성</button></div><div class="qna-list" id="qna-list"></div></div></div>
 
-<script src="patches.js?v=V3-1"></script>
+<script src="patches.js?v=V3-2"></script>
 
-<script src="sw-update.js?v=V3-1"></script>
+<script src="sw-update.js?v=V3-2"></script>
 
 
 
