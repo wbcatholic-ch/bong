@@ -484,8 +484,25 @@ function prSafeText(text){
   });
 }
 
-function prShowExternalGuide(message, duration){
+function prHideExternalGuide(){
   try{
+    window.clearTimeout(window.__prExternalGuideTimer);
+    var guide = document.getElementById('pr-external-guide');
+    if(!guide){
+      try{ document.documentElement.classList.remove('pr-external-guide-active'); }catch(_e){}
+      return;
+    }
+    guide.classList.remove('show');
+    window.setTimeout(function(){
+      try{ if(guide && guide.parentNode) guide.parentNode.removeChild(guide); }catch(_e){}
+      try{ if(!document.getElementById('pr-external-guide')) document.documentElement.classList.remove('pr-external-guide-active'); }catch(_e){}
+    }, 180);
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+}
+
+function prShowExternalGuide(message, duration, options){
+  try{
+    options = options || {};
     var old = document.getElementById('pr-external-guide');
     if(old && old.parentNode) old.parentNode.removeChild(old);
     var guide = document.createElement('div');
@@ -500,15 +517,14 @@ function prShowExternalGuide(message, duration){
     guide.classList.add('show');
     document.body.appendChild(guide);
     window.clearTimeout(window.__prExternalGuideTimer);
-    window.__prExternalGuideTimer = window.setTimeout(function(){
-      try{
-        guide.classList.remove('show');
-        window.setTimeout(function(){
-          try{ if(guide && guide.parentNode) guide.parentNode.removeChild(guide); }catch(_e){}
-          try{ if(!document.getElementById('pr-external-guide')) document.documentElement.classList.remove('pr-external-guide-active'); }catch(_e){}
-        }, 180);
-      }catch(_e){}
-    }, Math.max(450, duration || 900));
+    if(options.hold){
+      if(options.maxDuration){
+        window.__prExternalGuideTimer = window.setTimeout(prHideExternalGuide, Math.max(2500, options.maxDuration));
+      }
+      return guide;
+    }
+    window.__prExternalGuideTimer = window.setTimeout(prHideExternalGuide, Math.max(450, duration || 900));
+    return guide;
   }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
 
@@ -524,7 +540,7 @@ function prMaybeShowExternalReturnGuide(){
     if(sessionStorage.getItem('oai_prayer_external_return_pending') !== '1') return;
     sessionStorage.removeItem('oai_prayer_external_return_pending');
     sessionStorage.removeItem('oai_prayer_external_return_ts');
-    prShowExternalGuide('앱으로 돌아오는 중입니다.', 850);
+    prShowExternalGuide('앱으로 돌아오는 중입니다.', 900);
   }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
 
@@ -542,7 +558,9 @@ function prOpenOfficialPrayer(prayer){
     sessionStorage.setItem('oai_prayer_list_restore', JSON.stringify(window.__oaiPrayerListRestore));
   }catch(e){ console.warn('[가톨릭길동무]', e); }
   prMarkExternalReturnFlag();
-  prShowExternalGuide('공식 기도문 페이지로 이동합니다.', 850);
+  // V3-33: 기도문 공식 원문 페이지가 늦게 열리는 경우에도
+  // 보호 안내가 먼저 사라지지 않도록 실제 이동 신호 전까지 유지한다.
+  prShowExternalGuide('공식 기도문 페이지로 이동합니다.', 0, { hold:true, maxDuration:6500 });
   window.setTimeout(function(){
     try{ window.location.href = url; }
     catch(e){ location.href = url; }
