@@ -544,6 +544,9 @@ const PrayerState = {
 })();
 const PR_FONT_SIZES = [13,14,15,16,17,18,19,20,21,22,24,26,28,30];
 const PR_FONT_KEY = 'prayer_font_size';
+const PR_EXTERNAL_LEAVE_DELAY_MS = 720;
+const PR_EXTERNAL_VEIL_HOLD_MS = 1050;
+const PR_EXTERNAL_RETURN_VEIL_MS = 850;
 
 function prG(id){ return document.getElementById(id); }
 function prNorm(t){ return (t||'').replace(/\s+/g,'').toLowerCase(); }
@@ -567,14 +570,43 @@ function prNormalizeFavoriteIds(ids){
   });
   return out;
 }
+function prPrepareExternalVeilLabel(label){
+  try{
+    var root = document.documentElement;
+    root.setAttribute('data-oai-prayer-external-label', label || '기도문 외부 홈페이지로 이동 중입니다.');
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+}
+function prPreparePrayerExternalState(url){
+  try{
+    var now = Date.now ? Date.now() : new Date().getTime();
+    sessionStorage.setItem('oai_prayer_external_return_to_list', '1');
+    sessionStorage.setItem('oai_prayer_external_return_url', url || '');
+    sessionStorage.setItem('oai_prayer_external_started_at', String(now));
+    sessionStorage.setItem('oai_external_nav_started_at', String(now));
+    sessionStorage.setItem('oai_external_nav_kind', 'prayer-official-link');
+    sessionStorage.setItem('oai_external_nav_pending', '1');
+    sessionStorage.removeItem('oai_external_nav_pagehide');
+    sessionStorage.setItem('oai_external_nav_hold_until', String(now + PR_EXTERNAL_VEIL_HOLD_MS));
+    sessionStorage.setItem('oai_external_nav_force_release_at', String(now + PR_EXTERNAL_VEIL_HOLD_MS + 260));
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+}
 function prOpenPrayerExternalUrl(url){
-  const safeUrl = (url || '').trim();
+  var safeUrl = (url || '').trim();
+  try{
+    if(typeof normalizeCatholicExternalUrl === 'function') safeUrl = normalizeCatholicExternalUrl(safeUrl);
+  }catch(_e){}
   if(!/^https?:\/\//i.test(safeUrl)) return false;
-  if(typeof oaiSmoothNavigate === 'function'){
-    oaiSmoothNavigate(safeUrl, 'prayer-official-link');
-  } else {
-    try{ location.assign(safeUrl); }catch(_e){ location.href = safeUrl; }
-  }
+  prClearExternalOpenTimer();
+  prPreparePrayerExternalState(safeUrl);
+  prPrepareExternalVeilLabel('기도문 외부 홈페이지로 이동 중입니다.');
+  try{
+    document.documentElement.classList.add('oai-external-leaving');
+    if(typeof oaiHoldStabilityVeil === 'function') oaiHoldStabilityVeil('external-leave', PR_EXTERNAL_VEIL_HOLD_MS);
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+  prExternalOpenTimer = setTimeout(function(){
+    prExternalOpenTimer = null;
+    try{ location.assign(safeUrl); }catch(e){ try{ location.href = safeUrl; }catch(_e){ console.warn('[가톨릭길동무]', _e); } }
+  }, PR_EXTERNAL_LEAVE_DELAY_MS);
   return true;
 }
 function prClearExternalOpenTimer(){
@@ -894,41 +926,14 @@ function prOpenDetail(prayer){
   ttl.textContent = prayer.title;
   var safeTitle = (prayer.title || '기도문').replace(/[&<>"']/g, function(ch){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]; });
   var hasExternalUrl = !!(prayer && /^https?:\/\//i.test((prayer.url || '').trim()));
-  var rawContent = '';
   if(hasExternalUrl){
-    rawContent = '' +
-      '<div class="pr-link-card" style="padding:4px 0 2px;line-height:1.75;">' +
-      '<p style="margin:0 0 16px;color:#374151;font-weight:700;word-break:keep-all;">기도문 공식/원문 페이지로 이동 중입니다.</p>' +
-      '<p style="margin:0 0 18px;color:#6B7280;font-size:14px;line-height:1.65;word-break:keep-all;">앱 내부에는 기도문 본문을 저장하지 않는 테스트 방식입니다.</p>' +
-      '<button type="button" id="pr-official-link-btn" style="width:100%;min-height:48px;border:0;border-radius:13px;background:#0F766E;color:#fff;font-family:inherit;font-size:16px;font-weight:800;box-shadow:0 2px 6px rgba(15,118,110,.20);">바로 이동하지 않으면 여기를 눌러 주세요</button>' +
-      '<p style="margin:14px 0 0;color:#6B7280;font-size:13px;line-height:1.65;word-break:keep-all;">외부 사이트로 이동합니다. 앱으로 돌아올 때는 기기의 뒤로가기를 사용해 주세요.</p>' +
-      '</div>';
-  } else {
-    rawContent = ((prayer.content||prayer.body||'')+'').replace(/class="symbol"/g,'class="pr-symbol"');
+    prOpenPrayerExternalUrl(prayer.url);
+    return;
   }
+  var rawContent = ((prayer.content||prayer.body||'')+'').replace(/class="symbol"/g,'class="pr-symbol"');
   content.innerHTML = '<div class="pr-body-title">' + safeTitle + '</div>' + rawContent;
   prClearExternalOpenTimer();
-  if(hasExternalUrl){
-    var officialBtn = document.getElementById('pr-official-link-btn');
-    if(officialBtn){
-      officialBtn.addEventListener('click', function(ev){
-        if(ev){
-          ev.preventDefault();
-          ev.stopPropagation();
-        }
-        prClearExternalOpenTimer();
-        prOpenPrayerExternalUrl(prayer.url);
-      });
-    }
-  }
   detail.classList.add('show');
-  if(hasExternalUrl){
-    prExternalOpenTimer = setTimeout(function(){
-      prExternalOpenTimer = null;
-      if(!detail.classList.contains('show')) return;
-      prOpenPrayerExternalUrl(prayer.url);
-    }, 850);
-  }
   try{
     // 본문 진입 시 별도 history state를 만들지 않고, 공통 앱 back trap만 보강한다.
     // 실제 뒤로가기는 patches.js의 공통 컨트롤러가 DOM 상태를 보고 처리한다.
@@ -995,6 +1000,42 @@ window.prCloseDetail = function(opts){
     }
   }
 };
+
+function prHandlePrayerExternalReturn(){
+  try{
+    if(sessionStorage.getItem('oai_prayer_external_return_to_list') !== '1') return;
+    if(document.visibilityState && document.visibilityState === 'hidden') return;
+    var started = parseInt(sessionStorage.getItem('oai_prayer_external_started_at') || '0', 10) || 0;
+    if(started && Date.now && Date.now() - started > 10 * 60 * 1000){
+      sessionStorage.removeItem('oai_prayer_external_return_to_list');
+      sessionStorage.removeItem('oai_prayer_external_return_url');
+      sessionStorage.removeItem('oai_prayer_external_started_at');
+      return;
+    }
+    sessionStorage.removeItem('oai_prayer_external_return_to_list');
+    sessionStorage.removeItem('oai_prayer_external_return_url');
+    sessionStorage.removeItem('oai_prayer_external_started_at');
+    prClearExternalOpenTimer();
+    var detail = prG('prayer-detail');
+    if(detail) detail.classList.remove('show');
+    prRestoreListPosition();
+    prPrepareExternalVeilLabel('기도문 목록으로 돌아오는 중입니다.');
+    try{
+      var reason = document.documentElement.getAttribute('data-oai-stability-reason') || '';
+      if(!/external-return/i.test(reason) && typeof oaiHoldStabilityVeil === 'function'){
+        oaiHoldStabilityVeil('prayer-external-return', PR_EXTERNAL_RETURN_VEIL_MS);
+      }
+    }catch(_e){}
+    try{
+      if(typeof window._oaiArmPrayerBackTrap === 'function') window._oaiArmPrayerBackTrap('prayer-external-return-list');
+    }catch(_e){}
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+}
+window.addEventListener('pageshow', function(){ setTimeout(prHandlePrayerExternalReturn, 30); }, true);
+window.addEventListener('focus', function(){ setTimeout(prHandlePrayerExternalReturn, 70); }, true);
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState === 'visible') setTimeout(prHandlePrayerExternalReturn, 70);
+}, true);
 
 /* ── IIFE 스코프 외부 노출 ── */
 window.prSwitchCat = prSwitchCat;

@@ -115,12 +115,14 @@ function oaiReleaseStabilityVeil(){
         try{
           root.classList.remove('oai-stability-veil','oai-external-return-freeze','oai-external-leaving','oai-stability-veil-releasing');
           root.removeAttribute('data-oai-stability-reason');
+          root.removeAttribute('data-oai-prayer-external-label');
           try{ sessionStorage.removeItem('oai_refresh_veil_visible_until'); window.__oaiRefreshVeilLocalVisibleUntil = 0; }catch(_e){}
         }catch(_e){}
       }, 180);
     }else{
       root.classList.remove('oai-stability-veil','oai-external-return-freeze','oai-external-leaving','oai-stability-veil-releasing');
       root.removeAttribute('data-oai-stability-reason');
+      root.removeAttribute('data-oai-prayer-external-label');
       try{ sessionStorage.removeItem('oai_refresh_veil_visible_until'); window.__oaiRefreshVeilLocalVisibleUntil = 0; }catch(_e){}
     }
   }catch(e){ console.warn("[가톨릭길동무]", e); }
@@ -270,6 +272,7 @@ function oaiClearInternalReturnEffects(reason){
     root.removeAttribute('data-oai-stability-reason');
     root.removeAttribute('data-oai-external-return-early');
     root.removeAttribute('data-oai-refresh-early-veil');
+    root.removeAttribute('data-oai-prayer-external-label');
     var veil = document.getElementById('oai-category-entry-veil');
     if(veil){ veil.style.opacity=''; veil.className=''; }
   }catch(e){ console.warn('[가톨릭길동무]', e); }
@@ -314,6 +317,7 @@ function oaiClearExternalNavigationState(opts){
     var html = document.documentElement;
     html.classList.remove('oai-navigating-out','oai-external-return-prepaint','oai-external-return-stabilize','oai-missa-return-stabilize','oai-external-leaving');
     html.removeAttribute('data-oai-external-return-early');
+    if(!opts.keepVeil) html.removeAttribute('data-oai-prayer-external-label');
     if(!opts.keepVeil){
       html.classList.remove('oai-external-return-freeze');
       var reason = html.getAttribute('data-oai-stability-reason') || '';
@@ -395,19 +399,36 @@ function oaiIsExternalLeaveStillOpening(){
     return !!(info.pending && !info.pageHidden && info.forceAt && info.now && info.now < info.forceAt);
   }catch(_e){ return false; }
 }
+function oaiGetExternalReturnTiming(){
+  try{
+    var kind = sessionStorage.getItem('oai_external_nav_kind') || '';
+    if(/prayer-official-link|prayer-goodnews/i.test(kind)){
+      return { min: 650, max: 1100, ticks: 1, prayer: true };
+    }
+  }catch(_e){}
+  return {
+    min: OAI_EXTERNAL_RETURN_MIN_MS,
+    max: OAI_EXTERNAL_RETURN_MAX_MS,
+    ticks: OAI_EXTERNAL_RETURN_STABLE_TICKS,
+    prayer: false
+  };
+}
 function oaiStartExternalReturnStabilize(){
   try{
     var root = document.documentElement;
     if(window.__oaiExternalReturnStabilizing) return true;
     window.__oaiExternalReturnStabilizing = true;
+    var timing = oaiGetExternalReturnTiming();
     root.classList.remove('oai-stability-veil-releasing');
     root.classList.add('oai-external-return-freeze');
     root.removeAttribute('data-oai-external-return-early');
-    oaiHoldStabilityVeil('external-return', OAI_EXTERNAL_RETURN_MAX_MS);
+    if(timing.prayer) root.setAttribute('data-oai-prayer-external-label', '기도문 목록으로 돌아오는 중입니다.');
+    else root.removeAttribute('data-oai-prayer-external-label');
+    oaiHoldStabilityVeil('external-return', timing.max);
 
     var started = Date.now ? Date.now() : new Date().getTime();
-    var minUntil = started + OAI_EXTERNAL_RETURN_MIN_MS;
-    var maxUntil = started + OAI_EXTERNAL_RETURN_MAX_MS;
+    var minUntil = started + timing.min;
+    var maxUntil = started + timing.max;
     var last = oaiMeasureExternalViewport();
     var stableCount = 0;
     clearInterval(window.__oaiExternalReturnStableTimer);
@@ -426,13 +447,13 @@ function oaiStartExternalReturnStabilize(){
         var cur = oaiMeasureExternalViewport();
         if(cur === last) stableCount++;
         else { stableCount = 0; last = cur; }
-        if(now >= minUntil && stableCount >= OAI_EXTERNAL_RETURN_STABLE_TICKS){ finish(); return; }
+        if(now >= minUntil && stableCount >= timing.ticks){ finish(); return; }
         if(now >= maxUntil){ finish(); return; }
       }catch(e){ console.warn('[가톨릭길동무]', e); finish(); }
     }, 120);
     setTimeout(function(){
       try{ if(window.__oaiExternalReturnStabilizing) finish(); }catch(_e){}
-    }, OAI_EXTERNAL_RETURN_MAX_MS + 260);
+    }, timing.max + 260);
     return true;
   }catch(e){ console.warn('[가톨릭길동무]', e); return false; }
 }
@@ -1496,7 +1517,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V2-1';
+    frame.src='diocese.html?v=V2-2';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -1893,7 +1914,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V2-1';
+const _PARISH_ASSET_VERSION='V2-2';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -2056,7 +2077,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V2-1';
+const _PRAYER_ASSET_VERSION='V2-2';
 let _prayerModuleLoadPromise=null;
 function _isPrayerModuleReady(){
   return typeof window.initPrayerView === 'function' &&
@@ -2101,7 +2122,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V2-1';
+const _RETREAT_ASSET_VERSION='V2-2';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2350,7 +2371,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V2-1';
+const _SHRINE_ASSET_VERSION='V2-2';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
