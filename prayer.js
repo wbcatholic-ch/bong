@@ -7,7 +7,7 @@
 ════════════════════════════════════════════════════════ */
 (function(){
 
-const PR_CATS = ["favorites", "basic", "special", "bong2", "etc", "aim", "bong1", "bong3"];
+const PR_CATS = ['favorites','aim','basic','special','etc','bong1','bong2','bong3'];
 const PR_CAT_STYLE = {
   favorites:{ label:'⭐ 즐겨찾기', bg:'#FFF0DC', color:'#E8780C', icon:'⭐', accent:'#E8780C' },
   aim:      { label:'대구대교구 인준', bg:'#E3F0FF', color:'#1565C0', icon:'✝️', accent:'#1565C0' },
@@ -23,503 +23,140 @@ const PR_CAT_STYLE = {
 let prSwipeBlockUntil = 0;
 // 첫 진입 때 활성 탭을 부드럽게 스크롤하면 탭바가 살짝 흔들려 보일 수 있어 첫 1회만 즉시 정렬한다.
 let prTabsFirstAlign = true;
-// 링크 테스트 상세 화면에서 자동 이동 예약이 중복 실행되지 않도록 관리한다.
-let prExternalOpenTimer = null;
 
-// 기도문 데이터 (링크 테스트: 앱 내부 본문은 두지 않고 공식/원문 URL만 보관)
-const PR_DATA = {
-  "basic": [
-    {
-      "id": "basic_014",
-      "title": "성호경",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#14"
-    },
-    {
-      "id": "basic_015",
-      "title": "주님의 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#15"
-    },
-    {
-      "id": "basic_016",
-      "title": "성모송",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#16"
-    },
-    {
-      "id": "basic_017",
-      "title": "영광송",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#17"
-    },
-    {
-      "id": "basic_018",
-      "title": "사도신경",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#18"
-    },
-    {
-      "id": "basic_019",
-      "title": "니케아-콘스탄티노폴리스 신경",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#19"
-    },
-    {
-      "id": "basic_020",
-      "title": "반성기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#20"
-    },
-    {
-      "id": "basic_021",
-      "title": "십계명",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#21"
-    },
-    {
-      "id": "basic_022",
-      "title": "고백기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#22"
-    },
-    {
-      "id": "basic_023",
-      "title": "통회기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#23"
-    },
-    {
-      "id": "basic_024",
-      "title": "삼덕송",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#24"
-    },
-    {
-      "id": "basic_025",
-      "title": "봉헌기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#25"
-    },
-    {
-      "id": "basic_026",
-      "title": "삼종기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#26"
-    },
-    {
-      "id": "basic_027",
-      "title": "부활 삼종기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#27"
-    },
-    {
-      "id": "basic_028",
-      "title": "묵주기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#28"
-    },
-    {
-      "id": "basic_029",
-      "title": "식사 전 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#29"
-    },
-    {
-      "id": "basic_030",
-      "title": "식사 후 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#30"
-    },
-    {
-      "id": "basic_031",
-      "title": "일을 시작하며 바치는 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#31"
-    },
-    {
-      "id": "basic_032",
-      "title": "일을 마치고 바치는 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#32"
-    },
-    {
-      "id": "basic_033",
-      "title": "아침기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#33"
-    },
-    {
-      "id": "basic_034",
-      "title": "저녁기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#34"
-    },
-    {
-      "id": "basic_035",
-      "title": "고해성사",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#35"
-    }
-  ],
-  "special": [
-    {
-      "id": "special_010",
-      "title": "성 요셉 성월",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#10"
-    },
-    {
-      "id": "special_011",
-      "title": "성모성월",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#11"
-    },
-    {
-      "id": "special_012",
-      "title": "예수 성심 성월",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#12"
-    },
-    {
-      "id": "special_013",
-      "title": "순교자 성월",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#13"
-    },
-    {
-      "id": "special_014",
-      "title": "묵주기도성월",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#14"
-    },
-    {
-      "id": "special_015",
-      "title": "위령성월",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#15"
-    },
-    {
-      "id": "special_016",
-      "title": "예수 성심 호칭 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#16"
-    },
-    {
-      "id": "special_017",
-      "title": "성모 호칭 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#17"
-    },
-    {
-      "id": "special_018",
-      "title": "성 요셉 호칭 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#18"
-    },
-    {
-      "id": "special_019",
-      "title": "103위 한국 성인 호칭 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#19"
-    },
-    {
-      "id": "special_020",
-      "title": "성인 호칭 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#20"
-    },
-    {
-      "id": "special_023",
-      "title": "124위 한국 순교 복자 호칭 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#23"
-    }
-  ],
-  "bong2": [
-    {
-      "id": "bong2_003",
-      "title": "레지오 마리애의 기도문",
-      "url": "https://maria.catholic.or.kr/mi_pr/prayer/prayer.asp?menu=prayer&pgubun=6&ingId=142"
-    }
-  ],
-  "etc": [
-    {
-      "id": "etc_003",
-      "title": "성수기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#3"
-    },
-    {
-      "id": "etc_004",
-      "title": "예수 성심께 바치는 봉헌 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#4"
-    },
-    {
-      "id": "etc_005",
-      "title": "성모 성심께 바치는 봉헌 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#5"
-    },
-    {
-      "id": "etc_006",
-      "title": "성모께 자기를 바치는 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#6"
-    },
-    {
-      "id": "etc_007",
-      "title": "성 토마스의 성체 찬미가",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#7"
-    },
-    {
-      "id": "etc_008",
-      "title": "성 암브로시오의 사은 찬미가",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#8"
-    },
-    {
-      "id": "etc_009",
-      "title": "교황이나 주교를 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#9"
-    },
-    {
-      "id": "etc_010",
-      "title": "사제들을 위한 기도 1",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#10"
-    },
-    {
-      "id": "etc_011",
-      "title": "사제들을 위한 기도 2",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#11"
-    },
-    {
-      "id": "etc_012",
-      "title": "수도자들을 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#12"
-    },
-    {
-      "id": "etc_013",
-      "title": "평신도 사도직을 위한 기도 1",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#13"
-    },
-    {
-      "id": "etc_014",
-      "title": "평신도 사도직을 위한 기도 2",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#14"
-    },
-    {
-      "id": "etc_015",
-      "title": "비신자들을 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#15"
-    },
-    {
-      "id": "etc_016",
-      "title": "성소를 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#16"
-    },
-    {
-      "id": "etc_017",
-      "title": "그리스도교 일치를 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#17"
-    },
-    {
-      "id": "etc_018",
-      "title": "민족의 화해와 일치를 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#18"
-    },
-    {
-      "id": "etc_019",
-      "title": "성서 사도직을 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#19"
-    },
-    {
-      "id": "etc_020",
-      "title": "복음화를 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#20"
-    },
-    {
-      "id": "etc_021",
-      "title": "대중매체 선용을 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#21"
-    },
-    {
-      "id": "etc_022",
-      "title": "성전 건립 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#22"
-    },
-    {
-      "id": "etc_023",
-      "title": "가정을 위한 기도 1",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#23"
-    },
-    {
-      "id": "etc_024",
-      "title": "가정을 위한 기도 2",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#24"
-    },
-    {
-      "id": "etc_025",
-      "title": "부모를 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#25"
-    },
-    {
-      "id": "etc_026",
-      "title": "자녀를 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#26"
-    },
-    {
-      "id": "etc_027",
-      "title": "부부의 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#27"
-    },
-    {
-      "id": "etc_028",
-      "title": "군인의 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#28"
-    },
-    {
-      "id": "etc_034",
-      "title": "군인을 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#34"
-    },
-    {
-      "id": "etc_035",
-      "title": "병자를 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#35"
-    },
-    {
-      "id": "etc_037",
-      "title": "선종을 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#37"
-    },
-    {
-      "id": "etc_039",
-      "title": "세상을 떠난 부모를 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#39"
-    },
-    {
-      "id": "etc_040",
-      "title": "세상을 떠난 형제, 친척, 친구, 은인을 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#40"
-    },
-    {
-      "id": "etc_041",
-      "title": "새해를 맞이하며 바치는 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#41"
-    },
-    {
-      "id": "etc_042",
-      "title": "가뭄과 장마 때의 바치는 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#42"
-    },
-    {
-      "id": "etc_043",
-      "title": "하느님 자비를 구하는 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc"
-    }
-  ],
-  "aim": [
-    {
-      "id": "aim_029",
-      "title": "2027 서울 세계청년대회 공식 기도문",
-      "url": "https://wydseoul.org/introduction/prayer"
-    },
-    {
-      "id": "aim_028",
-      "title": "교황 선출을 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#28"
-    },
-    {
-      "id": "aim_027",
-      "title": "프란치스코 교황의 영원한 안식을 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#27"
-    },
-    {
-      "id": "aim_024",
-      "title": "전례의 해 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#24"
-    },
-    {
-      "id": "aim_023",
-      "title": "친교의 해 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#23"
-    },
-    {
-      "id": "aim_022",
-      "title": "가경자 최양업 토마스 신부 시복 시성 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#22"
-    },
-    {
-      "id": "aim_021",
-      "title": "시노드를 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#21"
-    },
-    {
-      "id": "aim_020",
-      "title": "말씀의 해 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#20"
-    },
-    {
-      "id": "aim_019",
-      "title": "성 김대건 안드레아 신부님 탄생 200주년 희년 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#19"
-    },
-    {
-      "id": "aim_018",
-      "title": "프란치스코 교황님의 성모님께 바치는 기도2",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#18"
-    },
-    {
-      "id": "aim_017",
-      "title": "프란치스코 교황님의 성모님께 바치는 기도1",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#17"
-    },
-    {
-      "id": "aim_016",
-      "title": "성 알퐁소 데 리구오리의 영적 영성체를 위한 기도2 (성체조배 중에)",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#16"
-    },
-    {
-      "id": "aim_015",
-      "title": "성 알퐁소 데 리구오리의 영적 영성체를 위한 기도1 (‘묵주의 9일기도’ 중에서)",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#15"
-    },
-    {
-      "id": "aim_012",
-      "title": "선교와 냉담교우 초대를 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#12"
-    },
-    {
-      "id": "aim_011",
-      "title": "장신호 요한보스코 보좌주교를 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#11"
-    },
-    {
-      "id": "aim_010",
-      "title": "자비의 희년에 바치는 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#10"
-    },
-    {
-      "id": "aim_009",
-      "title": "우리의 지구를 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#9"
-    },
-    {
-      "id": "aim_008",
-      "title": "그리스도인들이 피조물과 함께 드리는 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#8"
-    },
-    {
-      "id": "aim_007",
-      "title": "민족의 화해와 일치를 위한 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#7"
-    },
-    {
-      "id": "aim_006",
-      "title": "시복 시성 기도문",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#6"
-    },
-    {
-      "id": "aim_005",
-      "title": "새로운 100년을 시작하며 바치는 기도문",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#5"
-    },
-    {
-      "id": "aim_004",
-      "title": "교구설정 100주년 기도문",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#4"
-    },
-    {
-      "id": "aim_003",
-      "title": "이윤일 요한 성인께 바치는 기도",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#3"
-    }
-  ],
-  "bong1": [
-    {
-      "id": "bong1_002",
-      "title": "위령기도",
-      "url": "https://maria.catholic.or.kr/mobile/prayer/prayer.asp?pgubun=10&ingId=33"
-    }
-  ],
-  "bong3": [
-    {
-      "id": "bong3_001",
-      "title": "십자가의 길",
-      "url": "https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#1"
-    }
-  ],
-  "favorites": []
+// 기도문 데이터 (항목 추가 시 여기에 추가)
+const PR_DATA = { 
+
+'aim':[ 
+{"id":"aim_029","title":"2027 서울 세계청년대회 공식 기도문","url":"https://wydseoul.org/introduction/prayer","source":"2027 서울 WYD 지역조직위원회(공식기도문):","linkType":"링크"},
+{"id":"aim_028","title":"교황 선출을 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#28","source":"","linkType":"링크"},
+{"id":"aim_027","title":"프란치스코 교황의 영원한 안식을 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#27","source":"#NAME?","linkType":"링크"},
+{"id":"aim_024","title":"전례의 해 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#24","source":"천주교 대구대교구장 조환길 타대오 대주교 인준(2024.11.5)","linkType":"링크"},
+{"id":"aim_023","title":"친교의 해 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#23","source":"천주교 대구대교구장 조환길 타대오 대주교 인준(2022.10.19)","linkType":"링크"},
+{"id":"aim_022","title":"가경자 최양업 토마스 신부 시복 시성 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#22","source":"2022년 3월 23일 주교회의 2022년 춘계 정기총회 승인","linkType":"링크"},
+{"id":"aim_021","title":"시노드를 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#21","source":"","linkType":"링크"},
+{"id":"aim_020","title":"말씀의 해 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#20","source":"천주교 대구대교구장 조환길(타대오) 대주교 인준 (2020.9.8.)","linkType":"링크"},
+{"id":"aim_019","title":"성 김대건 안드레아 신부님 탄생 200주년 희년 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#19","source":"* 주교회의 상임위원회 승인","linkType":"링크"},
+{"id":"aim_018","title":"프란치스코 교황님의 성모님께 바치는 기도2","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#18","source":"","linkType":"링크"},
+{"id":"aim_017","title":"프란치스코 교황님의 성모님께 바치는 기도1","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#17","source":"","linkType":"링크"},
+{"id":"aim_016","title":"성 알퐁소 데 리구오리의 영적 영성체를 위한 기도2 (성체조배 중에)","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#16","source":"","linkType":"링크"},
+{"id":"aim_015","title":"성 알퐁소 데 리구오리의 영적 영성체를 위한 기도1 (‘묵주의 9일기도’ 중에서)","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#15","source":"","linkType":"링크"},
+{"id":"aim_012","title":"선교와 냉담교우 초대를 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#12","source":"(2018. 11. 26. 교구장 인준)","linkType":"링크"},
+{"id":"aim_011","title":"장신호 요한보스코 보좌주교를 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#11","source":"","linkType":"링크"},
+{"id":"aim_010","title":"자비의 희년에 바치는 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#10","source":"","linkType":"링크"},
+{"id":"aim_009","title":"우리의 지구를 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#9","source":"","linkType":"링크"},
+{"id":"aim_008","title":"그리스도인들이 피조물과 함께 드리는 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#8","source":"","linkType":"링크"},
+{"id":"aim_007","title":"민족의 화해와 일치를 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#7","source":"","linkType":"링크"},
+{"id":"aim_006","title":"시복 시성 기도문","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#6","source":"- 주교회의 2017년 추계 정기총회: '복자님' 추가 승인 / - 주교회의 상임위원회 2022년 7월 12일 회의: '하느님 종 최양업 토마스 사제'를 '가경자 최양업 토마스 사제'로 수정 승인","linkType":"링크"},
+{"id":"aim_005","title":"새로운 100년을 시작하며 바치는 기도문","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#5","source":"","linkType":"링크"},
+{"id":"aim_004","title":"교구설정 100주년 기도문","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#4","source":"그리고 교구 100년사 편찬을 통하여","linkType":"링크"},
+{"id":"aim_003","title":"이윤일 요한 성인께 바치는 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#3","source":"교구장 최영수 (요한) 대주교 인준","linkType":"링크"}
+
+],
+
+'basic':[ 
+{"id":"basic_014","title":"성호경","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#14","source":"","linkType":"내장"},
+{"id":"basic_015","title":"주님의 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#15","source":"","linkType":"내장"},
+{"id":"basic_016","title":"성모송","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#16","source":"","linkType":"내장"},
+{"id":"basic_017","title":"영광송","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#17","source":"","linkType":"내장"},
+{"id":"basic_018","title":"사도신경","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#18","source":"","linkType":"내장"},
+{"id":"basic_019","title":"니케아-콘스탄티노폴리스 신경","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#19","source":"","linkType":"내장"},
+{"id":"basic_020","title":"반성기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#20","source":"","linkType":"내장"},
+{"id":"basic_021","title":"십계명","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#21","source":"","linkType":"내장"},
+{"id":"basic_022","title":"고백기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#22","source":"","linkType":"내장"},
+{"id":"basic_023","title":"통회기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#23","source":"","linkType":"내장"},
+{"id":"basic_024","title":"삼덕송","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#24","source":"","linkType":"내장"},
+{"id":"basic_025","title":"봉헌기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#25","source":"","linkType":"내장"},
+{"id":"basic_026","title":"삼종기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#26","source":"","linkType":"내장"},
+{"id":"basic_027","title":"부활 삼종기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#27","source":"","linkType":"내장"},
+{"id":"basic_028","title":"묵주기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#28","source":"","linkType":"내장"},
+{"id":"basic_029","title":"식사 전 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#29","source":"","linkType":"내장"},
+{"id":"basic_030","title":"식사 후 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#30","source":"","linkType":"내장"},
+{"id":"basic_031","title":"일을 시작하며 바치는 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#31","source":"","linkType":"내장"},
+{"id":"basic_032","title":"일을 마치고 바치는 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#32","source":"","linkType":"내장"},
+{"id":"basic_033","title":"아침기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#33","source":"","linkType":"내장"},
+{"id":"basic_034","title":"저녁기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#34","source":"","linkType":"내장"},
+{"id":"basic_035","title":"고해성사","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#35","source":"","linkType":"내장"}
+
+],
+
+'special':[ 
+{"id":"special_010","title":"성 요셉 성월","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#10","source":"","linkType":"링크"},
+{"id":"special_011","title":"성모성월","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#11","source":"","linkType":"링크"},
+{"id":"special_012","title":"예수 성심 성월","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#12","source":"","linkType":"링크"},
+{"id":"special_013","title":"순교자 성월","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#13","source":"","linkType":"링크"},
+{"id":"special_014","title":"묵주기도성월","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#14","source":"","linkType":"링크"},
+{"id":"special_015","title":"위령성월","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#15","source":"","linkType":"링크"},
+{"id":"special_016","title":"예수 성심 호칭 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#16","source":"","linkType":"링크"},
+{"id":"special_017","title":"성모 호칭 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#17","source":"","linkType":"링크"},
+{"id":"special_018","title":"성 요셉 호칭 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#18","source":"","linkType":"링크"},
+{"id":"special_019","title":"103위 한국 성인 호칭 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#19","source":"","linkType":"링크"},
+{"id":"special_020","title":"성인 호칭 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#20","source":"","linkType":"링크"},
+{"id":"special_023","title":"124위 한국 순교 복자 호칭 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#23","source":"","linkType":"링크"}
+
+],
+
+'etc':[ 
+{"id":"etc_003","title":"성수기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#3","source":"","linkType":"링크"},
+{"id":"etc_004","title":"예수 성심께 바치는 봉헌 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#4","source":"","linkType":"링크"},
+{"id":"etc_005","title":"성모 성심께 바치는 봉헌 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#5","source":"","linkType":"링크"},
+{"id":"etc_006","title":"성모께 자기를 바치는 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#6","source":"","linkType":"링크"},
+{"id":"etc_007","title":"성 토마스의 성체 찬미가","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#7","source":"","linkType":"링크"},
+{"id":"etc_008","title":"성 암브로시오의 사은 찬미가","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#8","source":"","linkType":"링크"},
+{"id":"etc_009","title":"교황이나 주교를 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#9","source":"","linkType":"링크"},
+{"id":"etc_010","title":"사제들을 위한 기도 1","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#10","source":"","linkType":"링크"},
+{"id":"etc_011","title":"사제들을 위한 기도 2","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#11","source":"","linkType":"링크"},
+{"id":"etc_012","title":"수도자들을 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#12","source":"","linkType":"링크"},
+{"id":"etc_013","title":"평신도 사도직을 위한 기도 1","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#13","source":"","linkType":"링크"},
+{"id":"etc_014","title":"평신도 사도직을 위한 기도 2","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#14","source":"","linkType":"링크"},
+{"id":"etc_015","title":"비신자들을 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#15","source":"","linkType":"링크"},
+{"id":"etc_016","title":"성소를 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#16","source":"","linkType":"링크"},
+{"id":"etc_017","title":"그리스도교 일치를 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#17","source":"","linkType":"링크"},
+{"id":"etc_018","title":"민족의 화해와 일치를 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#18","source":"","linkType":"링크"},
+{"id":"etc_019","title":"성서 사도직을 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#19","source":"","linkType":"링크"},
+{"id":"etc_020","title":"복음화를 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#20","source":"","linkType":"링크"},
+{"id":"etc_021","title":"대중매체 선용을 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#21","source":"","linkType":"링크"},
+{"id":"etc_022","title":"성전 건립 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#22","source":"","linkType":"링크"},
+{"id":"etc_023","title":"가정을 위한 기도 1","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#23","source":"","linkType":"링크"},
+{"id":"etc_024","title":"가정을 위한 기도 2","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#24","source":"","linkType":"링크"},
+{"id":"etc_025","title":"부모를 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#25","source":"","linkType":"링크"},
+{"id":"etc_026","title":"자녀를 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#26","source":"","linkType":"링크"},
+{"id":"etc_027","title":"부부의 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#27","source":"","linkType":"링크"},
+{"id":"etc_028","title":"군인의 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#28","source":"","linkType":"링크"},
+{"id":"etc_034","title":"군인을 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#34","source":"","linkType":"링크"},
+{"id":"etc_035","title":"병자를 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#35","source":"","linkType":"링크"},
+{"id":"etc_037","title":"선종을 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#37","source":"","linkType":"링크"},
+{"id":"etc_039","title":"세상을 떠난 부모를 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#39","source":"","linkType":"링크"},
+{"id":"etc_040","title":"세상을 떠난 형제, 친척, 친구, 은인을 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#40","source":"","linkType":"링크"},
+{"id":"etc_041","title":"새해를 맞이하며 바치는 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#41","source":"","linkType":"링크"},
+{"id":"etc_042","title":"가뭄과 장마 때의 바치는 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#42","source":"","linkType":"링크"},
+{"id":"etc_043","title":"하느님 자비를 구하는 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc","source":"- 2022년 3월 23일 주교회의 2022년 춘계 정기총회 승인 -","linkType":"링크"}
+
+],
+
+'bong1':[ 
+{"id":"bong1_002","title":"위령기도","url":"https://maria.catholic.or.kr/mobile/prayer/prayer.asp?pgubun=10&ingId=33","source":"","linkType":"링크"}
+
+],
+
+'bong2':[ 
+{"id":"bong2_003","title":"레지오 마리애의 기도문","url":"https://maria.catholic.or.kr/mi_pr/prayer/prayer.asp?menu=prayer&pgubun=6&ingId=142","source":"","linkType":"링크"}
+
+],
+
+'bong3':[ 
+{"id":"bong3_001","title":"십자가의 길","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#1","source":"","linkType":"링크"}
+
+],
+
+  'favorites': []
 };
 
 // ─── 기도문 모듈 상태 ────────────────────────────────────────────────────────
 // 기도문 기능 전용 상태를 별도 객체로 분리합니다.
 // 기존 코드 호환을 위해 레거시 변수명을 getter/setter로 연결합니다.
 const PrayerState = {
-  curCat:    'basic',// 현재 선택된 카테고리 키
+  curCat:    'aim',  // 현재 선택된 카테고리 키
   favorites: [],     // 즐겨찾기 기도문 ID 배열
   fontIdx:   3,      // 글자 크기 인덱스
   inited:    false,  // 초기화 여부
@@ -544,82 +181,12 @@ const PrayerState = {
 })();
 const PR_FONT_SIZES = [13,14,15,16,17,18,19,20,21,22,24,26,28,30];
 const PR_FONT_KEY = 'prayer_font_size';
-const PR_EXTERNAL_LEAVE_DELAY_MS = 720;
-const PR_EXTERNAL_VEIL_HOLD_MS = 1050;
-const PR_EXTERNAL_RETURN_VEIL_MS = 850;
 
 function prG(id){ return document.getElementById(id); }
 function prNorm(t){ return (t||'').replace(/\s+/g,'').toLowerCase(); }
-function prNormalizeFavoriteIds(ids){
-  const map = {
-    bong1_001:'bong1_002',
-    bong1_002:'bong1_002',
-    bong2_001:'bong2_003',
-    bong2_002:'bong2_003',
-    bong2_003:'bong2_003'
-  };
-  const valid = new Set();
-  PR_CATS.forEach(function(k){
-    if(k === 'favorites') return;
-    (PR_DATA[k] || []).forEach(function(p){ valid.add(p.id); });
-  });
-  const out = [];
-  (ids || []).forEach(function(id){
-    const next = map[id] || id;
-    if(valid.has(next) && !out.includes(next)) out.push(next);
-  });
-  return out;
-}
-function prPrepareExternalVeilLabel(label){
-  try{
-    var root = document.documentElement;
-    root.setAttribute('data-oai-prayer-external-label', label || '기도문 외부 홈페이지로 이동 중입니다.');
-  }catch(e){ console.warn('[가톨릭길동무]', e); }
-}
-function prPreparePrayerExternalState(url){
-  try{
-    var now = Date.now ? Date.now() : new Date().getTime();
-    sessionStorage.setItem('oai_prayer_external_return_to_list', '1');
-    sessionStorage.setItem('oai_prayer_external_return_url', url || '');
-    sessionStorage.setItem('oai_prayer_external_started_at', String(now));
-    sessionStorage.setItem('oai_external_nav_started_at', String(now));
-    sessionStorage.setItem('oai_external_nav_kind', 'prayer-official-link');
-    sessionStorage.setItem('oai_external_nav_pending', '1');
-    sessionStorage.removeItem('oai_external_nav_pagehide');
-    sessionStorage.setItem('oai_external_nav_hold_until', String(now + PR_EXTERNAL_VEIL_HOLD_MS));
-    sessionStorage.setItem('oai_external_nav_force_release_at', String(now + PR_EXTERNAL_VEIL_HOLD_MS + 260));
-  }catch(e){ console.warn('[가톨릭길동무]', e); }
-}
-function prOpenPrayerExternalUrl(url){
-  var safeUrl = (url || '').trim();
-  try{
-    if(typeof normalizeCatholicExternalUrl === 'function') safeUrl = normalizeCatholicExternalUrl(safeUrl);
-  }catch(_e){}
-  if(!/^https?:\/\//i.test(safeUrl)) return false;
-  prClearExternalOpenTimer();
-  prPreparePrayerExternalState(safeUrl);
-  prPrepareExternalVeilLabel('기도문 외부 홈페이지로 이동 중입니다.');
-  try{
-    document.documentElement.classList.add('oai-external-leaving');
-    if(typeof oaiHoldStabilityVeil === 'function') oaiHoldStabilityVeil('external-leave', PR_EXTERNAL_VEIL_HOLD_MS);
-  }catch(e){ console.warn('[가톨릭길동무]', e); }
-  prExternalOpenTimer = setTimeout(function(){
-    prExternalOpenTimer = null;
-    try{ location.assign(safeUrl); }catch(e){ try{ location.href = safeUrl; }catch(_e){ console.warn('[가톨릭길동무]', _e); } }
-  }, PR_EXTERNAL_LEAVE_DELAY_MS);
-  return true;
-}
-function prClearExternalOpenTimer(){
-  if(prExternalOpenTimer){
-    clearTimeout(prExternalOpenTimer);
-    prExternalOpenTimer = null;
-  }
-}
 
 function prLoadPrefs(){
   try{ prFavorites = JSON.parse(localStorage.getItem('pr_favorites')||'[]'); }catch(e){ prFavorites=[]; }
-  prFavorites = prNormalizeFavoriteIds(prFavorites);
-  prSaveFavorites();
   const saved = (typeof window.__APP_getSharedFontPx === 'function')
     ? window.__APP_getSharedFontPx()
     : parseInt(localStorage.getItem(PR_FONT_KEY), 10);
@@ -692,7 +259,7 @@ function prApplyTabColors(){
   try{ if(typeof window.oaiKeepActiveTabsVisible === 'function') window.oaiKeepActiveTabsVisible('prayer'); }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
 
-// V3-S: 주요기도문 탭 표시 안전장치.
+// V3-S-1: 주요기도문 탭 표시 안전장치.
 // 일부 화면 전환/캐시 조합에서 목록은 렌더링되지만 탭 컨테이너가 비어 보이는 경우를 막는다.
 function prEnsureTabsVisible(){
   const wrap = prG('prayer-tabs');
@@ -759,8 +326,8 @@ window.prRenderList = function(){
       '</div>'+
       '<div class="pr-item-right">'+
       '<button type="button" class="pr-star '+(isFav?'on':'')+'" data-pid="'+prayer.id+'" aria-label="즐겨찾기">'+
-        '<span aria-hidden="true">★</span></button>'+
-      '<span class="pr-chevron" aria-hidden="true">›</span>'+
+        '<i class="fa-solid fa-star"></i></button>'+
+      '<i class="fa-solid fa-chevron-right pr-chevron"></i>'+
       '</div>';
     const starBtn = li.querySelector('.pr-star');
     let ignoreListClickUntil = 0;
@@ -910,7 +477,85 @@ window.prToggleDetailFav = function(e){
   if(listBtn) listBtn.classList.toggle('on', isFav);
 };
 
+
+function prSafeText(text){
+  return String(text || '').replace(/[&<>"']/g, function(ch){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+  });
+}
+
+function prShowExternalGuide(message, duration){
+  try{
+    var old = document.getElementById('pr-external-guide');
+    if(old && old.parentNode) old.parentNode.removeChild(old);
+    var guide = document.createElement('div');
+    guide.id = 'pr-external-guide';
+    guide.setAttribute('role','status');
+    guide.setAttribute('aria-live','polite');
+    guide.innerHTML = '<div class="pr-external-guide-card">' +
+      '<div class="pr-external-guide-cross">✝</div>' +
+      '<div class="pr-external-guide-text">' + prSafeText(message) + '</div>' +
+      '</div>';
+    document.body.appendChild(guide);
+    requestAnimationFrame(function(){ guide.classList.add('show'); });
+    window.clearTimeout(window.__prExternalGuideTimer);
+    window.__prExternalGuideTimer = window.setTimeout(function(){
+      try{
+        guide.classList.remove('show');
+        window.setTimeout(function(){ if(guide && guide.parentNode) guide.parentNode.removeChild(guide); }, 180);
+      }catch(_e){}
+    }, Math.max(450, duration || 900));
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+}
+
+function prMarkExternalReturnFlag(){
+  try{
+    sessionStorage.setItem('oai_prayer_external_return_pending','1');
+    sessionStorage.setItem('oai_prayer_external_return_ts', String(Date.now ? Date.now() : new Date().getTime()));
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+}
+
+function prMaybeShowExternalReturnGuide(){
+  try{
+    if(sessionStorage.getItem('oai_prayer_external_return_pending') !== '1') return;
+    sessionStorage.removeItem('oai_prayer_external_return_pending');
+    sessionStorage.removeItem('oai_prayer_external_return_ts');
+    if(typeof window.oaiHoldStabilityVeil === 'function') window.oaiHoldStabilityVeil('prayer-link-return', 850);
+    prShowExternalGuide('앱으로 돌아오는 중입니다.', 850);
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+}
+
+function prOpenOfficialPrayer(prayer){
+  var url = prayer && prayer.url ? String(prayer.url).trim() : '';
+  if(!url){
+    prShowExternalGuide('공식 원문 링크를 준비 중입니다.', 900);
+    return;
+  }
+  try{
+    var lv=prG('prayer-list-view');
+    PrayerState.listScroll = lv ? (lv.scrollTop || 0) : 0;
+    PrayerState.listItemId = prayer && prayer.id ? String(prayer.id) : '';
+    window.__oaiPrayerListRestore = { scroll: PrayerState.listScroll, itemId: PrayerState.listItemId, cat: prCurCat };
+    sessionStorage.setItem('oai_prayer_list_restore', JSON.stringify(window.__oaiPrayerListRestore));
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+  prMarkExternalReturnFlag();
+  try{ if(typeof markExternalReturnStabilize === 'function') markExternalReturnStabilize('prayer-link'); }catch(e){ console.warn('[가톨릭길동무]', e); }
+  try{ if(typeof window.oaiHoldStabilityVeil === 'function') window.oaiHoldStabilityVeil('prayer-link-leave', 900); }catch(e){ console.warn('[가톨릭길동무]', e); }
+  prShowExternalGuide('공식 기도문 페이지로 이동합니다.', 850);
+  window.setTimeout(function(){
+    try{ window.location.href = url; }
+    catch(e){ location.href = url; }
+  }, 650);
+}
+
+if(!window.__OAI_PRAYER_EXTERNAL_RETURN_GUIDE__){
+  window.__OAI_PRAYER_EXTERNAL_RETURN_GUIDE__ = true;
+  window.addEventListener('pageshow', function(){ window.setTimeout(prMaybeShowExternalReturnGuide, 80); });
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden) window.setTimeout(prMaybeShowExternalReturnGuide, 120); });
+}
+
 function prOpenDetail(prayer){
+  if(prayer && prayer.url){ prOpenOfficialPrayer(prayer); return; }
   try{
     var __lv=prG('prayer-list-view');
     PrayerState.listScroll = __lv ? (__lv.scrollTop || 0) : 0;
@@ -924,15 +569,17 @@ function prOpenDetail(prayer){
   const body = prG('prayer-detail-body');
   if(!detail) return;
   ttl.textContent = prayer.title;
-  var safeTitle = (prayer.title || '기도문').replace(/[&<>"']/g, function(ch){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]; });
-  var hasExternalUrl = !!(prayer && /^https?:\/\//i.test((prayer.url || '').trim()));
-  if(hasExternalUrl){
-    prOpenPrayerExternalUrl(prayer.url);
-    return;
-  }
   var rawContent = ((prayer.content||prayer.body||'')+'').replace(/class="symbol"/g,'class="pr-symbol"');
+  if(/^bong2_00[123]$/.test(prayer.id || '')){
+    rawContent = rawContent
+      .replace(/<p[^>]*>\s*(?:1\.\s*)?시작기도\s*<\/p>/gi,'')
+      .replace(/<p[^>]*>\s*(?:2\.\s*)?레지오(?:의)?\s*까떼나\s*<\/p>/gi,'')
+      .replace(/<p[^>]*>\s*(?:3\.\s*)?레지오(?:의)?\s*기도문\s*\(?마침기도\)?\s*<\/p>/gi,'')
+      .replace(/<p[^>]*>\s*마침기도\s*<\/p>/gi,'')
+      .replace(/<p[^>]*>\s*까떼나\s*<\/p>/gi,'');
+  }
+  var safeTitle = (prayer.title || '기도문').replace(/[&<>"']/g, function(ch){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]; });
   content.innerHTML = '<div class="pr-body-title">' + safeTitle + '</div>' + rawContent;
-  prClearExternalOpenTimer();
   detail.classList.add('show');
   try{
     // 본문 진입 시 별도 history state를 만들지 않고, 공통 앱 back trap만 보강한다.
@@ -985,7 +632,6 @@ function prRestoreListPosition(){
 window.prRestoreListPosition = prRestoreListPosition;
 
 window.prCloseDetail = function(opts){
-  prClearExternalOpenTimer();
   const detail = prG('prayer-detail');
   if(detail) detail.classList.remove('show');
   prRestoreListPosition();
@@ -1001,52 +647,16 @@ window.prCloseDetail = function(opts){
   }
 };
 
-function prHandlePrayerExternalReturn(){
-  try{
-    if(sessionStorage.getItem('oai_prayer_external_return_to_list') !== '1') return;
-    if(document.visibilityState && document.visibilityState === 'hidden') return;
-    var started = parseInt(sessionStorage.getItem('oai_prayer_external_started_at') || '0', 10) || 0;
-    if(started && Date.now && Date.now() - started > 10 * 60 * 1000){
-      sessionStorage.removeItem('oai_prayer_external_return_to_list');
-      sessionStorage.removeItem('oai_prayer_external_return_url');
-      sessionStorage.removeItem('oai_prayer_external_started_at');
-      return;
-    }
-    sessionStorage.removeItem('oai_prayer_external_return_to_list');
-    sessionStorage.removeItem('oai_prayer_external_return_url');
-    sessionStorage.removeItem('oai_prayer_external_started_at');
-    prClearExternalOpenTimer();
-    var detail = prG('prayer-detail');
-    if(detail) detail.classList.remove('show');
-    prRestoreListPosition();
-    prPrepareExternalVeilLabel('기도문 목록으로 돌아오는 중입니다.');
-    try{
-      var reason = document.documentElement.getAttribute('data-oai-stability-reason') || '';
-      if(!/external-return/i.test(reason) && typeof oaiHoldStabilityVeil === 'function'){
-        oaiHoldStabilityVeil('prayer-external-return', PR_EXTERNAL_RETURN_VEIL_MS);
-      }
-    }catch(_e){}
-    try{
-      if(typeof window._oaiArmPrayerBackTrap === 'function') window._oaiArmPrayerBackTrap('prayer-external-return-list');
-    }catch(_e){}
-  }catch(e){ console.warn('[가톨릭길동무]', e); }
-}
-window.addEventListener('pageshow', function(){ setTimeout(prHandlePrayerExternalReturn, 30); }, true);
-window.addEventListener('focus', function(){ setTimeout(prHandlePrayerExternalReturn, 70); }, true);
-document.addEventListener('visibilitychange', function(){
-  if(document.visibilityState === 'visible') setTimeout(prHandlePrayerExternalReturn, 70);
-}, true);
-
 /* ── IIFE 스코프 외부 노출 ── */
 window.prSwitchCat = prSwitchCat;
 window.prOpenDetail = prOpenDetail;
+window.prOpenOfficialPrayer = prOpenOfficialPrayer;
 window.prCloseDetail = window.prCloseDetail;
 
 /* ── 기도문 좌우 스와이프 (순환) — 웹사이트 기준 감도와 동일화 */
-function prBindSwipeTabs(){
+(function(){
   var el = document.getElementById('prayer-list-view');
-  if (!el || el.__prSwipeTabsBound) return;
-  el.__prSwipeTabsBound = true;
+  if (!el) return;
   var sx = 0, sy = 0;
   var THRESHOLD = 32;
   var HORIZONTAL_RATIO = 1.03;
@@ -1095,56 +705,16 @@ function prBindSwipeTabs(){
     if (!isHorizontalSwipe(dx, dy)) return;
     if (dx < 0) goNext(); else goPrev();
   }, { passive: true });
-}
-window.prBindSwipeTabs = prBindSwipeTabs;
-prBindSwipeTabs();
-
-
-/* V18: 기도문 본문 좌우 스와이프 시 웹사이트와 같은 화살표 피드백만 복구 */
-function prBindDetailSwipeArrow(){
-  var body = document.getElementById('prayer-detail-body');
-  if (!body || body.__prDetailSwipeArrowBound) return;
-  body.__prDetailSwipeArrowBound = true;
-
-  var sx = 0, sy = 0;
-  var THRESHOLD = 44;
-  var HORIZONTAL_RATIO = 1.18;
-
-  body.addEventListener('touchstart', function(e){
-    if(!e.touches || !e.touches[0]) return;
-    sx = e.touches[0].clientX;
-    sy = e.touches[0].clientY;
-  }, { passive: true });
-
-  body.addEventListener('touchend', function(e){
-    if (!e.changedTouches || !e.changedTouches[0]) return;
-    var detail = document.getElementById('prayer-detail');
-    if (!detail || !detail.classList.contains('show')) return;
-
-    var dx = e.changedTouches[0].clientX - sx;
-    var dy = e.changedTouches[0].clientY - sy;
-    if (Math.abs(dx) < THRESHOLD) return;
-    if (Math.abs(dx) < Math.abs(dy) * HORIZONTAL_RATIO) return;
-
-    if (typeof window.oaiSwipeAction === 'function') {
-      window.oaiSwipeAction(body, dx < 0 ? 'left' : 'right');
-    }
-  }, { passive: true });
-}
-window.prBindDetailSwipeArrow = prBindDetailSwipeArrow;
-prBindDetailSwipeArrow();
-
+})();
 /* lyTabColors: 미선언 전역 변수 - 참조하는 코드 없음, 제거 */
 
 window.initPrayerView = function(){
   prLoadPrefs();
-  prCurCat = (prFavorites && prFavorites.length) ? 'favorites' : 'basic';
+  prCurCat = (prFavorites && prFavorites.length) ? 'favorites' : 'aim';
   prBuildTabs();
   prApplyFont();
   prEnsureTabsVisible();
   prRenderList();
-  prBindSwipeTabs();
-  prBindDetailSwipeArrow();
   // 상세뷰 초기화
   const detail = prG('prayer-detail');
   const listView = prG('prayer-list-view');
@@ -1155,28 +725,5 @@ window.initPrayerView = function(){
     listView.style.scrollBehavior = '';
   }
 };
-
-/* ─── 굿뉴스 기도문 버튼: 외부복귀 안정화 경로로 연결 ───────────────
-   index.html의 <a target="_blank">를 JS로 오버라이드하여
-   oaiSmoothNavigate() → markExternalReturnStabilize() → pageshow 복귀 흐름을 탄다.
-   prayer.js는 동적 로드(첫 기도문 진입 시 1회)되므로 여기서 한 번만 바인딩한다. */
-(function(){
-  try{
-    var btn = document.getElementById('goodnews-prayer-btn');
-    if(!btn || btn.__oaiHandled) return;
-    btn.__oaiHandled = true;
-    btn.removeAttribute('target');
-    btn.addEventListener('click', function(e){
-      e.preventDefault();
-      e.stopPropagation();
-      var url = btn.getAttribute('href') || 'https://maria.catholic.or.kr/mobile/prayer/';
-      if(typeof oaiSmoothNavigate === 'function'){
-        oaiSmoothNavigate(url, 'prayer-goodnews');
-      } else {
-        try{ location.assign(url); }catch(_e){ location.href = url; }
-      }
-    });
-  }catch(e){ console.warn('[가톨릭길동무]', e); }
-})();
 
 })();

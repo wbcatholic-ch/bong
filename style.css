@@ -4507,3 +4507,56 @@ html.oai-cover-first-reveal #cover > * {
   animation: none !important;
   transition: none !important;
 }
+
+/* V3-29: 기도문 공식 원문 외부 이동/복귀 전용 안정 안내 */
+#pr-external-guide {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+  background: rgba(245,240,232,.96);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .16s ease;
+}
+#pr-external-guide.show { opacity: 1; }
+.pr-external-guide-card {
+  min-width: min(280px, calc(100vw - 48px));
+  max-width: min(360px, calc(100vw - 48px));
+  border-radius: 24px;
+  background: rgba(255,253,249,.92);
+  border: 1px solid rgba(212,170,106,.24);
+  box-shadow: 0 18px 42px rgba(14,21,53,.14);
+  padding: 24px 20px 22px;
+  text-align: center;
+  color: #1f2937;
+}
+.pr-external-guide-cross {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d4aa6a;
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1;
+  animation: prExternalCrossSpinV3-29 1.1s linear infinite;
+  transform-origin: 50% 50%;
+}
+.pr-external-guide-text {
+  font-size: 15px;
+  line-height: 1.55;
+  font-weight: 800;
+  letter-spacing: -.02em;
+  word-break: keep-all;
+}
+@keyframes prExternalCrossSpinV3-29 {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
