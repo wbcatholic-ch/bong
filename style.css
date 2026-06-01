@@ -2188,16 +2188,16 @@ html.oai-cover-booting #cover > * {
 .cover-header {
   flex: 0 0 auto;
   width: 100%;
-  padding: clamp(10px, calc(var(--cover-vh, 1vh) * 1.45), 15px) 18px clamp(11px, calc(var(--cover-vh, 1vh) * 1.55), 17px);
+  padding: 0 18px clamp(5px, calc(var(--cover-vh, 1vh) * .72), 9px);
   margin: 0;
   text-align: center;
   box-sizing: border-box;
   position: relative;
-  overflow: hidden;
-  border-radius: 22px;
-  background: linear-gradient(135deg, #2f3742 0%, #3f4752 100%);
-  border: 1px solid rgba(212,170,106,.22);
-  box-shadow: 0 8px 18px rgba(31,42,68,.10), inset 0 1px 0 rgba(255,255,255,.10);
+  overflow: visible;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 .cover-title {
   display: inline-block;
@@ -2205,27 +2205,28 @@ html.oai-cover-booting #cover > * {
   font-family: "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
   font-weight: 800;
   letter-spacing: -.03em;
-  color: #fffaf0;
+  color: #2f3742;
   margin: 0;
   line-height: 1.14;
-  text-shadow: 0 2px 7px rgba(0,0,0,.16);
+  text-shadow: none;
 }
 .cover-title::after {
   content: "";
   display: block;
   width: 100%;
   height: 2px;
-  margin: clamp(7px, calc(var(--cover-vh, 1vh) * .85), 10px) 0 0;
+  margin: clamp(5px, calc(var(--cover-vh, 1vh) * .62), 8px) 0 0;
   border-radius: 999px;
   background: #d4aa6a;
-  box-shadow: 0 1px 4px rgba(212,170,106,.25);
+  opacity: .82;
+  box-shadow: none;
 }
 .cover-subtitle {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 650;
-  color: rgba(255,250,240,.74);
-  margin: 0 0 7px;
-  line-height: 1.45;
+  color: #6b7280;
+  margin: 0 0 5px;
+  line-height: 1.38;
 }
 
 #cover-main-block {
@@ -2242,7 +2243,7 @@ html.oai-cover-booting #cover > * {
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
-  gap: clamp(5px, calc(var(--cover-vh, 1vh) * 0.8), 10px);
+  gap: clamp(7px, calc(var(--cover-vh, 1vh) * 0.92), 12px);
   box-sizing: border-box;
 }
 
@@ -2256,13 +2257,13 @@ html.oai-cover-booting #cover > * {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-rows: repeat(4, 1fr);
-  row-gap: clamp(3px, calc(var(--cover-vh, 1vh) * 0.7), 6px);
-  column-gap: clamp(4px, 1.2vw, 8px);
+  row-gap: clamp(5px, calc(var(--cover-vh, 1vh) * 0.82), 8px);
+  column-gap: clamp(5px, 1.4vw, 9px);
   align-content: stretch;
   box-sizing: border-box;
   isolation: isolate;
 }
-/* V3-46: 커버 카테고리 박스 상단 라인 단색 유지 / 내부 그라데이션 1안 복귀 */
+/* V3-55: 커버 제목 박스 제거 / 카테고리 박스 비율 조정 */
 .cover-grid::after {
   content: none;
   display: none;
@@ -2274,7 +2275,7 @@ html.oai-cover-booting #cover > * {
   width: 100%;
   height: 100%;
   min-height: 0;
-  padding: clamp(6px, calc(var(--cover-vh, 1vh) * 1.0), 10px) 7px clamp(5px, calc(var(--cover-vh, 1vh) * 0.85), 9px);
+  padding: clamp(7px, calc(var(--cover-vh, 1vh) * 1.1), 11px) 8px clamp(6px, calc(var(--cover-vh, 1vh) * .95), 10px);
   border-radius: 17px;
   display: flex;
   flex-direction: column;
@@ -3084,7 +3085,7 @@ html.ios-device #prayer-view.open #prayer-tabs {
   display: flex;
 }
 html.ios-device #cover { padding-bottom: var(--cover-bottom-safe); }
-html.ios-device #cover .cover-header { padding-bottom: 16px; }
+html.ios-device #cover .cover-header { padding-bottom: clamp(5px, calc(var(--cover-vh, 1vh) * .72), 9px); }
 html.ios-device #cover-main-block {
   height: calc((var(--cover-vh, 1vh) * 100) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - clamp(178px, calc(var(--cover-vh, 1vh) * 24), 222px));
   max-height: 670px;
@@ -3209,7 +3210,7 @@ html.oai-font-global #region-body .dio-hd { font-size: calc(17px * var(--app-inn
   #prayer-bar, #diocese-bar, .module-bar { width: 100vw; max-width: 100vw; }
 }
 @media (max-height: 720px) {
-  #cover .cover-header { padding-bottom: clamp(5px, calc(var(--cover-vh, 1vh) * .9), 10px); }
+  #cover .cover-header { padding-bottom: clamp(4px, calc(var(--cover-vh, 1vh) * .58), 7px); }
   #cover-main-block {
     max-height: 100%;
     gap: clamp(4px, calc(var(--cover-vh, 1vh) * .55), 7px);
@@ -3226,7 +3227,7 @@ html.oai-font-global #region-body .dio-hd { font-size: calc(17px * var(--app-inn
 }
 @media (max-height: 650px) {
   #cover { --cover-top-safe: calc(env(safe-area-inset-top, 0px) + clamp(58px, calc(var(--cover-vh, 1vh) * 9.4), 74px)); --cover-bottom-safe: calc(env(safe-area-inset-bottom, 0px) + clamp(48px, calc(var(--cover-vh, 1vh) * 7.2), 64px)); padding-top: var(--cover-top-safe); padding-bottom: var(--cover-bottom-safe); }
-  #cover .cover-header { padding-bottom: 12px; }
+  #cover .cover-header { padding-bottom: 6px; }
   #cover .cover-subtitle { font-size: 10px; }
   #cover .cover-grid { row-gap: clamp(2px, calc(var(--cover-vh, 1vh) * 0.5), 4px); }
   #cover .cover-card { padding: clamp(4px, calc(var(--cover-vh, 1vh) * 0.8), 8px) 6px; }
