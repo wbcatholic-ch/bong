@@ -2188,25 +2188,42 @@ html.oai-cover-booting #cover > * {
 .cover-header {
   flex: 0 0 auto;
   width: 100%;
-  padding: 0 18px clamp(6px, calc(var(--cover-vh, 1vh) * 1.15), 14px);
+  padding: clamp(10px, calc(var(--cover-vh, 1vh) * 1.45), 15px) 18px clamp(11px, calc(var(--cover-vh, 1vh) * 1.55), 17px);
   margin: 0;
   text-align: center;
   box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #2f3742 0%, #3f4752 100%);
+  border: 1px solid rgba(212,170,106,.22);
+  box-shadow: 0 8px 18px rgba(31,42,68,.10), inset 0 1px 0 rgba(255,255,255,.10);
 }
 .cover-title {
   font-size: clamp(32px, 8.9vw, 43px);
   font-family: "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
   font-weight: 800;
   letter-spacing: -.03em;
-  color: #3e362e;
+  color: #fffaf0;
   margin: 0;
   line-height: 1.14;
+  text-shadow: 0 2px 7px rgba(0,0,0,.16);
+}
+.cover-title::after {
+  content: "";
+  display: block;
+  width: min(132px, 38vw);
+  height: 2px;
+  margin: clamp(7px, calc(var(--cover-vh, 1vh) * .85), 10px) auto 0;
+  border-radius: 999px;
+  background: #d4aa6a;
+  box-shadow: 0 1px 4px rgba(212,170,106,.25);
 }
 .cover-subtitle {
   font-size: 16px;
-  font-weight: 600;
-  color: #81b29a;
-  margin: 0 0 8px;
+  font-weight: 650;
+  color: rgba(255,250,240,.74);
+  margin: 0 0 7px;
   line-height: 1.45;
 }
 
