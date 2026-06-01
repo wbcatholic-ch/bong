@@ -2244,18 +2244,10 @@ html.oai-cover-booting #cover > * {
   box-sizing: border-box;
   isolation: isolate;
 }
-/* V3-40: 커버 카테고리 박스 입체감 완화 / 상단 포인트·하단 그라데이션 차분하게 조정 */
+/* V3-41: 커버 카테고리 박스 하단 그림자 제거 / 상단 포인트를 직선 그라데이션으로 정리 */
 .cover-grid::after {
-  content: "";
-  position: absolute;
-  left: 5px;
-  right: 5px;
-  bottom: -6px;
-  height: 26%;
-  border-radius: 22px;
-  background: linear-gradient(180deg, rgba(247,240,229,0) 0%, rgba(231,220,205,.16) 54%, rgba(215,199,177,.30) 100%);
-  pointer-events: none;
-  z-index: -1;
+  content: none;
+  display: none;
 }
 .cover-card {
   --cover-card-point: #d4aa6a;
@@ -2273,13 +2265,11 @@ html.oai-cover-booting #cover > * {
   gap: 6px;
   text-align: center;
   cursor: pointer;
-  background: linear-gradient(180deg, #fffdf9 0%, #fbf8f2 62%, #f6efe5 100%);
+  background: linear-gradient(180deg, #fffdf9 0%, #fbf8f2 65%, #f7f1e8 100%);
   border: 1px solid rgba(152,131,101,.16);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.88),
-    inset 0 -5px 10px rgba(204,189,167,.09),
-    0 7px 12px rgba(95,78,55,.055),
-    0 2px 4px rgba(95,78,55,.035);
+    inset 0 1px 0 rgba(255,255,255,.90),
+    inset 0 -3px 7px rgba(204,189,167,.06);
   outline: none;
   box-sizing: border-box;
 }
@@ -2287,12 +2277,12 @@ html.oai-cover-booting #cover > * {
   content: "";
   position: absolute;
   top: 0;
-  left: 14px;
-  right: 14px;
+  left: 0;
+  right: 0;
   height: 3px;
-  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, var(--cover-card-point) 50%, rgba(255,255,255,0) 100%);
-  opacity: .62;
-  border-radius: 0 0 999px 999px;
+  background: linear-gradient(90deg, var(--cover-card-point) 0%, rgba(212,170,106,.58) 50%, var(--cover-card-point) 100%);
+  opacity: .42;
+  border-radius: 0;
 }
 .cover-card::after {
   content: "";
@@ -2323,8 +2313,7 @@ html.oai-cover-booting #cover > * {
   transform: translateY(7px) scale(.978);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.92),
-    inset 0 -8px 14px rgba(204,189,167,.14),
-    0 5px 8px rgba(95,78,55,.10);
+    inset 0 -4px 8px rgba(204,189,167,.10);
   filter: brightness(.97);
   transition: transform .16s, filter .16s, box-shadow .16s;
 }
