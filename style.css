@@ -276,8 +276,10 @@ html, body {
   align-items: center;
   justify-content: flex-start;
   overflow: hidden;
-  background: #f5f0e8;
-  background-color: #f5f0e8;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.18) 0%, rgba(255,255,255,0) 34%),
+    linear-gradient(145deg, #2F3742 0%, #3F4752 48%, #58616C 100%);
+  background-color: #3F4752;
   color: var(--text-main);
   font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
   padding-top: var(--cover-top-safe);
@@ -2220,15 +2222,19 @@ html.oai-cover-booting #cover > * {
   min-height: 0;
   width: 100%;
   contain: layout paint;
-  max-width: min(500px, calc(100vw - 20px));
+  max-width: min(500px, calc(100vw - 22px));
   margin: 0 auto;
-  padding: 0 10px 0;
+  padding: clamp(10px, calc(var(--cover-vh, 1vh) * 1.45), 16px) clamp(12px, 3vw, 16px) clamp(9px, calc(var(--cover-vh, 1vh) * 1.25), 14px);
   display: flex;
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
-  gap: clamp(5px, calc(var(--cover-vh, 1vh) * 0.8), 10px);
+  gap: clamp(5px, calc(var(--cover-vh, 1vh) * 0.76), 9px);
   box-sizing: border-box;
+  border-radius: clamp(24px, 6vw, 34px);
+  background: linear-gradient(180deg, rgba(255,253,248,.96) 0%, rgba(247,242,234,.94) 100%);
+  border: 1px solid rgba(255,255,255,.58);
+  box-shadow: 0 22px 54px rgba(14,21,53,.24), inset 0 1px 0 rgba(255,255,255,.92);
 }
 
 .cover-grid {
@@ -2258,9 +2264,9 @@ html.oai-cover-booting #cover > * {
   gap: 7px;
   text-align: center;
   cursor: pointer;
-  background: linear-gradient(180deg, #fffefb 0%, #fffaf2 100%);
-  border: 1px solid rgba(184,150,90,.34);
-  box-shadow: 0 10px 22px rgba(31,42,68,.065), inset 0 1px 0 rgba(255,255,255,.92);
+  background: linear-gradient(180deg, #fffefb 0%, #f8f3eb 100%);
+  border: 1px solid rgba(63,71,82,.24);
+  box-shadow: 0 8px 18px rgba(47,55,66,.10), inset 0 1px 0 rgba(255,255,255,.94);
   outline: none;
   box-sizing: border-box;
   position: relative;
@@ -2269,11 +2275,14 @@ html.oai-cover-booting #cover > * {
 .cover-card::before {
   content: '';
   position: absolute;
-  left: 18px;
-  right: 18px;
-  top: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent 0%, rgba(212,170,106,.82) 50%, transparent 100%);
+  left: 0;
+  right: auto;
+  top: 14px;
+  bottom: 14px;
+  width: 3px;
+  height: auto;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(47,55,66,.95) 0%, rgba(63,71,82,.72) 100%);
   opacity: .9;
   pointer-events: none;
 }
@@ -2307,9 +2316,9 @@ html.oai-cover-booting #cover > * {
   align-items: center;
   justify-content: center;
   margin-bottom: 6px;
-  background: rgba(255,250,242,.82);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 3px 10px rgba(184,150,90,.08);
-  border: 1px solid rgba(184,150,90,.25);
+  background: rgba(236,239,243,.78);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.95), 0 3px 10px rgba(63,71,82,.08);
+  border: 1px solid rgba(63,71,82,.18);
   overflow: visible;
   line-height: 1.16;
 }
@@ -2341,7 +2350,7 @@ html.oai-cover-booting #cover > * {
   letter-spacing: -.02em;
   text-align: center;
   word-break: keep-all;
-  color: #2f2a24;
+  color: #111827;
 }
 #cc-5 .cover-name { font-size: 13px; letter-spacing: -.04em; }
 
@@ -2371,7 +2380,7 @@ html.app-active #cover-action-row { display: none; }
   width: 100%;
   border: 0;
   border-radius: 999px;
-  background: rgba(255,253,249,.88);
+  background: rgba(255,253,249,.92);
   color: #1f2a44;
   font-family: inherit;
   font-size: calc(11.5px * var(--app-font-scale));
@@ -2380,7 +2389,7 @@ html.app-active #cover-action-row { display: none; }
   min-height: 36px;
   height: 36px;
   padding: 0 12px;
-  box-shadow: inset 0 0 0 1px rgba(184,150,90,.28), 0 4px 10px rgba(31,42,68,.045);
+  box-shadow: inset 0 0 0 1px rgba(63,71,82,.18), 0 4px 10px rgba(31,42,68,.07);
   cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
@@ -2415,9 +2424,9 @@ html.app-active #cover-action-row { display: none; }
   min-height: 36px;
   padding: 0 13px;
   font-size: calc(11.5px * var(--app-font-scale));
-  background: rgba(255,253,249,.88);
-  border-color: rgba(184,150,90,.28);
-  box-shadow: 0 4px 10px rgba(31,42,68,.045);
+  background: rgba(255,253,249,.92);
+  border-color: rgba(63,71,82,.18);
+  box-shadow: 0 4px 10px rgba(31,42,68,.07);
 }
 
 /* 커버 하단 고정 요소 */
@@ -2434,7 +2443,8 @@ html.app-active #cover-action-row { display: none; }
   font-weight: 500;
   line-height: 1.28;
   letter-spacing: -.02em;
-  color: rgba(96,86,76,.72);
+  color: rgba(255,250,240,.76);
+  text-shadow: 0 1px 2px rgba(14,21,53,.18);
   pointer-events: none;
   z-index: 130;
   box-sizing: border-box;
