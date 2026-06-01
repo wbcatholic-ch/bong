@@ -2195,9 +2195,9 @@ html.oai-cover-booting #cover > * {
   position: relative;
   overflow: hidden;
   border-radius: 22px;
-  background: linear-gradient(135deg, #2f3742 0%, #3f4752 100%);
-  border: 1px solid rgba(212,170,106,.22);
-  box-shadow: 0 8px 18px rgba(31,42,68,.10), inset 0 1px 0 rgba(255,255,255,.10);
+  background: linear-gradient(135deg, #0f1115 0%, #1f2937 100%);
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 8px 18px rgba(15,17,21,.13), inset 0 1px 0 rgba(255,255,255,.08);
 }
 .cover-title {
   font-size: clamp(32px, 8.9vw, 43px);
@@ -2210,14 +2210,13 @@ html.oai-cover-booting #cover > * {
   text-shadow: 0 2px 7px rgba(0,0,0,.16);
 }
 .cover-title::after {
-  content: "";
-  display: block;
-  width: min(132px, 38vw);
-  height: 2px;
-  margin: clamp(7px, calc(var(--cover-vh, 1vh) * .85), 10px) auto 0;
-  border-radius: 999px;
-  background: #d4aa6a;
-  box-shadow: 0 1px 4px rgba(212,170,106,.25);
+  content: none;
+  display: none;
+  width: 0;
+  height: 0;
+  margin: 0;
+  background: transparent;
+  box-shadow: none;
 }
 .cover-subtitle {
   font-size: 16px;
@@ -2261,7 +2260,7 @@ html.oai-cover-booting #cover > * {
   box-sizing: border-box;
   isolation: isolate;
 }
-/* V3-46: 커버 카테고리 박스 상단 라인 단색 유지 / 내부 그라데이션 1안 복귀 */
+/* V3-48: 커버 상단 검정 테스트 / 제목 아래 금색 라인 제거 / 카테고리 박스 1안 유지 */
 .cover-grid::after {
   content: none;
   display: none;
