@@ -4508,9 +4508,10 @@ html.oai-cover-first-reveal #cover > * {
   transition: none !important;
 }
 
-/* V3-30: 기도문 공식 원문 외부 이동/복귀 전용 안정 안내
+/* V3-31: 기도문 공식 원문 외부 이동/복귀 전용 안정 안내
    - 기도문 링크에서만 사용
-   - 전역 안정막의 원형 로딩과 겹치지 않게, 안내창 안의 금색 십자가만 즉시 회전 */
+   - 상단 앱 헤더가 비쳐 보이지 않도록 전체 배경을 불투명하게 덮는다
+   - 별도 상단 헤더 없이 중앙 안내와 금색 회전 십자가만 표시 */
 #pr-external-guide {
   position: fixed;
   inset: 0;
@@ -4520,17 +4521,17 @@ html.oai-cover-first-reveal #cover > * {
   justify-content: center;
   padding: 24px;
   box-sizing: border-box;
-  background: rgba(245,240,232,.96);
+  background: #f5f0e8;
   opacity: 0;
   pointer-events: none;
-  transition: opacity .10s ease;
+  transition: opacity .08s ease;
 }
 #pr-external-guide.show { opacity: 1; }
 .pr-external-guide-card {
   min-width: min(272px, calc(100vw - 48px));
   max-width: min(352px, calc(100vw - 48px));
   border-radius: 22px;
-  background: rgba(255,253,249,.94);
+  background: rgba(255,253,249,.98);
   border: 1px solid rgba(212,170,106,.22);
   box-shadow: 0 16px 38px rgba(14,21,53,.13);
   padding: 22px 20px 21px;
@@ -4549,7 +4550,7 @@ html.oai-cover-first-reveal #cover > * {
   font-weight: 900;
   line-height: 1;
   text-shadow: 0 2px 8px rgba(184,150,90,.20);
-  animation: prExternalCrossSpinV3-30 .82s linear infinite;
+  animation: prExternalCrossSpinV3-31 .82s linear infinite;
   transform-origin: 50% 50%;
   will-change: transform;
 }
@@ -4560,7 +4561,7 @@ html.oai-cover-first-reveal #cover > * {
   letter-spacing: -.02em;
   word-break: keep-all;
 }
-@keyframes prExternalCrossSpinV3-30 {
+@keyframes prExternalCrossSpinV3-31 {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
