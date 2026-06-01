@@ -2244,7 +2244,7 @@ html.oai-cover-booting #cover > * {
   box-sizing: border-box;
   isolation: isolate;
 }
-/* V3-44: 커버 카테고리 박스 내부 그라데이션 2안 적용 / 상단 직선 그라데이션 유지 */
+/* V3-45: 커버 카테고리 박스 상단 라인 그라데이션 제거 / 내부 그라데이션 3안 적용 */
 .cover-grid::after {
   content: none;
   display: none;
@@ -2265,7 +2265,7 @@ html.oai-cover-booting #cover > * {
   gap: 6px;
   text-align: center;
   cursor: pointer;
-  background: linear-gradient(180deg, #ffffff 0%, #eef1f4 100%);
+  background: linear-gradient(180deg, #fffaf0 0%, #efe0c8 100%);
   border: 1px solid rgba(126,104,74,.24);
   box-shadow:
     0 1px 2px rgba(31,42,68,.045),
@@ -2282,8 +2282,8 @@ html.oai-cover-booting #cover > * {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--cover-card-point) 0%, rgba(212,170,106,.58) 50%, var(--cover-card-point) 100%);
-  opacity: .42;
+  background: var(--cover-card-point);
+  opacity: .34;
   border-radius: 0;
 }
 .cover-card::after {
