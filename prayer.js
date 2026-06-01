@@ -23,6 +23,8 @@ const PR_CAT_STYLE = {
 let prSwipeBlockUntil = 0;
 // 첫 진입 때 활성 탭을 부드럽게 스크롤하면 탭바가 살짝 흔들려 보일 수 있어 첫 1회만 즉시 정렬한다.
 let prTabsFirstAlign = true;
+// 링크 테스트 상세 화면에서 자동 이동 예약이 중복 실행되지 않도록 관리한다.
+let prExternalOpenTimer = null;
 
 // 기도문 데이터 (링크 테스트: 앱 내부 본문은 두지 않고 공식/원문 URL만 보관)
 const PR_DATA = {
@@ -575,6 +577,12 @@ function prOpenPrayerExternalUrl(url){
   }
   return true;
 }
+function prClearExternalOpenTimer(){
+  if(prExternalOpenTimer){
+    clearTimeout(prExternalOpenTimer);
+    prExternalOpenTimer = null;
+  }
+}
 
 function prLoadPrefs(){
   try{ prFavorites = JSON.parse(localStorage.getItem('pr_favorites')||'[]'); }catch(e){ prFavorites=[]; }
@@ -890,14 +898,16 @@ function prOpenDetail(prayer){
   if(hasExternalUrl){
     rawContent = '' +
       '<div class="pr-link-card" style="padding:4px 0 2px;line-height:1.75;">' +
-      '<p style="margin:0 0 16px;color:#374151;font-weight:600;word-break:keep-all;">이 항목은 테스트 방식으로 앱 내부에 기도문 본문을 저장하지 않고 공식/원문 페이지로 연결합니다.</p>' +
-      '<button type="button" id="pr-official-link-btn" style="width:100%;min-height:48px;border:0;border-radius:13px;background:#0F766E;color:#fff;font-family:inherit;font-size:16px;font-weight:800;box-shadow:0 2px 6px rgba(15,118,110,.20);">공식 페이지에서 보기</button>' +
+      '<p style="margin:0 0 16px;color:#374151;font-weight:700;word-break:keep-all;">기도문 공식/원문 페이지로 이동 중입니다.</p>' +
+      '<p style="margin:0 0 18px;color:#6B7280;font-size:14px;line-height:1.65;word-break:keep-all;">앱 내부에는 기도문 본문을 저장하지 않는 테스트 방식입니다.</p>' +
+      '<button type="button" id="pr-official-link-btn" style="width:100%;min-height:48px;border:0;border-radius:13px;background:#0F766E;color:#fff;font-family:inherit;font-size:16px;font-weight:800;box-shadow:0 2px 6px rgba(15,118,110,.20);">바로 이동하지 않으면 여기를 눌러 주세요</button>' +
       '<p style="margin:14px 0 0;color:#6B7280;font-size:13px;line-height:1.65;word-break:keep-all;">외부 사이트로 이동합니다. 앱으로 돌아올 때는 기기의 뒤로가기를 사용해 주세요.</p>' +
       '</div>';
   } else {
     rawContent = ((prayer.content||prayer.body||'')+'').replace(/class="symbol"/g,'class="pr-symbol"');
   }
   content.innerHTML = '<div class="pr-body-title">' + safeTitle + '</div>' + rawContent;
+  prClearExternalOpenTimer();
   if(hasExternalUrl){
     var officialBtn = document.getElementById('pr-official-link-btn');
     if(officialBtn){
@@ -906,11 +916,19 @@ function prOpenDetail(prayer){
           ev.preventDefault();
           ev.stopPropagation();
         }
+        prClearExternalOpenTimer();
         prOpenPrayerExternalUrl(prayer.url);
       });
     }
   }
   detail.classList.add('show');
+  if(hasExternalUrl){
+    prExternalOpenTimer = setTimeout(function(){
+      prExternalOpenTimer = null;
+      if(!detail.classList.contains('show')) return;
+      prOpenPrayerExternalUrl(prayer.url);
+    }, 850);
+  }
   try{
     // 본문 진입 시 별도 history state를 만들지 않고, 공통 앱 back trap만 보강한다.
     // 실제 뒤로가기는 patches.js의 공통 컨트롤러가 DOM 상태를 보고 처리한다.
@@ -962,6 +980,7 @@ function prRestoreListPosition(){
 window.prRestoreListPosition = prRestoreListPosition;
 
 window.prCloseDetail = function(opts){
+  prClearExternalOpenTimer();
   const detail = prG('prayer-detail');
   if(detail) detail.classList.remove('show');
   prRestoreListPosition();
