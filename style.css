@@ -2212,7 +2212,7 @@ html.oai-cover-booting #cover > * {
 .cover-title::after {
   content: "";
   display: block;
-  width: min(132px, 38vw);
+  width: min(6.6em, 72vw);
   height: 2px;
   margin: clamp(7px, calc(var(--cover-vh, 1vh) * .85), 10px) auto 0;
   border-radius: 999px;
