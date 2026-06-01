@@ -141,7 +141,7 @@
   --bg-color:   #f7f0e5;
   /* 커버 화면 비율 기준 보호 영역 */
   --cover-top-safe: calc(env(safe-area-inset-top, 0px) + clamp(60px, calc(var(--cover-vh, 1vh) * 9.2), 82px));
-  --cover-bottom-safe: calc(env(safe-area-inset-bottom, 0px) + clamp(52px, calc(var(--cover-vh, 1vh) * 7.6), 72px));
+  --cover-bottom-safe: calc(env(safe-area-inset-bottom, 0px) + clamp(48px, calc(var(--cover-vh, 1vh) * 6.9), 64px));
   --cover-h:    calc(var(--cover-vh, 1vh) * 100);
   --text-main:  #3e362e;
   --text-sub:   #7a7065;
@@ -2194,7 +2194,8 @@ html.oai-cover-booting #cover > * {
   box-sizing: border-box;
 }
 .cover-title {
-  font-size: clamp(28px, 8.2vw, 38px);
+  font-size: clamp(32px, 8.9vw, 43px);
+  font-family: "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
   font-weight: 800;
   letter-spacing: -.03em;
   color: #3e362e;
@@ -3096,7 +3097,6 @@ html.oai-font-global .c-gw, html.oai-font-global .c-rg, html.oai-font-global .c-
 html.oai-font-global .dd, html.oai-font-global .sg { font-size: calc(12px * var(--app-inner-font-scale)); line-height: 1.45; }
 
 /* 커버는 font-global 연동에서 제외 (별도 --app-font-scale만 사용) */
-html.oai-font-global #cover .cover-title { font-size: clamp(28px, 8.2vw, 38px); }
 html.oai-font-global #cover .cover-subtitle { font-size: 16px; }
 html.oai-font-global #cover .cover-name { font-size: calc(16px * var(--app-font-scale)); }
 html.oai-font-global #cover .cover-emoji { font-size: calc(40px * var(--app-font-scale)); background: transparent; box-shadow: none; }
@@ -3150,7 +3150,6 @@ html.oai-font-global #region-body .dio-hd { font-size: calc(17px * var(--app-inn
 @media (max-height: 650px) {
   #cover { --cover-top-safe: calc(env(safe-area-inset-top, 0px) + clamp(58px, calc(var(--cover-vh, 1vh) * 9.4), 74px)); --cover-bottom-safe: calc(env(safe-area-inset-bottom, 0px) + clamp(48px, calc(var(--cover-vh, 1vh) * 7.2), 64px)); padding-top: var(--cover-top-safe); padding-bottom: var(--cover-bottom-safe); }
   #cover .cover-header { padding-bottom: 12px; }
-  #cover .cover-title { font-size: clamp(18px, 5vw, 24px); }
   #cover .cover-subtitle { font-size: 10px; }
   #cover .cover-grid { row-gap: clamp(2px, calc(var(--cover-vh, 1vh) * 0.5), 4px); }
   #cover .cover-card { padding: clamp(4px, calc(var(--cover-vh, 1vh) * 0.8), 8px) 6px; }
@@ -4390,4 +4389,121 @@ html.oai-cover-booting #cover > * {
   opacity: 0;
   visibility: visible;
   transition: none;
+}
+
+
+/* V3-22: 첫 스플래시/로딩 보호막의 금색 십자가를 완전히 숨기고 중립 로딩 원으로 정리 */
+html.oai-first-entry-intro::before {
+  content: "" !important;
+  display: none !important;
+  opacity: 0 !important;
+  animation: none !important;
+}
+.map-loading-icon,
+#diocese-loading .missa-spinner {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  margin: 0 auto 14px !important;
+  border: 3px solid rgba(31,42,68,.16) !important;
+  border-top-color: #1f2a44 !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  text-shadow: none !important;
+  transform-origin: 50% 50% !important;
+  animation: oaiLoadingCircleSpinV3-22 .75s linear infinite !important;
+}
+#diocese-loading .missa-spinner::before {
+  content: "" !important;
+  display: none !important;
+}
+#oai-category-entry-veil::after,
+html.oai-stability-veil::after,
+html.oai-external-return-freeze::after {
+  content: "" !important;
+  position: fixed !important;
+  left: 50% !important;
+  top: 50% !important;
+  width: 28px !important;
+  height: 28px !important;
+  margin: -14px 0 0 -14px !important;
+  display: block !important;
+  border: 3px solid rgba(31,42,68,.16) !important;
+  border-top-color: #1f2a44 !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  text-shadow: none !important;
+  transform-origin: 50% 50% !important;
+  animation: oaiLoadingCircleSpinV3-22 .75s linear infinite !important;
+  pointer-events: none !important;
+  z-index: 2147483647 !important;
+}
+@keyframes oaiLoadingCircleSpinV3-22 {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+
+/* V3-22: 남아 있는 금색 십자가 로더를 마지막 단계에서 한 번 더 무력화 */
+.map-loading-icon,
+#diocese-loading .missa-spinner,
+#oai-category-entry-veil::after,
+html.oai-stability-veil::after,
+html.oai-external-return-freeze::after {
+  content: "" !important;
+  color: transparent !important;
+  text-shadow: none !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  border: 3px solid rgba(31,42,68,.16) !important;
+  border-top-color: #1f2a44 !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  animation: oaiLoadingCircleSpinV3-22 .75s linear infinite !important;
+}
+.map-loading-icon::before,
+.map-loading-icon::after,
+#diocese-loading .missa-spinner::before,
+#diocese-loading .missa-spinner::after {
+  content: "" !important;
+  display: none !important;
+}
+
+
+/* V3-22: 시작·전환 보호막에서 텍스트 십자가가 다시 보이지 않도록 마지막 단계에서 완전 차단 */
+html.oai-stability-veil::after,
+html.oai-external-return-freeze::after,
+#oai-category-entry-veil::after,
+html.oai-first-entry-intro::before {
+  content: "" !important;
+  color: transparent !important;
+  text-shadow: none !important;
+}
+
+
+/* V3-22: 첫 진입 십자가 사진/금색 십자가 효과 완전 차단 */
+html.oai-first-entry-intro::before,
+html.oai-first-entry-intro::after,
+html.oai-cover-first-reveal #cover > * {
+  content: "" !important;
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  background-image: none !important;
+  animation: none !important;
+  transition: none !important;
 }
