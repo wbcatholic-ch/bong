@@ -276,10 +276,7 @@ html, body {
   align-items: center;
   justify-content: flex-start;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(255,255,255,.18) 0%, rgba(255,255,255,0) 34%),
-    linear-gradient(145deg, #2F3742 0%, #3F4752 48%, #58616C 100%);
-  background-color: #3F4752;
+  background-color: var(--bg-color);
   color: var(--text-main);
   font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
   padding-top: var(--cover-top-safe);
@@ -2201,18 +2198,16 @@ html.oai-cover-booting #cover > * {
   font-family: "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
   font-weight: 800;
   letter-spacing: -.03em;
-  color: #1f2a44;
+  color: #3e362e;
   margin: 0;
   line-height: 1.14;
-  text-shadow: 0 1px 0 rgba(255,255,255,.82);
 }
 .cover-subtitle {
   font-size: 16px;
-  font-weight: 700;
-  color: #9a7b49;
+  font-weight: 600;
+  color: #81b29a;
   margin: 0 0 8px;
   line-height: 1.45;
-  letter-spacing: -.01em;
 }
 
 #cover-main-block {
@@ -2222,19 +2217,15 @@ html.oai-cover-booting #cover > * {
   min-height: 0;
   width: 100%;
   contain: layout paint;
-  max-width: min(500px, calc(100vw - 22px));
+  max-width: min(500px, calc(100vw - 20px));
   margin: 0 auto;
-  padding: clamp(10px, calc(var(--cover-vh, 1vh) * 1.45), 16px) clamp(12px, 3vw, 16px) clamp(9px, calc(var(--cover-vh, 1vh) * 1.25), 14px);
+  padding: 0 10px 0;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
-  gap: clamp(5px, calc(var(--cover-vh, 1vh) * 0.76), 9px);
+  gap: clamp(5px, calc(var(--cover-vh, 1vh) * 0.8), 10px);
   box-sizing: border-box;
-  border-radius: clamp(24px, 6vw, 34px);
-  background: linear-gradient(180deg, rgba(255,253,248,.96) 0%, rgba(247,242,234,.94) 100%);
-  border: 1px solid rgba(255,255,255,.58);
-  box-shadow: 0 22px 54px rgba(14,21,53,.24), inset 0 1px 0 rgba(255,255,255,.92);
 }
 
 .cover-grid {
@@ -2256,7 +2247,7 @@ html.oai-cover-booting #cover > * {
   height: 100%;
   min-height: 0;
   padding: clamp(5px, calc(var(--cover-vh, 1vh) * 1.05), 10px) 7px;
-  border-radius: 20px;
+  border-radius: 18px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2264,46 +2255,11 @@ html.oai-cover-booting #cover > * {
   gap: 7px;
   text-align: center;
   cursor: pointer;
-  background: linear-gradient(180deg, #fffefb 0%, #f8f3eb 100%);
-  border: 1px solid rgba(63,71,82,.24);
-  box-shadow: 0 8px 18px rgba(47,55,66,.10), inset 0 1px 0 rgba(255,255,255,.94);
+  background: var(--card-bg);
+  border: 1px solid rgba(0,0,0,.05);
+  box-shadow: 0 4px 6px rgba(0,0,0,.02);
   outline: none;
   box-sizing: border-box;
-  position: relative;
-  overflow: hidden;
-}
-.cover-card::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: auto;
-  top: 14px;
-  bottom: 14px;
-  width: 3px;
-  height: auto;
-  border-radius: 999px;
-  background: linear-gradient(180deg, rgba(47,55,66,.95) 0%, rgba(63,71,82,.72) 100%);
-  opacity: .9;
-  pointer-events: none;
-}
-.cover-card::after {
-  content: '';
-  position: absolute;
-  inset: 4px;
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,.72);
-  pointer-events: none;
-}
-#cover #cc-1,
-#cover #cc-2,
-#cover #cc-3,
-#cover #cc-4,
-#cover #cc-5,
-#cover #cc-6,
-#cover #cc-7 {
-  --cover-card-accent:#d4aa6a;
-  --cover-card-soft:#fffaf2;
-  --cover-card-border:rgba(184,150,90,.34);
 }
 .cover-card.app-pressing { transform: translateY(8px) scale(.974); box-shadow: 0 2px 3px rgba(0,0,0,.02); filter: brightness(.94); transition: transform .16s, filter .16s; }
 
@@ -2316,9 +2272,9 @@ html.oai-cover-booting #cover > * {
   align-items: center;
   justify-content: center;
   margin-bottom: 6px;
-  background: rgba(236,239,243,.78);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.95), 0 3px 10px rgba(63,71,82,.08);
-  border: 1px solid rgba(63,71,82,.18);
+  background: transparent;
+  box-shadow: none;
+  border: none;
   overflow: visible;
   line-height: 1.16;
 }
@@ -2350,7 +2306,7 @@ html.oai-cover-booting #cover > * {
   letter-spacing: -.02em;
   text-align: center;
   word-break: keep-all;
-  color: #111827;
+  color: var(--text-main);
 }
 #cc-5 .cover-name { font-size: 13px; letter-spacing: -.04em; }
 
@@ -2380,7 +2336,7 @@ html.app-active #cover-action-row { display: none; }
   width: 100%;
   border: 0;
   border-radius: 999px;
-  background: rgba(255,253,249,.92);
+  background: rgba(31,42,68,.10);
   color: #1f2a44;
   font-family: inherit;
   font-size: calc(11.5px * var(--app-font-scale));
@@ -2389,7 +2345,7 @@ html.app-active #cover-action-row { display: none; }
   min-height: 36px;
   height: 36px;
   padding: 0 12px;
-  box-shadow: inset 0 0 0 1px rgba(63,71,82,.18), 0 4px 10px rgba(31,42,68,.07);
+  box-shadow: inset 0 0 0 1px rgba(31,42,68,.12);
   cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
@@ -2424,9 +2380,6 @@ html.app-active #cover-action-row { display: none; }
   min-height: 36px;
   padding: 0 13px;
   font-size: calc(11.5px * var(--app-font-scale));
-  background: rgba(255,253,249,.92);
-  border-color: rgba(63,71,82,.18);
-  box-shadow: 0 4px 10px rgba(31,42,68,.07);
 }
 
 /* 커버 하단 고정 요소 */
@@ -2443,8 +2396,7 @@ html.app-active #cover-action-row { display: none; }
   font-weight: 500;
   line-height: 1.28;
   letter-spacing: -.02em;
-  color: rgba(255,250,240,.76);
-  text-shadow: 0 1px 2px rgba(14,21,53,.18);
+  color: rgba(96,86,76,.72);
   pointer-events: none;
   z-index: 130;
   box-sizing: border-box;
@@ -3303,7 +3255,7 @@ html:not(.app-active), html:not(.app-active) body { scroll-behavior: auto; }
 .cv-extra-btn.cv-btn-diocese{background:linear-gradient(135deg,#dce7f1,#c5d6e6);color:#26384d}
 .cv-extra-btn.cv-btn-web .cv-btn-icon{background:rgba(255,255,255,.34);color:#5a4026}
 .cv-extra-btn.cv-btn-diocese .cv-btn-icon{background:rgba(255,255,255,.34);color:#334c6a}
-@media (max-width:420px){#cover{position:fixed;top:0;left:0;right:0;bottom:auto;z-index:9999;background:var(--bg-color);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0);overflow:hidden;overflow-y:hidden;background-color:var(--bg-color);color:var(--text-main);font-family:'Apple SD Gothic Neo','Malgun Gothic',sans-serif;transition:none;padding-top:var(--cover-top-safe);padding-bottom:var(--cover-bottom-safe)}.cv-shell-stage{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;gap:10px;width:min(100%,560px);height:var(--cover-h);min-height:var(--cover-h);padding:calc(env(safe-area-inset-top,0) + 9vh) 0 calc(9vh + env(safe-area-inset-bottom,0));margin:0 auto;box-sizing:border-box}.cv-stage,.cv-extra-row{width:min(100%,calc((var(--cover-h) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 112px) * .5625))}.cv-extra-row{gap:8px}.cv-extra-btn{min-height:78px;border-radius:18px;padding:8px 7px;gap:5px}.cv-extra-btn::before{inset:3px;border-radius:14px}.cv-extra-btn .cv-btn-icon{width:32px;height:32px;font-size:16px;border-radius:11px}.cv-extra-btn .cv-btn-label{font-size:10.4px}}
+@media (max-width:420px){#cover{position:fixed;top:0;left:0;right:0;bottom:auto;z-index:9999;background:#f4efe4;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0);overflow:hidden;overflow-y:hidden;background-color:var(--bg-color);color:var(--text-main);font-family:'Apple SD Gothic Neo','Malgun Gothic',sans-serif;transition:none;padding-top:var(--cover-top-safe);padding-bottom:var(--cover-bottom-safe)}.cv-shell-stage{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;gap:10px;width:min(100%,560px);height:var(--cover-h);min-height:var(--cover-h);padding:calc(env(safe-area-inset-top,0) + 9vh) 0 calc(9vh + env(safe-area-inset-bottom,0));margin:0 auto;box-sizing:border-box}.cv-stage,.cv-extra-row{width:min(100%,calc((var(--cover-h) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 112px) * .5625))}.cv-extra-row{gap:8px}.cv-extra-btn{min-height:78px;border-radius:18px;padding:8px 7px;gap:5px}.cv-extra-btn::before{inset:3px;border-radius:14px}.cv-extra-btn .cv-btn-icon{width:32px;height:32px;font-size:16px;border-radius:11px}.cv-extra-btn .cv-btn-label{font-size:10.4px}}
 @media (max-height:760px){.cv-shell-stage{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;gap:10px;width:min(100%,560px);height:var(--cover-h);min-height:var(--cover-h);padding:calc(env(safe-area-inset-top,0) + 9vh) 0 calc(9vh + env(safe-area-inset-bottom,0));margin:0 auto;box-sizing:border-box}.cv-stage,.cv-extra-row{width:min(100%,calc((var(--cover-h) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 98px) * .5625))}.cv-extra-row{gap:7px}.cv-extra-btn{min-height:70px;border-radius:16px;padding:7px 6px;gap:4px}.cv-extra-btn::before{inset:3px;border-radius:13px}.cv-extra-btn .cv-btn-icon{width:28px;height:28px;font-size:14px;border-radius:10px}.cv-extra-btn .cv-btn-label{font-size:9.6px;line-height:1.06}}
 html.parish-mode .srch-bar,html.parish-mode .filter-bar,html.parish-mode .sheet-hd{background:#374151!important}
 html.parish-mode .ric-lbl,html.parish-mode .region-list-hd{color:#4B5563!important}
@@ -4556,7 +4508,7 @@ html.oai-cover-first-reveal #cover > * {
   transition: none !important;
 }
 
-/* V3-33: 기도문 공식 원문 외부 이동/복귀 전용 안정 안내
+/* V3-38: 기도문 공식 원문 외부 이동/복귀 전용 안정 안내
    - 기도문 링크에서만 사용
    - 상단 앱 헤더가 비쳐 보이지 않도록 전체 배경을 불투명하게 덮는다
    - 별도 상단 헤더 없이 중앙 안내와 금색 회전 십자가만 표시 */
@@ -4599,7 +4551,7 @@ html.oai-cover-first-reveal #cover > * {
   font-weight: 900;
   line-height: 1;
   text-shadow: 0 2px 8px rgba(184,150,90,.20);
-  animation: prExternalCrossSpinV3-33 2.4s linear infinite !important;
+  animation: prExternalCrossSpinV3-38 2.4s linear infinite !important;
   animation-delay: 0s !important;
   transform-origin: 50% 50%;
   will-change: transform;
@@ -4611,12 +4563,12 @@ html.oai-cover-first-reveal #cover > * {
   letter-spacing: -.02em;
   word-break: keep-all;
 }
-@keyframes prExternalCrossSpinV3-33 {
+@keyframes prExternalCrossSpinV3-38 {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-/* V3-33: 기도문 외부 이동 안내 중에는 앱 내부 기도문 헤더와 공통 로딩 표시가 겹쳐 보이지 않게 한다. */
+/* V3-38: 기도문 외부 이동 안내 중에는 앱 내부 기도문 헤더와 공통 로딩 표시가 겹쳐 보이지 않게 한다. */
 html.pr-external-guide-active #prayer-bar,
 html.pr-external-guide-active #prayer-tabs,
 html.pr-external-guide-active #prayer-search-bar {

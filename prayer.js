@@ -558,7 +558,7 @@ function prOpenOfficialPrayer(prayer){
     sessionStorage.setItem('oai_prayer_list_restore', JSON.stringify(window.__oaiPrayerListRestore));
   }catch(e){ console.warn('[가톨릭길동무]', e); }
   prMarkExternalReturnFlag();
-  // V3-33: 기도문 공식 원문 페이지가 늦게 열리는 경우에도
+  // V3-38: 기도문 공식 원문 페이지가 늦게 열리는 경우에도
   // 보호 안내가 먼저 사라지지 않도록 실제 이동 신호 전까지 유지한다.
   prShowExternalGuide('공식 기도문 페이지로 이동합니다.', 0, { hold:true, maxDuration:6500 });
   window.setTimeout(function(){
