@@ -2188,16 +2188,22 @@ html.oai-cover-booting #cover > * {
 .cover-header {
   flex: 0 0 auto;
   width: 100%;
-  padding: clamp(10px, calc(var(--cover-vh, 1vh) * 1.45), 15px) 18px clamp(11px, calc(var(--cover-vh, 1vh) * 1.55), 17px);
+  height: 100%;
+  min-height: 0;
+  padding: clamp(6px, calc(var(--cover-vh, 1vh) * .75), 10px) 18px clamp(6px, calc(var(--cover-vh, 1vh) * .75), 10px);
   margin: 0;
   text-align: center;
   box-sizing: border-box;
   position: relative;
   overflow: hidden;
-  border-radius: 22px;
-  background: linear-gradient(135deg, #0f1115 0%, #1f2937 100%);
-  border: 1px solid rgba(255,255,255,.10);
-  box-shadow: 0 8px 18px rgba(15,17,21,.13), inset 0 1px 0 rgba(255,255,255,.08);
+  border-radius: 18px;
+  background: linear-gradient(135deg, #1f2a44 0%, #2d3a5f 100%);
+  border: 1px solid rgba(255,255,255,.13);
+  box-shadow: 0 3px 8px rgba(31,42,68,.12), inset 0 1px 0 rgba(255,255,255,.10);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .cover-title {
   font-size: clamp(32px, 8.9vw, 43px);
@@ -2236,10 +2242,10 @@ html.oai-cover-booting #cover > * {
   max-width: min(500px, calc(100vw - 20px));
   margin: 0 auto;
   padding: 0 10px 0;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: minmax(0, .95fr) minmax(0, 4fr) auto;
   align-items: stretch;
-  justify-content: center;
+  justify-content: stretch;
   gap: clamp(5px, calc(var(--cover-vh, 1vh) * 0.8), 10px);
   box-sizing: border-box;
 }
@@ -2248,6 +2254,7 @@ html.oai-cover-booting #cover > * {
   position: relative;
   flex: 1 1 auto;
   min-height: 0;
+  height: 100%;
   width: 100%;
   padding: 0;
   margin: 0;
@@ -2260,7 +2267,7 @@ html.oai-cover-booting #cover > * {
   box-sizing: border-box;
   isolation: isolate;
 }
-/* V3-48: 커버 상단 검정 테스트 / 제목 아래 금색 라인 제거 / 카테고리 박스 1안 유지 */
+/* V3-50: 커버 제목 박스는 성지 카테고리 네이비 계열로 정리 / 카테고리 박스 비율 유지 */
 .cover-grid::after {
   content: none;
   display: none;
@@ -3207,7 +3214,7 @@ html.oai-font-global #region-body .dio-hd { font-size: calc(17px * var(--app-inn
   #prayer-bar, #diocese-bar, .module-bar { width: 100vw; max-width: 100vw; }
 }
 @media (max-height: 720px) {
-  #cover .cover-header { padding-bottom: clamp(5px, calc(var(--cover-vh, 1vh) * .9), 10px); }
+  #cover .cover-header { padding-top: clamp(5px, calc(var(--cover-vh, 1vh) * .65), 8px); padding-bottom: clamp(5px, calc(var(--cover-vh, 1vh) * .65), 8px); }
   #cover-main-block {
     max-height: 100%;
     gap: clamp(4px, calc(var(--cover-vh, 1vh) * .55), 7px);
@@ -3224,7 +3231,7 @@ html.oai-font-global #region-body .dio-hd { font-size: calc(17px * var(--app-inn
 }
 @media (max-height: 650px) {
   #cover { --cover-top-safe: calc(env(safe-area-inset-top, 0px) + clamp(58px, calc(var(--cover-vh, 1vh) * 9.4), 74px)); --cover-bottom-safe: calc(env(safe-area-inset-bottom, 0px) + clamp(48px, calc(var(--cover-vh, 1vh) * 7.2), 64px)); padding-top: var(--cover-top-safe); padding-bottom: var(--cover-bottom-safe); }
-  #cover .cover-header { padding-bottom: 12px; }
+  #cover .cover-header { padding-top: 6px; padding-bottom: 6px; }
   #cover .cover-subtitle { font-size: 10px; }
   #cover .cover-grid { row-gap: clamp(2px, calc(var(--cover-vh, 1vh) * 0.5), 4px); }
   #cover .cover-card { padding: clamp(4px, calc(var(--cover-vh, 1vh) * 0.8), 8px) 6px; }
