@@ -63,6 +63,10 @@
   --oai-close-gold: #c49b56;
   --oai-close-brown: #6B5B45;
   --oai-map-close: #111827;
+  --oai-list-card-bg: #F8ECDD;
+  --oai-list-card-soft: #F1E3CF;
+  --oai-list-card-foot: #F1E2CD;
+  --oai-list-card-line: #E2CFB6;
 
   --mode-header-bg:    linear-gradient(135deg, #1f2a44, #2d3a5f);
   --mode-header-solid: #1f2a44;
@@ -1662,7 +1666,7 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #3F6F5A, #4F846C
   display: block;
   width: 100%;
   overflow: hidden;
-  background: #fffbf2 !important;
+  background: #F8ECDD !important;
   border: 1.25px solid #c8b79f !important;
   border-radius: 13px !important;
   box-shadow: 0 1px 8px rgba(0,0,0,.06) !important;
@@ -1675,8 +1679,8 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #3F6F5A, #4F846C
 .web-card-badge { display: inline-flex; align-items: center; justify-content: center; min-height: 24px; padding: 0 10px; border-radius: 999px !important; color: #fff; font-size: 12px; font-weight: 850; white-space: nowrap; flex-shrink: 0; }
 .web-card-op { display: flex; min-width: 0; flex: 1; justify-content: flex-end; align-items: center; color: #9999bb; font-size: 11.5px; font-weight: 500; line-height: 1.4; overflow: hidden; white-space: nowrap; }
 .web-card-body { display: flex; align-items: center; gap: 12px; padding: 9px 14px 10px !important; align-items: center !important; }
-.web-card-ico { width: 52px !important; height: 52px !important; flex-shrink: 0; border-radius: 12px !important; display: flex; align-items: center; justify-content: center; font-size: 28px; line-height: 1; background: #F5F0E8 !important; box-shadow: none !important; }
-.web-card.web-priest-card .web-card-ico{background:#F8F1E4!important;color:#0F766E!important;font-size:31px!important;font-weight:900!important;font-family:Georgia,"Times New Roman",serif!important;}
+.web-card-ico { width: 52px !important; height: 52px !important; flex-shrink: 0; border-radius: 12px !important; display: flex; align-items: center; justify-content: center; font-size: 28px; line-height: 1; background: #F1E3CF !important; box-shadow: none !important; }
+.web-card.web-priest-card .web-card-ico{background:#F1E3CF!important;color:#0F766E!important;font-size:31px!important;font-weight:900!important;font-family:Georgia,"Times New Roman",serif!important;}
 .web-card.web-priest-card .web-card-badge{box-shadow:0 2px 6px rgba(31,42,68,.13);}
 
 .web-card-info { flex: 1; min-width: 0; display: block; }
@@ -1686,7 +1690,7 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #3F6F5A, #4F846C
 .web-card-name-tail { margin-left: 4px; }
 .web-card.web-my-diocese-card { border-color: #B7791F !important; border-width: 2px !important; box-shadow: 0 8px 18px rgba(183,121,31,.12), 0 2px 8px rgba(31,42,68,.07) !important; }
 .web-card-desc { display: block; color: #555577; font-size: 13px; font-weight: 500; line-height: 1.55; letter-spacing: -.01em; word-break: keep-all; white-space: normal; }
-.web-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 14px; background: #faf8f4; border-top: 1px solid #ede8e2; }
+.web-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 14px; background: #F1E2CD; border-top: 1px solid #E2CFB6; }
 .web-card-url { display: block; min-width: 0; flex: 1; color: #1f2a44; font-size: 12px; font-weight: 500; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .web-card-arrow { flex-shrink: 0; color: #9999bb; font-size: 15px; line-height: 1; }
 .web-empty { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; gap: 12px; color: #94a3b8; font-size: 13px; text-align: center; }
@@ -1724,7 +1728,7 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #3F6F5A, #4F846C
 #trail-panel-list.on { display: flex !important; }
 #trail-panel-map { flex: 1 1 0 !important; min-height: 0 !important; overflow: hidden !important; }
 .trail-card {
-  background: linear-gradient(180deg, #fffdfb, #faf5ee);
+  background: linear-gradient(180deg, #FAF1E4, #F5E5D1);
   border-radius: 18px;
   border: 1.25px solid #c8b79f;
   box-shadow: 0 14px 30px rgba(24,32,51,.06);
@@ -1745,7 +1749,7 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #3F6F5A, #4F846C
 .trail-ico.d { background: #eaf2ff; }
 .trail-ico.l { background: #eaf8f4; }
 .trail-nm { font-size: 18px; font-weight: 800; color: #111827; word-break: keep-all; line-height: 1.35; }
-.trail-foot { border-top: 1px solid #f0f4fa; padding: 11px 16px; background: rgba(244,238,229,.72); display: flex; align-items: center; justify-content: space-between; background: rgba(244,238,229,.72); }
+.trail-foot { border-top: 1px solid #E2CFB6; padding: 11px 16px; background: #F1E2CD; display: flex; align-items: center; justify-content: space-between; }
 .trail-url { font-size: 11px; color: #2563eb; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0; }
 .trail-arr { font-size: 14px; color: #94a3b8; flex-shrink: 0; margin-left: 6px; }
 .trail-loc-btn { position: absolute; right: 14px; bottom: calc(18px + env(safe-area-inset-bottom, 0)); z-index: 5; background: rgba(255,255,255,.94); border: 1.5px solid #dde3ee; border-radius: 24px; box-shadow: 0 2px 10px rgba(0,0,0,.12); padding: 12px 16px; display: flex; align-items: center; gap: 6px; font-family: inherit; font-size: 13px; font-weight: 700; color: #2563eb; cursor: pointer; }
@@ -4979,7 +4983,7 @@ html.app-active #cover-menu-btn { display: none !important; }
   }
 }
 
-/* V2-118: 이전 메뉴 모달 크기 보정 블록은 아래 최종 통합 모달 규칙으로 합침. */
+/* V2-119: 이전 메뉴 모달 크기 보정 블록은 아래 최종 통합 모달 규칙으로 합침. */
 
 #cover #cover-menu-btn.cover-menu-btn {
   min-width: 94px !important;
@@ -6886,7 +6890,7 @@ html.oai-font-global #pr-list-ul .pr-title {
   color: rgba(75,85,99,.52) !important;
 }
 
-/* V2-118: 인포카드 경로검색 출발지/도착지/취소 선택창 색상 기준 유지 */
+/* V2-119: 인포카드 경로검색 출발지/도착지/취소 선택창 색상 기준 유지 */
 #route-role-choice.route-role-choice{
   position:fixed;
   inset:0;
@@ -7359,7 +7363,7 @@ html.oai-background-return-stabilizing.oai-background-return-stabilizing-release
     flex-basis: 33px !important;
     font-size: 22px !important;
   }
-  /* V2-118: 갤럭시 일반 모델에서 지도 상단 X도 다른 닫기 버튼과 크기감을 맞춘다.
+  /* V2-119: 갤럭시 일반 모델에서 지도 상단 X도 다른 닫기 버튼과 크기감을 맞춘다.
      - 지도/마커/길찾기 로직은 변경하지 않고, 작은 Android 화면의 버튼 크기만 조정한다. */
   html:not(.ios-device) .map-category-close {
     width: 33px !important;
@@ -7789,7 +7793,7 @@ html.oai-background-return-stabilizing.oai-background-return-stabilizing-release
 
 }
 
-/* V2-118: 나의 신앙생활 목록형 화면 CSS 정리
+/* V2-119: 나의 신앙생활 목록형 화면 CSS 정리
    - V2-97 구조와 V2-98 색 대비를 하나로 통합
    - 화면 모양은 V2-98 기준 유지, 중복 선언만 정리 */
 .my-faith-body.my-faith-home-list-body { gap: 12px !important; padding-top: 14px !important; background: #F6EBD8 !important; overscroll-behavior-y: contain !important; }
@@ -7833,7 +7837,7 @@ html.oai-background-return-stabilizing.oai-background-return-stabilizing-release
   html:not(.ios-device) .my-faith-next-step-note { border-radius: 13px !important; font-size: 11.2px !important; line-height: 1.34 !important; padding: 9px 11px !important; }
 }
 
-/* V2-118: 미사 중 빠른 사용 / 가톨릭길동무 메뉴 최종 통합 CSS
+/* V2-119: 미사 중 빠른 사용 / 가톨릭길동무 메뉴 최종 통합 CSS
    - V2-99~V2-113의 순례길색/브라운/유리톤/단색 헤더 중복을 정리
    - 현재 화면 기준은 V2-113 단색 다크톤 유지
    - 버튼 높이와 기능은 변경하지 않음 */
@@ -7902,8 +7906,8 @@ html.oai-background-return-stabilizing.oai-background-return-stabilizing-release
   html:not(.ios-device) #cover #mass-quick-modal .mass-quick-btn strong{ font-size:13.8px !important; line-height:1.14 !important; }
 }
 
-/* V2-118 Step 2: 커버/모달/나의 신앙생활 CSS 중복 정리 후 현재 시각 기준 유지 */
-/* V2-118: 커버 배경은 살짝 어두운 아이보리, 빠른 메뉴/메뉴 배너는 더 밝은 아이보리 기준 유지 */
+/* V2-119 Step 2: 커버/모달/나의 신앙생활 CSS 중복 정리 후 현재 시각 기준 유지 */
+/* V2-119: 커버 배경은 살짝 어두운 아이보리, 빠른 메뉴/메뉴 배너는 더 밝은 아이보리 기준 유지 */
 #cover { background-color: #F4EDE2 !important; }
 html.oai-cover-booting #cover,
 html.oai-cover-resetting-to-intro #cover { background: #F4EDE2 !important; background-color: #F4EDE2 !important; }
@@ -7911,7 +7915,7 @@ html.oai-cover-resetting-to-intro #cover { background: #F4EDE2 !important; backg
 #cover .cover-grid > #cc-1.cover-card-wide { background: linear-gradient(180deg,#FFFEFA 0%,#FAF2E6 100%) !important; border-color: rgba(198,166,90,.42) !important; }
 
 
-/* V2-118: 나의 신앙생활 홈 화면 스크롤 보정 유지 / 커버 카테고리 박스 내부 테두리 제거 */
+/* V2-119: 나의 신앙생활 홈 화면 스크롤 보정 유지 / 커버 카테고리 박스 내부 테두리 제거 */
 .my-faith-body.my-faith-home-list-body.my-faith-no-scroll {
   overflow-y: hidden !important;
   touch-action: manipulation !important;

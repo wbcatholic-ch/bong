@@ -213,6 +213,9 @@
   function wfLoad(){ try{ webFavs=JSON.parse(localStorage.getItem(WEB_FAV_KEY)||'[]'); }catch(e){ webFavs=[]; } }
   function wfSave(){ try{ localStorage.setItem(WEB_FAV_KEY, JSON.stringify(webFavs)); }catch(e){ console.warn("[가톨릭길동무]", e); } }
   function wfHas(url){ return webFavs.includes(url); }
+  function webDefaultCat(){
+    return webFavs && webFavs.length ? '⭐ 즐겨찾기' : '사제찾기';
+  }
   function wfToggle(url){
     if(wfHas(url)) webFavs=webFavs.filter(u=>u!==url);
     else webFavs.push(url);
@@ -334,9 +337,9 @@
   window.openWebView = function(opts){
     const restore = !!(opts && opts.restore);
     if(!restore){
-      // 가톨릭 정보는 진입할 때 항상 즐겨찾기 탭의 맨 위에서 시작
+      // 가톨릭 정보는 즐겨찾기가 있으면 즐겨찾기, 없으면 사제찾기 탭에서 시작
       resetWebTransientState();
-      webState.curCat = '⭐ 즐겨찾기';
+      webState.curCat = webDefaultCat();
       const list = ig$('web-list');
       if(list){
         list.style.scrollBehavior = 'auto';
@@ -349,7 +352,7 @@
     // restore 시: curCat 유지 (restoreIntegratedState에서 setWebCat 호출)
     enterIntegratedView('web-view');
     initWebModule();
-    scheduleWebCatSync(webState.curCat || '⭐ 즐겨찾기');
+    scheduleWebCatSync(webState.curCat || webDefaultCat());
   };
 
   window.openTrailView = function(opts){
@@ -449,7 +452,7 @@
 
   function initWebModule(){
     if(webState.built){
-      scheduleWebCatSync(webState.curCat||'⭐ 즐겨찾기');
+      scheduleWebCatSync(webState.curCat||webDefaultCat());
       renderWebList();
       return;
     }
@@ -470,12 +473,12 @@
       btn.addEventListener('click', function(){ setWebCat(c); });
       wrap.appendChild(btn);
     });
-    scheduleWebCatSync(webState.curCat||'⭐ 즐겨찾기');
+    scheduleWebCatSync(webState.curCat||webDefaultCat());
     renderWebList();
   }
 
   function applyWebCatState(cat){
-    webState.curCat = cat || '⭐ 즐겨찾기';
+    webState.curCat = cat || webDefaultCat();
     const btns = document.querySelectorAll('#web-cats .web-cat-btn');
     if(!btns.length) return false;
     btns.forEach(btn => {
@@ -493,7 +496,7 @@
   }
 
   function keepWebActiveCatVisible(cat, behavior){
-    const activeCat = cat || webState.curCat || '⭐ 즐겨찾기';
+    const activeCat = cat || webState.curCat || webDefaultCat();
     const activeBtn = ig$('web-cat_' + activeCat) || document.querySelector('#web-cats .web-cat-btn.on');
     if(!activeBtn) return;
     try{
@@ -505,7 +508,7 @@
   }
 
   function scheduleWebCatSync(cat){
-    const nextCat = cat || webState.curCat || '⭐ 즐겨찾기';
+    const nextCat = cat || webState.curCat || webDefaultCat();
     applyWebCatState(nextCat);
     keepWebActiveCatVisible(nextCat, 'auto');
     requestAnimationFrame(function(){ applyWebCatState(nextCat); });
@@ -515,7 +518,7 @@
   function setWebCat(cat){
     // 모든 웹사이트 카테고리 버튼 클릭은 이전 스크롤/검색/복귀 상태를 리셋
     resetWebTransientState();
-    const nextCat = cat || '⭐ 즐겨찾기';
+    const nextCat = cat || webDefaultCat();
     // 주요기도문(prSwitchCat)처럼 먼저 활성색을 즉시 바꾸고, 같은 타이밍에 탭을 가운데로 이동
     applyWebCatState(nextCat);
     keepWebActiveCatVisible(nextCat, 'smooth');
@@ -535,7 +538,7 @@
     const wrap = ig$('web-list');
     const empty = ig$('web-empty');
     if(!wrap || !empty) return;
-    applyWebCatState(webState.curCat || '⭐ 즐겨찾기');
+    applyWebCatState(webState.curCat || webDefaultCat());
     Array.from(wrap.querySelectorAll('.web-card')).forEach(el => el.remove());
     const filtered = sortWebItemsForMyDiocese(webState.curCat==='⭐ 즐겨찾기' ? WEB_SITES.filter(s => wfHas(s.url)) : WEB_SITES.filter(s => s.cat===webState.curCat));
     const countEl = ig$('web-count');
