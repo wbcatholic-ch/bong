@@ -401,13 +401,14 @@ header{height:var(--header-h)!important;min-height:var(--header-h)!important;max
 </style>
 
 
-<!-- V2-117: 관구·교구 스타일 동기화 규칙
+<!-- V2-118: 관구·교구 스타일 동기화 규칙
   - 관구·교구는 별도 diocese.html 파일로 유지한다.
   - 단, 색상/글자/탭/카드/검색창/compact 기준은 메인 앱 style.css 기준을 따라간다.
+  - 큰 화면 기본 크기는 기존 관구·교구 표준(탭 52/40/15)을 유지하고, 축소는 갤럭시 일반 모델 compact 조건 안에서만 적용한다.
   - 이후 관구·교구만 별도 크기나 색을 덧씌우지 말고, 이 동기화 블록 안에서만 조정한다.
   - 기능 로직, 지도 데이터, 외부 링크, 탭 전환 로직은 변경하지 않는다.
 -->
-<style id="oai-diocese-main-app-style-sync-V2-117">
+<style id="oai-diocese-main-app-style-sync-V2-118">
 :root{
   --dio-main-header: #3F4752;
   --dio-main-header-dark: #2F3742;
@@ -431,14 +432,14 @@ header{height:var(--header-h)!important;min-height:var(--header-h)!important;max
   --sub: var(--dio-muted) !important;
   --dim: #8B95A1 !important;
   --r: 14px !important;
-  --tab-h: 48px !important;
-  --tab-btn-h: 36px !important;
-  --fs-tab: 13.8px !important;
+  --tab-h: 52px !important;
+  --tab-btn-h: 40px !important;
+  --fs-tab: 15px !important;
 }
 html,body{background:var(--dio-app-bg)!important;color:var(--dio-text)!important;font-family:'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif!important;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
 #main,#map-view,#search-view,#list-view{background:var(--dio-app-bg)!important;}
-.tab-bar{height:var(--tab-h)!important;min-height:var(--tab-h)!important;max-height:var(--tab-h)!important;padding:7px 10px!important;gap:6px!important;background:var(--dio-card-bg)!important;border-top:0!important;border-bottom:1px solid var(--dio-line)!important;box-shadow:0 2px 8px rgba(31,41,55,.04)!important;}
-.tab{height:var(--tab-btn-h)!important;min-height:var(--tab-btn-h)!important;max-height:var(--tab-btn-h)!important;border-radius:12px!important;padding:0 8px!important;background:var(--dio-card-soft)!important;color:var(--dio-main-header)!important;border:1.3px solid var(--dio-line)!important;font-size:calc(var(--fs-tab) * var(--dio-effective-font-scale,1))!important;font-weight:850!important;letter-spacing:-.035em!important;line-height:1.1!important;box-shadow:none!important;}
+.tab-bar{height:var(--tab-h)!important;min-height:var(--tab-h)!important;max-height:var(--tab-h)!important;padding:9px 14px!important;gap:8px!important;background:var(--dio-card-bg)!important;border-top:0!important;border-bottom:1px solid var(--dio-line)!important;box-shadow:0 2px 8px rgba(31,41,55,.04)!important;}
+.tab{height:var(--tab-btn-h)!important;min-height:var(--tab-btn-h)!important;max-height:var(--tab-btn-h)!important;border-radius:14px!important;padding:0 8px!important;background:var(--dio-card-soft)!important;color:var(--dio-main-header)!important;border:1.3px solid var(--dio-line)!important;font-size:calc(var(--fs-tab) * var(--dio-effective-font-scale,1))!important;font-weight:850!important;letter-spacing:-.035em!important;line-height:1.1!important;box-shadow:none!important;}
 .tab.on{background:var(--dio-main-header)!important;color:#fff!important;border-color:var(--dio-main-header)!important;box-shadow:0 3px 10px rgba(63,71,82,.20)!important;}
 #gw-bar{top:9px!important;left:9px!important;gap:5px!important;}
 .gb{min-height:32px!important;padding:0 11px!important;border-radius:999px!important;border-width:1.5px!important;font-size:calc(11.5px * var(--dio-effective-font-scale,1))!important;font-weight:850!important;background:rgba(255,255,255,.96)!important;box-shadow:0 2px 8px rgba(31,41,55,.08)!important;}
@@ -499,7 +500,7 @@ html,body{background:var(--dio-app-bg)!important;color:var(--dio-text)!important
   #list-view .lv-sec-bdg{min-width:76px!important;padding:5px 11px!important;font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
 }
 </style>
-<script id="oai-diocese-parent-style-sync-V2-117">
+<script id="oai-diocese-parent-style-sync-V2-118">
 (function(){
   function clean(v){ return String(v || '').trim(); }
   function parentVar(cs, names, fallback){

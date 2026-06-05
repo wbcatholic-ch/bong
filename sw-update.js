@@ -10,10 +10,10 @@
   // SW_BUILD_VERSION: SW 등록·캐시 키용 전체 버전 (sw.js CACHE_VERSION과 일치해야 함)
   // ★ 버전 업그레이드 시 두 값 모두 수정, sw.js CACHE_VERSION과 SW_BUILD_VERSION을 동일하게 맞출 것
   var APP_VERSION = 'V-2';
-  var SW_BUILD_VERSION = 'V2-117';
+  var SW_BUILD_VERSION = 'V2-118';
   window.APP_VERSION = APP_VERSION;
 
-  /* V2-117 정리:
+  /* V2-118 정리:
      백그라운드 복귀 화면 정책은 app.js의 장시간 복귀 컨트롤러가 전담한다.
      이 파일에서는 더 이상 visibilitychange/pageshow로 커버 이동, 자동 새로고침,
      조용한 안정화를 중복 실행하지 않는다.
