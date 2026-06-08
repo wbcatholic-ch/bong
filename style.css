@@ -1569,9 +1569,9 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #3F6F5A, #4F846C
   flex-shrink: 0;
   box-sizing: border-box;
   scrollbar-width: none;
-  background: #fffbf2;
-  border-top: 1px solid #ddd5c8;
-  border-bottom: 2px solid #ddd5c8;
+  background: #FFF9EF;
+  border-top: 1px solid rgba(183,121,31,.26);
+  border-bottom: 2px solid rgba(183,121,31,.32);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   -webkit-overflow-scrolling: touch;
@@ -1591,9 +1591,9 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #3F6F5A, #4F846C
   min-height: 40px;
   padding: 0 12px;
   border-radius: 10px;
-  border: 1.5px solid #1f2a44;
-  background: #f5f0e8;
-  color: #1f2a44;
+  border: 1.5px solid rgba(183,121,31,.55);
+  background: #fffdf7;
+  color: #1F2937;
   box-shadow: none;
   font-size: calc(15px * var(--app-inner-font-scale));
   font-weight: 700;
@@ -1622,26 +1622,28 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #3F6F5A, #4F846C
   color: #fff;
   border-color: transparent;
   font-weight: 800;
-  box-shadow: 0 2px 8px rgba(31,42,68,.28);
-  background: #0e1535;
+  box-shadow: 0 4px 12px rgba(143,30,30,.18);
+  background: #8F1D1D;
 }
 
 /* 기도문 탭 카테고리별 색상 */
-#prayer-tabs .pr-tab.on[data-cat="favorites"] { background: #1f2a44; }
-#prayer-tabs .pr-tab.on[data-cat="aim"]       { background: #1565c0; }
-#prayer-tabs .pr-tab.on[data-cat="basic"]     { background: #1e40af; }
-#prayer-tabs .pr-tab.on[data-cat="special"]   { background: #be185d; }
-#prayer-tabs .pr-tab.on[data-cat="etc"]       { background: #15803d; }
-#prayer-tabs .pr-tab.on[data-cat="bong1"]     { background: #475569; }
-#prayer-tabs .pr-tab.on[data-cat="bong2"]     { background: #7e22ce; }
-#prayer-tabs .pr-tab.on[data-cat="bong3"]     { background: #c2410c; }
-#prayer-tabs .pr-tab.on[data-cat="fasting"]   { background: #6b48ad; }
-#prayer-tabs .pr-tab.on[data-cat="liturgy"]   { background: #7b2d8b; }
-#prayer-tabs .pr-tab.on[data-cat="season"]    { background: #2e7d32; }
-#prayer-tabs .pr-tab.on[data-cat="mary"]      { background: #ad1457; }
-#prayer-tabs .pr-tab.on[data-cat="saints"]    { background: #c17900; }
-#prayer-tabs .pr-tab.on[data-cat="funeral"]   { background: #546e7a; }
-#prayer-tabs .pr-tab.on[data-cat="novena"]    { background: #1565c0; }
+#prayer-tabs .pr-tab.on[data-cat="favorites"] { background: #B7791F; }
+#prayer-tabs .pr-tab.on[data-cat="wyd"]       { background: #8F1D1D; }
+#prayer-tabs .pr-tab.on[data-cat="aim"]       { background: #8F1D1D; }
+#prayer-tabs .pr-tab.on[data-cat="basic"]     { background: #1F2937; }
+#prayer-tabs .pr-tab.on[data-cat="special"]   { background: #8F1D1D; }
+#prayer-tabs .pr-tab.on[data-cat="etc"]       { background: #1F2937; }
+#prayer-tabs .pr-tab.on[data-cat="bong1"]     { background: #1F2937; }
+#prayer-tabs .pr-tab.on[data-cat="bong2"]     { background: #8F1D1D; }
+#prayer-tabs .pr-tab.on[data-cat="bong3"]     { background: #8F1D1D; }
+#prayer-tabs .pr-tab.on[data-cat="bong4"]     { background: #1F2937; }
+#prayer-tabs .pr-tab.on[data-cat="fasting"]   { background: #8F1D1D; }
+#prayer-tabs .pr-tab.on[data-cat="liturgy"]   { background: #1F2937; }
+#prayer-tabs .pr-tab.on[data-cat="season"]    { background: #1F2937; }
+#prayer-tabs .pr-tab.on[data-cat="mary"]      { background: #8F1D1D; }
+#prayer-tabs .pr-tab.on[data-cat="saints"]    { background: #B7791F; }
+#prayer-tabs .pr-tab.on[data-cat="funeral"]   { background: #1F2937; }
+#prayer-tabs .pr-tab.on[data-cat="novena"]    { background: #8F1D1D; }
 
 /* 웹사이트 탭 카테고리별 색상 */
 #web-view .web-cat-btn.on[data-cat-color="전체"]    { background: #1a2d5a; }
@@ -1991,8 +1993,8 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #3F6F5A, #4F846C
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #fffbf2;
-  border-bottom: 1px solid #ddd5c8;
+  background: #FFF9EF;
+  border-bottom: 1px solid rgba(183,121,31,.30);
   flex-shrink: 0;
   scroll-margin-inline: 18px;
   transition: background .16s, color .16s, border-color .16s;
@@ -2040,7 +2042,7 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #3F6F5A, #4F846C
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding: 10px 12px calc(24px + env(safe-area-inset-bottom, 0));
-  background: #ede8e0;
+  background: #FFF9EF;
   position: relative;
   transform: none;
   will-change: auto;
@@ -2051,10 +2053,10 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #3F6F5A, #4F846C
 }
 .pr-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
 .pr-item {
-  background: #fffbf2;
-  border: 1px solid #ddd5c8;
-  border-left-width: 4px;
-  border-radius: 11px;
+  background: #FFFFFF;
+  border: 1px solid rgba(183,121,31,.34);
+  border-left-width: 5px;
+  border-radius: 14px;
   padding: 16px 14px;
   min-height: 68px;
   display: flex;
@@ -2063,17 +2065,17 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #3F6F5A, #4F846C
   gap: 10px;
   cursor: pointer;
   box-sizing: border-box;
-  box-shadow: 0 1px 4px rgba(80,60,30,.07);
+  box-shadow: 0 8px 18px rgba(31,41,55,.06);
 }
 .pr-item.app-pressing { transform: translateY(8px) scale(.974); filter: brightness(.94); transition: transform .16s, filter .16s; }
 .pr-item-left { display: flex; align-items: center; gap: 11px; flex: 1; min-width: 0; }
 .pr-icon-dot { flex: 0 0 var(--pr-icon-sz, 40px); width: var(--pr-icon-sz, 40px); height: var(--pr-icon-sz, 40px); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: var(--pr-icon-fs, 18px); }
-.pr-title { font-size: var(--pr-item-fs, 15px); font-weight: 600; color: #1a1a2e; line-height: 1.4; word-break: keep-all; flex: 1; min-width: 0; }
+.pr-title { font-size: var(--pr-item-fs, 15px); font-weight: 600; color: #1F2937; line-height: 1.4; word-break: keep-all; flex: 1; min-width: 0; }
 .pr-item-right { display: flex; align-items: center; gap: 7px; flex: 0 0 auto; }
 .pr-star { background: none; border: none; padding: 6px; min-width: 34px; min-height: 34px; cursor: pointer; color: #ccccdd; font-size: 16px; line-height: 1; transition: color .14s; }
 .pr-star.on { color: #f59e0b; }
-.pr-chevron { color: #b0a89e; font-size: 12px; }
-.pr-empty { text-align: center; padding: 44px 20px; color: #b0a89e; font-size: 14px; background: #fffbf2; border: 1px dashed #ddd5c8; border-radius: 11px; line-height: 1.9; }
+.pr-chevron { color: #B7791F; font-size: 12px; }
+.pr-empty { text-align: center; padding: 44px 20px; color: #7C6F61; font-size: 14px; background: #FFFFFF; border: 1px dashed rgba(183,121,31,.42); border-radius: 11px; line-height: 1.9; }
 
 /* 기도문 상세 */
 #prayer-detail {
@@ -2081,7 +2083,7 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #3F6F5A, #4F846C
   inset: 0;
   top: 0;
   z-index: 10;
-  background: #ede8e0;
+  background: #FFF9EF;
   transform: translateX(100%);
   transition: transform .27s cubic-bezier(.25,.46,.45,.94);
   overflow-y: auto;
@@ -2097,8 +2099,8 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #3F6F5A, #4F846C
 #prayer-detail-hd {
   position: sticky;
   top: 0;
-  background: #fffbf2;
-  border-bottom: 1px solid #ddd5c8;
+  background: #FFF9EF;
+  border-bottom: 1px solid rgba(183,121,31,.30);
   display: flex;
   align-items: center;
   padding: 10px 13px;
@@ -2109,7 +2111,7 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #3F6F5A, #4F846C
   gap: 9px;
   box-sizing: border-box;
   justify-content: flex-start;
-  color: #1a1a2e;
+  color: #1F2937;
   box-shadow: none;
 }
 #prayer-detail-hd .pr-font-ctrl { margin-left: auto; }
@@ -2122,11 +2124,11 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #3F6F5A, #4F846C
 }
 #prayer-detail-hd .pr-font-ctrl { margin-left: auto; }
 #prayer-detail-hd #pr-detail-star { margin-left: 6px; margin-right: 0; }
-.pr-back { background: none; border: none; width: 42px; height: 42px; border-radius: var(--oai-std-radius); display: flex; align-items: center; justify-content: center; color: #1f2a44; cursor: pointer; font-size: 28px; font-weight: 900; line-height: 1; }
+.pr-back { background: none; border: none; width: 42px; height: 42px; border-radius: var(--oai-std-radius); display: flex; align-items: center; justify-content: center; color: #1F2937; cursor: pointer; font-size: 28px; font-weight: 900; line-height: 1; }
 #prayer-detail-ttl { display: none; }
 #prayer-detail-body { padding: 16px 14px 36px; flex: 1 1 auto !important; min-height: 0 !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch !important; }
-.pr-content-card { background: #fffbf2; border: 1px solid #ddd5c8; border-radius: 13px; padding: 24px 18px; font-family: inherit; font-size: var(--pr-body-fs, 16px); line-height: 2.1; color: #111; font-weight: 500; box-shadow: 0 1px 4px rgba(80,60,30,.07); }
-.pr-body-title { margin: 0 0 18px; padding: 0 0 14px; border-bottom: 1px solid #e6dfd3; color: #1f2a44; font-size: calc(var(--pr-body-fs, 16px) * 1.08); font-weight: 800; line-height: 1.45; letter-spacing: -.03em; text-align: left; word-break: keep-all; }
+.pr-content-card { background: #FFFFFF; border: 1px solid rgba(183,121,31,.34); border-radius: 14px; padding: 24px 18px; font-family: inherit; font-size: var(--pr-body-fs, 16px); line-height: 2.1; color: #111; font-weight: 500; box-shadow: 0 8px 18px rgba(31,41,55,.06); }
+.pr-body-title { margin: 0 0 18px; padding: 0 0 14px; border-bottom: 1px solid rgba(183,121,31,.28); color: #8F1D1D; font-size: calc(var(--pr-body-fs, 16px) * 1.08); font-weight: 800; line-height: 1.45; letter-spacing: -.03em; text-align: left; word-break: keep-all; }
 .pr-content-card p { margin-bottom: 16px; word-break: keep-all; }
 .pr-content-card p:last-child { margin-bottom: 0; }
 .pr-symbol { color: #1565c0; font-weight: 700; }
