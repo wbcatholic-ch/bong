@@ -1929,7 +1929,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V3-86';
+const _PARISH_ASSET_VERSION='V3-87';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -2092,7 +2092,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V3-86';
+const _PRAYER_ASSET_VERSION='V3-87';
 let _prayerModuleLoadPromise=null;
 function _isPrayerModuleReady(){
   return typeof window.initPrayerView === 'function' &&
@@ -2385,7 +2385,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V3-86';
+const _SHRINE_ASSET_VERSION='V3-87';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -6453,7 +6453,8 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
         var active = document.activeElement || null;
         var focusedInput = !!(active && modal.contains(active) && /^(INPUT|TEXTAREA|SELECT)$/i.test(active.tagName || ''));
         var keyboardLikely = focusedInput || !!(myFaithStableHeight && visibleH && visibleH < myFaithStableHeight - 120) || !!(vv && Math.round(vv.offsetTop || 0) > 0);
-        if(myFaithStableHeight > 0) modal.style.setProperty('--my-faith-vh', myFaithStableHeight + 'px');
+        var modalH = visibleH || candidateH || myFaithStableHeight || 0;
+        if(modalH > 0) modal.style.setProperty('--my-faith-vh', modalH + 'px');
         if(visibleH > 0) modal.style.setProperty('--my-faith-visible-vh', visibleH + 'px');
         modal.classList.toggle('keyboard-open', keyboardLikely);
       }catch(e){ console.warn('[가톨릭길동무]', e); }
