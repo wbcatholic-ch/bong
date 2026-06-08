@@ -2049,26 +2049,28 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, #3F6F5A, #4F846C
   overflow-x: hidden;
   overscroll-behavior-x: none;
 }
-.pr-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.pr-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
 .pr-item {
   background: #fffbf2;
   border: 1px solid #ddd5c8;
   border-left-width: 4px;
   border-radius: 11px;
-  padding: 12px 13px;
+  padding: 16px 14px;
+  min-height: 68px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 9px;
+  gap: 10px;
   cursor: pointer;
+  box-sizing: border-box;
   box-shadow: 0 1px 4px rgba(80,60,30,.07);
 }
 .pr-item.app-pressing { transform: translateY(8px) scale(.974); filter: brightness(.94); transition: transform .16s, filter .16s; }
 .pr-item-left { display: flex; align-items: center; gap: 11px; flex: 1; min-width: 0; }
-.pr-icon-dot { flex: 0 0 var(--pr-icon-sz, 36px); width: var(--pr-icon-sz, 36px); height: var(--pr-icon-sz, 36px); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: var(--pr-icon-fs, 17px); }
+.pr-icon-dot { flex: 0 0 var(--pr-icon-sz, 40px); width: var(--pr-icon-sz, 40px); height: var(--pr-icon-sz, 40px); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: var(--pr-icon-fs, 18px); }
 .pr-title { font-size: var(--pr-item-fs, 15px); font-weight: 600; color: #1a1a2e; line-height: 1.4; word-break: keep-all; flex: 1; min-width: 0; }
 .pr-item-right { display: flex; align-items: center; gap: 7px; flex: 0 0 auto; }
-.pr-star { background: none; border: none; padding: 3px; cursor: pointer; color: #ccccdd; font-size: 16px; line-height: 1; transition: color .14s; }
+.pr-star { background: none; border: none; padding: 6px; min-width: 34px; min-height: 34px; cursor: pointer; color: #ccccdd; font-size: 16px; line-height: 1; transition: color .14s; }
 .pr-star.on { color: #f59e0b; }
 .pr-chevron { color: #b0a89e; font-size: 12px; }
 .pr-empty { text-align: center; padding: 44px 20px; color: #b0a89e; font-size: 14px; background: #fffbf2; border: 1px dashed #ddd5c8; border-radius: 11px; line-height: 1.9; }
