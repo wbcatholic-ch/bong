@@ -7,9 +7,11 @@
 ════════════════════════════════════════════════════════ */
 (function(){
 
-const PR_CATS = ['favorites','aim','basic','special','etc','bong1','bong2','bong3'];
+const PR_ALL_CATS = ['favorites','wyd','aim','basic','special','etc','bong1','bong2','bong3','bong4'];
+let PR_CATS = PR_ALL_CATS.slice();
 const PR_CAT_STYLE = {
   favorites:{ label:'⭐ 즐겨찾기', bg:'#FFF0DC', color:'#E8780C', icon:'⭐', accent:'#E8780C' },
+  wyd:      { label:'2027 WYD', bg:'#EEF2FF', color:'#4338CA', icon:'🌍', accent:'#4338CA' },
   aim:      { label:'대구대교구 인준', bg:'#E3F0FF', color:'#1565C0', icon:'✝️', accent:'#1565C0' },
   basic:    { label:'주요 기도', bg:'#EFF4FF', color:'#1E40AF', icon:'🏰', accent:'#1E40AF' },
   special:  { label:'특수 기도', bg:'#FFF0F5', color:'#BE185D', icon:'🙏', accent:'#BE185D' },
@@ -17,6 +19,7 @@ const PR_CAT_STYLE = {
   bong1:    { label:'위령기도', bg:'#F1F5F9', color:'#475569', icon:'🕊️', accent:'#475569' },
   bong2:    { label:'레지오 마리애', bg:'#FDF4FF', color:'#7E22CE', icon:'✨', accent:'#7E22CE' },
   bong3:    { label:'십자가의 길', bg:'#FFF7ED', color:'#C2410C', icon:'✞',  accent:'#C2410C' },
+  bong4:    { label:'묵주기도', bg:'#EFF6FF', color:'#2563EB', icon:'📿', accent:'#2563EB' },
 };
 
 // 기도문 목록에서 좌우 스와이프 직후 즐겨찾기 별 오작동을 막는 공통 차단 시간
@@ -27,8 +30,11 @@ let prTabsFirstAlign = true;
 // 기도문 데이터 (항목 추가 시 여기에 추가)
 const PR_DATA = { 
 
+'wyd':[
+{"id":"wyd_001","title":"2027 서울 세계청년대회 공식 기도문","url":"https://wydseoul.org/introduction/prayer","source":"2027 서울 WYD 지역조직위원회 공식기도문","linkType":"링크"}
+],
+
 'aim':[ 
-{"id":"aim_029","title":"2027 서울 세계청년대회 공식 기도문","url":"https://wydseoul.org/introduction/prayer","source":"2027 서울 WYD 지역조직위원회(공식기도문):","linkType":"링크"},
 {"id":"aim_028","title":"교황 선출을 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#28","source":"","linkType":"링크"},
 {"id":"aim_027","title":"프란치스코 교황의 영원한 안식을 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#27","source":"#NAME?","linkType":"링크"},
 {"id":"aim_024","title":"전례의 해 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer#24","source":"천주교 대구대교구장 조환길 타대오 대주교 인준(2024.11.5)","linkType":"링크"},
@@ -89,7 +95,7 @@ const PR_DATA = {
 {"id":"special_015","title":"위령성월","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#15","source":"","linkType":"링크"},
 {"id":"special_016","title":"예수 성심 호칭 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#16","source":"","linkType":"링크"},
 {"id":"special_017","title":"성모 호칭 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#17","source":"","linkType":"링크"},
-{"id":"special_018","title":"성 요셉 호칭 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#18","source":"","linkType":"링크"},
+{"id":"special_018","title":"복되신 동정 마리아의 배필 성 요셉 호칭 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#18","source":"","linkType":"링크"},
 {"id":"special_019","title":"103위 한국 성인 호칭 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#19","source":"","linkType":"링크"},
 {"id":"special_020","title":"성인 호칭 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#20","source":"","linkType":"링크"},
 {"id":"special_023","title":"124위 한국 순교 복자 호칭 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=special#23","source":"","linkType":"링크"}
@@ -130,23 +136,34 @@ const PR_DATA = {
 {"id":"etc_040","title":"세상을 떠난 형제, 친척, 친구, 은인을 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#40","source":"","linkType":"링크"},
 {"id":"etc_041","title":"새해를 맞이하며 바치는 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#41","source":"","linkType":"링크"},
 {"id":"etc_042","title":"가뭄과 장마 때의 바치는 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#42","source":"","linkType":"링크"},
+{"id":"etc_044","title":"성령 송가","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#44","source":"","linkType":"링크"},
+{"id":"etc_045","title":"농민을 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#45","source":"","linkType":"링크"},
+{"id":"etc_046","title":"생명을 위한 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#46","source":"","linkType":"링크"},
+{"id":"etc_047","title":"시노드 기도문","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#47","source":"","linkType":"링크"},
 {"id":"etc_043","title":"하느님 자비를 구하는 기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc","source":"- 2022년 3월 23일 주교회의 2022년 춘계 정기총회 승인 -","linkType":"링크"}
 
 ],
 
 'bong1':[ 
-{"id":"bong1_002","title":"위령기도","url":"https://maria.catholic.or.kr/mobile/prayer/prayer.asp?pgubun=10&ingId=33","source":"","linkType":"링크"}
+{"id":"bong1_002","title":"위령기도1(상장예식)","url":"https://maria.catholic.or.kr/mobile/prayer/prayer.asp?pgubun=10&ingId=33","source":"굿뉴스 기도문","linkType":"링크"},
+{"id":"bong1_001","title":"위령기도2 (짧은 위령기도)","url":"https://maria.catholic.or.kr/mobile/prayer/prayer.asp?pgubun=10&ingId=33","source":"굿뉴스 기도문","linkType":"링크"}
 
 ],
 
 'bong2':[ 
-{"id":"bong2_003","title":"레지오 마리애의 기도문","url":"https://maria.catholic.or.kr/mi_pr/prayer/prayer.asp?menu=prayer&pgubun=6&ingId=142","source":"","linkType":"링크"}
+{"id":"bong2_003","title":"레지오 마리애의 기도문 (시작기도)","url":"https://maria.catholic.or.kr/mi_pr/prayer/prayer.asp?menu=prayer&pgubun=6&ingId=142","source":"굿뉴스 기도문","linkType":"링크"},
+{"id":"bong2_002","title":"레지오 마리애의 기도문 (까떼나)","url":"https://maria.catholic.or.kr/mi_pr/prayer/prayer.asp?menu=prayer&pgubun=6&ingId=142","source":"굿뉴스 기도문","linkType":"링크"},
+{"id":"bong2_001","title":"레지오 마리애의 기도문 (마침기도)","url":"https://maria.catholic.or.kr/mi_pr/prayer/prayer.asp?menu=prayer&pgubun=6&ingId=142","source":"굿뉴스 기도문","linkType":"링크"}
 
 ],
 
 'bong3':[ 
 {"id":"bong3_001","title":"십자가의 길","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=etc#1","source":"","linkType":"링크"}
 
+],
+
+'bong4':[
+{"id":"rosary_001","title":"묵주기도","url":"https://www.daegu-archdiocese.or.kr/page/catholic_life.html?srl=prayer&category=basic#28","source":"가톨릭 주요 기도문","linkType":"링크"}
 ],
 
   'favorites': []
@@ -156,7 +173,7 @@ const PR_DATA = {
 // 기도문 기능 전용 상태를 별도 객체로 분리합니다.
 // 기존 코드 호환을 위해 레거시 변수명을 getter/setter로 연결합니다.
 const PrayerState = {
-  curCat:    'aim',  // 현재 선택된 카테고리 키
+  curCat:    'wyd',  // 현재 선택된 카테고리 키
   favorites: [],     // 즐겨찾기 기도문 ID 배열
   fontIdx:   3,      // 글자 크기 인덱스
   inited:    false,  // 초기화 여부
@@ -229,7 +246,49 @@ window.prAdjustFont = function(delta){
 };
 window.prApplyFont = prApplyFont;
 
+function prIsDaeguBeliever(){
+  try{
+    return String(localStorage.getItem('oai_my_diocese_name') || '').trim() === '대구대교구';
+  }catch(_e){
+    return false;
+  }
+}
+
+function prVisibleDataCats(){
+  const cats = ['wyd'];
+  if(prIsDaeguBeliever()) cats.push('aim');
+  return cats.concat(['basic','special','etc','bong1','bong2','bong3','bong4']);
+}
+
+function prVisibleFavoriteCount(){
+  if(!Array.isArray(prFavorites) || !prFavorites.length) return 0;
+  const visibleIds = new Set();
+  prVisibleDataCats().forEach(function(k){
+    (PR_DATA[k] || []).forEach(function(p){ if(p && p.id) visibleIds.add(p.id); });
+  });
+  return prFavorites.filter(function(id){ return visibleIds.has(id); }).length;
+}
+
+function prUpdateVisibleCats(){
+  const cats = [];
+  if(prVisibleFavoriteCount() > 0) cats.push('favorites');
+  prVisibleDataCats().forEach(function(k){ cats.push(k); });
+  PR_CATS = cats;
+}
+
+function prDefaultCat(){
+  prUpdateVisibleCats();
+  if(PR_CATS.includes('favorites') && prVisibleFavoriteCount() > 0) return 'favorites';
+  return PR_CATS.includes('wyd') ? 'wyd' : (PR_CATS[0] || 'basic');
+}
+
+function prEnsureCurrentCat(){
+  prUpdateVisibleCats();
+  if(!PR_CATS.includes(prCurCat)) prCurCat = prDefaultCat();
+}
+
 function prBuildTabs(){
+  prUpdateVisibleCats();
   const wrap = prG('prayer-tabs');
   if(!wrap) return;
   wrap.innerHTML='';
@@ -262,6 +321,7 @@ function prApplyTabColors(){
 // V3-S-1: 주요기도문 탭 표시 안전장치.
 // 일부 화면 전환/캐시 조합에서 목록은 렌더링되지만 탭 컨테이너가 비어 보이는 경우를 막는다.
 function prEnsureTabsVisible(){
+  prEnsureCurrentCat();
   const wrap = prG('prayer-tabs');
   if(!wrap) return;
   if(wrap.children.length < PR_CATS.length) prBuildTabs();
@@ -277,6 +337,8 @@ function prEnsureTabsVisible(){
 }
 window.prEnsureTabsVisible = prEnsureTabsVisible;
 function prSwitchCat(cat){
+  prEnsureCurrentCat();
+  if(!PR_CATS.includes(cat)) cat = prDefaultCat();
   prCurCat = cat;
   const inp = prG('prayer-search-inp');
   const listView = prG('prayer-list-view');
@@ -293,6 +355,9 @@ function prSwitchCat(cat){
 }
 
 window.prRenderList = function(){
+  var currentCats = PR_CATS.join('|');
+  prEnsureCurrentCat();
+  if(currentCats !== PR_CATS.join('|')) prBuildTabs();
   const ul = prG('pr-list-ul');
   if(!ul) return;
   ul.innerHTML = '';
@@ -434,7 +499,7 @@ window.prRenderList = function(){
 
 function prGetCat(id){
   for(const k in PR_DATA){ if((PR_DATA[k]||[]).find(p=>p.id===id)) return k; }
-  return 'aim';
+  return 'wyd';
 }
 
 window.prToggleFav = function(id, e){
@@ -695,6 +760,7 @@ window.prCloseDetail = function(opts){
 window.prSwitchCat = prSwitchCat;
 window.prOpenDetail = prOpenDetail;
 window.prOpenOfficialPrayer = prOpenOfficialPrayer;
+window.prRefreshVisibleCats = function(){ prEnsureCurrentCat(); prBuildTabs(); prRenderList(); };
 window.prCloseDetail = window.prCloseDetail;
 
 /* ── 기도문 좌우 스와이프 (순환) — 웹사이트 기준 감도와 동일화 */
@@ -707,7 +773,7 @@ window.prCloseDetail = window.prCloseDetail;
   var SWIPE_BLOCK_MS = 700;
   var horizontalLocked = false;
 
-  function getIdx(cat) { return PR_CATS.indexOf(cat); }
+  function getIdx(cat) { prEnsureCurrentCat(); return PR_CATS.indexOf(cat); }
   function blockFavAfterSwipe(){ prSwipeBlockUntil = Date.now() + SWIPE_BLOCK_MS; }
   function isHorizontalSwipe(dx, dy){
     return Math.abs(dx) >= THRESHOLD && Math.abs(dx) >= Math.abs(dy) * HORIZONTAL_RATIO;
@@ -754,7 +820,7 @@ window.prCloseDetail = window.prCloseDetail;
 
 window.initPrayerView = function(){
   prLoadPrefs();
-  prCurCat = (prFavorites && prFavorites.length) ? 'favorites' : 'aim';
+  prCurCat = prDefaultCat();
   prBuildTabs();
   prApplyFont();
   prEnsureTabsVisible();
