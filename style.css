@@ -4917,19 +4917,24 @@ html.pr-external-guide-active.oai-stability-veil::after {
 
 
 /* ============================================================
-   V3-87: 커버 작업줄/WebView 스타일 조정 + 나의 신앙생활 스크롤 보정
+   V3-88: 커버 작업줄 간격/비율 정리
+   - 카테고리 박스 사이 간격과 작업줄 위쪽 간격을 같은 기준으로 통일
+   - 나의 신앙생활/새로고침을 카테고리 박스처럼 2등분 가로 비율로 정리
    ============================================================ */
+#cover #cover-main-block {
+  gap: clamp(5px, calc(var(--cover-vh, 1vh) * 0.82), 8px) !important;
+}
 #cover #cover-action-row.cover-action-single {
   display: grid !important;
-  grid-template-columns: minmax(0, 1fr) clamp(118px, 32vw, 150px) !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   align-items: stretch !important;
   justify-content: stretch !important;
-  gap: 8px !important;
+  gap: clamp(5px, 1.4vw, 9px) !important;
   width: 100% !important;
   height: 46px !important;
   min-height: 46px !important;
   max-height: 46px !important;
-  margin: clamp(4px, calc(var(--cover-vh, 1vh) * .72), 7px) 0 0 !important;
+  margin: 0 !important;
   padding: 0 !important;
   flex: 0 0 46px !important;
   box-sizing: border-box !important;
@@ -5020,7 +5025,8 @@ html.app-active #cover-diocese-box { display: none !important; }
   -webkit-overflow-scrolling: touch !important;
 }
 @media (max-width:370px){
-  #cover #cover-action-row.cover-action-single{height:44px !important;min-height:44px !important;max-height:44px !important;flex-basis:44px !important;gap:7px !important;grid-template-columns:minmax(0,1fr) clamp(112px,31vw,138px) !important;}
+  #cover #cover-main-block{gap:clamp(2px, calc(var(--cover-vh, 1vh) * 0.5), 4px) !important;}
+  #cover #cover-action-row.cover-action-single{height:44px !important;min-height:44px !important;max-height:44px !important;flex-basis:44px !important;gap:clamp(5px,1.4vw,9px) !important;grid-template-columns:repeat(2,minmax(0,1fr)) !important;}
   #cover #cover-action-row.cover-action-single #cover-diocese-box,
   #cover #cover-action-row.cover-action-single #cover-update-box,
   #cover .cover-diocese-btn,
