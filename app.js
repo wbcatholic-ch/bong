@@ -1918,7 +1918,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V3-83';
+const _PARISH_ASSET_VERSION='V3-84';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -2081,7 +2081,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V3-83';
+const _PRAYER_ASSET_VERSION='V3-84';
 let _prayerModuleLoadPromise=null;
 function _isPrayerModuleReady(){
   return typeof window.initPrayerView === 'function' &&
@@ -2374,7 +2374,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V3-83';
+const _SHRINE_ASSET_VERSION='V3-84';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -6300,6 +6300,74 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
     on(refreshBtn, 'dragstart', preventNativePressMenu, {capture:true});
   })();
   on('qna-cover-btn',  'click', function() { openQnaView(); });
+
+  // ── 커버 메뉴 ──
+  (function bindCoverMenu(){
+    var modal = document.getElementById('cover-menu-modal');
+    if(!modal) return;
+    function openMenu(){
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden','false');
+      try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+    }
+    function closeMenu(){
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden','true');
+      try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+    }
+    window.closeCoverMenuPopup = closeMenu;
+    window.isCoverMenuPopupOpen = function(){
+      return !!(modal && modal.classList && modal.classList.contains('show'));
+    };
+    on('cover-menu-btn', 'click', function(e){
+      if(e && e.preventDefault) e.preventDefault();
+      openMenu();
+    });
+    on('cover-menu-close', 'click', function(e){
+      if(e && e.preventDefault) e.preventDefault();
+      closeMenu();
+    });
+    modal.addEventListener('click', function(e){
+      if(e && e.target && e.target.getAttribute && e.target.getAttribute('data-cover-menu-close') === 'true') closeMenu();
+    });
+    on('cover-menu-guide-btn', 'click', function(e){
+      if(e && e.preventDefault) e.preventDefault();
+      closeMenu();
+      try{
+        if(window.openGuideManual) window.openGuideManual();
+        else if(typeof openGuideManual === 'function') openGuideManual();
+      }catch(err){ console.warn('[가톨릭길동무]', err); }
+    });
+    function markInternalPrivacyNavigation(){
+      try{
+        sessionStorage.setItem('oai_internal_return_no_effect_once','1');
+        sessionStorage.setItem('oai_internal_return_no_effect_until', String((Date.now ? Date.now() : new Date().getTime()) + 7000));
+        sessionStorage.setItem('oai_internal_page_nav','privacy');
+        sessionStorage.removeItem('oai_external_nav_started_at');
+        sessionStorage.removeItem('oai_external_nav_pagehide');
+        sessionStorage.removeItem('oai_external_nav_kind');
+        sessionStorage.removeItem('oai_external_nav_pending');
+        sessionStorage.removeItem('oai_external_nav_hold_until');
+        sessionStorage.removeItem('oai_external_nav_force_release_at');
+        sessionStorage.removeItem('oai_refresh_veil_until');
+        sessionStorage.removeItem('oai_refresh_veil_hold_ms');
+        sessionStorage.removeItem('oai_refresh_veil_reason');
+        sessionStorage.removeItem('oai_refresh_veil_visible_until');
+      }catch(_e){}
+    }
+    on('cover-menu-qna-btn', 'click', function(e){
+      if(e && e.preventDefault) e.preventDefault();
+      closeMenu();
+      try{ openQnaView(); }catch(err){ console.warn('[가톨릭길동무]', err); }
+    });
+    on('cover-menu-privacy-link', 'click', function(){
+      markInternalPrivacyNavigation();
+      closeMenu();
+    });
+    document.addEventListener('keydown', function(e){
+      if(e && e.key === 'Escape' && modal.classList.contains('show')) closeMenu();
+    });
+  })();
   on('pwa-install-btn','click', function() { triggerPwaInstall(); });
 
   // ── 탭바 ──

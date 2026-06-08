@@ -99,12 +99,16 @@
     }catch(e){ console.warn('[가톨릭길동무]', e); return false; }
   }
   function isGuideModalOpen(){
-    try{ return !!document.querySelector('.guide-modal.show') || isRefreshDialogOpen(); }catch(e){ return false; }
+    try{ return !!document.querySelector('.guide-modal.show') || !!document.querySelector('.cover-menu-modal.show') || isRefreshDialogOpen(); }catch(e){ return false; }
   }
   function closeGuideModals(){
     try{
       var rd = $b('oai-refresh-content-dialog');
       if(rd && rd.parentNode){ rd.parentNode.removeChild(rd); return; }
+      if(typeof window.closeCoverMenuPopup === 'function' && typeof window.isCoverMenuPopupOpen === 'function' && window.isCoverMenuPopupOpen()){
+        window.closeCoverMenuPopup();
+        return;
+      }
       var mq = $b('mass-quick-modal');
       if(mq && mq.classList.contains('show') && typeof window.closeMassQuickMenu === 'function'){
         var fromPrayer = false;
@@ -1139,10 +1143,14 @@
     try{ return !!document.getElementById('oai-refresh-content-dialog'); }catch(e){ return false; }
   }
   function isGuideModalOpen(){
-    try{ return !!document.querySelector('.guide-modal.show') || isRefreshDialogOpen(); }catch(e){ return false; }
+    try{ return !!document.querySelector('.guide-modal.show') || !!document.querySelector('.cover-menu-modal.show') || isRefreshDialogOpen(); }catch(e){ return false; }
   }
   function closeGuideModals(){
     try{
+      if(typeof window.closeCoverMenuPopup === 'function' && typeof window.isCoverMenuPopupOpen === 'function' && window.isCoverMenuPopupOpen()){
+        window.closeCoverMenuPopup();
+        return;
+      }
       var mq = $('mass-quick-modal');
       if(mq && mq.classList.contains('show') && typeof window.closeMassQuickMenu === 'function'){
         window.closeMassQuickMenu();

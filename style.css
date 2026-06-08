@@ -2570,6 +2570,160 @@ html.app-active #cover-action-row { display: none; }
 #cover #cover-guide-btn:active { transform: scale(.985); }
 html.app-active #cover-guide-btn { display: none; }
 
+
+/* 커버 메뉴 버튼 */
+#cover #cover-menu-btn.cover-menu-btn {
+  position: absolute;
+  left: 12px;
+  top: calc(env(safe-area-inset-top, 0px) + 12px);
+  z-index: 82;
+  height: 36px;
+  min-height: 36px;
+  max-width: min(142px, calc(50vw - 18px));
+  padding: 0 13px;
+  border: 1.5px solid rgba(31,42,68,.16);
+  border-radius: 999px;
+  background: #fffbf2;
+  color: #1f2a44;
+  font-family: inherit;
+  font-size: calc(12px * var(--app-font-scale));
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 6px 14px rgba(31,42,68,.10);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  touch-action: manipulation;
+}
+#cover #cover-menu-btn.cover-menu-btn:active { transform: scale(.985); }
+html.app-active #cover-menu-btn { display: none !important; }
+#cover #cover-menu-btn .cover-menu-label {
+  display: inline-block;
+  white-space: nowrap;
+  letter-spacing: -.03em;
+}
+#cover #cover-menu-btn .cover-menu-hamburger {
+  width: 15px;
+  height: 12px;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 0 0 auto;
+}
+#cover #cover-menu-btn .cover-menu-hamburger span {
+  display: block;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+/* 커버 메뉴 팝업 */
+.cover-menu-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10070;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  box-sizing: border-box;
+}
+.cover-menu-modal.show { display: flex; }
+.cover-menu-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(14,21,53,.42);
+  backdrop-filter: blur(2px);
+}
+.cover-menu-panel {
+  position: relative;
+  width: min(370px, calc(100vw - 32px));
+  min-height: 330px;
+  padding: 22px 18px 20px;
+  border-radius: 22px;
+  background: #fffaf2;
+  border: 1px solid rgba(212,170,106,.42);
+  box-shadow: 0 22px 52px rgba(14,21,53,.28);
+  color: #1f2a44;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+.cover-menu-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.cover-menu-title {
+  font-size: calc(20px * var(--app-font-scale));
+  font-weight: 950;
+  line-height: 1.2;
+  letter-spacing: -.04em;
+}
+.cover-menu-subtitle {
+  margin-top: 4px;
+  font-size: calc(12px * var(--app-font-scale));
+  font-weight: 800;
+  color: #7a5d2b;
+  line-height: 1.35;
+}
+.cover-menu-close {
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 999px;
+  background: #1f2a44;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1;
+  font-family: inherit;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+.cover-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.cover-menu-item {
+  width: 100%;
+  min-height: 62px;
+  padding: 0 16px;
+  border: 1px solid rgba(31,42,68,.10);
+  border-radius: 16px;
+  background: #fff;
+  color: #1f2a44;
+  box-shadow: 0 8px 20px rgba(31,42,68,.08);
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  text-decoration: none;
+  font-family: inherit;
+  font-size: calc(16px * var(--app-font-scale));
+  font-weight: 900;
+  line-height: 1.15;
+  cursor: pointer;
+  box-sizing: border-box;
+  touch-action: manipulation;
+}
+.cover-menu-item:active { transform: translateY(1px); }
+.cover-menu-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: #f5ead4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  flex: 0 0 auto;
+}
+.cover-menu-text { flex: 1 1 auto; text-align: left; }
+
 /* 커버 종료 토스트 */
 #oai-cover-exit-toast {
   position: fixed;
@@ -3258,6 +3412,7 @@ html.oai-font-global #region-body .dio-hd { font-size: calc(17px * var(--app-inn
   #cover #cover-update-btn { min-height: 32px; height: 32px; font-size: calc(10.2px * var(--app-font-scale)); padding: 0 10px; }
   #cover #cover-update-hint { font-size: 8.5px; }
   #cover #cover-guide-btn { height: 34px; min-height: 34px; font-size: calc(10.5px * var(--app-font-scale)); padding: 0 10px; }
+  #cover #cover-menu-btn.cover-menu-btn { height: 34px; min-height: 34px; font-size: calc(10.5px * var(--app-font-scale)); padding: 0 11px; }
   .guide-panel { max-height: 90dvh; padding: 16px 14px 14px; }
   html.ios-kakao-inapp #cover .ios-safari-banner { top: 49%; transform: translateY(-36%); padding: 20px 16px 16px; gap: 10px; border-radius: 24px; }
 }
