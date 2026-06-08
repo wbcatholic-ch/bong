@@ -1272,7 +1272,7 @@ function syncCoverUpdateVersionState(){
     if(!current && marker) current = String(marker.textContent || '').trim();
     if(!current) current = target;
     var mismatch = current !== target;
-    btn.textContent = mismatch ? (target + ' 업데이트 필요') : (target + ' 새로고침');
+    btn.textContent = mismatch ? '업데이트 필요' : '새로고침';
     box.classList.toggle('update-needed', mismatch);
     if(marker) marker.textContent = current;
   }catch(e){ console.warn('[가톨릭길동무]', e); }
@@ -1929,7 +1929,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V3-85';
+const _PARISH_ASSET_VERSION='V3-86';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -2092,7 +2092,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V3-85';
+const _PRAYER_ASSET_VERSION='V3-86';
 let _prayerModuleLoadPromise=null;
 function _isPrayerModuleReady(){
   return typeof window.initPrayerView === 'function' &&
@@ -2385,7 +2385,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V3-85';
+const _SHRINE_ASSET_VERSION='V3-86';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -6489,7 +6489,7 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
     function smallButton(label, fn){ var b=document.createElement('button'); b.type='button'; b.className='my-faith-small-btn'; b.textContent=label; b.addEventListener('click', function(e){ if(e&&e.preventDefault)e.preventDefault(); fn&&fn(); }); return b; }
     function appendMyFaithPrivacyNote(){ var note=document.createElement('div'); note.className='my-faith-inline-privacy-note'; note.textContent='선택한 교구와 본당 정보는 이 기기 안에만 저장되며, 외부로 수집되거나 전송되지 않습니다.'; body.appendChild(note); }
     function appendMyFaithConfirmButton(){ var wrap=document.createElement('div'); wrap.className='my-faith-inline-confirm'; var ok=document.createElement('button'); ok.type='button'; ok.className='my-faith-confirm-btn'; ok.textContent='확인'; ok.addEventListener('click', function(e){ if(e&&e.preventDefault)e.preventDefault(); closeModal(); }); wrap.appendChild(ok); body.appendChild(wrap); }
-    function settleMyFaithHomeScroll(){ try{ if(!body || !body.classList.contains('my-faith-home-list-body')) return; body.scrollTop=0; setTimeout(function(){ try{ if((body.scrollHeight||0)-(body.clientHeight||0) <= 42) body.classList.add('my-faith-no-scroll'); else body.classList.remove('my-faith-no-scroll'); }catch(_e){} },120); }catch(e){ console.warn('[가톨릭길동무]', e); } }
+    function settleMyFaithHomeScroll(){ try{ if(!body || !body.classList.contains('my-faith-home-list-body')) return; body.scrollTop=0; body.classList.remove('my-faith-no-scroll'); setTimeout(function(){ try{ body.classList.remove('my-faith-no-scroll'); }catch(_e){} },120); }catch(e){ console.warn('[가톨릭길동무]', e); } }
 
     function renderHome(){
       var name = selectedName(); var info = name ? DIO_INFO[name] : null; var parish = selectedParish();
