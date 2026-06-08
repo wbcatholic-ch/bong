@@ -375,7 +375,7 @@ window.prRenderList = function(){
     const isFav = prFavorites.includes(prayer.id);
     const li = document.createElement('li');
     li.className = 'pr-item';
-    li.style.borderLeftColor = '#8F1D1D';
+    li.style.borderLeftColor = st.accent;
     li.innerHTML = '<div class="pr-item-left">'+
       '<div class="pr-icon-dot" style="background:'+st.bg+';color:'+st.color+'">'+st.icon+'</div>'+
       '<div class="pr-title">'+prayer.title+'</div>'+
