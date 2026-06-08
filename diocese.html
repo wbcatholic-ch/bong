@@ -35,15 +35,15 @@
   --r:12px;
   /* ── 치수 변수 ── */
   --header-h:   70px;
-  --tab-h:      52px;
+  --tab-h:      55px;
   --tab-btn-h:  40px;
   --icon-size:  35px;
   --icon-r:     12px;
   --icon-fs:    15px;
   /* ── 글자 크기 변수 ── */
-  --fs-header:  18px;
+  --fs-header:  22px;
   --fs-tab:     15px;
-  --fs-sub:     12px;
+  --fs-sub:     10px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;overflow:hidden;}
@@ -113,8 +113,6 @@ header{flex-shrink:0;background:var(--d);border-bottom:none;z-index:30;
 .dd{font-size:11px;color:#555;padding:2px 0;border-bottom:.5px solid #f5f5f5;line-height:1.5;}
 .c-btn{display:flex;align-items:center;justify-content:center;gap:5px;font-size:12px;
   font-weight:500;color:white;border-radius:7px;padding:7px;border:none;width:100%;text-decoration:none;cursor:pointer;}
-.c-action-group{display:flex;flex-direction:column;gap:6px;}
-.c-btn.c-priest-btn{background:#0F766E!important;}
 .c-nurl{font-size:11px;color:#ccc;text-align:center;padding:3px 0;}
 
 /* ── 관구 버튼 ── */
@@ -133,7 +131,7 @@ header{flex-shrink:0;background:var(--d);border-bottom:none;z-index:30;
 /* ── 검색 뷰 ── */
 #search-view{position:absolute;inset:0;overflow-y:auto;padding:16px;display:none;background:var(--bg);}
 #search-view.on{display:block;}
-.ss{position:sticky;top:0;background:var(--bg);padding-bottom:12px;z-index:10;}
+.ss{position:sticky;top:0;background:var(--bg);padding:16px 16px 12px;margin:-16px -16px 0;z-index:10;}
 .sr{display:flex;gap:8px;}
 #si{flex:1;padding:0 14px;height:44px;border:1.5px solid var(--bdr);border-radius:10px;
   font-size:15px;font-family:inherit;background:var(--card);outline:none;color:var(--tx);}
@@ -141,7 +139,7 @@ header{flex-shrink:0;background:var(--d);border-bottom:none;z-index:30;
 #sb{padding:0 18px;height:44px;background:var(--d);color:white;border:none;border-radius:10px;
   font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;}
 #sb:hover{opacity:.88;}
-.sh{font-size:11px;color:var(--dim);margin-top:6px;line-height:1.6;}
+.sh{font-size:11px;color:#111827;margin-top:6px;line-height:1.6;font-weight:600;}
 #sres{margin-top:4px;}
 .se{text-align:center;padding:36px 0;color:var(--dim);font-size:13px;}
 /* 검색 결과 카드 — 기도문 .card 구조 적용 */
@@ -197,12 +195,6 @@ header{flex-shrink:0;background:var(--d);border-bottom:none;z-index:30;
 .lv-foot{border-top:1px solid #EDE8E2;padding:9px 14px;display:flex;align-items:center;justify-content:space-between;background:#FAF8F4;}
 .lv-url{font-size:12px;color:var(--d);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;}
 .lv-arr{font-size:15px;color:var(--dim);flex-shrink:0;margin-left:6px;}
-.lv-priest-link{flex-shrink:0;margin-left:8px;border:0;border-radius:7px;background:#0F766E;color:#fff;font-size:11px;font-weight:800;padding:5px 8px;font-family:inherit;}
-
-/* V2-21: 관구·교구지도 나의 교구 표시 */
-.lv-card.my-diocese-card{border-color:#B7791F;box-shadow:0 2px 12px rgba(183,121,31,.16);}
-.lv-my-diocese-badge{display:inline-flex;align-items:center;justify-content:center;margin-left:8px;padding:3px 10px;border-radius:999px;background:#FFF4D6;border:1.5px solid rgba(183,121,31,.46);color:#8A5A12;font-size:11.5px;font-weight:950;line-height:1.2;letter-spacing:-.03em;vertical-align:2px;white-space:nowrap;}
-.c-my-diocese-badge{display:none;margin-top:6px;padding:3px 8px;border-radius:999px;background:rgba(255,255,255,.94);border:1px solid rgba(183,121,31,.38);color:#1F2A44;font-size:10px;font-weight:900;line-height:1.2;letter-spacing:-.03em;box-shadow:0 2px 6px rgba(0,0,0,.08);}
 
 
 @media(display-mode:standalone){
@@ -250,22 +242,22 @@ body > header{display:none!important;visibility:hidden!important;height:0!import
 
 html.oai-dio-external-stabilize *,
 html.oai-dio-external-return *{transition:none!important;animation:none!important;scroll-behavior:auto!important;}
-/* V3-S: 부모 앱에서 복귀 상태를 복원하므로 iframe 자체 전체 덮개는 만들지 않는다. */
+/* V3: 부모 앱에서 복귀 상태를 복원하므로 iframe 자체 전체 덮개는 만들지 않는다. */
 
 </style>
 <style id="oai-diocese-tab-standard-20260504">
 /* 관구교구 헤더 아래 탭 버튼 표준화 + 글자 크기 조절(지도 제외) */
 :root{
   --diocese-font-scale:1;--dio-font-scale:1;--dio-effective-font-scale:calc(var(--dio-font-scale,1) * var(--ios-dio-font-scale,1));--diocese-effective-font-scale:calc(var(--diocese-font-scale,1) * var(--ios-dio-font-scale,1));}
-.tab-bar{height:52px!important;padding:9px 14px!important;gap:8px!important;background:#FFFBF2!important;border-top:0!important;border-bottom:1px solid #DDD5C8!important;align-items:center!important;}
-.tab{height:40px!important;min-height:40px!important;max-height:40px!important;border-radius:14px!important;font-size:15px!important;font-weight:800!important;background:#F8FAFC!important;color:#475569!important;border:1.5px solid #dde3ee!important;display:flex!important;align-items:center!important;justify-content:center!important;}
+.tab-bar{height:55px!important;padding:8px 10px!important;gap:8px!important;background:#FFFBF2!important;border-top:0!important;border-bottom:1px solid #DDD5C8!important;align-items:center!important;}
+.tab{height:40px!important;border-radius:12px!important;font-size:calc(15px * var(--dio-effective-font-scale,1))!important;font-weight:800!important;background:#F8FAFC!important;color:#475569!important;border:1.5px solid #dde3ee!important;display:flex!important;align-items:center!important;justify-content:center!important;}
 .tab.on{background:#1F2A44!important;color:#fff!important;border-color:#1F2A44!important;box-shadow:0 3px 10px rgba(31,42,68,.22)!important;}
 
 
 
 
 
-#search-view #si,#search-view #sb{font-size:15px!important;}
+#search-view #si,#search-view #sb{font-size:calc(15px * var(--dio-effective-font-scale,1))!important;}
 #search-view .sh{font-size:calc(11px * var(--dio-effective-font-scale,1))!important;}
 #search-view .se{font-size:calc(13px * var(--dio-effective-font-scale,1))!important;}
 #search-view .sl{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
@@ -273,11 +265,11 @@ html.oai-dio-external-return *{transition:none!important;animation:none!importan
 #search-view .sd{font-size:calc(16px * var(--dio-effective-font-scale,1))!important;}
 #search-view .sg{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
 #search-view .si-r-url{font-size:calc(11px * var(--dio-effective-font-scale,1))!important;}
-#search-view .si-r-arr{font-size:15px!important;}
+#search-view .si-r-arr{font-size:calc(15px * var(--dio-effective-font-scale,1))!important;}
 #search-view .sot{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
 #search-view .sod{font-size:calc(13px * var(--dio-effective-font-scale,1))!important;}
 #search-view .sodd{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
-#list-view .lv-sec-bdg{font-size:15px!important;}
+#list-view .lv-sec-bdg{font-size:calc(15px * var(--dio-effective-font-scale,1))!important;}
 #list-view .lv-sec-cnt{font-size:calc(14px * var(--dio-effective-font-scale,1))!important;}
 #list-view .lv-bdg{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
 #list-view .lv-op{font-size:calc(11.5px * var(--dio-effective-font-scale,1))!important;}
@@ -287,7 +279,7 @@ html.oai-dio-external-return *{transition:none!important;animation:none!importan
 #list-view .lv-parish-count b{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
 #list-view .lv-parish-count span{font-size:calc(7px * var(--dio-effective-font-scale,1))!important;}
 #list-view .lv-url{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
-#list-view .lv-arr{font-size:15px!important;}
+#list-view .lv-arr{font-size:calc(15px * var(--dio-effective-font-scale,1))!important;}
 @media(max-width:360px){}
 </style>
 
@@ -316,8 +308,8 @@ html.oai-dio-returning #map-view.on,html.oai-dio-returning #list-view.on,html.oa
 <style id="oai-ios-ui-density-v22">
 /* iPhone 관구·교구 iframe 내부 UI 밀도 보정 */
 html.ios-device{--ios-dio-ui-scale:.96;}
-html.ios-device .tab-bar{height:52px!important;padding:9px 14px!important;gap:8px!important;align-items:center!important;}
-html.ios-device .tab{height:40px!important;min-height:40px!important;max-height:40px!important;border-radius:14px!important;font-size:15px!important;line-height:1.1!important;}
+html.ios-device .tab-bar{height:46px!important;padding:7px 10px!important;gap:6px!important;align-items:center!important;}
+html.ios-device .tab{height:32px!important;min-height:32px!important;border-radius:10px!important;font-size:calc(14px * var(--dio-effective-font-scale,1))!important;line-height:1!important;}
 html.ios-device #gw-bar{gap:6px!important;padding:7px 9px!important;}
 html.ios-device .gb{min-height:34px!important;padding:0 10px!important;border-radius:11px!important;}
 html.ios-device #card{width:170px!important;border-radius:13px!important;}
@@ -326,7 +318,7 @@ html.ios-device .c-bd{padding:10px 13px 12px!important;}
 html.ios-device .c-x{width:26px!important;height:26px!important;font-size:18px!important;}
 html.ios-device .c-dtbtn,
 html.ios-device .c-btn{min-height:38px!important;border-radius:10px!important;}
-html.ios-device #search-view .ss{padding:10px 11px!important;}
+html.ios-device #search-view .ss{padding:10px 11px!important;margin:-16px -16px 0!important;background:var(--bg)!important;}
 html.ios-device #search-view #si,
 html.ios-device #search-view #sb{height:38px!important;border-radius:10px!important;}
 html.ios-device #sres{padding:10px 11px!important;}
@@ -342,209 +334,6 @@ html.ios-device .cb{width:34px!important;height:34px!important;border-radius:10p
 .hd-icon::before{top:50%;width:3px;height:24px;transform:translate(-50%,-50%);}
 .hd-icon::after{top:42%;width:14px;height:3px;transform:translate(-50%,-50%);}
 </style>
-
-
-<style id="oai-diocese-website-ui-standard-V13">
-/* 관구·교구 내부 화면도 웹사이트 카드/탭 기준으로 맞춘다. */
-:root{
-  --header-h:70px;
-  --tab-h:52px;
-  --tab-btn-h:40px;
-  --fs-header:18px;
-  --fs-sub:12px;
-  --fs-tab:15px;
-}
-header{height:var(--header-h)!important;min-height:var(--header-h)!important;max-height:var(--header-h)!important;}
-.hd h1{font-size:18px!important;line-height:1.2!important;}
-.hd-sub{font-size:12px!important;line-height:1.2!important;}
-.tab-bar{height:52px!important;min-height:52px!important;max-height:52px!important;padding:9px 14px!important;gap:8px!important;box-sizing:border-box!important;}
-.tab{height:40px!important;min-height:40px!important;max-height:40px!important;border-radius:14px!important;font-size:15px!important;line-height:1.1!important;}
-#search-view .sl,#list-view .lv-bdg{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
-#search-view .si-r-op,#list-view .lv-op{font-size:calc(11.5px * var(--dio-effective-font-scale,1))!important;}
-#search-view .sd,#list-view .lv-name{font-size:calc(17px * var(--dio-effective-font-scale,1))!important;line-height:1.38!important;}
-#search-view .sg,#list-view .lv-rg,#list-view .lv-det{font-size:calc(13px * var(--dio-effective-font-scale,1))!important;line-height:1.55!important;}
-#search-view .si-r-url,#list-view .lv-url{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
-#search-view .si-r-arr,#list-view .lv-arr{font-size:15px!important;}
-</style>
-
-
-<style id="oai-diocese-card-spacing-website-standard-V13">
-/* 관구·교구 목록 카드 간격을 웹사이트 목록 카드 기준으로 맞춘다. */
-#list-view .lv-card{margin-bottom:4px!important;}
-#list-view .lv-card:last-child{margin-bottom:0!important;}
-</style>
-
-
-
-<style id="oai-diocese-search-input-standard-V13">
-#search-view #si{
-  font-size:15px!important;
-  color:#374151!important;
-  -webkit-text-fill-color:#374151!important;
-  font-weight:600!important;
-}
-#search-view #si::placeholder{
-  color:#9ca3af!important;
-  -webkit-text-fill-color:#9ca3af!important;
-  opacity:1!important;
-  font-weight:500!important;
-}
-</style>
-
-<style id="oai-diocese-structure-font-lock-V13">
-/* V13: 관구·교구 헤더/탭은 A 글자 크기 조절과 분리한다. */
-.hd h1{font-size:20px!important;line-height:1.24!important;}
-.hd-sub{font-size:11px!important;line-height:1.25!important;}
-.tab{font-size:15px!important;line-height:1.1!important;}
-.gb{font-size:12px!important;}
-#si{font-size:15px!important;}
-</style>
-
-
-<!-- V2-120: 관구·교구 스타일 동기화 규칙
-  - 관구·교구는 별도 diocese.html 파일로 유지한다.
-  - 단, 색상/글자/탭/카드/검색창/compact 기준은 메인 앱 style.css 기준을 따라간다.
-  - 큰 화면 기본 크기는 기존 관구·교구 표준(탭 52/40/15)을 유지하고, 축소는 갤럭시 일반 모델 compact 조건 안에서만 적용한다.
-  - 이후 관구·교구만 별도 크기나 색을 덧씌우지 말고, 이 동기화 블록 안에서만 조정한다. 탭 색은 카드 목록 색상과 분리해 유지한다.
-  - 기능 로직, 지도 데이터, 외부 링크, 탭 전환 로직은 변경하지 않는다.
--->
-<style id="oai-diocese-main-app-style-sync-V2-120">
-:root{
-  --dio-main-header: #3F4752;
-  --dio-main-header-dark: #2F3742;
-  --dio-app-bg: #fbf8f1;
-  --dio-card-bg: #ffffff;
-  --dio-card-soft: #F8FAFC;
-  --dio-list-card-bg: #FFF6EA;
-  --dio-list-card-soft: #F8EFE2;
-  --dio-list-card-foot: #F8EFE2;
-  --dio-list-card-line: #E8DCCB;
-  --dio-line: #D8DEE8;
-  --dio-line-soft: #E6EAF0;
-  --dio-text: #1F2937;
-  --dio-muted: #6B7280;
-  --dio-gold: #C9A96A;
-  --diocese-font-scale: 1;
-  --dio-effective-font-scale: calc(var(--diocese-font-scale,1) * var(--ios-dio-font-scale,1));
-  --diocese-effective-font-scale: calc(var(--diocese-font-scale,1) * var(--ios-dio-font-scale,1));
-  --d: var(--dio-main-header) !important;
-  --bg: var(--dio-app-bg) !important;
-  --card: var(--dio-card-bg) !important;
-  --card-sub: var(--dio-card-soft) !important;
-  --bdr: var(--dio-line) !important;
-  --tx: var(--dio-text) !important;
-  --sub: var(--dio-muted) !important;
-  --dim: #8B95A1 !important;
-  --r: 14px !important;
-  --tab-h: 52px !important;
-  --tab-btn-h: 40px !important;
-  --fs-tab: 15px !important;
-}
-html,body{background:var(--dio-app-bg)!important;color:var(--dio-text)!important;font-family:'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif!important;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
-#main,#map-view,#search-view,#list-view{background:var(--dio-app-bg)!important;}
-.tab-bar{height:var(--tab-h)!important;min-height:var(--tab-h)!important;max-height:var(--tab-h)!important;padding:9px 14px!important;gap:8px!important;background:var(--dio-card-bg)!important;border-top:0!important;border-bottom:1px solid var(--dio-line)!important;box-shadow:0 2px 8px rgba(31,41,55,.04)!important;}
-.tab{height:var(--tab-btn-h)!important;min-height:var(--tab-btn-h)!important;max-height:var(--tab-btn-h)!important;border-radius:14px!important;padding:0 8px!important;background:var(--dio-card-soft)!important;color:var(--dio-main-header)!important;border:1.3px solid var(--dio-line)!important;font-size:calc(var(--fs-tab) * var(--dio-effective-font-scale,1))!important;font-weight:850!important;letter-spacing:-.035em!important;line-height:1.1!important;box-shadow:none!important;}
-.tab.on{background:var(--dio-main-header)!important;color:#fff!important;border-color:var(--dio-main-header)!important;box-shadow:0 3px 10px rgba(63,71,82,.20)!important;}
-#gw-bar{top:9px!important;left:9px!important;gap:5px!important;}
-.gb{min-height:32px!important;padding:0 11px!important;border-radius:999px!important;border-width:1.5px!important;font-size:calc(11.5px * var(--dio-effective-font-scale,1))!important;font-weight:850!important;background:rgba(255,255,255,.96)!important;box-shadow:0 2px 8px rgba(31,41,55,.08)!important;}
-.gb.on{color:#fff!important;box-shadow:0 3px 10px rgba(31,41,55,.16)!important;}
-.gb-all{color:var(--dio-main-header)!important;border-color:rgba(63,71,82,.32)!important;}
-.gb-all.on{background:var(--dio-main-header)!important;border-color:var(--dio-main-header)!important;color:#fff!important;}
-#card{border-radius:14px!important;border:1px solid rgba(31,41,55,.12)!important;box-shadow:0 10px 24px rgba(31,41,55,.18)!important;}
-.c-x{width:24px!important;height:24px!important;font-size:17px!important;line-height:1!important;}
-.c-n{font-size:calc(23px * var(--dio-effective-font-scale,1))!important;}
-.c-gw,.c-rg,.c-lbl,.c-nurl{font-size:calc(10.5px * var(--dio-effective-font-scale,1))!important;}
-.c-btn{min-height:36px!important;border-radius:10px!important;font-size:calc(11.5px * var(--dio-effective-font-scale,1))!important;}
-#search-view{padding:12px!important;}
-#list-view{padding:12px 12px 52px!important;}
-#search-view .ss{gap:7px!important;padding:0!important;margin-bottom:9px!important;}
-#search-view #si,#search-view #sb{height:38px!important;border-radius:11px!important;font-size:calc(13.5px * var(--dio-effective-font-scale,1))!important;}
-#search-view #si{background:var(--dio-card-bg)!important;border-color:var(--dio-line)!important;color:var(--dio-text)!important;}
-#search-view #sb{background:var(--dio-main-header)!important;color:#fff!important;}
-.si-r,.lv-card{background:var(--dio-list-card-bg)!important;border:1px solid var(--dio-line)!important;border-radius:13px!important;box-shadow:0 3px 10px rgba(31,41,55,.05)!important;}
-.si-r{margin-bottom:8px!important;}
-.lv-card{margin-bottom:6px!important;padding:11px 12px!important;}
-.si-r-foot,.lv-foot{background:var(--dio-list-card-foot)!important;border-top:1px solid var(--dio-list-card-line)!important;}
-#search-view .sl,#list-view .lv-bdg{font-size:calc(11.2px * var(--dio-effective-font-scale,1))!important;font-weight:850!important;}
-#search-view .si-r-op,#list-view .lv-op{font-size:calc(10.6px * var(--dio-effective-font-scale,1))!important;}
-#search-view .sd,#list-view .lv-name{font-size:calc(15.5px * var(--dio-effective-font-scale,1))!important;line-height:1.35!important;font-weight:850!important;color:var(--dio-text)!important;}
-#search-view .sg,#list-view .lv-rg,#list-view .lv-det{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;line-height:1.48!important;color:var(--dio-muted)!important;}
-#search-view .si-r-url,#list-view .lv-url{font-size:calc(11.2px * var(--dio-effective-font-scale,1))!important;color:var(--dio-main-header)!important;}
-#search-view .si-r-arr,#list-view .lv-arr{font-size:14px!important;color:#9CA3AF!important;}
-#list-view .lv-sec{margin:0 0 10px!important;padding:11px 12px!important;border-radius:14px!important;background:var(--dio-list-card-bg)!important;border:1px solid var(--dio-line)!important;}
-#list-view .lv-sec-bdg{min-width:84px!important;padding:6px 14px!important;font-size:calc(13px * var(--dio-effective-font-scale,1))!important;border-radius:999px!important;}
-#list-view .lv-sec-cnt{font-size:calc(12.5px * var(--dio-effective-font-scale,1))!important;}
-.lv-ico{width:46px!important;height:46px!important;border-radius:13px!important;font-size:25px!important;background:var(--dio-card-soft)!important;}
-.lv-priest-link{background:#0F766E!important;border-radius:9px!important;font-size:calc(10.8px * var(--dio-effective-font-scale,1))!important;padding:5px 8px!important;}
-.lv-parish-count{background:rgba(63,71,82,.06)!important;border:1px solid rgba(63,71,82,.12)!important;color:var(--dio-main-header)!important;}
-.lv-card.my-diocese-card{border-color:var(--dio-gold)!important;box-shadow:0 4px 14px rgba(183,121,31,.12)!important;}
-@media(max-width:370px) and (max-height:820px){
-  :root{--diocese-font-scale:.90;--tab-h:44px!important;--tab-btn-h:32px!important;--fs-tab:12.8px!important;}
-  .tab-bar{padding:6px 8px!important;gap:5px!important;}
-  .tab{border-radius:10px!important;padding:0 6px!important;}
-  #gw-bar{top:7px!important;left:7px!important;gap:4px!important;}
-  .gb{min-height:29px!important;padding:0 9px!important;font-size:calc(10.8px * var(--dio-effective-font-scale,1))!important;}
-  #card{width:166px!important;top:6px!important;right:6px!important;border-radius:12px!important;}
-  .c-hd{padding:10px 11px!important;}
-  .c-bd{padding:9px 11px 11px!important;}
-  .c-x{width:22px!important;height:22px!important;font-size:16px!important;top:7px!important;right:7px!important;}
-  .c-n{font-size:calc(21px * var(--dio-effective-font-scale,1))!important;}
-  .c-btn{min-height:34px!important;}
-  #search-view{padding:10px!important;}
-  #list-view{padding:10px 10px 46px!important;}
-  #search-view #si,#search-view #sb{height:35px!important;border-radius:10px!important;}
-  .si-r{margin-bottom:7px!important;}
-  .si-r-top{padding:10px 11px 0!important;}
-  .si-r-foot{padding:7px 11px!important;}
-  .lv-card{padding:9px 10px!important;border-radius:12px!important;margin-bottom:5px!important;}
-  .lv-ico{width:40px!important;height:40px!important;border-radius:11px!important;font-size:22px!important;}
-  #search-view .sd,#list-view .lv-name{font-size:calc(14.5px * var(--dio-effective-font-scale,1))!important;}
-  #search-view .sg,#list-view .lv-rg,#list-view .lv-det{font-size:calc(11.4px * var(--dio-effective-font-scale,1))!important;}
-  #list-view .lv-sec{padding:9px 10px!important;margin-bottom:8px!important;}
-  #list-view .lv-sec-bdg{min-width:76px!important;padding:5px 11px!important;font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
-}
-</style>
-<script id="oai-diocese-parent-style-sync-V2-120">
-(function(){
-  function clean(v){ return String(v || '').trim(); }
-  function parentVar(cs, names, fallback){
-    for(var i=0;i<names.length;i++){
-      var v = clean(cs.getPropertyValue(names[i]));
-      if(v) return v;
-    }
-    return fallback;
-  }
-  function syncDioceseStyleFromParent(){
-    try{
-      if(!window.parent || window.parent === window || !window.parent.document) return;
-      var pRoot = window.parent.document.documentElement;
-      var cs = window.parent.getComputedStyle(pRoot);
-      var root = document.documentElement;
-      root.style.setProperty('--dio-main-header', parentVar(cs, ['--oai-parish-header','--cathedral-category-final','--parish-bg'], '#3F4752'));
-      root.style.setProperty('--dio-main-header-dark', parentVar(cs, ['--cathedral-category-dark','--church-main-2'], '#2F3742'));
-      root.style.setProperty('--dio-app-bg', parentVar(cs, ['--bg-color','--ui-bg'], '#fbf8f1'));
-      root.style.setProperty('--dio-card-bg', parentVar(cs, ['--ui-card','--card-bg'], '#ffffff'));
-      root.style.setProperty('--dio-card-soft', parentVar(cs, ['--ui-surface','--church-soft-2'], '#F8FAFC'));
-      root.style.setProperty('--dio-list-card-bg', parentVar(cs, ['--oai-list-card-bg'], '#FFF6EA'));
-      root.style.setProperty('--dio-list-card-soft', parentVar(cs, ['--oai-list-card-soft'], '#F8EFE2'));
-      root.style.setProperty('--dio-list-card-foot', parentVar(cs, ['--oai-list-card-foot'], '#F8EFE2'));
-      root.style.setProperty('--dio-list-card-line', parentVar(cs, ['--oai-list-card-line'], '#E8DCCB'));
-      root.style.setProperty('--dio-line', parentVar(cs, ['--ui-line-strong','--oai-btn-border','--border'], '#D8DEE8'));
-      root.style.setProperty('--dio-line-soft', parentVar(cs, ['--ui-line','--line-soft'], '#E6EAF0'));
-      root.style.setProperty('--dio-text', parentVar(cs, ['--ink','--text-main'], '#1F2937'));
-      root.style.setProperty('--dio-muted', parentVar(cs, ['--addr-color','--text-sub'], '#6B7280'));
-      root.style.setProperty('--dio-gold', parentVar(cs, ['--oai-gold-border','--gold2','--gold'], '#C9A96A'));
-      root.style.setProperty('--diocese-font-scale', parentVar(cs, ['--app-font-scale'], '1'));
-      document.documentElement.classList.add('oai-diocese-main-style-synced');
-    }catch(e){ /* same-origin이 아닐 때는 diocese.html 내부 기본값을 사용한다. */ }
-  }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', syncDioceseStyleFromParent);
-  else syncDioceseStyleFromParent();
-  window.addEventListener('pageshow', syncDioceseStyleFromParent);
-  document.addEventListener('visibilitychange', function(){ if(!document.hidden) syncDioceseStyleFromParent(); });
-})();
-</script>
-
 </head>
 <body>
 <header>
@@ -619,6 +408,9 @@ html,body{background:var(--dio-app-bg)!important;color:var(--dio-text)!important
 
     <div id="gw-bar">
       <button class="gb on gb-all" data-gw="" onclick="filterGw(this)">전체 보기</button>
+      <button class="gb" data-gw="서울관구" style="color:#1a6bb5;border-color:#1a6bb5" onclick="filterGw(this)">서울관구</button>
+      <button class="gb" data-gw="대구관구" style="color:#c05a00;border-color:#c05a00" onclick="filterGw(this)">대구관구</button>
+      <button class="gb" data-gw="광주관구" style="color:#7a1fa2;border-color:#7a1fa2" onclick="filterGw(this)">광주관구</button>
     </div>
 
     <div id="card">
@@ -652,7 +444,7 @@ html,body{background:var(--dio-app-bg)!important;color:var(--dio-text)!important
         <input id="si" type="text" placeholder="지역명 검색 (예 : 서울, 전주, 평창, 제주)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="search" enterkeyhint="done">
         <button id="sb" onclick="doSearch()">검색</button>
       </div>
-      <div class="sh">도 · 시 · 군 이름으로 검색 &nbsp;|&nbsp; 3개 관구 · 16개 교구</div>
+      <div class="sh">도·시·군·구 이름으로 검색</div>
     </div>
     <div id="sres"><div class="se">검색어를 입력하세요</div></div>
   </div>
@@ -686,7 +478,6 @@ const DIOCESE_META =
     "gwangu": "서울관구",
     "parishes": 233,
     "url": "https://aos.catholic.or.kr/index",
-    "priestUrl": "https://aos.catholic.or.kr/pro10315",
     "region": "서울 전지역",
     "detail": ["서울 전지역"]
   },
@@ -695,7 +486,6 @@ const DIOCESE_META =
     "gwangu": "서울관구",
     "parishes": 135,
     "url": "http://www.caincheon.or.kr/",
-    "priestUrl": "http://www.caincheon.or.kr/father/father_list.do",
     "region": "인천 전지역, 경기 서부",
     "detail": [
       "인천 전지역",
@@ -707,7 +497,6 @@ const DIOCESE_META =
     "gwangu": "서울관구",
     "parishes": 222,
     "url": "https://www.casuwon.or.kr/",
-    "priestUrl": "https://www.casuwon.or.kr/priest/priest",
     "region": "경기 남부",
     "detail": [
       "경기 남부 (수원·광주·과천·광명·군포·성남·시흥일부·안산일부·안성·안양·양평·여주·오산·용인·의왕·이천·평택·하남·화성)"
@@ -718,7 +507,6 @@ const DIOCESE_META =
     "gwangu": "서울관구",
     "parishes": 88,
     "url": "http://ucatholic.or.kr/",
-    "priestUrl": "http://ucatholic.or.kr/bbs/board.php?bo_table=priest",
     "region": "경기 북부",
     "detail": [
       "경기 북부 (의정부·고양·구리·남양주·동두천·양주·연천·파주)"
@@ -729,7 +517,6 @@ const DIOCESE_META =
     "gwangu": "서울관구",
     "parishes": 54,
     "url": "http://www.wjcatholic.or.kr/",
-    "priestUrl": "http://www.wjcatholic.or.kr/company/sajedan",
     "region": "강원 남부, 충북 북부, 경북 봉화(석포면)",
     "detail": [
       "강원 남부 (원주·삼척·영월·정선·태백·횡성·동해일부·평창일부)",
@@ -742,7 +529,6 @@ const DIOCESE_META =
     "gwangu": "서울관구",
     "parishes": 62,
     "url": "https://www.cccatholic.or.kr/",
-    "priestUrl": "https://www.cccatholic.or.kr/diocese/priest/priest",
     "region": "강원 북부, 경기 동북부",
     "detail": [
       "강원 북부 (춘천·강릉·고성·속초·양구·양양·인제·철원·홍천·화천·동해일부·평창일부)",
@@ -754,7 +540,6 @@ const DIOCESE_META =
     "gwangu": "서울관구",
     "parishes": 145,
     "url": "https://www.djcatholic.or.kr/home/",
-    "priestUrl": "https://www.djcatholic.or.kr/home/pages/priest_list.php",
     "region": "대전 전지역, 세종 일부, 충남 전지역",
     "detail": [
       "대전 전지역",
@@ -767,7 +552,6 @@ const DIOCESE_META =
     "gwangu": "대구관구",
     "parishes": 164,
     "url": "https://www.daegu-archdiocese.or.kr/",
-    "priestUrl": "https://www.daegu-archdiocese.or.kr/page/priest.html?srl=priest",
     "region": "대구, 경북 남부",
     "detail": [
       "대구 전지역",
@@ -779,7 +563,6 @@ const DIOCESE_META =
     "gwangu": "대구관구",
     "parishes": 82,
     "url": "https://www.cdcj.or.kr/",
-    "priestUrl": "https://www.cdcj.or.kr/diocese/priest/priest",
     "region": "충북 중남부, 세종 일부",
     "detail": [
       "충북 중남부 (청주·충주·진천·증평·음성·옥천·영동·괴산·보은)",
@@ -791,7 +574,6 @@ const DIOCESE_META =
     "gwangu": "대구관구",
     "parishes": 41,
     "url": "https://www.acatholic.or.kr/",
-    "priestUrl": "https://www.acatholic.or.kr/sub2/sub1.asp",
     "region": "경북 북부",
     "detail": [
       "경북 북부 (안동·영덕·울진·영양·청송·문경·상주·영주·봉화(석포면 제외한 전지역)·예천·의성)"
@@ -802,7 +584,6 @@ const DIOCESE_META =
     "gwangu": "대구관구",
     "parishes": 75,
     "url": "https://cathms.kr/",
-    "priestUrl": "https://cathms.kr/saje",
     "region": "경남 서부",
     "detail": [
       "경남 서부 (창원·창녕·함안·의령·진주·거창·산청·함양·합천·남해·사천·하동·고성·통영·거제, 김해일부, 밀양일부)"
@@ -813,7 +594,6 @@ const DIOCESE_META =
     "gwangu": "대구관구",
     "parishes": 125,
     "url": "https://www.catholicbusan.or.kr/",
-    "priestUrl": "https://www.catholicbusan.or.kr/clergy/priest",
     "region": "부산, 울산, 경남 동부",
     "detail": [
       "부산 전지역",
@@ -826,7 +606,6 @@ const DIOCESE_META =
     "gwangu": "광주관구",
     "parishes": 143,
     "url": "https://www.gjcatholic.or.kr/",
-    "priestUrl": "https://www.gjcatholic.or.kr/priest/priests",
     "region": "광주, 전남 전지역",
     "detail": [
       "광주 전지역",
@@ -838,7 +617,6 @@ const DIOCESE_META =
     "gwangu": "광주관구",
     "parishes": 96,
     "url": "https://jcatholic.or.kr/index.php",
-    "priestUrl": "https://www.jcatholic.or.kr/theme/main/pages/priest.php?st=diocese",
     "region": "전북 전지역, 충남 논산(연무읍)",
     "detail": [
       "전북 전지역",
@@ -850,7 +628,6 @@ const DIOCESE_META =
     "gwangu": "광주관구",
     "parishes": 31,
     "url": "https://www.diocesejeju.or.kr/",
-    "priestUrl": "https://www.diocesejeju.or.kr/diocese_father",
     "region": "제주도 전지역",
     "detail": [
       "제주도 전지역 (제주·서귀포)"
@@ -861,7 +638,6 @@ const DIOCESE_META =
     "gwangu": "군종교구",
     "parishes": 0,
     "url": "https://www.gunjong.or.kr/",
-    "priestUrl": "https://www.gunjong.or.kr/organization/index.asp?SearchArmyCd=",
     "region": "육·해·공군 전체",
     "detail": [
       "육·해·공군 전체"
@@ -1463,47 +1239,30 @@ const DIOCESE_ICO={
   '광주대교구':'💜','전주교구':'🌿','제주교구':'🌸',
   '군종교구':'🎖️'
 };
-const MY_DIOCESE_STORAGE_KEY='oai_my_diocese_name';
-function getMyDioceseName(){
-  try{return (localStorage.getItem(MY_DIOCESE_STORAGE_KEY)||'').trim();}
-  catch(e){return '';}
-}
-function isMyDioceseName(name){
-  const mine=getMyDioceseName();
-  return !!(mine&&name&&mine===name);
-}
-function appendMyDioceseBadge(target){
-  if(!target)return null;
-  const badge=document.createElement('span');
-  badge.className='lv-my-diocese-badge';
-  badge.textContent='나의 교구';
-  target.appendChild(badge);
-  return badge;
-}
 function buildListView(){
   const gws=[
-    {key:'서울관구',col:'#2563EB',dioceses:['서울대교구','인천교구','수원교구','의정부교구','원주교구','춘천교구','대전교구']},
-    {key:'대구관구',col:'#B7791F',dioceses:['대구대교구','청주교구','안동교구','마산교구','부산교구']},
-    {key:'광주관구',col:'#7C3AED',dioceses:['광주대교구','전주교구','제주교구']},
+    {key:'서울관구',col:'#1a6bb5',dioceses:['서울대교구','인천교구','수원교구','의정부교구','원주교구','춘천교구','대전교구']},
+    {key:'대구관구',col:'#c05a00',dioceses:['대구대교구','청주교구','안동교구','마산교구','부산교구']},
+    {key:'광주관구',col:'#7a1fa2',dioceses:['광주대교구','전주교구','제주교구']},
     {key:'군종교구',col:'#4A5568',dioceses:['군종교구']},
   ];
   const wrap=document.getElementById('list-content');
   wrap.innerHTML='';
-  const myName=getMyDioceseName();
-  if(myName && DIOCESE_META[myName]){
-    wrap.appendChild(makeRow((DIOCESE_META[myName]&&DIOCESE_META[myName].region)||'', myName));
-  }
   gws.forEach(function(g){
+    // ── 관구 섹션 헤더 ──
+    const sec=document.createElement('div');sec.className='lv-sec';
+    const secBdg=document.createElement('span');secBdg.className='lv-sec-bdg';
+    secBdg.style.background=g.col;secBdg.textContent=g.key;
+    sec.appendChild(secBdg);
+    wrap.appendChild(sec);
     // ── 교구 카드 ──
     g.dioceses.forEach(function(dName){
-      if(myName && dName === myName) return;
       const m=DIOCESE_META[dName];if(!m)return;
       const isArchdiocese=dName.includes('대교구');
       const dets=(m.detail||[]).filter(function(x){return x.trim()!==m.region.trim();});
       const regionFull=m.region+(dets.length?'·'+dets.join('·'):'');
 
-      const isMine=isMyDioceseName(dName);
-      const card=document.createElement('div');card.className='lv-card'+(isMine?' my-diocese-card':'');
+      const card=document.createElement('div');card.className='lv-card';
 
       // top: 뱃지(대교구/교구) + 오른쪽 "천주교 XX교구"
       const top=document.createElement('div');top.className='lv-top';
@@ -1511,7 +1270,7 @@ function buildListView(){
       bdg.style.background=g.col;
       bdg.textContent=g.key;
       const op=document.createElement('span');op.className='lv-op';
-      if(isMine) appendMyDioceseBadge(op);
+      op.textContent='천주교 '+dName;
       top.appendChild(bdg);top.appendChild(op);
 
       // body: 아이콘 + (교구명 + 지역)
@@ -1525,7 +1284,6 @@ function buildListView(){
       }else{
         nm.textContent=(dName==='군종교구')?dName:(dName+' · '+(m.parishes||0)+'개 본당');
       }
-      if(isMine) appendMyDioceseBadge(nm);
       const rg=document.createElement('div');rg.className='lv-rg';
       rg.innerHTML='📍 '+m.region;
       info.appendChild(nm);info.appendChild(rg);
@@ -1543,18 +1301,7 @@ function buildListView(){
       const url=document.createElement('span');url.className='lv-url';
       url.textContent=m.url?m.url.replace(/^https?:\/\//,'').replace(/\/$/,''):'홈페이지 없음';
       const arr=document.createElement('span');arr.className='lv-arr';arr.textContent='›';
-      foot.appendChild(url);
-      if(m.priestUrl){
-        const priestBtn=document.createElement('button');
-        priestBtn.type='button';
-        priestBtn.className='lv-priest-link';
-        priestBtn.textContent='✝ 사제찾기';
-        priestBtn.dataset.dioUrl=m.priestUrl;
-        priestBtn.dataset.dioSource='priest';
-        priestBtn.dataset.dioKey=dName;
-        foot.appendChild(priestBtn);
-      }
-      foot.appendChild(arr);
+      foot.appendChild(url);foot.appendChild(arr);
 
       card.appendChild(top);card.appendChild(body);card.appendChild(foot);
       if(m.url){
@@ -1860,17 +1607,6 @@ function showCard(el){
   document.getElementById('c-gw').textContent=el.dataset.gw||'';
   document.getElementById('c-nm').textContent=el.dataset.d||'';
   document.getElementById('c-rg').textContent=el.dataset.region||'';
-  const cardDioceseName=el.dataset.d||'';
-  let myCardBadge=document.getElementById('c-my-diocese-badge');
-  if(!myCardBadge){
-    myCardBadge=document.createElement('div');
-    myCardBadge.id='c-my-diocese-badge';
-    myCardBadge.className='c-my-diocese-badge';
-    myCardBadge.textContent='나의 교구';
-    const closeBtn=document.querySelector('#c-hd .c-x');
-    if(closeBtn&&closeBtn.parentNode) closeBtn.parentNode.insertBefore(myCardBadge,closeBtn);
-  }
-  if(myCardBadge) myCardBadge.style.display=isMyDioceseName(cardDioceseName)?'inline-flex':'none';
   const cn=document.getElementById('c-n');cn.style.color=c;cn.textContent=el.dataset.parishes||'';
   const parishRow=document.getElementById('c-parish-row');
   if(parishRow){ parishRow.style.display=(el.dataset.d==='군종교구')?'none':'flex'; }
@@ -1879,15 +1615,9 @@ function showCard(el){
   dl.classList.remove('on');detOpen=false;
   document.getElementById('c-dtbtn').textContent='▶ 상세 지역 보기';
   const url=el.dataset.url;
-  const meta=DIOCESE_META[el.dataset.d||'']||{};
-  const priestUrl=meta.priestUrl||'';
-  const homeBtn=url
+  document.getElementById('c-act').innerHTML=url
     ?`<button type="button" class="c-btn" data-dio-url="${url}" data-dio-source="map" style="background:${c}">↗ 홈페이지 방문</button>`
     :'<div class="c-nurl">홈페이지 없음</div>';
-  const priestBtn=priestUrl
-    ?`<button type="button" class="c-btn c-priest-btn" data-dio-url="${priestUrl}" data-dio-source="priest">✝ 사제찾기</button>`
-    :'';
-  document.getElementById('c-act').innerHTML=`<div class="c-action-group">${homeBtn}${priestBtn}</div>`;
   const card=document.getElementById('card');
   const diocese=el.dataset.d||'';
   const topDioceses=['서울대교구','인천교구','수원교구','의정부교구','원주교구','춘천교구','대전교구','청주교구','안동교구'];
@@ -1957,30 +1687,22 @@ document.addEventListener('touchstart',closeCardIfOutside,{capture:true,passive:
 function makeRow(disp,diocese,overlapDongs){
   const m=DIOCESE_META[diocese];if(!m)return document.createElement('div');
   const url=m.url||'';
-  const priestUrl=m.priestUrl||'';
   const isArch=diocese.includes('대교구');
   const gwKey=GW_OF[diocese]||m.gwangu||'';
-  const gwCol={'서울관구':'#2563EB','대구관구':'#B7791F','광주관구':'#7C3AED','군종교구':'#64748B'}[gwKey]||'#888';
-  const isMine=isMyDioceseName(diocese);
-  const card=document.createElement('div');card.className='lv-card'+(isMine?' my-diocese-card':'');
+  const gwCol={'서울관구':'#1a6bb5','대구관구':'#c05a00','광주관구':'#7a1fa2','군종교구':'#4A5568'}[gwKey]||'#888';
+  const card=document.createElement('div');card.className='lv-card';
   // top
   const top=document.createElement('div');top.className='lv-top';
   const bdg=document.createElement('span');bdg.className='lv-bdg';
   bdg.style.background=gwCol;bdg.textContent=gwKey;
-  const op=document.createElement('span');op.className='lv-op';
-  if(isMine) appendMyDioceseBadge(op);
+  const op=document.createElement('span');op.className='lv-op';op.textContent='천주교 '+diocese;
   top.appendChild(bdg);top.appendChild(op);
   // body
   const body=document.createElement('div');body.className='lv-body';
   const ico=document.createElement('div');ico.className='lv-ico';
   ico.textContent='⛪';
   const info=document.createElement('div');info.className='lv-info';
-  const nm=document.createElement('div');nm.className='lv-name';
-  if(diocese==='춘천교구' || diocese==='부산교구'){
-    nm.textContent=diocese+' · '+(m.parishes||0)+'개 본당(해외본당 제외)';
-  }else{
-    nm.textContent=(diocese==='군종교구')?diocese:(diocese+' · '+(m.parishes||0)+'개 본당');
-  }
+  const nm=document.createElement('div');nm.className='lv-name';nm.textContent=diocese;
   const rg=document.createElement('div');rg.className='lv-rg';rg.innerHTML='📍 '+(disp||m.region);
   info.appendChild(nm);info.appendChild(rg);
   // 세부지역: 중복지역일 때만 표시
@@ -1994,18 +1716,7 @@ function makeRow(disp,diocese,overlapDongs){
   const urlEl=document.createElement('span');urlEl.className='lv-url';
   urlEl.textContent=url?url.replace(/^https?:\/\//,'').replace(/\/$/,''):'홈페이지 없음';
   const arr=document.createElement('span');arr.className='lv-arr';arr.textContent='›';
-  foot.appendChild(urlEl);
-  if(priestUrl){
-    const priestBtn=document.createElement('button');
-    priestBtn.type='button';
-    priestBtn.className='lv-priest-link';
-    priestBtn.textContent='✝ 사제찾기';
-    priestBtn.dataset.dioUrl=priestUrl;
-    priestBtn.dataset.dioSource='priest';
-    priestBtn.dataset.dioKey=diocese;
-    foot.appendChild(priestBtn);
-  }
-  foot.appendChild(arr);
+  foot.appendChild(urlEl);foot.appendChild(arr);
   card.appendChild(top);card.appendChild(body);card.appendChild(foot);
   if(url){
     card.dataset.dioUrl = url;
@@ -2016,6 +1727,74 @@ function makeRow(disp,diocese,overlapDongs){
   return card;
 }
 
+const AMBIGUOUS_GU_STANDALONE=['중구','동구','서구','남구','북구'];
+const DIOCESE_DISTRICT_SEARCH=[
+  {display:'마산교구',d:'마산교구',aliases:['마산','마산교구']},
+  {display:'경남 창원시',d:'마산교구',aliases:['창원','창원시','경남창원','경남 창원','경남창원시','경남 창원시','경상남도창원','경상남도 창원','경상남도창원시','경상남도 창원시']},
+  {display:'경남 창원시 마산합포구',d:'마산교구',aliases:['마산합포구','창원마산합포구','창원 마산합포구','경남마산합포구','경남 마산합포구']},
+  {display:'경남 창원시 마산회원구',d:'마산교구',aliases:['마산회원구','창원마산회원구','창원 마산회원구','경남마산회원구','경남 마산회원구']},
+  {display:'경남 창원시 진해구',d:'마산교구',aliases:['진해','진해구','창원진해','창원 진해','창원진해구','창원 진해구','경남진해','경남 진해','경남진해구','경남 진해구']},
+
+  {display:'서울 중구',d:'서울대교구',aliases:['서울중구','서울 중구','서울특별시중구','서울특별시 중구']},
+
+  {display:'인천 중구',d:'인천교구',aliases:['인천중구','인천 중구','인천광역시중구','인천광역시 중구']},
+  {display:'인천 동구',d:'인천교구',aliases:['인천동구','인천 동구','인천광역시동구','인천광역시 동구']},
+  {display:'인천 서구',d:'인천교구',aliases:['인천서구','인천 서구','인천광역시서구','인천광역시 서구']},
+  {display:'인천 미추홀구',d:'인천교구',aliases:['미추홀','미추홀구','인천미추홀','인천 미추홀','인천미추홀구','인천 미추홀구','인천광역시미추홀구','인천광역시 미추홀구']},
+  {display:'인천 남동구',d:'인천교구',aliases:['남동','남동구','인천남동','인천 남동','인천남동구','인천 남동구','인천광역시남동구','인천광역시 남동구']},
+  {display:'인천 연수구',d:'인천교구',aliases:['연수','연수구','인천연수','인천 연수','인천연수구','인천 연수구','인천광역시연수구','인천광역시 연수구']},
+  {display:'인천 부평구',d:'인천교구',aliases:['부평','부평구','인천부평','인천 부평','인천부평구','인천 부평구','인천광역시부평구','인천광역시 부평구']},
+  {display:'인천 계양구',d:'인천교구',aliases:['계양','계양구','인천계양','인천 계양','인천계양구','인천 계양구','인천광역시계양구','인천광역시 계양구']},
+
+  {display:'대구 중구',d:'대구대교구',aliases:['대구중구','대구 중구','대구광역시중구','대구광역시 중구']},
+  {display:'대구 동구',d:'대구대교구',aliases:['대구동구','대구 동구','대구광역시동구','대구광역시 동구']},
+  {display:'대구 서구',d:'대구대교구',aliases:['대구서구','대구 서구','대구광역시서구','대구광역시 서구']},
+  {display:'대구 남구',d:'대구대교구',aliases:['대구남구','대구 남구','대구광역시남구','대구광역시 남구']},
+  {display:'대구 북구',d:'대구대교구',aliases:['대구북구','대구 북구','대구광역시북구','대구광역시 북구']},
+  {display:'대구 달서구',d:'대구대교구',aliases:['달서','달서구','대구달서','대구 달서','대구달서구','대구 달서구','대구광역시달서','대구광역시 달서','대구광역시달서구','대구광역시 달서구']},
+  {display:'대구 수성구',d:'대구대교구',aliases:['수성','수성구','대구수성','대구 수성','대구수성구','대구 수성구','대구광역시수성구','대구광역시 수성구']},
+
+  {display:'부산 중구',d:'부산교구',aliases:['부산중구','부산 중구','부산광역시중구','부산광역시 중구']},
+  {display:'부산 동구',d:'부산교구',aliases:['부산동구','부산 동구','부산광역시동구','부산광역시 동구']},
+  {display:'부산 서구',d:'부산교구',aliases:['부산서구','부산 서구','부산광역시서구','부산광역시 서구']},
+  {display:'부산 남구',d:'부산교구',aliases:['부산남구','부산 남구','부산광역시남구','부산광역시 남구']},
+  {display:'부산 북구',d:'부산교구',aliases:['부산북구','부산 북구','부산광역시북구','부산광역시 북구']},
+
+  {display:'광주 동구',d:'광주대교구',aliases:['광주동구','광주 동구','광주광역시동구','광주광역시 동구']},
+  {display:'광주 서구',d:'광주대교구',aliases:['광주서구','광주 서구','광주광역시서구','광주광역시 서구']},
+  {display:'광주 남구',d:'광주대교구',aliases:['광주남구','광주 남구','광주광역시남구','광주광역시 남구']},
+  {display:'광주 북구',d:'광주대교구',aliases:['광주북구','광주 북구','광주광역시북구','광주광역시 북구']},
+
+  {display:'대전 중구',d:'대전교구',aliases:['대전중구','대전 중구','대전광역시중구','대전광역시 중구']},
+  {display:'대전 동구',d:'대전교구',aliases:['대전동구','대전 동구','대전광역시동구','대전광역시 동구']},
+  {display:'대전 서구',d:'대전교구',aliases:['대전서구','대전 서구','대전광역시서구','대전광역시 서구']},
+  {display:'대전 유성구',d:'대전교구',aliases:['유성','유성구','대전유성','대전 유성','대전유성구','대전 유성구','대전광역시유성구','대전광역시 유성구']},
+  {display:'대전 대덕구',d:'대전교구',aliases:['대덕','대덕구','대전대덕','대전 대덕','대전대덕구','대전 대덕구','대전광역시대덕구','대전광역시 대덕구']},
+
+  {display:'울산 중구',d:'부산교구',aliases:['울산중구','울산 중구','울산광역시중구','울산광역시 중구']},
+  {display:'울산 동구',d:'부산교구',aliases:['울산동구','울산 동구','울산광역시동구','울산광역시 동구']},
+  {display:'울산 남구',d:'부산교구',aliases:['울산남구','울산 남구','울산광역시남구','울산광역시 남구']},
+  {display:'울산 북구',d:'부산교구',aliases:['울산북구','울산 북구','울산광역시북구','울산광역시 북구']},
+  {display:'울산 울주군',d:'부산교구',aliases:['울주','울주군','울산울주','울산 울주','울산울주군','울산 울주군','울산광역시울주군','울산광역시 울주군']}
+];
+function findDioceseDistrictMatches(q){
+  const rows=[];
+  const seen=new Set();
+  DIOCESE_DISTRICT_SEARCH.forEach(function(item){
+    const aliases=item.aliases||[];
+    if(!aliases.some(function(a){return String(a).replace(/\s+/g,'')===q;})) return;
+    const key=(item.display||'')+'|'+item.d;
+    if(seen.has(key)) return;
+    seen.add(key);
+    rows.push(item);
+  });
+  return rows;
+}
+function renderSearchRows(res, rows){
+  res.innerHTML='';
+  rows.forEach(function(i){ if(DIOCESE_META[i.d]) res.appendChild(makeRow(i.display||i.k, i.d)); });
+}
+
 function doSearch(){
   try{ document.activeElement && document.activeElement.blur && document.activeElement.blur(); }catch(e){}
   const raw=document.getElementById('si').value.trim();
@@ -2023,6 +1802,13 @@ function doSearch(){
   if(!raw){res.innerHTML='<div class="se">검색어를 입력하세요</div>';return;}
 
   const q=raw.replace(/\s+/g,'');
+
+  if(AMBIGUOUS_GU_STANDALONE.includes(q)){
+    res.innerHTML='<div class="se">도시명과 함께 입력하세요<br>예: 대구중구, 서울중구, 부산남구</div>';
+    return;
+  }
+  const districtMatches=findDioceseDistrictMatches(q);
+  if(districtMatches.length){renderSearchRows(res,districtMatches);return;}
 
   for(const [city,aliases] of Object.entries(REGION_OVERLAP_PLAIN)){
     if(aliases.map(a=>a.replace(/\s+/g,'')).includes(q)){
@@ -2278,7 +2064,7 @@ window.addEventListener('pageshow',function(){
   window.resetDioceseFirstPage = function(){
     try{ sessionStorage.removeItem('listScroll'); }catch(e){}
     var si=document.getElementById('si'); if(si) si.value='';
-    var sres=document.getElementById('sres'); if(sres) sres.innerHTML='<div class="se">교구명, 지역명, 주소로 검색하세요</div>';
+    var sres=document.getElementById('sres'); if(sres) sres.innerHTML='<div class="se">도·시·군·구 이름으로 검색</div>';
     var lv=document.getElementById('list-view'); if(lv) lv.scrollTop=0;
     var sv=document.getElementById('search-view'); if(sv) sv.scrollTop=0;
     var btn=document.querySelector('.tab[data-tab="gwangu"]'); if(btn) btn.click();
@@ -2343,7 +2129,7 @@ window.addEventListener('pageshow',function(){
     var state=window.getDioceseReturnState(source||'link', extra || {});
     try{ sessionStorage.setItem('oai_diocese_last_return_state', JSON.stringify(state)); localStorage.setItem('oai_diocese_last_return_state', JSON.stringify(state)); }catch(e){}
     if(window.parent && window.parent!==window){
-      // V3-S: iframe 내부 클릭은 부모의 지연 이동에 맡기지 않고, 클릭 흐름 안에서 top을 즉시 이동한다.
+      // V3: iframe 내부 클릭은 부모의 지연 이동에 맡기지 않고, 클릭 흐름 안에서 top을 즉시 이동한다.
       // 이렇게 해야 웹페이지 카테고리처럼 Android/PWA에서도 외부 교구 홈페이지가 바로 열린다.
       try{
         if(typeof window.parent.prepareExternalUrl === 'function') url = window.parent.prepareExternalUrl(url) || url;
@@ -2354,9 +2140,7 @@ window.addEventListener('pageshow',function(){
         window.parent.localStorage.setItem('catholic_diocese_external_return_v1', payload);
         window.parent.__OAI_DIOCESE_EXTERNAL_LEAVING__ = true;
       }catch(e){}
-      try{
-        if(typeof window.parent.markExternalReturnStabilize === 'function') window.parent.markExternalReturnStabilize('diocese-external');
-      }catch(e){}
+      // 관구·교구 외부 홈페이지 복귀 시 부모 앱의 안정막/페이드 효과를 호출하지 않는다.
       document.documentElement.classList.remove('oai-dio-external-stabilize','oai-dio-external-return','oai-dio-returning');
       try{ window.top.location.assign(url); }
       catch(e){ try{ window.top.location.href = url; }catch(_e){ window.__OAI_DIO_EXTERNAL_LEAVING__ = false; } }

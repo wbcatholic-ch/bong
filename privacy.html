@@ -115,7 +115,7 @@
       box-shadow: 0 6px 15px rgba(31,42,68,.2);
     }
   
-    /* V13 privacy confirm button only */
+    /* V1-83 privacy confirm button only */
     #privacy-back-app-link.privacy-confirm-button {
       width: min(360px, 100%);
       min-height: 52px;
@@ -143,7 +143,7 @@
     }
 
   
-    /* V13 privacy confirm no effect */
+    /* V1-83 privacy confirm no effect */
     #privacy-back-app-link.privacy-confirm-button {
       transition: none !important;
       animation: none !important;
@@ -163,14 +163,14 @@
     <section class="hero" aria-labelledby="privacy-title">
       <p class="eyebrow">가톨릭길동무</p>
       <h1 id="privacy-title">개인정보처리방침</h1>
-      <p class="updated">시행일 및 최종 업데이트: 2026년 6월 3일</p>
+      <p class="updated">시행일 및 최종 업데이트: 2026년 5월 22일</p>
     </section>
 
     <section class="card">
       <h2>1. 기본 원칙</h2>
-      <p>가톨릭길동무는 성당, 성지, 피정의집, 기도문, 가톨릭 웹사이트, 관구·교구 정보, 문의·건의 접수 기능을 제공하는 가톨릭 신앙생활 안내 앱입니다.</p>
+      <p>가톨릭길동무는 성당, 성지, 피정의집, 기도문, 가톨릭 웹사이트, 관구·교구 정보, 문의 기능을 제공하는 가톨릭 신앙생활 안내 앱입니다.</p>
       <p>가톨릭길동무는 앱 제공에 필요한 범위에서만 정보를 이용하며, 사용자의 개인정보를 불필요하게 요구하지 않습니다.</p>
-      <div class="notice">문의·건의는 관리자 확인용 비공개 접수 방식입니다. 앱은 이름, 전화번호, 이메일 등 개인정보 입력을 요구하지 않으므로, 문의 내용에 개인정보나 민감정보를 입력하지 않도록 주의해 주세요.</div>
+      <div class="notice">문의 기능을 이용할 때 이름, 전화번호, 주소, 주민등록번호, 건강정보, 금융정보 등 민감하거나 불필요한 개인정보를 입력하지 않도록 주의해 주세요.</div>
     </section>
 
     <section class="card">
@@ -178,7 +178,7 @@
       <p>가톨릭길동무는 회원가입, 로그인, 결제, 광고 맞춤화를 제공하지 않습니다.</p>
       <p>앱은 연락처, 통화기록, 문자메시지, 사진·동영상, 마이크, 카메라, 금융정보, 건강정보를 요청하거나 수집하지 않습니다.</p>
       <p>위치 정보는 사용자가 내 주변 찾기, 현재 위치, 경로검색, 길찾기 기능을 직접 실행할 때만 사용되며, 가까운 장소 표시와 길찾기 계산을 위해 Kakao 지도 서비스 또는 Kakao REST API 프록시를 통해 처리될 수 있습니다.</p>
-      <p>문의·건의 기능에 사용자가 입력한 제목과 내용은 관리자 확인용으로 Firebase Firestore에 저장될 수 있으며, 다른 사용자에게 공개되지 않습니다.</p>
+      <p>문의·건의 기능에 입력한 내용은 Firebase Firestore에 저장될 수 있으며, 삭제 또는 정정 요청은 개발자 연락처로 요청할 수 있습니다.</p>
     </section>
 
     <section class="card">
@@ -202,9 +202,9 @@
             </tr>
             <tr>
               <td>문의 및 건의 내용</td>
-              <td>사용자가 문의·건의 화면에 입력한 분류, 제목, 내용, 익명 작성자명, 작성일, 서버 저장 시각, 비공개 표시 상태</td>
+              <td>사용자가 문의 화면에 입력한 분류, 제목, 내용, 익명 작성자명, 작성일, 서버 저장 시각</td>
               <td>문의 확인, 오류 수정, 개선 건의 검토, 앱 운영 및 품질 개선</td>
-              <td>Firebase Firestore에 관리자 확인용으로 저장될 수 있으며, 다른 사용자에게 공개되지 않습니다.</td>
+              <td>Firebase Firestore에 저장될 수 있습니다.</td>
             </tr>
             <tr>
               <td>앱 사용 편의 정보</td>
@@ -237,11 +237,10 @@
     </section>
 
     <section class="card">
-      <h2>5. 문의·건의 기능</h2>
-      <p>가톨릭길동무의 문의·건의 기능은 앱 오류 제보, 정보 수정 요청, 개선 의견 접수를 위해 Firebase Firestore를 이용할 수 있습니다.</p>
-      <p>문의·건의는 관리자 확인용으로만 저장되며, 일반 사용자에게 목록이나 상세 내용이 공개되지 않습니다.</p>
-      <p>문의·건의 기능은 익명 사용을 기본으로 하며, 앱은 별도의 회원가입이나 로그인을 요구하지 않습니다.</p>
-      <p>앱은 문의·건의 작성 시 이름, 전화번호, 이메일, 주소 등 개인정보 입력을 요구하지 않습니다. 사용자가 임의로 개인정보를 입력하지 않도록 안내하고 있습니다.</p>
+      <h2>5. 문의 기능</h2>
+      <p>가톨릭길동무의 문의·건의 기능은 Firebase Firestore를 이용하여 사용자가 작성한 문의, 수정 제안, 개선 건의, 칭찬 내용을 저장할 수 있습니다.</p>
+      <p>문의 기능은 익명 사용을 기본으로 하며, 앱은 별도의 회원가입이나 로그인을 요구하지 않습니다.</p>
+      <p>문의 삭제 또는 정정을 요청하려면 작성한 문의의 제목, 작성일, 분류 등 식별 가능한 정보를 함께 알려 주세요.</p>
     </section>
 
     <section class="card">
@@ -265,23 +264,23 @@
     </section>
 
     <section class="card">
-      <h2>8. 보관 기간 및 이용자 조치</h2>
-      <p>문의·건의 내용은 앱 운영, 오류 수정, 개선 검토에 필요한 기간 동안 관리자 확인용으로 보관될 수 있습니다.</p>
-      <p>가톨릭길동무는 별도의 회원 계정을 만들지 않으므로 계정 삭제 기능은 제공하지 않습니다.</p>
-      <p>기기 또는 브라우저에 저장된 즐겨찾기, 글자 크기, 캐시 정보 등은 사용자가 브라우저 데이터 삭제, 앱 데이터 삭제, 캐시 삭제 등을 통해 삭제할 수 있습니다.</p>
-      <p>문의·건의 내용에 개인정보를 잘못 입력한 경우에는 아래 문의처로 연락해 주세요. 개발자는 확인 가능한 범위에서 필요한 조치를 검토합니다.</p>
+      <h2>8. 보관 기간 및 삭제 요청</h2>
+      <p>문의 및 건의 내용은 앱 운영, 오류 수정, 개선 검토에 필요한 기간 동안 보관될 수 있습니다.</p>
+      <p>사용자는 문의 내용의 삭제 또는 정정을 요청할 수 있으며, 개발자는 요청 내용을 확인한 뒤 가능한 범위에서 조치합니다.</p>
+      <p>기기 또는 브라우저에 저장된 즐겨찾기, 설정, 캐시 정보는 사용자가 브라우저 데이터 삭제, 앱 데이터 삭제, 캐시 삭제 등을 통해 삭제할 수 있습니다.</p>
+      <p>가톨릭길동무는 별도의 사용자 계정을 만들지 않으므로 계정 삭제 기능은 제공하지 않습니다.</p>
     </section>
 
     <section class="card">
       <h2>9. 아동의 개인정보</h2>
       <p>가톨릭길동무는 아동을 주 대상으로 개인정보를 수집하지 않습니다.</p>
-      <p>아동 사용자가 문의·건의 기능을 이용하는 경우 보호자의 지도를 권장하며, 문의 내용에 개인정보를 입력하지 않도록 안내합니다.</p>
+      <p>아동 사용자가 문의 기능을 이용하는 경우 보호자의 지도를 권장하며, 문의 내용에 개인정보를 입력하지 않도록 안내합니다.</p>
     </section>
 
     <section class="card">
       <h2>10. 보안</h2>
-      <p>가톨릭길동무는 HTTPS 기반의 GitHub Pages를 통해 앱을 제공하며, 문의·건의 데이터는 Firebase Firestore에 관리자 확인용으로 저장될 수 있습니다.</p>
-      <p>다만 인터넷을 통한 정보 전송 및 저장에는 항상 일정한 위험이 있을 수 있으므로, 문의·건의 기능에 개인정보나 민감정보를 입력하지 않는 것이 좋습니다.</p>
+      <p>가톨릭길동무는 HTTPS 기반의 GitHub Pages를 통해 앱을 제공하며, 문의 데이터는 Firebase Firestore에 저장될 수 있습니다.</p>
+      <p>다만 인터넷을 통한 정보 전송 및 저장에는 항상 일정한 위험이 있을 수 있으므로, 문의 기능에 민감한 개인정보를 입력하지 않는 것이 좋습니다.</p>
     </section>
 
     <section class="card">
@@ -292,8 +291,8 @@
 
     <section class="card">
       <h2>12. 문의처</h2>
-      <p>앱 운영 및 개인정보처리방침 관련 문의는 아래 연락처로 접수할 수 있습니다.</p>
-      <p><strong>앱 운영 및 개인정보처리방침 관련 문의:</strong> catholicgildongmu@gmail.com</p>
+      <p>개인정보 관련 문의, 삭제 요청, 정정 요청은 아래 연락처 또는 앱 내 문의 기능을 통해 접수할 수 있습니다.</p>
+      <p><strong>개발자 연락처:</strong> catholicgildongmu@gmail.com</p>
       <a id="privacy-back-app-link" class="back-link privacy-confirm-button" href="javascript:void(0)">확인</a>
     </section>
 
@@ -306,7 +305,6 @@ var oaiPrivacyReturning = false;
 function oaiPreparePrivacyNoReturnEffectToApp(){
   try{
     sessionStorage.setItem('oai_internal_return_no_effect_once','1');
-    sessionStorage.setItem('oai_internal_return_no_effect_until', String((Date.now ? Date.now() : new Date().getTime()) + 7000));
     sessionStorage.setItem('oai_internal_page_nav','privacy');
     sessionStorage.removeItem('oai_external_nav_started_at');
     sessionStorage.removeItem('oai_external_nav_pagehide');
