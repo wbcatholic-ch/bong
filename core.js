@@ -1,8 +1,8 @@
 /* 가톨릭길동무 core.js — 뒤로가기/종료 상태 관리
-   patches.js와 app.js 양쪽에서 참조하는 순수 유틸리티 함수들.
+   app.js 및 분리된 js/* 모듈에서 참조하는 순수 유틸리티 함수들.
    브라우저 전역(window, history, sessionStorage, document)만 사용하며
    app.js의 다른 함수에 의존하지 않습니다.
-   로드 순서: constants.js → core.js → app.js → patches.js */
+   로드 순서: constants.js → core.js → app.js → 분리된 js/* 모듈 */
 
 'use strict';
 
@@ -185,7 +185,7 @@ function doExit(){
   attemptAppExit();
 }
 
-/* ── window 전역 노출 (patches.js 등 외부에서 window.* 로 접근) ── */
+/* ── window 전역 노출 (분리된 js/* 모듈에서 window.* 로 접근) ── */
 window._resetCoverExitReady   = _resetCoverExitReady;
 window._clearCoverExitArmed   = _clearCoverExitArmed;
 window._armCoverExitWindow    = _armCoverExitWindow;

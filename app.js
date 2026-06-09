@@ -515,7 +515,7 @@ function oaiSetMainMapLayerHidden(hidden){
 }
 window.oaiSetMainMapLayerHidden = oaiSetMainMapLayerHidden;
 
-/* ── 뒤로가기 처리는 patches.js의 공통 컨트롤러에서 통합 관리 ── */
+/* ── 뒤로가기 처리는 js/back-controller.js의 공통 컨트롤러에서 통합 관리 ── */
 
 /* 기존 pull-to-refresh 핸들러는 아래의 최종 새로고침 핸들러로 통합 관리 */
 
@@ -690,7 +690,7 @@ function _ensureCoverBackTrap(reason){
 }
 
 function _resetCoverBackTrap(reason){
-  /* V3-20: 커버 trap 재설정도 patches.js의 공통 armCoverBackTrap을 우선 사용한다.
+  /* V4-16: 커버 trap 재설정도 js/back-controller.js의 공통 armCoverBackTrap을 우선 사용한다.
      이미 trap이 살아 있으면 중복 root/trap을 다시 쌓지 않아 Back을 여러 번 눌러야 하는 상태를 줄인다. */
   try{
     if(_isAppScreenActive()) return;
@@ -947,7 +947,7 @@ function _schedulePrayerReturnQuickMenuStable(){
     window.__OAI_AFTER_RESTORE_PRAYER_QUICK_POPUP_UNTIL__ = Date.now() + 1800;
   }catch(e){ console.warn('[가톨릭길동무]', e); }
   // 일부 WebView에서 history.go(1) 복귀 popstate가 늦거나 생략될 수 있어 안전망만 둔다.
-  // 정상 경로에서는 patches.js의 _restoring 해제 지점에서 즉시 실행된다.
+  // 정상 경로에서는 back-controller.js의 _restoring 해제 지점에서 즉시 실행된다.
   setTimeout(function(){
     try{
       if(window.__OAI_AFTER_RESTORE_PRAYER_QUICK_POPUP__ === run) run();
@@ -1538,7 +1538,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V4-14';
+    frame.src='diocese.html?v=V4-16';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -1929,7 +1929,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V4-14';
+const _PARISH_ASSET_VERSION='V4-16';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -2092,7 +2092,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V4-14';
+const _PRAYER_ASSET_VERSION='V4-16';
 let _prayerModuleLoadPromise=null;
 function _isPrayerModuleReady(){
   return typeof window.initPrayerView === 'function' &&
@@ -2137,7 +2137,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V4-14';
+const _RETREAT_ASSET_VERSION='V4-16';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2435,7 +2435,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V4-14';
+const _SHRINE_ASSET_VERSION='V4-16';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -2711,7 +2711,7 @@ function triggerPwaInstall(){
   if(_dp){ _dp.prompt(); _dp.userChoice.then(()=>{_dp=null;}); }
 }
 (function(){
-  // history 초기화는 patches.js의 공통 뒤로가기 컨트롤러에서 단독 관리
+  // history 초기화는 js/back-controller.js의 공통 뒤로가기 컨트롤러에서 단독 관리
   window._appExiting = false;
   window._historyEnterMap = function(){};
 })();
@@ -2763,7 +2763,7 @@ function attemptAppExit(){
   try{ document.documentElement.classList.add('app-exiting'); }catch(e){ console.warn("[가톨릭길동무]", e); }
   // Android/PWA에서 window.close()가 막히면 현재 Back으로 trap만 빠진 상태가 될 수 있다.
   // 이때 사용자가 2~3번 더 눌러야 하지 않도록, 종료 상태로 표시한 뒤 한 번만 실제 뒤로가기를 진행한다.
-  // _appExiting=true 상태라 patches.js의 popstate 컨트롤러는 이 후속 Back을 다시 잡지 않는다.
+  // _appExiting=true 상태라 js/back-controller.js의 popstate 컨트롤러는 이 후속 Back을 다시 잡지 않는다.
   setTimeout(function(){ try{ history.back(); }catch(_e){} }, 40);
 }
 function closeExitDlg(){
