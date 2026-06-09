@@ -566,18 +566,18 @@ html.ios-device .cb{width:34px!important;height:34px!important;border-radius:10p
 .hd-icon::before{top:50%;width:3px;height:24px;transform:translate(-50%,-50%);}
 .hd-icon::after{top:42%;width:14px;height:3px;transform:translate(-50%,-50%);}
 
-/* V4-41: 관구·교구 지역검색 입력창 표준값 명시 */
+/* 관구·교구 지역검색 입력창 기준값 */
 #search-view #si{
-  height:44px!important;
-  min-height:44px!important;
-  font-size:calc(15px * var(--dio-effective-font-scale,1))!important;
+  height:var(--oai-search-input-h,44px)!important;
+  min-height:var(--oai-search-input-h,44px)!important;
+  font-size:calc(var(--oai-search-input-fs,15px) * var(--dio-effective-font-scale,1))!important;
   font-weight:600!important;
-  color:#111827!important;
+  color:var(--oai-search-input-color,#111827)!important;
   line-height:1.2!important;
 }
 #search-view #si::placeholder{
-  font-size:calc(15px * var(--dio-effective-font-scale,1))!important;
+  font-size:calc(var(--oai-search-input-fs,15px) * var(--dio-effective-font-scale,1))!important;
   font-weight:500!important;
-  color:#8a7d6d!important;
+  color:var(--oai-search-placeholder-color,#8a7d6d)!important;
 }
 

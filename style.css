@@ -33,6 +33,10 @@
   --map-tab-gap:    6px;
   --map-tab-icon-fs: 20px;
   --map-tab-icon-active-fs: 22px;
+  --oai-search-input-h: 44px;
+  --oai-search-input-fs: 15px;
+  --oai-search-input-color: #111827;
+  --oai-search-placeholder-color: #8a7d6d;
 
   /* ── OAI 표준 컴포넌트 */
   --oai-std-header-h:  70px;
@@ -322,7 +326,7 @@ html, body {
   max-height: var(--cover-h);
 }
 
-/* V4-49: 커버가 가끔 아래로 밀리는 현상 방지.
+/* 커버가 가끔 아래로 밀리는 현상 방지.
    JS가 일시적으로 큰 viewport 값을 잡아도 실제 보이는 화면 높이를 우선한다. */
 @supports (height: 100dvh) {
   #cover {
@@ -669,21 +673,33 @@ html.retreat-mode #tabbar .tab-btn.active {
   align-items: center;
   background: #efe7d7;
   border: 1.5px solid #d4c7ad;
-  border-radius: 22px;
+  border-radius: 10px;
   padding: 0 14px;
-  height: 38px;
+  height: var(--oai-search-input-h);
+  min-height: var(--oai-search-input-h);
   box-shadow: none;
+  box-sizing: border-box;
 }
 .srch-inner input, #srch-modal .sm-si input {
   flex: 1;
+  min-width: 0;
+  height: 100%;
+  min-height: var(--oai-search-input-h);
   background: none;
   border: none;
   outline: none;
-  font-size: 15px;
-  color: #374151;
+  font-size: calc(var(--oai-search-input-fs) * var(--app-inner-font-scale,1));
+  font-weight: 600;
+  color: var(--oai-search-input-color);
+  line-height: 1.2;
   font-family: inherit;
+  box-sizing: border-box;
 }
-.srch-inner input::placeholder, #srch-modal .sm-si input::placeholder { color: #8a8f98; }
+.srch-inner input::placeholder, #srch-modal .sm-si input::placeholder {
+  font-size: calc(var(--oai-search-input-fs) * var(--app-inner-font-scale,1));
+  font-weight: 500;
+  color: var(--oai-search-placeholder-color);
+}
 .srch-x { background: none; border: none; color: rgba(255,255,255,.58); font-size: 24px; font-weight: 900; line-height: 1; width: 30px; height: 30px; min-width: 30px; cursor: pointer; padding: 0; display: none; align-items: center; justify-content: center; }
 
 .filter-btn, .region-search-btn {
@@ -719,8 +735,31 @@ html.retreat-mode #tabbar .tab-btn.active {
   background: var(--mode-header-solid);
   flex-shrink: 0;
   border-bottom: 2px solid var(--gold);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
-.region-row { display: flex; gap: 6px; align-items: center; }
+.region-row {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.region-row .srch-inner {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.region-row .srch-inner input {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
 .region-search-btn {
   padding: 0 14px;
   height: 34px;
@@ -735,14 +774,6 @@ html.retreat-mode #tabbar .tab-btn.active {
   cursor: pointer;
   flex-shrink: 0;
 }
-html.retreat-mode .region-row {
-  display: grid;
-  grid-template-columns: minmax(0,1fr) auto;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-}
-html.retreat-mode .region-row .srch-inner { width: 100%; height: 42px; }
 html.retreat-mode .region-search-btn {
   width: 74px;
   min-width: 74px;
@@ -3024,37 +3055,6 @@ html:not(.parish-mode):not(.retreat-mode) .sm-tab.active{background:linear-gradi
 html.retreat-mode #list-body .li-name{color:var(--v4-text-strong)!important}
 
 
-/* V4-41: 검색 입력창 공통 규격 — 관구·교구 지역검색(#si) 기준 */
-:root{
-  --oai-search-input-h:44px;
-  --oai-search-input-fs:15px;
-  --oai-search-input-color:#111827;
-  --oai-search-placeholder-color:#8a7d6d;
-}
-#app .srch-inner,
-#app #srch-modal .sm-si{
-  height:var(--oai-search-input-h)!important;
-  min-height:var(--oai-search-input-h)!important;
-  border-radius:10px!important;
-  box-sizing:border-box!important;
-}
-#app .srch-inner input,
-#app #srch-modal .sm-si input{
-  height:100%!important;
-  min-height:var(--oai-search-input-h)!important;
-  font-size:calc(var(--oai-search-input-fs) * var(--app-inner-font-scale,1))!important;
-  font-weight:600!important;
-  color:var(--oai-search-input-color)!important;
-  line-height:1.2!important;
-  font-family:inherit!important;
-}
-#app .srch-inner input::placeholder,
-#app #srch-modal .sm-si input::placeholder{
-  font-size:calc(var(--oai-search-input-fs) * var(--app-inner-font-scale,1))!important;
-  font-weight:500!important;
-  color:var(--oai-search-placeholder-color)!important;
-}
-
 /* ===== /OAI ===== */
 .nearby-name,.li-name,.sm-name,.sm-place-name{font-size:16px;font-weight:800;line-height:1.35;letter-spacing:-.03em;white-space:normal;overflow:visible;word-break:keep-all}
 .nearby-addr,.li-sub,.sm-sub,.sm-place-addr{font-size:13px;line-height:1.45;letter-spacing:-.02em;white-space:normal;overflow:visible;word-break:keep-all}
@@ -3067,7 +3067,7 @@ html.retreat-mode #list-body .li-name{color:var(--v4-text-strong)!important}
 html:not(.parish-mode):not(.retreat-mode) #tabbar,html.parish-mode #tabbar,html.retreat-mode #tabbar{background:rgba(255,255,255,.96)!important;border-bottom:1px solid #d8dee6!important}
 .tab-btn .tab-icon{color:inherit!important}
 html:not(.parish-mode):not(.retreat-mode) .sheet-hd,html:not(.parish-mode):not(.retreat-mode) .filter-bar,html:not(.parish-mode):not(.retreat-mode) .region-wrap,html:not(.parish-mode):not(.retreat-mode) .sm-hd,html:not(.parish-mode):not(.retreat-mode) .sm-filter{background:var(--oai-shrine-header)!important}
-html.parish-mode .sheet-hd,html.parish-mode .filter-bar,html.parish-mode .region-wrap,html.parish-mode .sm-hd,html.retreat-mode .sheet-hd,html.retreat-mode .filter-bar,html.retreat-mode .region-wrap,html.retreat-mode .sm-hd,.srch-inner input,.srch-inner input::placeholder,.srch-x{color:var(--v4-parish-gray)!important}
+html.parish-mode .sheet-hd,html.parish-mode .filter-bar,html.parish-mode .region-wrap,html.parish-mode .sm-hd,html.retreat-mode .sheet-hd,html.retreat-mode .filter-bar,html.retreat-mode .region-wrap,html.retreat-mode .sm-hd,.srch-x{color:var(--v4-parish-gray)!important}
 .sheet-title,.sm-title{color:#c49b56!important;font-weight:800!important}
 .sheet-x{color:#c49b56!important;border-color:transparent!important;background:transparent!important;border:none!important;box-shadow:none!important;border-radius:0!important}
 .sm-x{color:#c49b56!important;border-color:transparent!important;background:transparent!important;border:none!important;box-shadow:none!important;border-radius:0!important}
@@ -4711,20 +4711,6 @@ html.oai-font-global #srch-modal .sm-hd .sm-title{
   font-size:18px!important;
 }
 
-/* V4-41: 검색 입력창 최종 우선순위 보정 */
-#app .srch-inner input,
-#app #srch-modal .sm-si input{
-  font-size:calc(var(--oai-search-input-fs,15px) * var(--app-inner-font-scale,1))!important;
-  color:var(--oai-search-input-color,#111827)!important;
-}
-#app .srch-inner input::placeholder,
-#app #srch-modal .sm-si input::placeholder{
-  font-size:calc(var(--oai-search-input-fs,15px) * var(--app-inner-font-scale,1))!important;
-  color:var(--oai-search-placeholder-color,#8a7d6d)!important;
-}
-
-
-
 /* V4-41: 관구·교구 탭바 기준으로 주요기도문·웹사이트·순례길 탭바 높이 통일 */
 #prayer-tabs,
 #web-view .web-cats,
@@ -4752,32 +4738,4 @@ html.oai-font-global #srch-modal .sm-hd .sm-title{
   box-sizing:border-box!important;
 }
 
-/* V4-41: 성당·성지 지역검색 검색창 가로폭 피정의집 기준 보정 */
-#app .region-row{
-  display:grid!important;
-  grid-template-columns:minmax(0,1fr) auto!important;
-  align-items:center!important;
-  gap:8px!important;
-  width:100%!important;
-  max-width:100%!important;
-  box-sizing:border-box!important;
-}
-#app .region-row .srch-inner{
-  width:100%!important;
-  max-width:100%!important;
-  min-width:0!important;
-  box-sizing:border-box!important;
-}
-#app .region-row .srch-inner input{
-  min-width:0!important;
-  max-width:100%!important;
-  box-sizing:border-box!important;
-}
-#app .region-wrap{
-  width:100%!important;
-  max-width:100%!important;
-  box-sizing:border-box!important;
-  overflow:hidden!important;
-}
-
-/* V4-49: 상부탭 덮어쓰기 보정 제거 완료 - 기준값은 :root와 기본 #tabbar/.tab-btn 규칙에서 관리 */
+/* 상부탭 덮어쓰기 보정 제거 완료 - 기준값은 :root와 기본 #tabbar/.tab-btn 규칙에서 관리 */
