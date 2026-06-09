@@ -143,6 +143,7 @@
   --cover-top-safe: calc(env(safe-area-inset-top, 0px) + clamp(60px, calc(var(--cover-vh, 1vh) * 9.2), 82px));
   --cover-bottom-safe: calc(env(safe-area-inset-bottom, 0px) + clamp(48px, calc(var(--cover-vh, 1vh) * 6.9), 64px));
   --cover-h:    calc(var(--cover-vh, 1vh) * 100);
+  --cover-note-reserve: calc(env(safe-area-inset-bottom, 0px) + 48px);
   --text-main:  #3e362e;
   --text-sub:   #7a7065;
   --card-bg:    #ffffff;
@@ -299,7 +300,7 @@ html, body {
   top: 0;
   left: 0;
   right: 0;
-  bottom: auto;
+  bottom: 0;
   z-index: 9999;
   display: flex;
   flex-direction: column;
@@ -316,6 +317,24 @@ html, body {
   min-height: var(--cover-h);
   max-height: var(--cover-h);
 }
+
+/* V4-44: 커버가 가끔 아래로 밀리는 현상 방지.
+   JS가 일시적으로 큰 viewport 값을 잡아도 실제 보이는 화면 높이를 우선한다. */
+@supports (height: 100dvh) {
+  #cover {
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+  }
+}
+@supports (height: 100svh) {
+  html.oai-cover-booting #cover {
+    height: 100svh;
+    min-height: 100svh;
+    max-height: 100svh;
+  }
+}
+
 html.app-active #cover { display: none; }
 
 #app {
@@ -1894,7 +1913,7 @@ html.app-active #cover-action-row { display: none; }
   letter-spacing: -.02em;
   color: rgba(96,86,76,.72);
   pointer-events: none;
-  z-index: 130;
+  z-index: 8;
   box-sizing: border-box;
 }
 #cover #oai-build-marker {
@@ -2700,8 +2719,8 @@ html.ios-device #prayer-view.open #prayer-tabs {
 html.ios-device #cover { padding-bottom: var(--cover-bottom-safe); }
 html.ios-device #cover .cover-header { padding-bottom: clamp(5px, calc(var(--cover-vh, 1vh) * .72), 9px); }
 html.ios-device #cover-main-block {
-  height: calc((var(--cover-vh, 1vh) * 100) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - clamp(178px, calc(var(--cover-vh, 1vh) * 24), 222px));
-  max-height: 670px;
+  height: auto;
+  max-height: 100%;
   padding-bottom: 4px;
 }
 html.ios-device #cover .cover-card, html.ios-device #cover .cv-btn { padding: 7px; gap: 5px; }
@@ -4787,7 +4806,7 @@ html.oai-font-global #srch-modal .sm-hd .sm-title{
   overflow:hidden!important;
 }
 
-/* V4-43: 성당·성지·피정의집 상부탭 현재 크기 고정 및 아이콘/문구 간격 보정 */
+/* V4-44: 성당·성지·피정의집 상부탭 현재 크기 고정 및 아이콘/문구 간격 보정 */
 :root{
   --oai-v443-map-tabbar-h:84px;
   --oai-v443-map-tab-btn-h:70px;
