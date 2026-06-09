@@ -1,4 +1,4 @@
-/* 가톨릭길동무 관구·교구 전용 CSS - V4-62
+/* 가톨릭길동무 관구·교구 전용 CSS - V4-63
    관구·교구 헤더/탭 기준을 기본 규칙 한 곳으로 정리했습니다. */
 
 /* ---- original diocese.html <style no-id> block 1 ---- */
@@ -117,9 +117,9 @@ header{flex-shrink:0;background:var(--d);border-bottom:none;z-index:30;
 .cb:hover{background:#f0f0f0;}
 
 /* ── 검색 뷰 ── */
-#search-view{position:absolute;inset:0;overflow-y:auto;padding:16px;display:none;background:var(--bg);}
+#search-view{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding:16px;display:none;background:var(--bg);}
 #search-view.on{display:block;}
-.ss{position:sticky;top:0;background:var(--bg);padding:16px 16px 12px;margin:-16px -16px 0;z-index:10;}
+.ss{position:sticky;top:0;background:var(--bg);padding:16px 16px 14px;margin:-16px -16px 0;z-index:10;box-sizing:border-box;}
 .sr{display:flex;gap:8px;width:100%;max-width:100%;box-sizing:border-box;}
 #si{flex:1 1 auto;min-width:0;width:100%;max-width:100%;box-sizing:border-box;padding:0 14px;height:var(--oai-search-input-h);min-height:var(--oai-search-input-h);border:1.5px solid var(--bdr);border-radius:10px;
   font-size:calc(var(--oai-search-input-fs) * var(--dio-effective-font-scale,1));font-family:inherit;background:var(--card);outline:none;color:var(--oai-search-input-color);-webkit-text-fill-color:var(--oai-search-input-color);font-weight:600;line-height:1.2;}
@@ -129,35 +129,45 @@ header{flex-shrink:0;background:var(--d);border-bottom:none;z-index:30;
   font-size:calc(var(--oai-search-input-fs) * var(--dio-effective-font-scale,1));font-weight:600;cursor:pointer;font-family:inherit;box-sizing:border-box;}
 #sb:hover{opacity:.88;}
 .sh{font-size:11px;color:#111827;margin-top:6px;line-height:1.6;font-weight:600;}
-#sres{margin-top:4px;}
+#sres{display:block;clear:both;position:relative;z-index:0;width:100%;max-width:100%;box-sizing:border-box;margin-top:12px;padding:0 2px;overflow:visible;}
 .se{text-align:center;padding:36px 0;color:var(--dim);font-size:13px;}
 /* 검색 결과 카드 — 기도문 .card 구조 적용 */
-.si-r{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);
-  box-shadow:0 1px 8px rgba(0,0,0,.06);margin-bottom:12px;overflow:hidden;cursor:pointer;
+.si-r{width:calc(100% - 20px);max-width:calc(100% - 20px);box-sizing:border-box;background:var(--card);border-radius:13px;border:1px solid var(--bdr);
+  box-shadow:0 1px 8px rgba(0,0,0,.06);margin:0 10px 12px;overflow:hidden;cursor:pointer;
   transition:transform .12s,box-shadow .12s;}
 .si-r:active{transform:scale(.983);box-shadow:none;}
-.si-r-top{display:flex;align-items:center;justify-content:space-between;padding:12px 14px 0;gap:8px;}
+.si-r-top{display:flex;align-items:flex-start;justify-content:space-between;padding:12px 14px 0;gap:8px;min-width:0;box-sizing:border-box;}
 .sl{font-size:12px;font-weight:800;padding:3px 9px;border-radius:6px;color:#fff;white-space:nowrap;flex-shrink:0;}
-.si-r-op{font-size:11px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.srow{display:flex;align-items:center;gap:12px;padding:9px 14px 12px;}
+.si-r-op{font-size:11px;color:var(--dim);white-space:normal;overflow:visible;text-overflow:clip;line-height:1.38;word-break:keep-all;overflow-wrap:anywhere;text-align:right;max-width:52%;}
+.srow{display:flex;align-items:flex-start;gap:12px;padding:9px 14px 12px;min-width:0;box-sizing:border-box;}
 .sdot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
 .srow-info{flex:1;min-width:0;}
-.sd{font-size:16px;font-weight:700;color:var(--tx);}
-.sg{font-size:12px;color:var(--sub);margin-top:2px;}
-.si-r-foot{border-top:1px solid #EDE8E2;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;background:#FAF8F4;}
-.si-r-url{font-size:11px;color:var(--d);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+.sd{font-size:16px;font-weight:700;color:var(--tx);word-break:keep-all;overflow-wrap:anywhere;}
+.sg{font-size:12px;color:var(--sub);margin-top:2px;word-break:keep-all;overflow-wrap:anywhere;}
+.si-r-foot{min-height:44px;box-sizing:border-box;border-top:1px solid #EDE8E2;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;background:#FAF8F4;}
+.si-r-url{min-width:0;font-size:11px;color:var(--d);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
 .si-r-arr{font-size:15px;color:var(--dim);flex-shrink:0;margin-left:6px;}
 .si-r-op,.lv-op{word-break:keep-all;}
 @media (max-width:560px){
-  .si-r-top,.lv-top{align-items:flex-start;}
-  .si-r-op,.lv-op{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.35;text-align:right;max-width:48%;}
+  #search-view{padding-left:14px;padding-right:14px;}
+  #search-view .ss{margin-left:-14px;margin-right:-14px;padding-left:14px;padding-right:14px;}
+  #search-view #sres{padding-left:1px;padding-right:1px;margin-top:12px;}
+  .si-r{width:calc(100% - 18px);max-width:calc(100% - 18px);margin-left:9px;margin-right:9px;}
+  .si-r-top,.lv-top{gap:6px;align-items:flex-start;}
+  .si-r-op,.lv-op{font-size:11px;max-width:50%;}
 }
 
-.sob{background:#FFF8E7;border-radius:var(--r);padding:13px 15px;margin-bottom:9px;border:1.5px solid #F4A261;}
-.sot{font-size:12px;font-weight:700;color:#c05a00;margin-bottom:8px;line-height:1.4;word-break:keep-all;}
+.sob{position:relative;z-index:0;width:auto;max-width:none;box-sizing:border-box;background:#FFF8E7;border-radius:13px;padding:12px 14px;margin:0 4px 9px;border:1.5px solid #F4A261;overflow:hidden;}
+.sot{display:block;width:100%;box-sizing:border-box;font-size:12px;font-weight:700;color:#c05a00;margin:0 0 8px;padding:0;line-height:1.45;word-break:keep-all;overflow-wrap:anywhere;}
 .sog{margin-bottom:10px;}
 .sod{font-size:13px;font-weight:700;margin-bottom:4px;}
 .sodd{font-size:12px;color:#555;line-height:1.7;}
+.duplicate-warning-box{position:relative;z-index:0;display:block;width:calc(100% - 20px);max-width:calc(100% - 20px);margin:0 10px 14px;padding:12px 14px;box-sizing:border-box;border:1.5px solid #F4A261;border-radius:13px;background:#FFF8E7;overflow:hidden;box-shadow:none;}
+.duplicate-warning-text{display:block;width:100%;box-sizing:border-box;margin:0;padding:0;line-height:1.42;color:#B35A00;font-weight:800;word-break:keep-all;overflow-wrap:break-word;}
+@media(max-width:560px){
+  .sob{margin-left:3px;margin-right:3px;}
+  .duplicate-warning-box{width:calc(100% - 18px);max-width:calc(100% - 18px);margin-left:9px;margin-right:9px;}
+}
 
 /* ── 목록 뷰 ── */
 #list-view{position:absolute;inset:0;overflow-y:auto;padding:14px 14px 60px;display:none;background:var(--bg);}
@@ -242,141 +252,7 @@ html.oai-dio-external-return *{transition:none!important;animation:none!importan
 /* V3: 부모 앱에서 복귀 상태를 복원하므로 iframe 자체 전체 덮개는 만들지 않는다. */
 
 
-/* V3-117: 관구교구 지역검색 중복 안내/결과 카드 잘림 방지 */
-#search-view,
-#list-view{
-  overflow-x:hidden!important;
-}
-#search-view .sob,
-#search-view .si-r,
-#list-view .lv-card{
-  width:100%!important;
-  max-width:100%!important;
-  box-sizing:border-box!important;
-}
-#search-view .sob{
-  margin-left:0!important;
-  margin-right:0!important;
-  overflow:visible!important;
-}
-#search-view .sot{
-  margin:0!important;
-  line-height:1.48!important;
-  word-break:keep-all!important;
-  overflow-wrap:anywhere!important;
-}
-#search-view .si-r{
-  overflow:hidden!important;
-}
-#search-view .si-r-top,
-#list-view .lv-top{
-  align-items:flex-start!important;
-  min-width:0!important;
-}
-#search-view .si-r-op,
-#list-view .lv-op{
-  white-space:normal!important;
-  overflow:visible!important;
-  text-overflow:clip!important;
-  line-height:1.38!important;
-  word-break:keep-all!important;
-  overflow-wrap:anywhere!important;
-  text-align:right!important;
-  max-width:52%!important;
-}
-#search-view .srow,
-#list-view .lv-body{
-  align-items:flex-start!important;
-  min-width:0!important;
-}
-#search-view .srow-info,
-#list-view .lv-info{
-  min-width:0!important;
-}
-#search-view .sd,
-#list-view .lv-name{
-  word-break:keep-all!important;
-  overflow-wrap:anywhere!important;
-}
-#search-view .sg,
-#list-view .lv-rg,
-#list-view .lv-det{
-  word-break:keep-all!important;
-  overflow-wrap:anywhere!important;
-}
-#search-view .si-r-foot,
-#list-view .lv-foot{
-  min-height:44px!important;
-  box-sizing:border-box!important;
-}
-#search-view .si-r-url,
-#list-view .lv-url{
-  min-width:0!important;
-  white-space:nowrap!important;
-  overflow:hidden!important;
-  text-overflow:ellipsis!important;
-}
-@media(max-width:560px){
-  #search-view{padding-left:14px!important;padding-right:14px!important;}
-  #search-view .ss{margin-left:-14px!important;margin-right:-14px!important;padding-left:14px!important;padding-right:14px!important;}
-  #search-view .sob{padding:12px 13px!important;}
-  #search-view .si-r-top,#list-view .lv-top{gap:6px!important;}
-  #search-view .si-r-op,#list-view .lv-op{font-size:11px!important;max-width:50%!important;}
-}
-
-
-/* V3-117: 관구교구 지역검색 안내/결과 박스 안쪽 여백 확보 */
-#search-view #sres{
-  width:100%!important;
-  max-width:100%!important;
-  box-sizing:border-box!important;
-  padding-left:2px!important;
-  padding-right:2px!important;
-  overflow:visible!important;
-}
-#search-view .sob,
-#search-view .si-r{
-  width:auto!important;
-  max-width:none!important;
-  margin-left:4px!important;
-  margin-right:4px!important;
-  box-sizing:border-box!important;
-  border-radius:13px!important;
-}
-#search-view .sob{
-  padding:12px 14px!important;
-  overflow:hidden!important;
-}
-#search-view .si-r{
-  overflow:hidden!important;
-}
-#search-view .sot{
-  display:block!important;
-  width:100%!important;
-  box-sizing:border-box!important;
-  margin:0!important;
-  padding:0!important;
-  line-height:1.45!important;
-  word-break:keep-all!important;
-  overflow-wrap:anywhere!important;
-}
-#search-view .si-r-top,
-#search-view .srow,
-#search-view .si-r-foot{
-  box-sizing:border-box!important;
-}
-@media(max-width:560px){
-  #search-view #sres{
-    padding-left:1px!important;
-    padding-right:1px!important;
-  }
-  #search-view .sob,
-  #search-view .si-r{
-    margin-left:3px!important;
-    margin-right:3px!important;
-  }
-}
-
+/* V4-63: 관구·교구 지역검색 결과/중복지역 안내 박스 기준은 상단 기본 .ss/#sres/.sob/.si-r/.duplicate-warning-box 규칙으로 통합했습니다. */
 
 /* V3-117: 관구교구 사제찾기 버튼 */
 #c-act{display:flex;flex-direction:column;gap:8px;}
@@ -390,104 +266,8 @@ html.oai-dio-external-return *{transition:none!important;animation:none!importan
 @media(max-width:560px){.lv-priest-btn{min-height:32px;padding:0 10px;font-size:11.5px;}#c-act{gap:7px;}}
 
 
-/* V3-117: 관구교구 중복지역 안내 박스 실제 잘림 수정 */
-#search-view{
-  overflow-x:hidden!important;
-}
-#search-view #sres{
-  width:100%!important;
-  max-width:100%!important;
-  box-sizing:border-box!important;
-  overflow:visible!important;
-}
-#search-view .duplicate-warning-box{
-  display:block!important;
-  width:calc(100% - 20px)!important;
-  max-width:calc(100% - 20px)!important;
-  margin:10px 10px 12px 10px!important;
-  padding:12px 14px!important;
-  box-sizing:border-box!important;
-  border:1.5px solid #F4A261!important;
-  border-radius:13px!important;
-  background:#FFF8E7!important;
-  overflow:hidden!important;
-  box-shadow:none!important;
-}
-#search-view .duplicate-warning-text{
-  display:block!important;
-  width:100%!important;
-  box-sizing:border-box!important;
-  margin:0!important;
-  padding:0!important;
-  line-height:1.42!important;
-  color:#B35A00!important;
-  font-weight:800!important;
-  word-break:keep-all!important;
-  overflow-wrap:break-word!important;
-}
-#search-view .si-r{
-  width:calc(100% - 20px)!important;
-  max-width:calc(100% - 20px)!important;
-  margin-left:10px!important;
-  margin-right:10px!important;
-  box-sizing:border-box!important;
-  border-radius:13px!important;
-  overflow:hidden!important;
-}
-@media(max-width:560px){
-  #search-view .duplicate-warning-box{
-    width:calc(100% - 18px)!important;
-    max-width:calc(100% - 18px)!important;
-    margin-left:9px!important;
-    margin-right:9px!important;
-  }
-  #search-view .si-r{
-    width:calc(100% - 18px)!important;
-    max-width:calc(100% - 18px)!important;
-    margin-left:9px!important;
-    margin-right:9px!important;
-  }
-}
-
-
-/* V3-117: 관구교구 지역검색 안내문과 중복지역 박스 겹침 수정 */
-#search-view .ss{
-  position:relative!important;
-  top:auto!important;
-  z-index:1!important;
-  margin:-16px -16px 0!important;
-  padding:16px 16px 14px!important;
-  box-sizing:border-box!important;
-}
-#search-view #sres{
-  position:relative!important;
-  z-index:0!important;
-  clear:both!important;
-  display:block!important;
-  margin-top:12px!important;
-  padding-top:0!important;
-}
-#search-view .duplicate-warning-box,
-#search-view .sob{
-  position:relative!important;
-  z-index:0!important;
-}
-#search-view .duplicate-warning-box{
-  margin-top:0!important;
-  margin-bottom:14px!important;
-}
-@media(max-width:560px){
-  #search-view .ss{
-    margin:-16px -16px 0!important;
-    padding:16px 16px 14px!important;
-  }
-  #search-view #sres{
-    margin-top:12px!important;
-  }
-}
-
 /* ---- original diocese.html <style id="oai-diocese-tab-standard-20260504"> block 2 ---- */
-/* V4-62: 탭바 크기/색상 기준은 상단 기본 .tab-bar/.tab 규칙으로 통합했습니다. */
+/* V4-63: 탭바 크기/색상 기준은 상단 기본 .tab-bar/.tab 규칙으로 통합했습니다. */
 #search-view .sh{font-size:calc(11px * var(--dio-effective-font-scale,1))!important;}
 #search-view .se{font-size:calc(13px * var(--dio-effective-font-scale,1))!important;}
 #search-view .sl{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
