@@ -154,7 +154,7 @@
   --cover-bottom-safe: calc(env(safe-area-inset-bottom, 0px) + clamp(7px, calc(var(--cover-vh, 1vh) * 1.1), 10px));
   --cover-h:    calc(var(--cover-vh, 1vh) * 100);
   --cover-main-gap: clamp(5px, calc(var(--cover-vh, 1vh) * 0.82), 8px);
-  --cover-note-reserve: clamp(52px, calc(var(--cover-vh, 1vh) * 5.8), 66px);
+  --cover-note-reserve: clamp(66px, calc(var(--cover-vh, 1vh) * 7.1), 82px);
   --cover-action-h: 50px;
   --cover-action-h-compact: 48px;
   --cover-action-gap: clamp(5px, 1.4vw, 9px);
@@ -2011,7 +2011,7 @@ html.app-active #cover-diocese-box { display: none; }
   position: absolute;
   left: 0;
   right: 0;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 4px);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(18px, calc(var(--cover-vh, 1vh) * 2.4), 24px));
   transform: none;
   flex: 0 0 auto;
   width: 100%;
@@ -2019,7 +2019,7 @@ html.app-active #cover-diocese-box { display: none; }
   margin: 0 auto;
   padding: 0 max(18px, env(safe-area-inset-left, 0px)) 0 max(18px, env(safe-area-inset-right, 0px));
   text-align: center;
-  font-size: clamp(7.8px, calc(var(--cover-vh, 1vh) * 1.1), 9px);
+  font-size: clamp(7.8px, calc(var(--cover-vh, 1vh) * 1.05), 9px);
   font-weight: 500;
   line-height: 1.28;
   letter-spacing: -.02em;
@@ -2858,7 +2858,8 @@ html.oai-font-global #region-body .dio-hd { font-size: calc(17px * var(--app-inn
   .mass-quick-panel .guide-badge { font-size: calc(18px * var(--app-font-scale)); min-height: 40px; margin-bottom: 16px; }
 }
 @media (max-height: 650px) {
-  #cover { --cover-top-safe: calc(env(safe-area-inset-top, 0px) + clamp(58px, calc(var(--cover-vh, 1vh) * 9.4), 74px)); --cover-bottom-safe: calc(env(safe-area-inset-bottom, 0px) + clamp(6px, calc(var(--cover-vh, 1vh) * 1.0), 10px)); --cover-note-reserve: clamp(48px, calc(var(--cover-vh, 1vh) * 5.4), 58px); padding-top: var(--cover-top-safe); padding-bottom: calc(var(--cover-bottom-safe) + var(--cover-note-reserve)); }
+  #cover { --cover-top-safe: calc(env(safe-area-inset-top, 0px) + clamp(58px, calc(var(--cover-vh, 1vh) * 9.4), 74px)); --cover-bottom-safe: calc(env(safe-area-inset-bottom, 0px) + clamp(6px, calc(var(--cover-vh, 1vh) * 1.0), 10px)); --cover-note-reserve: clamp(58px, calc(var(--cover-vh, 1vh) * 6.6), 70px); padding-top: var(--cover-top-safe); padding-bottom: calc(var(--cover-bottom-safe) + var(--cover-note-reserve)); }
+  #cover-bottom-note { bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(12px, calc(var(--cover-vh, 1vh) * 2.0), 18px)); }
   #cover .cover-header { padding-bottom: 6px; }
   #cover .cover-subtitle { font-size: 10px; }
   #cover .cover-grid { row-gap: clamp(2px, calc(var(--cover-vh, 1vh) * 0.5), 4px); }
@@ -3516,7 +3517,7 @@ html.oai-cover-booting body {
 html.oai-cover-booting #cover {
   background-color: var(--cream, var(--v4-bg-cream)) !important;
 }
-/* V4-70: 위쪽 커버 부팅 규칙과 중복되던 동일 블록 제거 */
+/* V4-71: 위쪽 커버 부팅 규칙과 중복되던 동일 블록 제거 */
 
 /* V3-22: 첫 스플래시/로딩 보호막의 금색 십자가를 완전히 숨기고 중립 로딩 원으로 정리 */
 html.oai-first-entry-intro::before {
