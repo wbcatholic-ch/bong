@@ -408,7 +408,7 @@
 
 /* V4-12: 관구교구 본당 수 표시 보정은 js/app-state-guards.js로 분리됨. */
 
-/* V4-8: 커버 글자 크기/문의·건의/PWA 설치 버튼 보조 로직은 js/cover-common.js로 분리 */
+/* 커버 글자 크기/문의·건의/PWA 설치 버튼 보조 로직은 js/cover-common.js로 분리 */
 
 /* V4-12: 경량 성능 보정은 js/app-state-guards.js로 분리됨. */
 
