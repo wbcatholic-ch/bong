@@ -205,17 +205,7 @@
 }
 
 
-/* V3-122: 나의 신앙생활 본당 정보 행 정리 */
-.my-faith-body.my-faith-home-list-body .my-faith-quick-section .my-faith-parish-info-row {
-  background: #E6E8ED !important;
-  border-bottom-color: #D7DAE0 !important;
-}
-.my-faith-body.my-faith-home-list-body .my-faith-quick-section .my-faith-parish-info-row:last-child {
-  border-bottom: 0 !important;
-}
-
-
-/* V3-123: 나의 신앙생활 교구·본당 정보 박스 높이 및 본당 행 강조 */
+/* 나의 신앙생활 교구·본당 정보 행 기준 */
 .my-faith-body.my-faith-home-list-body .my-faith-quick-section .my-faith-list-row {
   min-height: 68px !important;
   padding-top: 12px !important;
@@ -224,4 +214,7 @@
 .my-faith-body.my-faith-home-list-body .my-faith-quick-section .my-faith-parish-info-row {
   background: #DADDE4 !important;
   border-bottom-color: #C9CED8 !important;
+}
+.my-faith-body.my-faith-home-list-body .my-faith-quick-section .my-faith-parish-info-row:last-child {
+  border-bottom: 0 !important;
 }
