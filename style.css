@@ -318,7 +318,7 @@ html, body {
   max-height: var(--cover-h);
 }
 
-/* V4-46: 커버가 가끔 아래로 밀리는 현상 방지.
+/* V4-47: 커버가 가끔 아래로 밀리는 현상 방지.
    JS가 일시적으로 큰 viewport 값을 잡아도 실제 보이는 화면 높이를 우선한다. */
 @supports (height: 100dvh) {
   #cover {
@@ -4828,7 +4828,7 @@ html.oai-font-global #srch-modal .sm-hd .sm-title{
   overflow:hidden!important;
 }
 
-/* V4-46: 성당·성지·피정의집 상부탭 현재 크기 고정 및 아이콘/문구 간격 보정 */
+/* V4-47: 성당·성지·피정의집 상부탭 현재 크기 고정 및 아이콘/문구 간격 보정 */
 :root{
   --oai-v443-map-tabbar-h:80px;
   --oai-v443-map-tab-btn-h:66px;
@@ -4866,4 +4866,51 @@ html.ios-device #app #tabbar .tab-btn{
 }
 html.ios-device #app #tabbar .tab-btn span:not(.tab-icon){
   font-size:var(--oai-v443-map-tab-fs)!important;
+}
+
+
+/* ============================================================
+   V4-47: 커버 새로고침 후 하단 안내문구 겹침 방지
+   - 안내문구를 fixed overlay가 아니라 커버 flex 흐름의 마지막 줄로 둔다.
+   - 나의 신앙생활/새로고침 버튼과 하단 안내문구가 서로 겹치지 않도록 분리한다.
+   ============================================================ */
+#cover {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 4px) !important;
+  isolation: isolate;
+}
+#cover #cover-main-block {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  padding-bottom: 0 !important;
+  box-sizing: border-box !important;
+}
+#cover #cover-bottom-note {
+  position: relative !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  flex: 0 0 auto !important;
+  width: min(100%, 720px) !important;
+  max-width: min(100%, 720px) !important;
+  margin: clamp(5px, calc(var(--cover-vh, 1vh) * 0.7), 8px) auto 0 !important;
+  padding: 2px max(18px, env(safe-area-inset-left, 0px)) calc(5px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-right, 0px)) !important;
+  z-index: 1 !important;
+  background: transparent !important;
+  pointer-events: none !important;
+  box-sizing: border-box !important;
+}
+html.ios-device #cover #cover-bottom-note {
+  position: relative !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  width: min(100%, 720px) !important;
+  max-width: min(100%, 720px) !important;
+  margin-top: clamp(5px, calc(var(--cover-vh, 1vh) * 0.7), 8px) !important;
+  padding-left: max(18px, env(safe-area-inset-left, 0px)) !important;
+  padding-right: max(18px, env(safe-area-inset-right, 0px)) !important;
+  padding-bottom: calc(5px + env(safe-area-inset-bottom, 0px)) !important;
 }

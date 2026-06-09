@@ -347,6 +347,7 @@
   };
 
   function enterIntegratedView(id){
+    try{ if(typeof window.oaiClearMapInfoSelection === 'function') window.oaiClearMapInfoSelection('integrated-view:'+id); }catch(e){ console.warn('[가톨릭길동무]', e); }
     hideIntegratedViews();
     _screen = 'map';
     if(typeof window.oaiSetMainMapLayerHidden === 'function') window.oaiSetMainMapLayerHidden(true);

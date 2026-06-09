@@ -99,3 +99,8 @@
 .trail-myloc { width: 16px; height: 16px; border-radius: 50%; background: #2255cc; border: 2.5px solid var(--v4-surface-white); box-shadow: 0 0 0 4px rgba(34,85,204,.22); }
 
 #trail-view .trail-body { flex: 1; min-height: 0; display: flex; flex-direction: column; width: 100%; }
+
+
+/* V4-41: 순례길 탭바 높이를 관구·교구 탭 기준(55/40)으로 고정 */
+#trail-view .trail-tabs{height:55px!important;min-height:55px!important;max-height:55px!important;padding:0 10px!important;align-items:center!important;box-sizing:border-box!important;}
+#trail-view .trail-tab{height:40px!important;min-height:40px!important;padding:0 12px!important;border-radius:10px!important;font-size:15px!important;line-height:1!important;align-items:center!important;box-sizing:border-box!important;}
