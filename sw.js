@@ -1,37 +1,37 @@
-/* 가톨릭길동무 Service Worker - V4-24
+/* 가톨릭길동무 Service Worker - V4-24-1
    iOS viewport height stability patch
    캐시를 매번 삭제하지 않고, 버전 변경 시 오래된 캐시만 정리합니다.
    localStorage/사용자 설정은 건드리지 않습니다. */
-const CACHE_VERSION = 'catholic-way-V4-24';
+const CACHE_VERSION = 'catholic-way-V4-24-1';
 /* 다이어트 1: 첫 실행에 꼭 필요한 앱 셸만 선캐시합니다.
    성당/성지/피정의집/기도문/관구교구/문의 페이지는 versioned fetch 시 cacheFirst로 저장됩니다. */
 const APP_SHELL = [
   './',
   './index.html',
-  './style.css?v=V4-24',
-  './css/prayer.css?v=V4-24',
-  './css/web.css?v=V4-24',
-  './css/pilgrimage.css?v=V4-24',
-  './css/overlays.css?v=V4-24',
-  './css/cover-modals.css?v=V4-24',
-  './css/myfaith.css?v=V4-24',
-  './css/my-diocese.css?v=V4-24',
-  './js/myfaith.js?v=V4-24',
-  './app.js?v=V4-24',
-  './js/cover-common.js?v=V4-24',
-  './js/touch-ux.js?v=V4-24',
-  './js/prayer-ui.js?v=V4-24',
-  './js/cover-refresh.js?v=V4-24',
-  './js/app-state-guards.js?v=V4-24',
-  './web.js?v=V4-24',
-  './js/route-web-guards.js?v=V4-24',
-  './js/prayer-back.js?v=V4-24',
-  './js/back-controller.js?v=V4-24',
-  './sw-update.js?v=V4-24',
-  './manifest.json?v=V4-24',
-  './icon-192x192.png?v=V4-24',
-  './icon-512x512.png?v=V4-24',
-  './icon-512x512-maskable.png?v=V4-24',
+  './style.css?v=V4-24-1',
+  './css/prayer.css?v=V4-24-1',
+  './css/web.css?v=V4-24-1',
+  './css/pilgrimage.css?v=V4-24-1',
+  './css/overlays.css?v=V4-24-1',
+  './css/cover-modals.css?v=V4-24-1',
+  './css/myfaith.css?v=V4-24-1',
+  './css/my-diocese.css?v=V4-24-1',
+  './js/myfaith.js?v=V4-24-1',
+  './app.js?v=V4-24-1',
+  './js/cover-common.js?v=V4-24-1',
+  './js/touch-ux.js?v=V4-24-1',
+  './js/prayer-ui.js?v=V4-24-1',
+  './js/cover-refresh.js?v=V4-24-1',
+  './js/app-state-guards.js?v=V4-24-1',
+  './web.js?v=V4-24-1',
+  './js/route-web-guards.js?v=V4-24-1',
+  './js/prayer-back.js?v=V4-24-1',
+  './js/back-controller.js?v=V4-24-1',
+  './sw-update.js?v=V4-24-1',
+  './manifest.json?v=V4-24-1',
+  './icon-192x192.png?v=V4-24-1',
+  './icon-512x512.png?v=V4-24-1',
+  './icon-512x512-maskable.png?v=V4-24-1',
 ];
 
 

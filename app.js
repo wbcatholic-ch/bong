@@ -690,7 +690,7 @@ function _ensureCoverBackTrap(reason){
 }
 
 function _resetCoverBackTrap(reason){
-  /* V4-24: 커버 trap 재설정도 js/back-controller.js의 공통 armCoverBackTrap을 우선 사용한다.
+  /* V4-24-1: 커버 trap 재설정도 js/back-controller.js의 공통 armCoverBackTrap을 우선 사용한다.
      이미 trap이 살아 있으면 중복 root/trap을 다시 쌓지 않아 Back을 여러 번 눌러야 하는 상태를 줄인다. */
   try{
     if(_isAppScreenActive()) return;
@@ -1538,7 +1538,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V4-24';
+    frame.src='diocese.html?v=V4-24-1';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -1929,7 +1929,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V4-24';
+const _PARISH_ASSET_VERSION='V4-24-1';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -2092,10 +2092,14 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V4-24';
+const _PRAYER_ASSET_VERSION='V4-24-1';
 let _prayerModuleLoadPromise=null;
+function _isPrayerDataReady(){
+  return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
+}
 function _isPrayerModuleReady(){
-  return typeof window.initPrayerView === 'function' &&
+  return _isPrayerDataReady() &&
+         typeof window.initPrayerView === 'function' &&
          typeof window.prRenderList === 'function' &&
          typeof window.prAdjustFont === 'function';
 }
@@ -2103,32 +2107,45 @@ function _showPrayerLoadingMessage(msg){
   const body=document.getElementById('pr-list-ul');
   if(body) body.innerHTML='<div class="pr-empty">'+(msg||'기도문을 불러오는 중입니다...')+'</div>';
 }
+function _loadPrayerScriptOnce(src, attrName, errMsg){
+  return new Promise(function(resolve,reject){
+    const existing=document.querySelector('script['+attrName+'="true"]');
+    if(existing){
+      if(existing.dataset.loaded === 'true') { resolve(true); return; }
+      existing.addEventListener('load', function(){ resolve(true); }, {once:true});
+      existing.addEventListener('error', function(){ reject(new Error(errMsg)); }, {once:true});
+      return;
+    }
+    const sc=document.createElement('script');
+    sc.src=src;
+    sc.setAttribute(attrName,'true');
+    sc.onload=function(){ sc.dataset.loaded='true'; resolve(true); };
+    sc.onerror=function(){ reject(new Error(errMsg)); };
+    document.head.appendChild(sc);
+  });
+}
 function ensurePrayerModuleLoaded(){
   if(_isPrayerModuleReady()) return Promise.resolve(true);
   if(_prayerModuleLoadPromise) return _prayerModuleLoadPromise;
   _showPrayerLoadingMessage('기도문을 불러오는 중입니다...');
-  _prayerModuleLoadPromise=new Promise(function(resolve,reject){
-    const existing=document.querySelector('script[data-prayer-loader="true"],script[src*="prayer.js"]');
-    function finish(){
-      if(_isPrayerModuleReady()) resolve(true);
-      else reject(new Error('기도문 모듈이 준비되지 않았습니다.'));
-    }
-    if(existing){
-      existing.addEventListener('load', finish, {once:true});
-      existing.addEventListener('error', function(){ reject(new Error('기도문 모듈 로드 실패')); }, {once:true});
-      setTimeout(function(){ try{ if(_isPrayerModuleReady()) finish(); }catch(_e){} }, 0);
-      return;
-    }
-    const sc=document.createElement('script');
-    sc.src='prayer.js?v='+_PRAYER_ASSET_VERSION;
-    sc.dataset.prayerLoader='true';
-    sc.onload=finish;
-    sc.onerror=function(){ reject(new Error('기도문 모듈 로드 실패')); };
-    document.head.appendChild(sc);
-  }).catch(function(err){
-    _prayerModuleLoadPromise=null;
-    throw err;
-  });
+  _prayerModuleLoadPromise=Promise.resolve()
+    .then(function(){
+      if(_isPrayerDataReady()) return true;
+      return _loadPrayerScriptOnce('prayer-data.js?v='+_PRAYER_ASSET_VERSION, 'data-prayer-data-loader', '기도문 데이터 로드 실패');
+    })
+    .then(function(){
+      if(!_isPrayerDataReady()) throw new Error('기도문 데이터가 준비되지 않았습니다.');
+      if(typeof window.initPrayerView === 'function') return true;
+      return _loadPrayerScriptOnce('prayer.js?v='+_PRAYER_ASSET_VERSION, 'data-prayer-loader', '기도문 모듈 로드 실패');
+    })
+    .then(function(){
+      if(_isPrayerModuleReady()) return true;
+      throw new Error('기도문 모듈이 준비되지 않았습니다.');
+    })
+    .catch(function(err){
+      _prayerModuleLoadPromise=null;
+      throw err;
+    });
   return _prayerModuleLoadPromise;
 }
 try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ console.warn('[가톨릭길동무]', e); }
@@ -2137,7 +2154,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V4-24';
+const _RETREAT_ASSET_VERSION='V4-24-1';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2435,7 +2452,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V4-24';
+const _SHRINE_ASSET_VERSION='V4-24-1';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
