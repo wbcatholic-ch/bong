@@ -96,9 +96,9 @@ html.pr-external-guide-active.oai-stability-veil::after {
   inset:0;
   z-index:14000;
   display:none;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
+  align-items:flex-end!important;
+  justify-content:center!important;
+  padding:20px 18px calc(env(safe-area-inset-bottom, 0px) + 18px)!important;
   box-sizing:border-box;
 }
 #route-choice-modal.open{display:flex;}
@@ -111,6 +111,8 @@ html.pr-external-guide-active.oai-stability-veil::after {
 .route-choice-panel{
   position:relative;
   width:min(320px,calc(100vw - 48px));
+  max-height:calc(100vh - 96px - env(safe-area-inset-bottom, 0px));
+  overflow:auto;
   background:#fffdf8;
   border:1px solid rgba(31,41,55,.12);
   border-radius:18px;
