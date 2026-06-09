@@ -1,38 +1,38 @@
-/* 가톨릭길동무 Service Worker - V4-48
+/* 가톨릭길동무 Service Worker - V4-49
    iOS viewport height stability patch
    캐시를 매번 삭제하지 않고, 버전 변경 시 오래된 캐시만 정리합니다.
    localStorage/사용자 설정은 건드리지 않습니다. */
-const CACHE_VERSION = 'catholic-way-V4-48';
+const CACHE_VERSION = 'catholic-way-V4-49';
 /* 다이어트 1: 첫 실행에 꼭 필요한 앱 셸만 선캐시합니다.
    성당/성지/피정의집/기도문/관구교구/문의 페이지는 versioned fetch 시 cacheFirst로 저장됩니다. */
 const APP_SHELL = [
   './',
   './index.html',
-  './style.css?v=V4-48',
-  './css/module-common.css?v=V4-48',
-  './css/prayer.css?v=V4-48',
-  './css/web.css?v=V4-48',
-  './css/pilgrimage.css?v=V4-48',
-  './css/overlays.css?v=V4-48',
-  './css/cover-modals.css?v=V4-48',
-  './css/myfaith.css?v=V4-48',
-  './css/my-diocese.css?v=V4-48',
-  './js/myfaith.js?v=V4-48',
-  './app.js?v=V4-48',
-  './js/cover-common.js?v=V4-48',
-  './js/touch-ux.js?v=V4-48',
-  './js/prayer-ui.js?v=V4-48',
-  './js/cover-refresh.js?v=V4-48',
-  './js/app-state-guards.js?v=V4-48',
-  './web.js?v=V4-48',
-  './js/route-web-guards.js?v=V4-48',
-  './js/prayer-back.js?v=V4-48',
-  './js/back-controller.js?v=V4-48',
-  './sw-update.js?v=V4-48',
-  './manifest.json?v=V4-48',
-  './icon-192x192.png?v=V4-48',
-  './icon-512x512.png?v=V4-48',
-  './icon-512x512-maskable.png?v=V4-48',
+  './style.css?v=V4-49',
+  './css/module-common.css?v=V4-49',
+  './css/prayer.css?v=V4-49',
+  './css/web.css?v=V4-49',
+  './css/pilgrimage.css?v=V4-49',
+  './css/overlays.css?v=V4-49',
+  './css/cover-modals.css?v=V4-49',
+  './css/myfaith.css?v=V4-49',
+  './css/my-diocese.css?v=V4-49',
+  './js/myfaith.js?v=V4-49',
+  './app.js?v=V4-49',
+  './js/cover-common.js?v=V4-49',
+  './js/touch-ux.js?v=V4-49',
+  './js/prayer-ui.js?v=V4-49',
+  './js/cover-refresh.js?v=V4-49',
+  './js/app-state-guards.js?v=V4-49',
+  './web.js?v=V4-49',
+  './js/route-web-guards.js?v=V4-49',
+  './js/prayer-back.js?v=V4-49',
+  './js/back-controller.js?v=V4-49',
+  './sw-update.js?v=V4-49',
+  './manifest.json?v=V4-49',
+  './icon-192x192.png?v=V4-49',
+  './icon-512x512.png?v=V4-49',
+  './icon-512x512-maskable.png?v=V4-49',
 ];
 
 

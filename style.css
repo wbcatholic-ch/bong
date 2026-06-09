@@ -146,9 +146,8 @@
   --bg-color:   #f7f0e5;
   /* 커버 화면 비율 기준 보호 영역 */
   --cover-top-safe: calc(env(safe-area-inset-top, 0px) + clamp(60px, calc(var(--cover-vh, 1vh) * 9.2), 82px));
-  --cover-bottom-safe: calc(env(safe-area-inset-bottom, 0px) + clamp(48px, calc(var(--cover-vh, 1vh) * 6.9), 64px));
+  --cover-bottom-safe: calc(env(safe-area-inset-bottom, 0px) + clamp(8px, calc(var(--cover-vh, 1vh) * 1.4), 14px));
   --cover-h:    calc(var(--cover-vh, 1vh) * 100);
-  --cover-note-reserve: calc(env(safe-area-inset-bottom, 0px) + 48px);
   --text-main:  #3e362e;
   --text-sub:   #7a7065;
   --card-bg:    #ffffff;
@@ -323,7 +322,7 @@ html, body {
   max-height: var(--cover-h);
 }
 
-/* V4-48: 커버가 가끔 아래로 밀리는 현상 방지.
+/* V4-49: 커버가 가끔 아래로 밀리는 현상 방지.
    JS가 일시적으로 큰 viewport 값을 잡아도 실제 보이는 화면 높이를 우선한다. */
 @supports (height: 100dvh) {
   #cover {
@@ -1903,15 +1902,18 @@ html.app-active #cover-action-row { display: none; }
   font-size: calc(11.5px * var(--app-font-scale));
 }
 
-/* 커버 하단 고정 요소 */
+/* 커버 하단 안내문구: 커버 flex 흐름 안의 마지막 줄로 고정한다. */
 #cover-bottom-note {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  flex: none;
-  width: 100%;
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 3px 22px calc(7px + env(safe-area-inset-bottom, 0px)) 60px;
+  position: relative;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  transform: none;
+  flex: 0 0 auto;
+  width: min(100%, 720px);
+  max-width: min(100%, 720px);
+  margin: clamp(5px, calc(var(--cover-vh, 1vh) * 0.7), 8px) auto 0;
+  padding: 2px max(18px, env(safe-area-inset-left, 0px)) calc(5px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-right, 0px));
   text-align: center;
   font-size: clamp(7.8px, calc(var(--cover-vh, 1vh) * 1.1), 9px);
   font-weight: 500;
@@ -1919,7 +1921,7 @@ html.app-active #cover-action-row { display: none; }
   letter-spacing: -.02em;
   color: rgba(96,86,76,.72);
   pointer-events: none;
-  z-index: 8;
+  z-index: 1;
   box-sizing: border-box;
 }
 #cover #oai-build-marker {
@@ -2852,7 +2854,7 @@ html.oai-font-global #region-body .dio-hd { font-size: calc(17px * var(--app-inn
   .mass-quick-panel .guide-badge { font-size: calc(18px * var(--app-font-scale)); min-height: 40px; margin-bottom: 16px; }
 }
 @media (max-height: 650px) {
-  #cover { --cover-top-safe: calc(env(safe-area-inset-top, 0px) + clamp(58px, calc(var(--cover-vh, 1vh) * 9.4), 74px)); --cover-bottom-safe: calc(env(safe-area-inset-bottom, 0px) + clamp(48px, calc(var(--cover-vh, 1vh) * 7.2), 64px)); padding-top: var(--cover-top-safe); padding-bottom: var(--cover-bottom-safe); }
+  #cover { --cover-top-safe: calc(env(safe-area-inset-top, 0px) + clamp(58px, calc(var(--cover-vh, 1vh) * 9.4), 74px)); --cover-bottom-safe: calc(env(safe-area-inset-bottom, 0px) + clamp(6px, calc(var(--cover-vh, 1vh) * 1.2), 12px)); padding-top: var(--cover-top-safe); padding-bottom: var(--cover-bottom-safe); }
   #cover .cover-header { padding-bottom: 6px; }
   #cover .cover-subtitle { font-size: 10px; }
   #cover .cover-grid { row-gap: clamp(2px, calc(var(--cover-vh, 1vh) * 0.5), 4px); }
@@ -3919,25 +3921,6 @@ html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active{
   border-color:transparent!important;
 }
 
-/* V3-12: 커버 하단 안정화 / 하단 버전 표시 숨김 / 안내문구 중앙 정렬 */
-#cover-bottom-note {
-  left: 50% !important;
-  right: auto !important;
-  bottom: 0 !important;
-  transform: translateX(-50%) !important;
-  width: min(100vw, 720px) !important;
-  max-width: min(100vw, 720px) !important;
-  padding: 3px max(18px, env(safe-area-inset-left, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-right, 0px)) !important;
-  text-align: center !important;
-  margin: 0 auto !important;
-}
-html.ios-device #cover #cover-bottom-note {
-  max-width: min(100vw, 720px) !important;
-  padding-left: max(18px, env(safe-area-inset-left, 0px)) !important;
-  padding-right: max(18px, env(safe-area-inset-right, 0px)) !important;
-  text-align: center !important;
-}
-
 /* V3-12: 하단 버전 배지는 내부 비교용으로만 유지하고 화면에서는 숨김 */
 #cover #oai-build-marker {
   display: none !important;
@@ -3960,11 +3943,7 @@ html.ios-device .module-view.open {
   min-height: var(--oai-app-h, 100dvh) !important;
   max-height: var(--oai-app-h, 100dvh) !important;
 }
-html.ios-device #cover {
-  height: var(--oai-app-h, var(--cover-h)) !important;
-  min-height: var(--oai-app-h, var(--cover-h)) !important;
-  max-height: var(--oai-app-h, var(--cover-h)) !important;
-}
+/* iOS 커버 높이는 기본 #cover의 100dvh/cover-h 기준을 사용한다. */
 html.ios-device #diocese-view.open #diocese-frame {
   flex: 1 1 auto !important;
   min-height: 0 !important;
@@ -4451,11 +4430,6 @@ html.app-active #cover-diocese-box { display: none !important; }
   opacity: .42 !important;
   transition: filter .18s ease, opacity .18s ease !important;
 }
-#cover.my-diocese-setup-active + #cover-bottom-note {
-  filter: blur(4px) !important;
-  opacity: .42 !important;
-  transition: filter .18s ease, opacity .18s ease !important;
-}
 #cover.my-diocese-setup-active #cover-diocese-box {
   position: relative !important;
   z-index: 38 !important;
@@ -4806,51 +4780,4 @@ html.oai-font-global #srch-modal .sm-hd .sm-title{
   overflow:hidden!important;
 }
 
-/* V4-48: 상부탭 덮어쓰기 보정 제거 완료 - 기준값은 :root와 기본 #tabbar/.tab-btn 규칙에서 관리 */
-
-
-/* ============================================================
-   V4-48: 커버 새로고침 후 하단 안내문구 겹침 방지
-   - 안내문구를 fixed overlay가 아니라 커버 flex 흐름의 마지막 줄로 둔다.
-   - 나의 신앙생활/새로고침 버튼과 하단 안내문구가 서로 겹치지 않도록 분리한다.
-   ============================================================ */
-#cover {
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 4px) !important;
-  isolation: isolate;
-}
-#cover #cover-main-block {
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  max-height: none !important;
-  padding-bottom: 0 !important;
-  box-sizing: border-box !important;
-}
-#cover #cover-bottom-note {
-  position: relative !important;
-  left: auto !important;
-  right: auto !important;
-  bottom: auto !important;
-  transform: none !important;
-  flex: 0 0 auto !important;
-  width: min(100%, 720px) !important;
-  max-width: min(100%, 720px) !important;
-  margin: clamp(5px, calc(var(--cover-vh, 1vh) * 0.7), 8px) auto 0 !important;
-  padding: 2px max(18px, env(safe-area-inset-left, 0px)) calc(5px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-right, 0px)) !important;
-  z-index: 1 !important;
-  background: transparent !important;
-  pointer-events: none !important;
-  box-sizing: border-box !important;
-}
-html.ios-device #cover #cover-bottom-note {
-  position: relative !important;
-  left: auto !important;
-  right: auto !important;
-  bottom: auto !important;
-  transform: none !important;
-  width: min(100%, 720px) !important;
-  max-width: min(100%, 720px) !important;
-  margin-top: clamp(5px, calc(var(--cover-vh, 1vh) * 0.7), 8px) !important;
-  padding-left: max(18px, env(safe-area-inset-left, 0px)) !important;
-  padding-right: max(18px, env(safe-area-inset-right, 0px)) !important;
-  padding-bottom: calc(5px + env(safe-area-inset-bottom, 0px)) !important;
-}
+/* V4-49: 상부탭 덮어쓰기 보정 제거 완료 - 기준값은 :root와 기본 #tabbar/.tab-btn 규칙에서 관리 */
