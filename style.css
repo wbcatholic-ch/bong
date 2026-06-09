@@ -151,10 +151,10 @@
   --bg-color:   #f7f0e5;
   /* 커버 화면 비율 기준 보호 영역 */
   --cover-top-safe: calc(env(safe-area-inset-top, 0px) + clamp(60px, calc(var(--cover-vh, 1vh) * 9.2), 82px));
-  --cover-bottom-safe: calc(env(safe-area-inset-bottom, 0px) + clamp(8px, calc(var(--cover-vh, 1vh) * 1.4), 14px));
+  --cover-bottom-safe: calc(env(safe-area-inset-bottom, 0px) + clamp(7px, calc(var(--cover-vh, 1vh) * 1.1), 10px));
   --cover-h:    calc(var(--cover-vh, 1vh) * 100);
   --cover-main-gap: clamp(5px, calc(var(--cover-vh, 1vh) * 0.82), 8px);
-  --cover-note-reserve: clamp(48px, calc(var(--cover-vh, 1vh) * 5.2), 62px);
+  --cover-note-reserve: clamp(52px, calc(var(--cover-vh, 1vh) * 5.8), 66px);
   --cover-action-h: 50px;
   --cover-action-h-compact: 48px;
   --cover-action-gap: clamp(5px, 1.4vw, 9px);
@@ -330,29 +330,16 @@ html, body {
   color: var(--text-main);
   font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
   padding-top: var(--cover-top-safe);
-  padding-bottom: var(--cover-bottom-safe);
+  padding-bottom: calc(var(--cover-bottom-safe) + var(--cover-note-reserve));
   box-sizing: border-box;
   height: var(--cover-h);
   min-height: var(--cover-h);
   max-height: var(--cover-h);
 }
 
-/* 커버가 가끔 아래로 밀리는 현상 방지.
-   JS가 일시적으로 큰 viewport 값을 잡아도 실제 보이는 화면 높이를 우선한다. */
-@supports (height: 100dvh) {
-  #cover {
-    height: 100dvh;
-    min-height: 100dvh;
-    max-height: 100dvh;
-  }
-}
-@supports (height: 100svh) {
-  html.oai-cover-booting #cover {
-    height: 100svh;
-    min-height: 100svh;
-    max-height: 100svh;
-  }
-}
+/* 커버 높이는 위의 --cover-h 한 기준만 사용한다.
+   일부 모바일 PWA에서 reload 직후 100dvh가 실제 보이는 화면보다 크게 잡혀
+   하단 안내문구가 화면 밖으로 밀렸으므로 dynamic viewport override는 사용하지 않는다. */
 
 html.app-active #cover { display: none; }
 
@@ -1720,7 +1707,7 @@ html.oai-cover-booting #cover > * {
 #cover-main-block {
   flex: 1 1 0;
   height: auto;
-  max-height: calc(100% - var(--cover-note-reserve, 54px));
+  max-height: 100%;
   min-height: 0;
   width: 100%;
   contain: layout paint;
@@ -2019,18 +2006,18 @@ html.app-active #cover-diocese-box { display: none; }
   font-size: calc(11.5px * var(--app-font-scale));
 }
 
-/* 커버 하단 안내문구: 커버 flex 흐름 안의 마지막 줄로 고정한다. */
+/* 커버 하단 안내문구: 카드/새로고침 묶음과 분리해 화면 최하단에 고정한다. */
 #cover-bottom-note {
-  position: relative;
-  left: auto;
-  right: auto;
-  bottom: auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 4px);
   transform: none;
   flex: 0 0 auto;
-  width: min(100%, 720px);
-  max-width: min(100%, 720px);
-  margin: clamp(10px, calc(var(--cover-vh, 1vh) * 1.1), 14px) auto 0;
-  padding: 2px max(18px, env(safe-area-inset-left, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-right, 0px));
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  padding: 0 max(18px, env(safe-area-inset-left, 0px)) 0 max(18px, env(safe-area-inset-right, 0px));
   text-align: center;
   font-size: clamp(7.8px, calc(var(--cover-vh, 1vh) * 1.1), 9px);
   font-weight: 500;
@@ -2871,7 +2858,7 @@ html.oai-font-global #region-body .dio-hd { font-size: calc(17px * var(--app-inn
   .mass-quick-panel .guide-badge { font-size: calc(18px * var(--app-font-scale)); min-height: 40px; margin-bottom: 16px; }
 }
 @media (max-height: 650px) {
-  #cover { --cover-top-safe: calc(env(safe-area-inset-top, 0px) + clamp(58px, calc(var(--cover-vh, 1vh) * 9.4), 74px)); --cover-bottom-safe: calc(env(safe-area-inset-bottom, 0px) + clamp(6px, calc(var(--cover-vh, 1vh) * 1.2), 12px)); padding-top: var(--cover-top-safe); padding-bottom: var(--cover-bottom-safe); }
+  #cover { --cover-top-safe: calc(env(safe-area-inset-top, 0px) + clamp(58px, calc(var(--cover-vh, 1vh) * 9.4), 74px)); --cover-bottom-safe: calc(env(safe-area-inset-bottom, 0px) + clamp(6px, calc(var(--cover-vh, 1vh) * 1.0), 10px)); --cover-note-reserve: clamp(48px, calc(var(--cover-vh, 1vh) * 5.4), 58px); padding-top: var(--cover-top-safe); padding-bottom: calc(var(--cover-bottom-safe) + var(--cover-note-reserve)); }
   #cover .cover-header { padding-bottom: 6px; }
   #cover .cover-subtitle { font-size: 10px; }
   #cover .cover-grid { row-gap: clamp(2px, calc(var(--cover-vh, 1vh) * 0.5), 4px); }
@@ -3371,7 +3358,7 @@ html.ios-device .module-view.open {
   min-height: var(--oai-app-h, 100dvh) !important;
   max-height: var(--oai-app-h, 100dvh) !important;
 }
-/* iOS 커버 높이는 기본 #cover의 100dvh/cover-h 기준을 사용한다. */
+/* iOS 커버 높이는 기본 #cover의 --cover-h 기준을 사용한다. */
 html.ios-device #diocese-view.open #diocese-frame {
   flex: 1 1 auto !important;
   min-height: 0 !important;
@@ -3529,7 +3516,7 @@ html.oai-cover-booting body {
 html.oai-cover-booting #cover {
   background-color: var(--cream, var(--v4-bg-cream)) !important;
 }
-/* V4-69: 위쪽 커버 부팅 규칙과 중복되던 동일 블록 제거 */
+/* V4-70: 위쪽 커버 부팅 규칙과 중복되던 동일 블록 제거 */
 
 /* V3-22: 첫 스플래시/로딩 보호막의 금색 십자가를 완전히 숨기고 중립 로딩 원으로 정리 */
 html.oai-first-entry-intro::before {
