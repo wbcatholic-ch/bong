@@ -1,0 +1,2060 @@
+{
+  "baseline": "pwa_V4-28_map_category_structure_audit_full.zip",
+  "state_count": 50,
+  "state": [
+    {
+      "key": "map",
+      "initial": "null",
+      "comment": "Kakao 지도 인스턴스"
+    },
+    {
+      "key": "markers",
+      "initial": "[]",
+      "comment": "성지/성당 마커 배열"
+    },
+    {
+      "key": "retreatMarkers",
+      "initial": "[]",
+      "comment": "피정의 집 마커 배열"
+    },
+    {
+      "key": "myMkr",
+      "initial": "null",
+      "comment": "내 위치 마커"
+    },
+    {
+      "key": "myLat",
+      "initial": "null",
+      "comment": "내 위치 위도"
+    },
+    {
+      "key": "myLng",
+      "initial": "null",
+      "comment": "내 위치 경도"
+    },
+    {
+      "key": "jukrimgulParkMkr",
+      "initial": "null",
+      "comment": "죽림굴 주차장 마커"
+    },
+    {
+      "key": "startTmpMkr",
+      "initial": "null",
+      "comment": "출발지 임시 마커"
+    },
+    {
+      "key": "endTmpMkr",
+      "initial": "null",
+      "comment": "도착지 임시 마커"
+    },
+    {
+      "key": "paSelMkr",
+      "initial": "null",
+      "comment": "parish/retreat 선택 마커"
+    },
+    {
+      "key": "selIdx",
+      "initial": "-1",
+      "comment": "현재 선택된 shrine 마커 인덱스"
+    },
+    {
+      "key": "polyline",
+      "initial": "null",
+      "comment": "경로 폴리라인"
+    },
+    {
+      "key": "mode",
+      "initial": "'shrine'",
+      "comment": "'shrine' | 'parish' | 'retreat'"
+    },
+    {
+      "key": "screen",
+      "initial": "'cover'",
+      "comment": "'cover' | 'map'"
+    },
+    {
+      "key": "activeTab",
+      "initial": "null",
+      "comment": "현재 열린 탭 이름"
+    },
+    {
+      "key": "filterDio",
+      "initial": "'all'",
+      "comment": "교구 필터"
+    },
+    {
+      "key": "listSrch",
+      "initial": "''",
+      "comment": "목록 검색어"
+    },
+    {
+      "key": "regionLat",
+      "initial": "null",
+      "comment": ""
+    },
+    {
+      "key": "regionLng",
+      "initial": "null",
+      "comment": ""
+    },
+    {
+      "key": "regionName",
+      "initial": "''",
+      "comment": ""
+    },
+    {
+      "key": "regionPlaceName",
+      "initial": "''",
+      "comment": ""
+    },
+    {
+      "key": "regionCache",
+      "initial": "[]",
+      "comment": "지역검색 결과 캐시"
+    },
+    {
+      "key": "regionMarker",
+      "initial": "null",
+      "comment": "지역검색 선택 장소 보라색 마커"
+    },
+    {
+      "key": "regionResultMarkers",
+      "initial": "[]",
+      "comment": "성당 지역검색 결과 전용 임시 마커"
+    },
+    {
+      "key": "nearbyCache",
+      "initial": "[]",
+      "comment": "내주변 결과 캐시"
+    },
+    {
+      "key": "nearbyParishMarkers",
+      "initial": "[]",
+      "comment": "성당 첫 진입/내주변 10곳 전용 마커"
+    },
+    {
+      "key": "nearbyLoadToken",
+      "initial": "0",
+      "comment": "내주변 비동기 거리 계산 최신 요청 번호"
+    },
+    {
+      "key": "routeMode",
+      "initial": "false",
+      "comment": ""
+    },
+    {
+      "key": "rS",
+      "initial": "null",
+      "comment": "출발지 {lat, lng, name, idx}"
+    },
+    {
+      "key": "rE",
+      "initial": "null",
+      "comment": "도착지"
+    },
+    {
+      "key": "routeRegionStart",
+      "initial": "null",
+      "comment": "지역검색에서 길찾기 시작 시 출발지 보존"
+    },
+    {
+      "key": "routeStartMarkerExplicitCurrent",
+      "initial": "false",
+      "comment": "길찾기 탭의 '현위치' 버튼을 눌렀을 때만 출발지 임시 마커 표시"
+    },
+    {
+      "key": "smRole",
+      "initial": "'start'",
+      "comment": ""
+    },
+    {
+      "key": "smDio",
+      "initial": "'all'",
+      "comment": ""
+    },
+    {
+      "key": "curInfoItem",
+      "initial": "null",
+      "comment": "현재 열린 인포카드 아이템"
+    },
+    {
+      "key": "curFromRegion",
+      "initial": "false",
+      "comment": "인포카드가 지역검색에서 열렸는지"
+    },
+    {
+      "key": "kakaoLaunching",
+      "initial": "false",
+      "comment": ""
+    },
+    {
+      "key": "mapInited",
+      "initial": "false",
+      "comment": ""
+    },
+    {
+      "key": "dp",
+      "initial": "null",
+      "comment": "PWA install prompt (BeforeInstallPromptEvent)"
+    },
+    {
+      "key": "exitReady",
+      "initial": "false",
+      "comment": ""
+    },
+    {
+      "key": "exitTimer",
+      "initial": "null",
+      "comment": ""
+    },
+    {
+      "key": "dioMkrs",
+      "initial": "{}",
+      "comment": "code → [Marker, ...]"
+    },
+    {
+      "key": "dioOverlays",
+      "initial": "{}",
+      "comment": "code → CustomOverlay"
+    },
+    {
+      "key": "activeDio",
+      "initial": "null",
+      "comment": "현재 마커 펼쳐진 교구 코드"
+    },
+    {
+      "key": "parishSysInited",
+      "initial": "false",
+      "comment": ""
+    },
+    {
+      "key": "parishIdleListener",
+      "initial": "null",
+      "comment": "뷰포트 필터링용 idle 이벤트 리스너"
+    },
+    {
+      "key": "parishDioUserZoomTouched",
+      "initial": "false",
+      "comment": "사용자가 성당 교구 지도에서 직접 확대/축소했는지"
+    },
+    {
+      "key": "parishDioProgrammaticMoveUntil",
+      "initial": "0",
+      "comment": "앱이 조정한 줌 변경을 사용자 조작으로 오인하지 않기 위한 보호 시간"
+    },
+    {
+      "key": "smPlaceDebounce",
+      "initial": "null",
+      "comment": ""
+    },
+    {
+      "key": "smTab",
+      "initial": "'cat'",
+      "comment": "'cat' | 'place'"
+    }
+  ],
+  "function_count": 331,
+  "categories": {
+    "data_load": [
+      {
+        "name": "_ensureCoverBackTrap",
+        "line": 675
+      },
+      {
+        "name": "_ensureAppBackTrap",
+        "line": 710
+      },
+      {
+        "name": "_getParishDioceseAsset",
+        "line": 1933
+      },
+      {
+        "name": "_getParishDioceseRawStore",
+        "line": 1936
+      },
+      {
+        "name": "_getParishRawByDioceseCode",
+        "line": 1940
+      },
+      {
+        "name": "_rememberParishDioceseLoaded",
+        "line": 1947
+      },
+      {
+        "name": "_isParishDioceseReady",
+        "line": 1951
+      },
+      {
+        "name": "_areAllParishDiocesesReady",
+        "line": 1954
+      },
+      {
+        "name": "_rememberAllParishDiocesesLoadedFromRaw",
+        "line": 1957
+      },
+      {
+        "name": "_mergeLoadedParishRaw",
+        "line": 1964
+      },
+      {
+        "name": "_getLegacyParishRawGlobal",
+        "line": 1973
+      },
+      {
+        "name": "_getParishRawGlobal",
+        "line": 1978
+      },
+      {
+        "name": "_buildParishList",
+        "line": 1984
+      },
+      {
+        "name": "_setParishRawData",
+        "line": 1998
+      },
+      {
+        "name": "_refreshParishDataFromLoadedDioceses",
+        "line": 2006
+      },
+      {
+        "name": "_initParishDataFromGlobal",
+        "line": 2010
+      },
+      {
+        "name": "_showParishDataLoadingMessage",
+        "line": 2013
+      },
+      {
+        "name": "_afterParishDataLoaded",
+        "line": 2021
+      },
+      {
+        "name": "_ensureParishDioceseDataLoaded",
+        "line": 2030
+      },
+      {
+        "name": "_ensureAllParishDiocesesLoaded",
+        "line": 2069
+      },
+      {
+        "name": "_ensureParishDataLoaded",
+        "line": 2084
+      },
+      {
+        "name": "_isPrayerDataReady",
+        "line": 2097
+      },
+      {
+        "name": "ensurePrayerModuleLoaded",
+        "line": 2127
+      },
+      {
+        "name": "_buildRetreatList",
+        "line": 2160
+      },
+      {
+        "name": "_getRetreatRawGlobal",
+        "line": 2163
+      },
+      {
+        "name": "_setRetreatRawData",
+        "line": 2167
+      },
+      {
+        "name": "_initRetreatDataFromGlobal",
+        "line": 2173
+      },
+      {
+        "name": "_ensureRetreatDataLoaded",
+        "line": 2177
+      },
+      {
+        "name": "_getRetreatColor",
+        "line": 2218
+      },
+      {
+        "name": "_decodeShrineHomePage",
+        "line": 2458
+      },
+      {
+        "name": "_buildShrineList",
+        "line": 2464
+      },
+      {
+        "name": "_getShrineRawGlobal",
+        "line": 2473
+      },
+      {
+        "name": "_rebuildShrineSpecialIndexes",
+        "line": 2477
+      },
+      {
+        "name": "_setShrineRawData",
+        "line": 2480
+      },
+      {
+        "name": "_initShrineDataFromGlobal",
+        "line": 2487
+      },
+      {
+        "name": "_ensureShrineDataLoaded",
+        "line": 2491
+      },
+      {
+        "name": "_mkrImgRetreat",
+        "line": 3973
+      },
+      {
+        "name": "_buildShrineMarkers",
+        "line": 4061
+      },
+      {
+        "name": "_clearShrineMarkers",
+        "line": 4089
+      },
+      {
+        "name": "_selectShrineMarker",
+        "line": 4153
+      },
+      {
+        "name": "_clearShrineMarkerSel",
+        "line": 4165
+      },
+      {
+        "name": "_clearParishNearbyMarkers",
+        "line": 4174
+      },
+      {
+        "name": "_fitParishNearbyBounds",
+        "line": 4182
+      },
+      {
+        "name": "_showParishNearbyMarkersOnMap",
+        "line": 4205
+      },
+      {
+        "name": "_showAllShrinesOnMapWithNearbyBounds",
+        "line": 4262
+      },
+      {
+        "name": "_selectParishMarker",
+        "line": 4294
+      },
+      {
+        "name": "_isParishDioBoundsOutlier",
+        "line": 4343
+      },
+      {
+        "name": "_rebuildParishDioIndex",
+        "line": 4356
+      },
+      {
+        "name": "_markParishDioProgrammaticMove",
+        "line": 4376
+      },
+      {
+        "name": "_centerParishDioWithoutZoom",
+        "line": 4398
+      },
+      {
+        "name": "_focusParishPointAround",
+        "line": 4410
+      },
+      {
+        "name": "_buildParishDioSystem",
+        "line": 4435
+      },
+      {
+        "name": "_isParishRouteLineActive",
+        "line": 4481
+      },
+      {
+        "name": "_syncParishDioLabels",
+        "line": 4495
+      },
+      {
+        "name": "_toggleParishDio",
+        "line": 4519
+      },
+      {
+        "name": "_focusParishDio",
+        "line": 4541
+      },
+      {
+        "name": "_fitParishDioBounds",
+        "line": 4551
+      },
+      {
+        "name": "_ensureParishMarkerZoom",
+        "line": 4604
+      },
+      {
+        "name": "_showParishDioMkrs",
+        "line": 4610
+      },
+      {
+        "name": "_updateParishViewport",
+        "line": 4657
+      },
+      {
+        "name": "_hideParishDioMkrs",
+        "line": 4671
+      },
+      {
+        "name": "_buildRetreatMarkers",
+        "line": 4679
+      },
+      {
+        "name": "_clearRetreatMarkers",
+        "line": 4699
+      },
+      {
+        "name": "_restoreRetreatMarkers",
+        "line": 4703
+      },
+      {
+        "name": "_selectRetreatMarker",
+        "line": 4710
+      },
+      {
+        "name": "_clearParishMarkers",
+        "line": 4718
+      },
+      {
+        "name": "_showCurrentParishDioIfIdle",
+        "line": 4765
+      },
+      {
+        "name": "_loadNearbyShrines",
+        "line": 4937
+      },
+      {
+        "name": "_loadNearbyParishes",
+        "line": 4940
+      },
+      {
+        "name": "_loadNearbyRetreats",
+        "line": 4952
+      },
+      {
+        "name": "_ensureCurrentLocationStart",
+        "line": 5358
+      },
+      {
+        "name": "_hideParishMarkersForRouteDisplay",
+        "line": 5612
+      },
+      {
+        "name": "_hideRetreatMarkersForRouteDisplay",
+        "line": 5630
+      }
+    ],
+    "map_init": [
+      {
+        "name": "oaiSetMainMapLayerHidden",
+        "line": 511
+      },
+      {
+        "name": "_resetMapState",
+        "line": 3021
+      },
+      {
+        "name": "_loadMap",
+        "line": 3082
+      },
+      {
+        "name": "_mapError",
+        "line": 3098
+      },
+      {
+        "name": "_onMapReady",
+        "line": 3107
+      },
+      {
+        "name": "closeCategoryToCoverFromMap",
+        "line": 3173
+      },
+      {
+        "name": "zoomCategoryMap",
+        "line": 3178
+      },
+      {
+        "name": "_setMapCenterByInfoCardStandard",
+        "line": 3416
+      },
+      {
+        "name": "_biasCurrentMapCenterToInfoCardStandard",
+        "line": 3437
+      },
+      {
+        "name": "selectMapFromSearchModal",
+        "line": 3936
+      },
+      {
+        "name": "_restoreMapMarkers",
+        "line": 4093
+      },
+      {
+        "name": "_showParishNearbyMarkersOnMap",
+        "line": 4205
+      },
+      {
+        "name": "_showItemsOnMap",
+        "line": 4245
+      },
+      {
+        "name": "_showAllShrinesOnMapWithNearbyBounds",
+        "line": 4262
+      },
+      {
+        "name": "_showRegionResultsOnMap",
+        "line": 5160
+      },
+      {
+        "name": "_openRegionMapFromCard",
+        "line": 5188
+      }
+    ],
+    "tabs": [
+      {
+        "name": "markExternalReturnStabilize",
+        "line": 39
+      },
+      {
+        "name": "oaiReleaseStabilityVeil",
+        "line": 65
+      },
+      {
+        "name": "oaiHoldStabilityVeil",
+        "line": 125
+      },
+      {
+        "name": "oaiStartExternalReturnStabilize",
+        "line": 416
+      },
+      {
+        "name": "applyExternalReturnStabilize",
+        "line": 457
+      },
+      {
+        "name": "_openPrayerReturnQuickMenuStable",
+        "line": 899
+      },
+      {
+        "name": "_schedulePrayerReturnQuickMenuStable",
+        "line": 933
+      },
+      {
+        "name": "oaiPreopenNearbySheetForCategory",
+        "line": 2888
+      },
+      {
+        "name": "_updateSheetPanelTitles",
+        "line": 3142
+      },
+      {
+        "name": "closeSheetPanelOnly",
+        "line": 3151
+      },
+      {
+        "name": "closeRouteSheetByX",
+        "line": 3159
+      },
+      {
+        "name": "openTab",
+        "line": 3188
+      },
+      {
+        "name": "closeTab",
+        "line": 3249
+      },
+      {
+        "name": "_closeSheetOnly",
+        "line": 3298
+      },
+      {
+        "name": "closeAllTabs",
+        "line": 3303
+      },
+      {
+        "name": "_scrollSheetTop",
+        "line": 3309
+      },
+      {
+        "name": "_resetTabWork",
+        "line": 3316
+      },
+      {
+        "name": "toggleTab",
+        "line": 3335
+      },
+      {
+        "name": "_updateTabBtns",
+        "line": 3359
+      },
+      {
+        "name": "oaiScrollActiveTabIntoView",
+        "line": 3372
+      },
+      {
+        "name": "oaiKeepActiveTabsVisible",
+        "line": 3382
+      },
+      {
+        "name": "smSwitchTab",
+        "line": 5793
+      }
+    ],
+    "info_card": [
+      {
+        "name": "oaiGetExternalNavInfo",
+        "line": 386
+      },
+      {
+        "name": "_getInfoCardCenterTargetY",
+        "line": 3411
+      },
+      {
+        "name": "_setMapCenterByInfoCardStandard",
+        "line": 3416
+      },
+      {
+        "name": "_biasCurrentMapCenterToInfoCardStandard",
+        "line": 3437
+      },
+      {
+        "name": "_setBoundsByInfoCardStandard",
+        "line": 3443
+      },
+      {
+        "name": "_focusMarkerAboveInfoCard",
+        "line": 3493
+      },
+      {
+        "name": "_fitInfoCardButtons",
+        "line": 3534
+      },
+      {
+        "name": "_showInfoCard",
+        "line": 3550
+      },
+      {
+        "name": "closeInfoCard",
+        "line": 3627
+      },
+      {
+        "name": "_infoRouteHasFixedStart",
+        "line": 3807
+      },
+      {
+        "name": "_openInfoRouteChoice",
+        "line": 3866
+      },
+      {
+        "name": "_closeInfoRouteChoice",
+        "line": 3880
+      },
+      {
+        "name": "_setInfoRouteStart",
+        "line": 3888
+      },
+      {
+        "name": "_runInfoRouteToEndWithStart",
+        "line": 3896
+      },
+      {
+        "name": "_setInfoRouteEnd",
+        "line": 3904
+      }
+    ],
+    "route": [
+      {
+        "name": "clearRouteNoFocus",
+        "line": 1762
+      },
+      {
+        "name": "_getRouteGuideTarget",
+        "line": 2220
+      },
+      {
+        "name": "_kakaoDirectionsFetch",
+        "line": 2250
+      },
+      {
+        "name": "_navFetch",
+        "line": 2415
+      },
+      {
+        "name": "closeRouteSheetByX",
+        "line": 3159
+      },
+      {
+        "name": "_getRouteBoundsPadding",
+        "line": 3459
+      },
+      {
+        "name": "_fitRouteBounds",
+        "line": 3476
+      },
+      {
+        "name": "openInAppRoute",
+        "line": 3645
+      },
+      {
+        "name": "_routeStartLabelFilled",
+        "line": 3686
+      },
+      {
+        "name": "_routeHasVisibleStart",
+        "line": 3693
+      },
+      {
+        "name": "_restoreRouteSelectionMarkersAfterReset",
+        "line": 3696
+      },
+      {
+        "name": "_clearRouteVisualOnly",
+        "line": 3719
+      },
+      {
+        "name": "_restoreRouteMarkerVisual",
+        "line": 3729
+      },
+      {
+        "name": "_refreshExistingRoutePointMarkerImages",
+        "line": 3739
+      },
+      {
+        "name": "_restoreMarkersForRouteDestinationSelection",
+        "line": 3753
+      },
+      {
+        "name": "_setRoutePointFromItem",
+        "line": 3783
+      },
+      {
+        "name": "_infoRouteHasFixedStart",
+        "line": 3807
+      },
+      {
+        "name": "_prepareRouteChoiceSetUI",
+        "line": 3821
+      },
+      {
+        "name": "_prepareRouteCancelUI",
+        "line": 3835
+      },
+      {
+        "name": "_openRoutePointCancelChoice",
+        "line": 3851
+      },
+      {
+        "name": "_handleRouteChoiceStart",
+        "line": 3858
+      },
+      {
+        "name": "_handleRouteChoiceEnd",
+        "line": 3862
+      },
+      {
+        "name": "_openInfoRouteChoice",
+        "line": 3866
+      },
+      {
+        "name": "_closeInfoRouteChoice",
+        "line": 3880
+      },
+      {
+        "name": "_setInfoRouteStart",
+        "line": 3888
+      },
+      {
+        "name": "_runInfoRouteToEndWithStart",
+        "line": 3896
+      },
+      {
+        "name": "_setInfoRouteEnd",
+        "line": 3904
+      },
+      {
+        "name": "openKakaoNav",
+        "line": 3947
+      },
+      {
+        "name": "_mkrImgRoute",
+        "line": 3992
+      },
+      {
+        "name": "_setRouteMarkerZ",
+        "line": 4000
+      },
+      {
+        "name": "_clearRouteTmpMarkers",
+        "line": 4012
+      },
+      {
+        "name": "_routeEndMarkerColor",
+        "line": 4016
+      },
+      {
+        "name": "_shouldShowRouteStartMarker",
+        "line": 4022
+      },
+      {
+        "name": "_refreshRouteTmpMarkers",
+        "line": 4030
+      },
+      {
+        "name": "_isParishRouteLineActive",
+        "line": 4481
+      },
+      {
+        "name": "_showRouteGuideText",
+        "line": 5329
+      },
+      {
+        "name": "_hideRouteGuide",
+        "line": 5341
+      },
+      {
+        "name": "_enterRouteMode",
+        "line": 5392
+      },
+      {
+        "name": "_exitRouteMode",
+        "line": 5409
+      },
+      {
+        "name": "_setRouteLabel",
+        "line": 5440
+      },
+      {
+        "name": "doSearchRoute",
+        "line": 5457
+      },
+      {
+        "name": "swapRoute",
+        "line": 5464
+      },
+      {
+        "name": "_clearRouteResultOnly",
+        "line": 5480
+      },
+      {
+        "name": "clearRoute",
+        "line": 5490
+      },
+      {
+        "name": "resetRoute",
+        "line": 5514
+      },
+      {
+        "name": "_routePointMatchesItem",
+        "line": 5580
+      },
+      {
+        "name": "_selectRouteItem",
+        "line": 5588
+      },
+      {
+        "name": "_hideParishMarkersForRouteDisplay",
+        "line": 5612
+      },
+      {
+        "name": "_hideRetreatMarkersForRouteDisplay",
+        "line": 5630
+      },
+      {
+        "name": "_hideCategoryMarkersForRouteDisplay",
+        "line": 5642
+      },
+      {
+        "name": "doKakaoRoute",
+        "line": 5781
+      }
+    ],
+    "markers": [
+      {
+        "name": "_getModeMarkerColor",
+        "line": 2219
+      },
+      {
+        "name": "_focusMarkerAboveInfoCard",
+        "line": 3493
+      },
+      {
+        "name": "_restoreRouteSelectionMarkersAfterReset",
+        "line": 3696
+      },
+      {
+        "name": "_restoreRouteMarkerVisual",
+        "line": 3729
+      },
+      {
+        "name": "_refreshExistingRoutePointMarkerImages",
+        "line": 3739
+      },
+      {
+        "name": "_restoreMarkersForRouteDestinationSelection",
+        "line": 3753
+      },
+      {
+        "name": "_mkrImgRetreat",
+        "line": 3973
+      },
+      {
+        "name": "_mkrImg",
+        "line": 3980
+      },
+      {
+        "name": "_mkrImgRoute",
+        "line": 3992
+      },
+      {
+        "name": "_setRouteMarkerZ",
+        "line": 4000
+      },
+      {
+        "name": "_clearRouteTmpMarkers",
+        "line": 4012
+      },
+      {
+        "name": "_routeEndMarkerColor",
+        "line": 4016
+      },
+      {
+        "name": "_shouldShowRouteStartMarker",
+        "line": 4022
+      },
+      {
+        "name": "_refreshRouteTmpMarkers",
+        "line": 4030
+      },
+      {
+        "name": "_buildShrineMarkers",
+        "line": 4061
+      },
+      {
+        "name": "_clearShrineMarkers",
+        "line": 4089
+      },
+      {
+        "name": "_restoreMapMarkers",
+        "line": 4093
+      },
+      {
+        "name": "_restoreAllCategoryMarkersForSelection",
+        "line": 4125
+      },
+      {
+        "name": "_selectShrineMarker",
+        "line": 4153
+      },
+      {
+        "name": "_clearShrineMarkerSel",
+        "line": 4165
+      },
+      {
+        "name": "_clearParishNearbyMarkers",
+        "line": 4174
+      },
+      {
+        "name": "_showParishNearbyMarkersOnMap",
+        "line": 4205
+      },
+      {
+        "name": "_selectParishMarker",
+        "line": 4294
+      },
+      {
+        "name": "_ensureParishMarkerZoom",
+        "line": 4604
+      },
+      {
+        "name": "_showParishDioMkrs",
+        "line": 4610
+      },
+      {
+        "name": "_hideParishDioMkrs",
+        "line": 4671
+      },
+      {
+        "name": "_buildRetreatMarkers",
+        "line": 4679
+      },
+      {
+        "name": "_clearRetreatMarkers",
+        "line": 4699
+      },
+      {
+        "name": "_restoreRetreatMarkers",
+        "line": 4703
+      },
+      {
+        "name": "_selectRetreatMarker",
+        "line": 4710
+      },
+      {
+        "name": "_clearParishMarkers",
+        "line": 4718
+      },
+      {
+        "name": "_clearRegionMarker",
+        "line": 5117
+      },
+      {
+        "name": "_clearRegionResultMarkers",
+        "line": 5120
+      },
+      {
+        "name": "_showRegionPlaceMarker",
+        "line": 5134
+      },
+      {
+        "name": "_hideParishMarkersForRouteDisplay",
+        "line": 5612
+      },
+      {
+        "name": "_hideRetreatMarkersForRouteDisplay",
+        "line": 5630
+      },
+      {
+        "name": "_hideCategoryMarkersForRouteDisplay",
+        "line": 5642
+      },
+      {
+        "name": "_showJukrimgulParkingMkr",
+        "line": 5746
+      }
+    ],
+    "nearby": [
+      {
+        "name": "oaiPreopenNearbySheetForCategory",
+        "line": 2888
+      },
+      {
+        "name": "_clearParishNearbyMarkers",
+        "line": 4174
+      },
+      {
+        "name": "_fitParishNearbyBounds",
+        "line": 4182
+      },
+      {
+        "name": "_showParishNearbyMarkersOnMap",
+        "line": 4205
+      },
+      {
+        "name": "_showAllShrinesOnMapWithNearbyBounds",
+        "line": 4262
+      },
+      {
+        "name": "_beginNearbyLoad",
+        "line": 4813
+      },
+      {
+        "name": "_cancelNearbyLoad",
+        "line": 4822
+      },
+      {
+        "name": "_isNearbyLoadCurrent",
+        "line": 4825
+      },
+      {
+        "name": "_loadNearby",
+        "line": 4837
+      },
+      {
+        "name": "_loadNearbyWithDist",
+        "line": 4881
+      },
+      {
+        "name": "_renderNearbyDone",
+        "line": 4916
+      },
+      {
+        "name": "_loadNearbyShrines",
+        "line": 4937
+      },
+      {
+        "name": "_loadNearbyParishes",
+        "line": 4940
+      },
+      {
+        "name": "_loadNearbyRetreats",
+        "line": 4952
+      },
+      {
+        "name": "_nearbyHtml",
+        "line": 6065
+      }
+    ],
+    "region": [
+      {
+        "name": "_regionHtmlEsc",
+        "line": 5101
+      },
+      {
+        "name": "_regionAttrEsc",
+        "line": 5106
+      },
+      {
+        "name": "_regionModeLabel",
+        "line": 5110
+      },
+      {
+        "name": "_regionGuideHtml",
+        "line": 5113
+      },
+      {
+        "name": "_clearRegionMarker",
+        "line": 5117
+      },
+      {
+        "name": "_clearRegionResultMarkers",
+        "line": 5120
+      },
+      {
+        "name": "_isRegionSearchActiveForItem",
+        "line": 5124
+      },
+      {
+        "name": "_rememberRegionStart",
+        "line": 5127
+      },
+      {
+        "name": "_showRegionPlaceMarker",
+        "line": 5134
+      },
+      {
+        "name": "_focusRegionSearchCenter",
+        "line": 5152
+      },
+      {
+        "name": "_showRegionResultsOnMap",
+        "line": 5160
+      },
+      {
+        "name": "_openRegionMapFromCard",
+        "line": 5188
+      },
+      {
+        "name": "onRegionInp",
+        "line": 5206
+      },
+      {
+        "name": "doRegionSearch",
+        "line": 5213
+      },
+      {
+        "name": "_showRegionResults",
+        "line": 5247
+      },
+      {
+        "name": "_showRegionFallback",
+        "line": 5292
+      },
+      {
+        "name": "_regionHtml",
+        "line": 6070
+      }
+    ],
+    "parish_diocese": [
+      {
+        "name": "openDioceseView",
+        "line": 1521
+      },
+      {
+        "name": "closeDioceseView",
+        "line": 1546
+      },
+      {
+        "name": "dioceseLoaded",
+        "line": 1553
+      },
+      {
+        "name": "openDioceseExternal",
+        "line": 1626
+      },
+      {
+        "name": "_finishDioceseExternalReturn",
+        "line": 1647
+      },
+      {
+        "name": "restoreDioceseExternalState",
+        "line": 1660
+      },
+      {
+        "name": "_getParishDioceseAsset",
+        "line": 1933
+      },
+      {
+        "name": "_getParishDioceseRawStore",
+        "line": 1936
+      },
+      {
+        "name": "_getParishRawByDioceseCode",
+        "line": 1940
+      },
+      {
+        "name": "_rememberParishDioceseLoaded",
+        "line": 1947
+      },
+      {
+        "name": "_isParishDioceseReady",
+        "line": 1951
+      },
+      {
+        "name": "_areAllParishDiocesesReady",
+        "line": 1954
+      },
+      {
+        "name": "_rememberAllParishDiocesesLoadedFromRaw",
+        "line": 1957
+      },
+      {
+        "name": "_refreshParishDataFromLoadedDioceses",
+        "line": 2006
+      },
+      {
+        "name": "_ensureParishDioceseDataLoaded",
+        "line": 2030
+      },
+      {
+        "name": "_ensureAllParishDiocesesLoaded",
+        "line": 2069
+      },
+      {
+        "name": "_getMyDioceseName",
+        "line": 2354
+      },
+      {
+        "name": "_isMyDioceseName",
+        "line": 2358
+      },
+      {
+        "name": "_getDioceseOrderIndex",
+        "line": 2362
+      },
+      {
+        "name": "_sortDioceseNamesWithMyFirst",
+        "line": 2366
+      },
+      {
+        "name": "_getDioFilterEntries",
+        "line": 2377
+      },
+      {
+        "name": "_renderDioFilterBars",
+        "line": 2386
+      },
+      {
+        "name": "_parishDioCodeOf",
+        "line": 4339
+      },
+      {
+        "name": "_isParishDioBoundsOutlier",
+        "line": 4343
+      },
+      {
+        "name": "_rebuildParishDioIndex",
+        "line": 4356
+      },
+      {
+        "name": "_markParishDioProgrammaticMove",
+        "line": 4376
+      },
+      {
+        "name": "_parishDioCenter",
+        "line": 4382
+      },
+      {
+        "name": "_centerParishDioWithoutZoom",
+        "line": 4398
+      },
+      {
+        "name": "_buildParishDioSystem",
+        "line": 4435
+      },
+      {
+        "name": "_showDioOverlays",
+        "line": 4484
+      },
+      {
+        "name": "_hideDioOverlays",
+        "line": 4491
+      },
+      {
+        "name": "_syncParishDioLabels",
+        "line": 4495
+      },
+      {
+        "name": "_toggleParishDio",
+        "line": 4519
+      },
+      {
+        "name": "_focusParishDio",
+        "line": 4541
+      },
+      {
+        "name": "_fitParishDioBounds",
+        "line": 4551
+      },
+      {
+        "name": "_showParishDioMkrs",
+        "line": 4610
+      },
+      {
+        "name": "_hideParishDioMkrs",
+        "line": 4671
+      },
+      {
+        "name": "_nearestDioCode",
+        "line": 4753
+      },
+      {
+        "name": "_showCurrentParishDioIfIdle",
+        "line": 4765
+      },
+      {
+        "name": "setDioFilter",
+        "line": 5047
+      },
+      {
+        "name": "setSmDio",
+        "line": 5955
+      }
+    ],
+    "location": [
+      {
+        "name": "_getCurrentItems",
+        "line": 2209
+      },
+      {
+        "name": "_biasCurrentMapCenterToInfoCardStandard",
+        "line": 3437
+      },
+      {
+        "name": "_autoLocate",
+        "line": 4727
+      },
+      {
+        "name": "_showCurrentParishDioIfIdle",
+        "line": 4765
+      },
+      {
+        "name": "_setMyLoc",
+        "line": 4787
+      },
+      {
+        "name": "goMyLoc",
+        "line": 4801
+      },
+      {
+        "name": "_isNearbyLoadCurrent",
+        "line": 4825
+      },
+      {
+        "name": "_setImplicitCurrentLocationStartLabelVisible",
+        "line": 5348
+      },
+      {
+        "name": "_ensureCurrentLocationStart",
+        "line": 5358
+      },
+      {
+        "name": "setMyLocAsStart",
+        "line": 5414
+      }
+    ],
+    "other": [
+      {
+        "name": "hideCoverAndRun",
+        "line": 9
+      },
+      {
+        "name": "oaiIsRefreshVeilReason",
+        "line": 55
+      },
+      {
+        "name": "oaiRefreshVeilVisibleUntil",
+        "line": 58
+      },
+      {
+        "name": "oaiMarkRefreshHistoryCompact",
+        "line": 143
+      },
+      {
+        "name": "oaiPrepareRefreshVeil",
+        "line": 150
+      },
+      {
+        "name": "oaiAfterRefreshVeilPaint",
+        "line": 183
+      },
+      {
+        "name": "oaiApplyPendingRefreshVeil",
+        "line": 191
+      },
+      {
+        "name": "oaiClearExternalNavigationState",
+        "line": 239
+      },
+      {
+        "name": "oaiSmoothNavigate",
+        "line": 351
+      },
+      {
+        "name": "oaiMeasureExternalViewport",
+        "line": 367
+      },
+      {
+        "name": "oaiReleasePassiveVeil",
+        "line": 379
+      },
+      {
+        "name": "oaiHasExternalReturnPending",
+        "line": 396
+      },
+      {
+        "name": "oaiExternalReturnKind",
+        "line": 404
+      },
+      {
+        "name": "oaiIsMyFaithExternalReturn",
+        "line": 407
+      },
+      {
+        "name": "oaiIsExternalLeaveStillOpening",
+        "line": 410
+      },
+      {
+        "name": "openMissa",
+        "line": 523
+      },
+      {
+        "name": "_setMassQuickReturn",
+        "line": 536
+      },
+      {
+        "name": "_setPrayerQuickReturn",
+        "line": 555
+      },
+      {
+        "name": "_clearPrayerQuickReturn",
+        "line": 574
+      },
+      {
+        "name": "_isFreshMassQuickReturnStore",
+        "line": 575
+      },
+      {
+        "name": "_isFreshPrayerQuickReturn",
+        "line": 583
+      },
+      {
+        "name": "_shouldMassQuickReturn",
+        "line": 591
+      },
+      {
+        "name": "_shouldPrayerQuickReturn",
+        "line": 598
+      },
+      {
+        "name": "_isPageReloadNavigation",
+        "line": 606
+      },
+      {
+        "name": "_clearMassQuickReturnForReload",
+        "line": 614
+      },
+      {
+        "name": "_resetCoverExitReady",
+        "line": 627
+      },
+      {
+        "name": "_clearCoverExitArmed",
+        "line": 637
+      },
+      {
+        "name": "_armCoverExitWindow",
+        "line": 643
+      },
+      {
+        "name": "_isCoverExitArmed",
+        "line": 650
+      },
+      {
+        "name": "_isCoverScreenVisible",
+        "line": 656
+      },
+      {
+        "name": "_isAppScreenActive",
+        "line": 671
+      },
+      {
+        "name": "_resetCoverBackTrap",
+        "line": 692
+      },
+      {
+        "name": "_resetAppBackTrap",
+        "line": 724
+      },
+      {
+        "name": "_armMassQuickHistoryTrap",
+        "line": 735
+      },
+      {
+        "name": "_hideMassQuickMenuOnly",
+        "line": 748
+      },
+      {
+        "name": "_isCoverAlreadyVisibleForQuickMenu",
+        "line": 807
+      },
+      {
+        "name": "_setPrayerPopupReturnSource",
+        "line": 813
+      },
+      {
+        "name": "_isPrayerPopupReturnSource",
+        "line": 822
+      },
+      {
+        "name": "_markPrayerCoverNeedsFirstToast",
+        "line": 829
+      },
+      {
+        "name": "_consumePrayerCoverNeedsFirstToast",
+        "line": 836
+      },
+      {
+        "name": "_forceCoverAfterPrayerQuickPopup",
+        "line": 844
+      },
+      {
+        "name": "_returnToMassQuickMenu",
+        "line": 957
+      },
+      {
+        "name": "openMassQuickMenu",
+        "line": 985
+      },
+      {
+        "name": "closeMassQuickMenu",
+        "line": 1002
+      },
+      {
+        "name": "openCatholicHymn",
+        "line": 1021
+      },
+      {
+        "name": "_resumeMassQuickReturnIfNeeded",
+        "line": 1030
+      },
+      {
+        "name": "_tryResumeMassQuickSoon",
+        "line": 1061
+      },
+      {
+        "name": "_runRefreshAppFilesOnly",
+        "line": 1098
+      },
+      {
+        "name": "_showRefreshContentDialog",
+        "line": 1130
+      },
+      {
+        "name": "refreshAppFilesOnly",
+        "line": 1184
+      },
+      {
+        "name": "_showCacheClearDialog",
+        "line": 1226
+      },
+      {
+        "name": "clearAppFilesCacheCompletely",
+        "line": 1258
+      },
+      {
+        "name": "syncCoverUpdateVersionState",
+        "line": 1263
+      },
+      {
+        "name": "closeMissa",
+        "line": 1340
+      },
+      {
+        "name": "missaLoaded",
+        "line": 1346
+      },
+      {
+        "name": "openPrayerBook",
+        "line": 1350
+      },
+      {
+        "name": "closePrayerView",
+        "line": 1405
+      },
+      {
+        "name": "_closePrayerAndReturn",
+        "line": 1414
+      },
+      {
+        "name": "saveCoreReturnState",
+        "line": 1558
+      },
+      {
+        "name": "normalizeCatholicExternalUrl",
+        "line": 1580
+      },
+      {
+        "name": "prepareExternalUrl",
+        "line": 1611
+      },
+      {
+        "name": "openCoreExternalUrl",
+        "line": 1617
+      },
+      {
+        "name": "restoreCoreReturnState",
+        "line": 1780
+      },
+      {
+        "name": "_decUrl",
+        "line": 1896
+      },
+      {
+        "name": "_unpack",
+        "line": 1897
+      },
+      {
+        "name": "_isPrayerModuleReady",
+        "line": 2100
+      },
+      {
+        "name": "_showPrayerLoadingMessage",
+        "line": 2106
+      },
+      {
+        "name": "_loadPrayerScriptOnce",
+        "line": 2110
+      },
+      {
+        "name": "_getModeTypeText",
+        "line": 2210
+      },
+      {
+        "name": "_getModeTypeLabel",
+        "line": 2211
+      },
+      {
+        "name": "_itemSearchBlob",
+        "line": 2212
+      },
+      {
+        "name": "_itemSearchNorm",
+        "line": 2213
+      },
+      {
+        "name": "_appendQueryToUrl",
+        "line": 2236
+      },
+      {
+        "name": "_kakaoRestProxyUrl",
+        "line": 2241
+      },
+      {
+        "name": "_kakaoRestFetch",
+        "line": 2245
+      },
+      {
+        "name": "_kakaoKeywordFetch",
+        "line": 2253
+      },
+      {
+        "name": "_dedupeKakaoDocs",
+        "line": 2258
+      },
+      {
+        "name": "_kakaoKeywordDocsFromRest",
+        "line": 2271
+      },
+      {
+        "name": "_kakaoKeywordDocsFromJs",
+        "line": 2285
+      },
+      {
+        "name": "_kakaoKeywordDocs",
+        "line": 2336
+      },
+      {
+        "name": "triggerPwaInstall",
+        "line": 2727
+      },
+      {
+        "name": "_showBackToast",
+        "line": 2737
+      },
+      {
+        "name": "attemptAppExit",
+        "line": 2769
+      },
+      {
+        "name": "closeExitDlg",
+        "line": 2786
+      },
+      {
+        "name": "doExit",
+        "line": 2792
+      },
+      {
+        "name": "oaiEnterView",
+        "line": 2798
+      },
+      {
+        "name": "oaiEnterPopup",
+        "line": 2836
+      },
+      {
+        "name": "oaiShowCategoryEntryVeil",
+        "line": 2861
+      },
+      {
+        "name": "oaiHideCategoryEntryVeil",
+        "line": 2871
+      },
+      {
+        "name": "startApp",
+        "line": 2916
+      },
+      {
+        "name": "goToCover",
+        "line": 3044
+      },
+      {
+        "name": "_modeTargetLabel",
+        "line": 3139
+      },
+      {
+        "name": "selectItem",
+        "line": 3502
+      },
+      {
+        "name": "_typeColor",
+        "line": 4059
+      },
+      {
+        "name": "_dioLabelSize",
+        "line": 4370
+      },
+      {
+        "name": "renderList",
+        "line": 4956
+      },
+      {
+        "name": "onListSearch",
+        "line": 5034
+      },
+      {
+        "name": "clearListSearch",
+        "line": 5040
+      },
+      {
+        "name": "_updateSearchBtn",
+        "line": 5450
+      },
+      {
+        "name": "_drawLine",
+        "line": 5700
+      },
+      {
+        "name": "_kakaoLaunch",
+        "line": 5768
+      },
+      {
+        "name": "onSmInp",
+        "line": 5810
+      },
+      {
+        "name": "_searchKakaoPlace",
+        "line": 5818
+      },
+      {
+        "name": "selectFromPlaceModal",
+        "line": 5833
+      },
+      {
+        "name": "openSearchModal",
+        "line": 5859
+      },
+      {
+        "name": "_blurAll",
+        "line": 5919
+      },
+      {
+        "name": "oaiInputIsVisible",
+        "line": 5920
+      },
+      {
+        "name": "oaiFocusSearchKeyboardInput",
+        "line": 5928
+      },
+      {
+        "name": "oaiBlurIfAutoFocusedInput",
+        "line": 5942
+      },
+      {
+        "name": "closeSearchModal",
+        "line": 5950
+      },
+      {
+        "name": "filterModal",
+        "line": 5981
+      },
+      {
+        "name": "selectFromModal",
+        "line": 6024
+      },
+      {
+        "name": "_fetchDist",
+        "line": 6057
+      },
+      {
+        "name": "_show",
+        "line": 6075
+      },
+      {
+        "name": "_hide",
+        "line": 6076
+      },
+      {
+        "name": "calcDist",
+        "line": 6077
+      },
+      {
+        "name": "_fmtTime",
+        "line": 6082
+      }
+    ]
+  },
+  "window_exposures": [
+    {
+      "name": "_noAutoNearby",
+      "line": 18
+    },
+    {
+      "name": "__oaiStabilityVeilTimer",
+      "line": 74
+    },
+    {
+      "name": "__oaiStabilityVeilTimer",
+      "line": 89
+    },
+    {
+      "name": "__oaiStabilityVeilTimer",
+      "line": 96
+    },
+    {
+      "name": "__oaiStabilityVeilTimer",
+      "line": 133
+    },
+    {
+      "name": "__oaiStabilityVeilHardTimer",
+      "line": 137
+    },
+    {
+      "name": "oaiHoldStabilityVeil",
+      "line": 140
+    },
+    {
+      "name": "oaiReleaseStabilityVeil",
+      "line": 141
+    },
+    {
+      "name": "__oaiStabilityVeilTimer",
+      "line": 212
+    },
+    {
+      "name": "__oaiStabilityVeilHardTimer",
+      "line": 214
+    },
+    {
+      "name": "__oaiExternalReturnStabilizing",
+      "line": 420
+    },
+    {
+      "name": "__oaiExternalReturnStabilizing",
+      "line": 436
+    },
+    {
+      "name": "__oaiExternalReturnStableTimer",
+      "line": 441
+    },
+    {
+      "name": "oaiSetMainMapLayerHidden",
+      "line": 516
+    },
+    {
+      "name": "prEnsureTabsVisible",
+      "line": 1384
+    },
+    {
+      "name": "prEnsureTabsVisible",
+      "line": 1386
+    },
+    {
+      "name": "_noAutoNearby",
+      "line": 1802
+    },
+    {
+      "name": "_noAutoNearby",
+      "line": 1854
+    },
+    {
+      "name": "_setRetreatRawData",
+      "line": 2207
+    },
+    {
+      "name": "_setShrineRawData",
+      "line": 2521
+    },
+    {
+      "name": "_historyEnterMap",
+      "line": 2733
+    },
+    {
+      "name": "_noAutoNearby",
+      "line": 2977
+    },
+    {
+      "name": "_noAutoNearby",
+      "line": 3135
+    },
+    {
+      "name": "oaiKeepActiveTabsVisible",
+      "line": 3369
+    },
+    {
+      "name": "oaiKeepActiveTabsVisible",
+      "line": 3400
+    },
+    {
+      "name": "_closeInfoRouteChoice",
+      "line": 3887
+    },
+    {
+      "name": "_openRoutePointCancelChoice",
+      "line": 3887
+    },
+    {
+      "name": "selectMapFromSearchModal",
+      "line": 3945
+    },
+    {
+      "name": "__oaiNearbyLoadToken",
+      "line": 4818
+    }
+  ],
+  "recommendation": "Do not split map core yet; only pure helpers or CSS/audit."
+}

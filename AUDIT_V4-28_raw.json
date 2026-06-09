@@ -1,0 +1,1568 @@
+{
+  "app_lines": 6551,
+  "app_bytes": 278790,
+  "category_related_functions": [
+    {
+      "line": 291,
+      "name": "clearRestartLockIfNeeded",
+      "code": "function clearRestartLockIfNeeded(){"
+    },
+    {
+      "line": 302,
+      "name": "prepareFreshStart",
+      "code": "function prepareFreshStart(){"
+    },
+    {
+      "line": 316,
+      "name": "restartFromBeginning",
+      "code": "function restartFromBeginning(reason){"
+    },
+    {
+      "line": 386,
+      "name": "oaiGetExternalNavInfo",
+      "code": "function oaiGetExternalNavInfo(){"
+    },
+    {
+      "line": 416,
+      "name": "oaiStartExternalReturnStabilize",
+      "code": "function oaiStartExternalReturnStabilize(){"
+    },
+    {
+      "line": 511,
+      "name": "oaiSetMainMapLayerHidden",
+      "code": "function oaiSetMainMapLayerHidden(hidden){"
+    },
+    {
+      "line": 1452,
+      "name": "isKakao",
+      "code": "function isKakao(){ return ua().indexOf('kakaotalk') > -1; }"
+    },
+    {
+      "line": 1762,
+      "name": "clearRouteNoFocus",
+      "code": "function clearRouteNoFocus(){"
+    },
+    {
+      "line": 1805,
+      "name": "needMapLoad",
+      "code": "const needMapLoad = (!_map || !mapEl || !mapEl.children || !mapEl.children.length);"
+    },
+    {
+      "line": 1897,
+      "name": "_unpack",
+      "code": "function _unpack(raw){return raw.map((r,i)=>({_idx:i,name:r[0],diocese:_DIO[r[1]]||r[1],addr:r[2],tel:r[3]||'',hp:_decUrl(r[4]||''),url:_decUrl(r[5]||''),lat:r["
+    },
+    {
+      "line": 1933,
+      "name": "_getParishDioceseAsset",
+      "code": "function _getParishDioceseAsset(code){"
+    },
+    {
+      "line": 1936,
+      "name": "_getParishDioceseRawStore",
+      "code": "function _getParishDioceseRawStore(){"
+    },
+    {
+      "line": 1940,
+      "name": "_getParishRawByDioceseCode",
+      "code": "function _getParishRawByDioceseCode(code){"
+    },
+    {
+      "line": 1947,
+      "name": "_rememberParishDioceseLoaded",
+      "code": "function _rememberParishDioceseLoaded(code){"
+    },
+    {
+      "line": 1951,
+      "name": "_isParishDioceseReady",
+      "code": "function _isParishDioceseReady(code){"
+    },
+    {
+      "line": 1954,
+      "name": "_areAllParishDiocesesReady",
+      "code": "function _areAllParishDiocesesReady(){"
+    },
+    {
+      "line": 1957,
+      "name": "_rememberAllParishDiocesesLoadedFromRaw",
+      "code": "function _rememberAllParishDiocesesLoadedFromRaw(raw){"
+    },
+    {
+      "line": 1964,
+      "name": "_mergeLoadedParishRaw",
+      "code": "function _mergeLoadedParishRaw(){"
+    },
+    {
+      "line": 1973,
+      "name": "_getLegacyParishRawGlobal",
+      "code": "function _getLegacyParishRawGlobal(){"
+    },
+    {
+      "line": 1978,
+      "name": "_getParishRawGlobal",
+      "code": "function _getParishRawGlobal(){"
+    },
+    {
+      "line": 1984,
+      "name": "_buildParishList",
+      "code": "function _buildParishList(raw){"
+    },
+    {
+      "line": 1998,
+      "name": "_setParishRawData",
+      "code": "function _setParishRawData(raw, loaded){"
+    },
+    {
+      "line": 2006,
+      "name": "_refreshParishDataFromLoadedDioceses",
+      "code": "function _refreshParishDataFromLoadedDioceses(){"
+    },
+    {
+      "line": 2010,
+      "name": "_initParishDataFromGlobal",
+      "code": "function _initParishDataFromGlobal(){"
+    },
+    {
+      "line": 2013,
+      "name": "_showParishDataLoadingMessage",
+      "code": "function _showParishDataLoadingMessage(msg){"
+    },
+    {
+      "line": 2021,
+      "name": "_afterParishDataLoaded",
+      "code": "function _afterParishDataLoaded(){"
+    },
+    {
+      "line": 2030,
+      "name": "_ensureParishDioceseDataLoaded",
+      "code": "function _ensureParishDioceseDataLoaded(code){"
+    },
+    {
+      "line": 2069,
+      "name": "_ensureAllParishDiocesesLoaded",
+      "code": "function _ensureAllParishDiocesesLoaded(){"
+    },
+    {
+      "line": 2084,
+      "name": "_ensureParishDataLoaded",
+      "code": "function _ensureParishDataLoaded(){"
+    },
+    {
+      "line": 2160,
+      "name": "_buildRetreatList",
+      "code": "function _buildRetreatList(raw){"
+    },
+    {
+      "line": 2163,
+      "name": "_getRetreatRawGlobal",
+      "code": "function _getRetreatRawGlobal(){"
+    },
+    {
+      "line": 2167,
+      "name": "_setRetreatRawData",
+      "code": "function _setRetreatRawData(raw, loaded){"
+    },
+    {
+      "line": 2173,
+      "name": "_initRetreatDataFromGlobal",
+      "code": "function _initRetreatDataFromGlobal(){"
+    },
+    {
+      "line": 2177,
+      "name": "_ensureRetreatDataLoaded",
+      "code": "function _ensureRetreatDataLoaded(){"
+    },
+    {
+      "line": 2209,
+      "name": "_getCurrentItems",
+      "code": "function _getCurrentItems(){return _mode==='shrine'?SHRINES:(_mode==='retreat'?RETREATS:PARISHES);}"
+    },
+    {
+      "line": 2210,
+      "name": "_getModeTypeText",
+      "code": "function _getModeTypeText(){return _mode==='shrine'?'성지':(_mode==='retreat'?'피정의 집':'성당');}"
+    },
+    {
+      "line": 2211,
+      "name": "_getModeTypeLabel",
+      "code": "function _getModeTypeLabel(item){return _mode==='shrine'?item.type:(_mode==='retreat'?'🏔 피정의 집':'⛪ 성당');}"
+    },
+    {
+      "line": 2218,
+      "name": "_getRetreatColor",
+      "code": "function _getRetreatColor(item){return OAI_RETREAT_CATEGORY_COLOR;}"
+    },
+    {
+      "line": 2219,
+      "name": "_getModeMarkerColor",
+      "code": "function _getModeMarkerColor(item){return _mode==='shrine'?(TC[item.type]||'#555'):(_mode==='retreat'?_getRetreatColor(item):OAI_CATHEDRAL_CATEGORY_COLOR);}"
+    },
+    {
+      "line": 2220,
+      "name": "_getRouteGuideTarget",
+      "code": "function _getRouteGuideTarget(){return _mode==='shrine'?'성지':(_mode==='retreat'?'피정의 집':'성당');}"
+    },
+    {
+      "line": 2226,
+      "name": "JSKEY",
+      "code": "const JSKEY = (window.APP_CONFIG && window.APP_CONFIG.KAKAO_JS_KEY) || '';"
+    },
+    {
+      "line": 2227,
+      "name": "KAKAO_REST_PROXY_URL",
+      "code": "const KAKAO_REST_PROXY_URL = (window.APP_CONFIG && window.APP_CONFIG.KAKAO_REST_PROXY_URL) || '';"
+    },
+    {
+      "line": 2241,
+      "name": "_kakaoRestProxyUrl",
+      "code": "function _kakaoRestProxyUrl(endpoint, params){"
+    },
+    {
+      "line": 2245,
+      "name": "_kakaoRestFetch",
+      "code": "function _kakaoRestFetch(endpoint, params){"
+    },
+    {
+      "line": 2250,
+      "name": "_kakaoDirectionsFetch",
+      "code": "function _kakaoDirectionsFetch(origin, destination){"
+    },
+    {
+      "line": 2253,
+      "name": "_kakaoKeywordFetch",
+      "code": "function _kakaoKeywordFetch(query, size, page){"
+    },
+    {
+      "line": 2258,
+      "name": "_dedupeKakaoDocs",
+      "code": "function _dedupeKakaoDocs(groups, max){"
+    },
+    {
+      "line": 2271,
+      "name": "_kakaoKeywordDocsFromRest",
+      "code": "function _kakaoKeywordDocsFromRest(query, max){"
+    },
+    {
+      "line": 2285,
+      "name": "_kakaoKeywordDocsFromJs",
+      "code": "function _kakaoKeywordDocsFromJs(query, max){"
+    },
+    {
+      "line": 2336,
+      "name": "_kakaoKeywordDocs",
+      "code": "function _kakaoKeywordDocs(query, limit){"
+    },
+    {
+      "line": 2415,
+      "name": "_navFetch",
+      "code": "function _navFetch(origin, dest) {"
+    },
+    {
+      "line": 2425,
+      "name": "val",
+      "code": "const val = (route && route.result_code === 0)"
+    },
+    {
+      "line": 2458,
+      "name": "_decodeShrineHomePage",
+      "code": "function _decodeShrineHomePage(hp){"
+    },
+    {
+      "line": 2464,
+      "name": "_buildShrineList",
+      "code": "function _buildShrineList(raw){"
+    },
+    {
+      "line": 2473,
+      "name": "_getShrineRawGlobal",
+      "code": "function _getShrineRawGlobal(){"
+    },
+    {
+      "line": 2477,
+      "name": "_rebuildShrineSpecialIndexes",
+      "code": "function _rebuildShrineSpecialIndexes(){"
+    },
+    {
+      "line": 2480,
+      "name": "_setShrineRawData",
+      "code": "function _setShrineRawData(raw, loaded){"
+    },
+    {
+      "line": 2487,
+      "name": "_initShrineDataFromGlobal",
+      "code": "function _initShrineDataFromGlobal(){"
+    },
+    {
+      "line": 2491,
+      "name": "_ensureShrineDataLoaded",
+      "code": "function _ensureShrineDataLoaded(){"
+    },
+    {
+      "line": 2733,
+      "name": "window._historyEnterMap",
+      "code": "window._historyEnterMap = function(){};"
+    },
+    {
+      "line": 2888,
+      "name": "oaiPreopenNearbySheetForCategory",
+      "code": "function oaiPreopenNearbySheetForCategory(){"
+    },
+    {
+      "line": 2916,
+      "name": "startApp",
+      "code": "function startApp(mode){"
+    },
+    {
+      "line": 3021,
+      "name": "_resetMapState",
+      "code": "function _resetMapState(){"
+    },
+    {
+      "line": 3082,
+      "name": "_loadMap",
+      "code": "function _loadMap(){"
+    },
+    {
+      "line": 3098,
+      "name": "_mapError",
+      "code": "function _mapError(msg){"
+    },
+    {
+      "line": 3107,
+      "name": "_onMapReady",
+      "code": "function _onMapReady(){"
+    },
+    {
+      "line": 3159,
+      "name": "closeRouteSheetByX",
+      "code": "function closeRouteSheetByX(){"
+    },
+    {
+      "line": 3173,
+      "name": "closeCategoryToCoverFromMap",
+      "code": "function closeCategoryToCoverFromMap(){"
+    },
+    {
+      "line": 3178,
+      "name": "zoomCategoryMap",
+      "code": "function zoomCategoryMap(delta){"
+    },
+    {
+      "line": 3268,
+      "name": "idx",
+      "code": "const idx = (typeof _routeDest.idx==='number' && _routeDest.idx>=0)"
+    },
+    {
+      "line": 3411,
+      "name": "_getInfoCardCenterTargetY",
+      "code": "function _getInfoCardCenterTargetY(mapH){"
+    },
+    {
+      "line": 3416,
+      "name": "_setMapCenterByInfoCardStandard",
+      "code": "function _setMapCenterByInfoCardStandard(pos){"
+    },
+    {
+      "line": 3420,
+      "name": "mapH",
+      "code": "const mapH = (mapEl && (mapEl.clientHeight || mapEl.offsetHeight)) || window.innerHeight || 700;"
+    },
+    {
+      "line": 3426,
+      "name": "point",
+      "code": "const point = (window.kakao && kakao.maps && kakao.maps.Point)"
+    },
+    {
+      "line": 3437,
+      "name": "_biasCurrentMapCenterToInfoCardStandard",
+      "code": "function _biasCurrentMapCenterToInfoCardStandard(){"
+    },
+    {
+      "line": 3443,
+      "name": "_setBoundsByInfoCardStandard",
+      "code": "function _setBoundsByInfoCardStandard(bounds, top, right, bottom, left){"
+    },
+    {
+      "line": 3459,
+      "name": "_getRouteBoundsPadding",
+      "code": "function _getRouteBoundsPadding(){"
+    },
+    {
+      "line": 3461,
+      "name": "mapH",
+      "code": "const mapH = (mapEl && (mapEl.clientHeight || mapEl.offsetHeight)) || window.innerHeight || 700;"
+    },
+    {
+      "line": 3476,
+      "name": "_fitRouteBounds",
+      "code": "function _fitRouteBounds(bounds, opts){"
+    },
+    {
+      "line": 3493,
+      "name": "_focusMarkerAboveInfoCard",
+      "code": "function _focusMarkerAboveInfoCard(item){"
+    },
+    {
+      "line": 3534,
+      "name": "_fitInfoCardButtons",
+      "code": "function _fitInfoCardButtons(){"
+    },
+    {
+      "line": 3550,
+      "name": "_showInfoCard",
+      "code": "function _showInfoCard(item, idx){"
+    },
+    {
+      "line": 3588,
+      "name": "km",
+      "code": "const km=(route.summary.distance/1000).toFixed(1);"
+    },
+    {
+      "line": 3627,
+      "name": "closeInfoCard",
+      "code": "function closeInfoCard(opts){"
+    },
+    {
+      "line": 3645,
+      "name": "openInAppRoute",
+      "code": "function openInAppRoute(){"
+    },
+    {
+      "line": 3651,
+      "name": "doRoute",
+      "code": "function doRoute(spLat, spLng, spName){"
+    },
+    {
+      "line": 3686,
+      "name": "_routeStartLabelFilled",
+      "code": "function _routeStartLabelFilled(){"
+    },
+    {
+      "line": 3693,
+      "name": "_routeHasVisibleStart",
+      "code": "function _routeHasVisibleStart(){"
+    },
+    {
+      "line": 3696,
+      "name": "_restoreRouteSelectionMarkersAfterReset",
+      "code": "function _restoreRouteSelectionMarkersAfterReset(){"
+    },
+    {
+      "line": 3719,
+      "name": "_clearRouteVisualOnly",
+      "code": "function _clearRouteVisualOnly(){"
+    },
+    {
+      "line": 3729,
+      "name": "_restoreRouteMarkerVisual",
+      "code": "function _restoreRouteMarkerVisual(role, routeItem){"
+    },
+    {
+      "line": 3739,
+      "name": "_refreshExistingRoutePointMarkerImages",
+      "code": "function _refreshExistingRoutePointMarkerImages(){"
+    },
+    {
+      "line": 3753,
+      "name": "_restoreMarkersForRouteDestinationSelection",
+      "code": "function _restoreMarkersForRouteDestinationSelection(){"
+    },
+    {
+      "line": 3759,
+      "name": "startItem",
+      "code": "const startItem=(_rS.idx>=0 && items && items[_rS.idx]) ? items[_rS.idx] : null;"
+    },
+    {
+      "line": 3783,
+      "name": "_setRoutePointFromItem",
+      "code": "function _setRoutePointFromItem(role,item,idx){"
+    },
+    {
+      "line": 3807,
+      "name": "_infoRouteHasFixedStart",
+      "code": "function _infoRouteHasFixedStart(){"
+    },
+    {
+      "line": 3821,
+      "name": "_prepareRouteChoiceSetUI",
+      "code": "function _prepareRouteChoiceSetUI(){"
+    },
+    {
+      "line": 3835,
+      "name": "_prepareRouteCancelUI",
+      "code": "function _prepareRouteCancelUI(role){"
+    },
+    {
+      "line": 3851,
+      "name": "_openRoutePointCancelChoice",
+      "code": "function _openRoutePointCancelChoice(role){"
+    },
+    {
+      "line": 3858,
+      "name": "_handleRouteChoiceStart",
+      "code": "function _handleRouteChoiceStart(){"
+    },
+    {
+      "line": 3862,
+      "name": "_handleRouteChoiceEnd",
+      "code": "function _handleRouteChoiceEnd(){"
+    },
+    {
+      "line": 3866,
+      "name": "_openInfoRouteChoice",
+      "code": "function _openInfoRouteChoice(){"
+    },
+    {
+      "line": 3880,
+      "name": "_closeInfoRouteChoice",
+      "code": "function _closeInfoRouteChoice(){"
+    },
+    {
+      "line": 3888,
+      "name": "_setInfoRouteStart",
+      "code": "function _setInfoRouteStart(){"
+    },
+    {
+      "line": 3896,
+      "name": "_runInfoRouteToEndWithStart",
+      "code": "function _runInfoRouteToEndWithStart(startObj,item,idx){"
+    },
+    {
+      "line": 3904,
+      "name": "_setInfoRouteEnd",
+      "code": "function _setInfoRouteEnd(){"
+    },
+    {
+      "line": 3936,
+      "name": "selectMapFromSearchModal",
+      "code": "function selectMapFromSearchModal(){"
+    },
+    {
+      "line": 3947,
+      "name": "openKakaoNav",
+      "code": "function openKakaoNav(){"
+    },
+    {
+      "line": 3973,
+      "name": "_mkrImgRetreat",
+      "code": "function _mkrImgRetreat(color,big){"
+    },
+    {
+      "line": 3992,
+      "name": "_mkrImgRoute",
+      "code": "function _mkrImgRoute(color,label){"
+    },
+    {
+      "line": 4000,
+      "name": "_setRouteMarkerZ",
+      "code": "function _setRouteMarkerZ(idx, role){"
+    },
+    {
+      "line": 4012,
+      "name": "_clearRouteTmpMarkers",
+      "code": "function _clearRouteTmpMarkers(){"
+    },
+    {
+      "line": 4016,
+      "name": "_routeEndMarkerColor",
+      "code": "function _routeEndMarkerColor(){"
+    },
+    {
+      "line": 4022,
+      "name": "_shouldShowRouteStartMarker",
+      "code": "function _shouldShowRouteStartMarker(){"
+    },
+    {
+      "line": 4030,
+      "name": "_refreshRouteTmpMarkers",
+      "code": "function _refreshRouteTmpMarkers(){"
+    },
+    {
+      "line": 4061,
+      "name": "_buildShrineMarkers",
+      "code": "function _buildShrineMarkers(){"
+    },
+    {
+      "line": 4089,
+      "name": "_clearShrineMarkers",
+      "code": "function _clearShrineMarkers(){"
+    },
+    {
+      "line": 4093,
+      "name": "_restoreMapMarkers",
+      "code": "function _restoreMapMarkers(){"
+    },
+    {
+      "line": 4098,
+      "name": "keepCode",
+      "code": "const keepCode = (AppState && AppState.nearbyParishDioCode) || _activeDio || null;"
+    },
+    {
+      "line": 4125,
+      "name": "_restoreAllCategoryMarkersForSelection",
+      "code": "function _restoreAllCategoryMarkersForSelection(){"
+    },
+    {
+      "line": 4153,
+      "name": "_selectShrineMarker",
+      "code": "function _selectShrineMarker(idx){"
+    },
+    {
+      "line": 4165,
+      "name": "_clearShrineMarkerSel",
+      "code": "function _clearShrineMarkerSel(){"
+    },
+    {
+      "line": 4174,
+      "name": "_clearParishNearbyMarkers",
+      "code": "function _clearParishNearbyMarkers(){"
+    },
+    {
+      "line": 4176,
+      "name": "arr",
+      "code": "const arr=(AppState && AppState.nearbyParishMarkers) || [];"
+    },
+    {
+      "line": 4182,
+      "name": "_fitParishNearbyBounds",
+      "code": "function _fitParishNearbyBounds(items, lat, lng){"
+    },
+    {
+      "line": 4205,
+      "name": "_showParishNearbyMarkersOnMap",
+      "code": "function _showParishNearbyMarkersOnMap(items, lat, lng, phase){"
+    },
+    {
+      "line": 4245,
+      "name": "_showItemsOnMap",
+      "code": "function _showItemsOnMap(items){"
+    },
+    {
+      "line": 4262,
+      "name": "_showAllShrinesOnMapWithNearbyBounds",
+      "code": "function _showAllShrinesOnMapWithNearbyBounds(items, lat, lng){"
+    },
+    {
+      "line": 4294,
+      "name": "_selectParishMarker",
+      "code": "function _selectParishMarker(p){"
+    },
+    {
+      "line": 4339,
+      "name": "_parishDioCodeOf",
+      "code": "function _parishDioCodeOf(p){"
+    },
+    {
+      "line": 4343,
+      "name": "_isParishDioBoundsOutlier",
+      "code": "function _isParishDioBoundsOutlier(p, code){"
+    },
+    {
+      "line": 4356,
+      "name": "_rebuildParishDioIndex",
+      "code": "function _rebuildParishDioIndex(){"
+    },
+    {
+      "line": 4376,
+      "name": "_markParishDioProgrammaticMove",
+      "code": "function _markParishDioProgrammaticMove(ms){"
+    },
+    {
+      "line": 4382,
+      "name": "_parishDioCenter",
+      "code": "function _parishDioCenter(code){"
+    },
+    {
+      "line": 4398,
+      "name": "_centerParishDioWithoutZoom",
+      "code": "function _centerParishDioWithoutZoom(code){"
+    },
+    {
+      "line": 4410,
+      "name": "_focusParishPointAround",
+      "code": "function _focusParishPointAround(lat, lng, opts){"
+    },
+    {
+      "line": 4435,
+      "name": "_buildParishDioSystem",
+      "code": "function _buildParishDioSystem(){"
+    },
+    {
+      "line": 4481,
+      "name": "_isParishRouteLineActive",
+      "code": "function _isParishRouteLineActive(){"
+    },
+    {
+      "line": 4495,
+      "name": "_syncParishDioLabels",
+      "code": "function _syncParishDioLabels(){"
+    },
+    {
+      "line": 4519,
+      "name": "_toggleParishDio",
+      "code": "function _toggleParishDio(code){"
+    },
+    {
+      "line": 4541,
+      "name": "_focusParishDio",
+      "code": "function _focusParishDio(code, opts){"
+    },
+    {
+      "line": 4551,
+      "name": "_fitParishDioBounds",
+      "code": "function _fitParishDioBounds(code, opts){"
+    },
+    {
+      "line": 4604,
+      "name": "_ensureParishMarkerZoom",
+      "code": "function _ensureParishMarkerZoom(){"
+    },
+    {
+      "line": 4610,
+      "name": "_showParishDioMkrs",
+      "code": "function _showParishDioMkrs(code){"
+    },
+    {
+      "line": 4657,
+      "name": "_updateParishViewport",
+      "code": "function _updateParishViewport(code){"
+    },
+    {
+      "line": 4671,
+      "name": "_hideParishDioMkrs",
+      "code": "function _hideParishDioMkrs(code){"
+    },
+    {
+      "line": 4679,
+      "name": "_buildRetreatMarkers",
+      "code": "function _buildRetreatMarkers(){"
+    },
+    {
+      "line": 4699,
+      "name": "_clearRetreatMarkers",
+      "code": "function _clearRetreatMarkers(){"
+    },
+    {
+      "line": 4703,
+      "name": "_restoreRetreatMarkers",
+      "code": "function _restoreRetreatMarkers(){"
+    },
+    {
+      "line": 4710,
+      "name": "_selectRetreatMarker",
+      "code": "function _selectRetreatMarker(p){"
+    },
+    {
+      "line": 4718,
+      "name": "_clearParishMarkers",
+      "code": "function _clearParishMarkers(){"
+    },
+    {
+      "line": 4765,
+      "name": "_showCurrentParishDioIfIdle",
+      "code": "function _showCurrentParishDioIfIdle(){"
+    },
+    {
+      "line": 4813,
+      "name": "_beginNearbyLoad",
+      "code": "function _beginNearbyLoad(){"
+    },
+    {
+      "line": 4822,
+      "name": "_cancelNearbyLoad",
+      "code": "function _cancelNearbyLoad(){"
+    },
+    {
+      "line": 4825,
+      "name": "_isNearbyLoadCurrent",
+      "code": "function _isNearbyLoadCurrent(mode, token, body){"
+    },
+    {
+      "line": 4837,
+      "name": "_loadNearby",
+      "code": "function _loadNearby(){"
+    },
+    {
+      "line": 4881,
+      "name": "_loadNearbyWithDist",
+      "code": "function _loadNearbyWithDist(lat,lng,items,getIdx,getColor,getLabel){"
+    },
+    {
+      "line": 4916,
+      "name": "_renderNearbyDone",
+      "code": "function _renderNearbyDone(prelim,results,getIdx,getColor,getLabel,phase,requestMode,requestToken){"
+    },
+    {
+      "line": 4937,
+      "name": "_loadNearbyShrines",
+      "code": "function _loadNearbyShrines(lat,lng){"
+    },
+    {
+      "line": 4940,
+      "name": "_loadNearbyParishes",
+      "code": "function _loadNearbyParishes(lat,lng){"
+    },
+    {
+      "line": 4952,
+      "name": "_loadNearbyRetreats",
+      "code": "function _loadNearbyRetreats(lat,lng){"
+    },
+    {
+      "line": 5022,
+      "name": "dotColor",
+      "code": "const dotColor = (_mode==='retreat') ? OAI_RETREAT_LIST_DOT_COLOR : c;"
+    },
+    {
+      "line": 5117,
+      "name": "_clearRegionMarker",
+      "code": "function _clearRegionMarker(){"
+    },
+    {
+      "line": 5120,
+      "name": "_clearRegionResultMarkers",
+      "code": "function _clearRegionResultMarkers(){"
+    },
+    {
+      "line": 5127,
+      "name": "_rememberRegionStart",
+      "code": "function _rememberRegionStart(lat,lng,name){"
+    },
+    {
+      "line": 5134,
+      "name": "_showRegionPlaceMarker",
+      "code": "function _showRegionPlaceMarker(lat,lng,name){"
+    },
+    {
+      "line": 5160,
+      "name": "_showRegionResultsOnMap",
+      "code": "function _showRegionResultsOnMap(items, lat, lng, name){"
+    },
+    {
+      "line": 5188,
+      "name": "_openRegionMapFromCard",
+      "code": "function _openRegionMapFromCard(){"
+    },
+    {
+      "line": 5329,
+      "name": "_showRouteGuideText",
+      "code": "function _showRouteGuideText(msg){"
+    },
+    {
+      "line": 5341,
+      "name": "_hideRouteGuide",
+      "code": "function _hideRouteGuide(){"
+    },
+    {
+      "line": 5348,
+      "name": "_setImplicitCurrentLocationStartLabelVisible",
+      "code": "function _setImplicitCurrentLocationStartLabelVisible(visible){"
+    },
+    {
+      "line": 5358,
+      "name": "_ensureCurrentLocationStart",
+      "code": "function _ensureCurrentLocationStart(){"
+    },
+    {
+      "line": 5392,
+      "name": "_enterRouteMode",
+      "code": "function _enterRouteMode(){"
+    },
+    {
+      "line": 5409,
+      "name": "_exitRouteMode",
+      "code": "function _exitRouteMode(){"
+    },
+    {
+      "line": 5414,
+      "name": "setMyLocAsStart",
+      "code": "function setMyLocAsStart(){"
+    },
+    {
+      "line": 5416,
+      "name": "applyCurrentStart",
+      "code": "function applyCurrentStart(lat,lng){"
+    },
+    {
+      "line": 5440,
+      "name": "_setRouteLabel",
+      "code": "function _setRouteLabel(role,name){"
+    },
+    {
+      "line": 5457,
+      "name": "doSearchRoute",
+      "code": "function doSearchRoute(){ document.activeElement&&document.activeElement.blur();"
+    },
+    {
+      "line": 5464,
+      "name": "swapRoute",
+      "code": "function swapRoute(){"
+    },
+    {
+      "line": 5480,
+      "name": "_clearRouteResultOnly",
+      "code": "function _clearRouteResultOnly(){"
+    },
+    {
+      "line": 5490,
+      "name": "clearRoute",
+      "code": "function clearRoute(role){"
+    },
+    {
+      "line": 5514,
+      "name": "resetRoute",
+      "code": "function resetRoute(opts){"
+    },
+    {
+      "line": 5520,
+      "name": "destItem",
+      "code": "const destItem = (!fresh && _rE) ? {lat:_rE.lat, lng:_rE.lng, idx:_rE.idx} : null;"
+    },
+    {
+      "line": 5521,
+      "name": "regionStart",
+      "code": "const regionStart = (!fresh && _routeRegionStart && _routeRegionStart.lat) ? Object.assign({}, _routeRegionStart) : null;"
+    },
+    {
+      "line": 5567,
+      "name": "_idx",
+      "code": "const _idx=(typeof destItem.idx==='number' && destItem.idx>=0) ? destItem.idx : _items.findIndex(p=>Number(p.lat)===Number(destItem.lat) && Number(p.lng)===Numb"
+    },
+    {
+      "line": 5580,
+      "name": "_routePointMatchesItem",
+      "code": "function _routePointMatchesItem(point, idx, item){"
+    },
+    {
+      "line": 5588,
+      "name": "_selectRouteItem",
+      "code": "function _selectRouteItem(idx){"
+    },
+    {
+      "line": 5612,
+      "name": "_hideParishMarkersForRouteDisplay",
+      "code": "function _hideParishMarkersForRouteDisplay(){"
+    },
+    {
+      "line": 5630,
+      "name": "_hideRetreatMarkersForRouteDisplay",
+      "code": "function _hideRetreatMarkersForRouteDisplay(){"
+    },
+    {
+      "line": 5642,
+      "name": "_hideCategoryMarkersForRouteDisplay",
+      "code": "function _hideCategoryMarkersForRouteDisplay(){"
+    },
+    {
+      "line": 5647,
+      "name": "_calcRoute",
+      "code": "async function _calcRoute(){"
+    },
+    {
+      "line": 5716,
+      "name": "isRoute",
+      "code": "const isRoute=(_rS&&_rS.idx===i)||(_rE&&_rE.idx===i);"
+    },
+    {
+      "line": 5724,
+      "name": "isRoute",
+      "code": "const isRoute=(_rS&&_rS.idx===o.index)||(_rE&&_rE.idx===o.index);"
+    },
+    {
+      "line": 5768,
+      "name": "_kakaoLaunch",
+      "code": "function _kakaoLaunch(w,a){"
+    },
+    {
+      "line": 5781,
+      "name": "doKakaoRoute",
+      "code": "function doKakaoRoute(){"
+    },
+    {
+      "line": 5818,
+      "name": "_searchKakaoPlace",
+      "code": "function _searchKakaoPlace(q){"
+    },
+    {
+      "line": 6065,
+      "name": "_nearbyHtml",
+      "code": "function _nearbyHtml(idx,i,name,addr,c,tLabel,distId,estKm){"
+    }
+  ],
+  "category_related_listeners": [
+    {
+      "line": 503,
+      "code": "if(typeof a.onclick === 'function') return;"
+    },
+    {
+      "line": 1506,
+      "code": "el.addEventListener('touchend', fn, true);"
+    },
+    {
+      "line": 2048,
+      "code": "already.addEventListener('load', finish, {once:true});"
+    },
+    {
+      "line": 2049,
+      "code": "already.addEventListener('error', function(){ reject(new Error('성당 교구 데이터 로드 실패: '+code)); }, {once:true});"
+    },
+    {
+      "line": 2190,
+      "code": "already.addEventListener('load', finish, {once:true});"
+    },
+    {
+      "line": 2191,
+      "code": "already.addEventListener('error', function(){ reject(new Error('피정의집 데이터 로드 실패')); }, {once:true});"
+    },
+    {
+      "line": 2504,
+      "code": "already.addEventListener('load', finish, {once:true});"
+    },
+    {
+      "line": 2505,
+      "code": "already.addEventListener('error', function(){ reject(new Error('성지 데이터 로드 실패')); }, {once:true});"
+    },
+    {
+      "line": 3613,
+      "code": "if(item.seq){ guide.onclick=()=>openCoreExternalUrl(_SU+item.seq,{infoIdx:idx}); guide.textContent='성지 상세페이지'; _show(guide);}"
+    },
+    {
+      "line": 3616,
+      "code": "if(item.url){ guide.onclick=()=>openCoreExternalUrl(item.url,{infoIdx:idx}); guide.textContent=(_mode==='retreat'?'피정의 집 상세페이지':'성당 상세페이지'); _show(guide);}"
+    },
+    {
+      "line": 4451,
+      "code": "el.addEventListener('click',function(e){"
+    },
+    {
+      "line": 4868,
+      "code": "<button onclick=\"_loadNearby()\" style=\"background:#0e1535;color:#d4aa6a;border:none;border-radius:20px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;\">↺ 다시 시도</button>"
+    },
+    {
+      "line": 4875,
+      "code": "<button onclick=\"_loadNearby()\" style=\"background:#0e1535;color:#d4aa6a;border:none;border-radius:20px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;\">↺ 다시 시도</button>"
+    },
+    {
+      "line": 4933,
+      "code": "return `<div class=\"nearby-item\" onclick=\"selectItem(${idx},{fromNearby:true})\"><div class=\"nearby-num\" style=\"background:${c}!important\">${i+1}</div><div class=\"nearby-info\"><div class=\"nearby-name\">${o.x.p.name}</div><"
+    },
+    {
+      "line": 5028,
+      "code": "d.onclick=()=>selectItem(i);"
+    },
+    {
+      "line": 5266,
+      "code": "const infoCard=`<div class=\"region-info-card\"><div class=\"ric-hd\"><div class=\"ric-icon\">📍</div><div class=\"ric-name-wrap\"><div class=\"ric-name\">${safePlaceName}</div>${placeAddr?`<div class=\"ric-addr\">${safePlaceAddr}</d"
+    },
+    {
+      "line": 5285,
+      "code": "return `<div class=\"region-item\" onclick=\"selectItem(${idx},{fromRegion:true})\"><div class=\"nearby-num\" style=\"background:${c}!important;width:28px;height:28px;font-size:12px\">${i+1}</div><div class=\"nearby-info\"><div cl"
+    },
+    {
+      "line": 5318,
+      "code": "return `<div class=\"region-item\" onclick=\"selectItem(${idx},{fromRegion:true})\">"
+    },
+    {
+      "line": 5777,
+      "code": "window.addEventListener('blur',()=>clearTimeout(t),{once:true});"
+    },
+    {
+      "line": 6018,
+      "code": "html+=`<div class=\"sm-item\" onclick=\"selectFromModal(${i})\"><div class=\"sm-role\" style=\"background:${c}\">${_smRole==='start'?'출':'도'}</div><div class=\"sm-info\"><div class=\"sm-name\">${s.name}</div><div class=\"sm-sub\">${s."
+    },
+    {
+      "line": 6068,
+      "code": "return `<div class=\"nearby-item\" onclick=\"selectItem(${idx},{fromNearby:true})\"><div class=\"nearby-num\" style=\"background:${c}!important\">${i+1}</div><div class=\"nearby-info\"><div class=\"nearby-name\">${name}</div><div cl"
+    },
+    {
+      "line": 6073,
+      "code": "return `<div class=\"region-item\" onclick=\"selectItem(${idx},{fromRegion:true})\"><div class=\"nearby-num\" style=\"background:${c}!important;width:28px;height:28px;font-size:12px\">${i+1}</div><div class=\"nearby-info\"><div cl"
+    },
+    {
+      "line": 6109,
+      "code": "document.addEventListener('touchstart', function(e){"
+    },
+    {
+      "line": 6177,
+      "code": "document.addEventListener(ev, _resetIdle, {passive:true});"
+    }
+  ],
+  "css_related_selectors_count": 119,
+  "css_related_selectors": [
+    {
+      "line": 213,
+      "selector": "html.parish-mode {"
+    },
+    {
+      "line": 233,
+      "selector": "html.retreat-mode {"
+    },
+    {
+      "line": 384,
+      "selector": "html:not(.parish-mode):not(.retreat-mode) #tabbar .tab-btn.active {"
+    },
+    {
+      "line": 390,
+      "selector": "html.parish-mode #tabbar .tab-btn.active {"
+    },
+    {
+      "line": 396,
+      "selector": "html.retreat-mode #tabbar .tab-btn {"
+    },
+    {
+      "line": 402,
+      "selector": "html.retreat-mode #tabbar .tab-btn.active {"
+    },
+    {
+      "line": 425,
+      "selector": "#map-wrap {"
+    },
+    {
+      "line": 469,
+      "selector": "#route-guide {"
+    },
+    {
+      "line": 488,
+      "selector": ".map-category-close {"
+    },
+    {
+      "line": 588,
+      "selector": "#sheet-route {"
+    },
+    {
+      "line": 598,
+      "selector": ".route-sheet-x {"
+    },
+    {
+      "line": 714,
+      "selector": "html.retreat-mode .region-row {"
+    },
+    {
+      "line": 722,
+      "selector": "html.retreat-mode .region-search-btn {"
+    },
+    {
+      "line": 753,
+      "selector": "#list-body, #nearby-body, #region-body {"
+    },
+    {
+      "line": 757,
+      "selector": ".list-item, .nearby-item, .region-item {"
+    },
+    {
+      "line": 784,
+      "selector": ".li-name, .nearby-name, .sm-name, .sm-place-name {"
+    },
+    {
+      "line": 795,
+      "selector": ".li-sub, .nearby-addr, .sm-sub, .sm-place-addr {"
+    },
+    {
+      "line": 807,
+      "selector": ".li-badge, .nearby-type {"
+    },
+    {
+      "line": 820,
+      "selector": ".nearby-num {"
+    },
+    {
+      "line": 837,
+      "selector": "html.retreat-mode #nearby-body .nearby-meta {"
+    },
+    {
+      "line": 847,
+      "selector": "html.retreat-mode #nearby-body .nearby-type {"
+    },
+    {
+      "line": 859,
+      "selector": "html.retreat-mode #nearby-body .nearby-dist {"
+    },
+    {
+      "line": 870,
+      "selector": "html.retreat-mode #nearby-body .nearby-dist span {"
+    },
+    {
+      "line": 876,
+      "selector": "html.retreat-mode #nearby-body .list-item {"
+    },
+    {
+      "line": 992,
+      "selector": ".sm-map-select-btn{"
+    },
+    {
+      "line": 1134,
+      "selector": "html:not(.parish-mode):not(.retreat-mode) #srch-modal #sm-tab-bar {"
+    },
+    {
+      "line": 1137,
+      "selector": "html.parish-mode #srch-modal #sm-tab-bar {"
+    },
+    {
+      "line": 1140,
+      "selector": "html.retreat-mode #srch-modal #sm-tab-bar {"
+    },
+    {
+      "line": 1146,
+      "selector": "html.retreat-mode #srch-modal #sm-tab-bar .sm-tab {"
+    },
+    {
+      "line": 1163,
+      "selector": "html:not(.parish-mode):not(.retreat-mode) #srch-modal #sm-tab-bar .sm-tab.active {"
+    },
+    {
+      "line": 1170,
+      "selector": "html.parish-mode #srch-modal #sm-tab-bar .sm-tab.active {"
+    },
+    {
+      "line": 1177,
+      "selector": "html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {"
+    },
+    {
+      "line": 1186,
+      "selector": "#info-card {"
+    },
+    {
+      "line": 1260,
+      "selector": ".ic-route-btn {"
+    },
+    {
+      "line": 1300,
+      "selector": ".btn-kakao-nav {"
+    },
+    {
+      "line": 1322,
+      "selector": ".rs-start-box, .rs-end-box {"
+    },
+    {
+      "line": 1388,
+      "selector": "#nearby-body .nearby-distance-loading {"
+    },
+    {
+      "line": 1900,
+      "selector": "#cover #oai-build-marker {"
+    },
+    {
+      "line": 2301,
+      "selector": "html.ios-kakao-inapp #cover .ios-safari-banner {"
+    },
+    {
+      "line": 2345,
+      "selector": "#cover #ios-kakao-safari-help {"
+    },
+    {
+      "line": 3133,
+      "selector": ".map-loading{"
+    },
+    {
+      "line": 3140,
+      "selector": "html.parish-mode{"
+    },
+    {
+      "line": 3159,
+      "selector": "html.parish-mode .ric-hd{"
+    },
+    {
+      "line": 3166,
+      "selector": "html.parish-mode #region-body .region-item .nearby-num{"
+    },
+    {
+      "line": 3174,
+      "selector": "html.parish-mode .dio-hd{"
+    },
+    {
+      "line": 3181,
+      "selector": "html.parish-mode .ic-type-badge{"
+    },
+    {
+      "line": 3187,
+      "selector": "html.retreat-mode{"
+    },
+    {
+      "line": 3206,
+      "selector": "html.retreat-mode .ric-hd{"
+    },
+    {
+      "line": 3213,
+      "selector": "html.retreat-mode #region-body .region-item .nearby-num{"
+    },
+    {
+      "line": 3221,
+      "selector": "html.retreat-mode .dio-hd{"
+    },
+    {
+      "line": 3228,
+      "selector": "html.retreat-mode .ic-type-badge{"
+    },
+    {
+      "line": 3259,
+      "selector": "html.retreat-mode .sm-fb.on{"
+    },
+    {
+      "line": 3266,
+      "selector": "html.parish-mode #srch-modal #sm-tab-bar .sm-tab.active{"
+    },
+    {
+      "line": 3271,
+      "selector": "html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active{"
+    },
+    {
+      "line": 3314,
+      "selector": "html.parish-mode #nearby-body .nearby-num{"
+    },
+    {
+      "line": 3320,
+      "selector": "html.retreat-mode{"
+    },
+    {
+      "line": 3339,
+      "selector": "html.retreat-mode .ric-hd{"
+    },
+    {
+      "line": 3345,
+      "selector": "html.retreat-mode .nearby-num{"
+    },
+    {
+      "line": 3353,
+      "selector": "html.retreat-mode .dio-hd{"
+    },
+    {
+      "line": 3360,
+      "selector": "html.retreat-mode .ic-type-badge{"
+    },
+    {
+      "line": 3367,
+      "selector": "html.retreat-mode #srch-modal #sm-tab-bar{"
+    },
+    {
+      "line": 3374,
+      "selector": "html.retreat-mode #srch-modal #sm-tab-bar .sm-tab{"
+    },
+    {
+      "line": 3379,
+      "selector": "html.parish-mode #srch-modal #sm-tab-bar .sm-tab.active{"
+    },
+    {
+      "line": 3384,
+      "selector": "html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active{"
+    },
+    {
+      "line": 3396,
+      "selector": "html.retreat-mode .sm-fb.on{"
+    },
+    {
+      "line": 3419,
+      "selector": "html:not(.parish-mode):not(.retreat-mode) #tabbar .tab-btn.active{"
+    },
+    {
+      "line": 3426,
+      "selector": "html.parish-mode{"
+    },
+    {
+      "line": 3438,
+      "selector": "html.parish-mode .nearby-num{"
+    },
+    {
+      "line": 3444,
+      "selector": "html.retreat-mode{"
+    },
+    {
+      "line": 3463,
+      "selector": "html.retreat-mode .ric-hd{"
+    },
+    {
+      "line": 3469,
+      "selector": "html.retreat-mode .nearby-num{"
+    },
+    {
+      "line": 3477,
+      "selector": "html.retreat-mode .dio-hd{"
+    },
+    {
+      "line": 3484,
+      "selector": "html.retreat-mode .ic-type-badge{"
+    },
+    {
+      "line": 3497,
+      "selector": "html.retreat-mode #srch-modal #sm-tab-bar{"
+    },
+    {
+      "line": 3509,
+      "selector": "html.retreat-mode .sm-fb.on{"
+    },
+    {
+      "line": 3534,
+      "selector": "html.retreat-mode{"
+    },
+    {
+      "line": 3553,
+      "selector": "html.retreat-mode .ric-hd{"
+    },
+    {
+      "line": 3561,
+      "selector": "html.retreat-mode #region-body .region-item .nearby-num{"
+    },
+    {
+      "line": 3569,
+      "selector": "html.retreat-mode .dio-hd{"
+    },
+    {
+      "line": 3576,
+      "selector": "html.retreat-mode .ic-type-badge{"
+    },
+    {
+      "line": 3596,
+      "selector": "#app #info-card .ic-name{"
+    },
+    {
+      "line": 3600,
+      "selector": "#app #info-card .ic-addr-val{"
+    },
+    {
+      "line": 3606,
+      "selector": "#app #info-card .ic-dist-lbl{"
+    },
+    {
+      "line": 3609,
+      "selector": "#app #info-card .ic-type-badge{"
+    },
+    {
+      "line": 3612,
+      "selector": "#app #info-card .ic-dist-box{"
+    },
+    {
+      "line": 3618,
+      "selector": "#app #info-card .btn-kakao-nav{"
+    },
+    {
+      "line": 3623,
+      "selector": "html.retreat-mode{"
+    },
+    {
+      "line": 3645,
+      "selector": "html.retreat-mode .ric-hd{"
+    },
+    {
+      "line": 3653,
+      "selector": "html.retreat-mode #region-body .region-item .nearby-num{"
+    },
+    {
+      "line": 3661,
+      "selector": "html.retreat-mode .dio-hd{"
+    },
+    {
+      "line": 3668,
+      "selector": "html.retreat-mode .ic-type-badge{"
+    },
+    {
+      "line": 3672,
+      "selector": "html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active{"
+    },
+    {
+      "line": 3678,
+      "selector": "html.retreat-mode .sm-fb.on{"
+    },
+    {
+      "line": 3701,
+      "selector": "html.parish-mode{"
+    },
+    {
+      "line": 3719,
+      "selector": "html.parish-mode .ric-hd{"
+    },
+    {
+      "line": 3726,
+      "selector": "html.parish-mode #region-body .region-item .nearby-num{"
+    },
+    {
+      "line": 3734,
+      "selector": "html.parish-mode .dio-hd{"
+    },
+    {
+      "line": 3741,
+      "selector": "html.parish-mode .ic-type-badge{"
+    },
+    {
+      "line": 3745,
+      "selector": "html.retreat-mode{"
+    },
+    {
+      "line": 3765,
+      "selector": "html.retreat-mode .ric-hd{"
+    },
+    {
+      "line": 3772,
+      "selector": "html.retreat-mode #region-body .region-item .nearby-num{"
+    },
+    {
+      "line": 3780,
+      "selector": "html.retreat-mode .dio-hd{"
+    },
+    {
+      "line": 3787,
+      "selector": "html.retreat-mode .ic-type-badge{"
+    },
+    {
+      "line": 3791,
+      "selector": "html.parish-mode #srch-modal #sm-tab-bar .sm-tab.active{"
+    },
+    {
+      "line": 3796,
+      "selector": "html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active{"
+    },
+    {
+      "line": 3818,
+      "selector": "html.parish-mode{"
+    },
+    {
+      "line": 3825,
+      "selector": "html.retreat-mode{"
+    },
+    {
+      "line": 3835,
+      "selector": "html.parish-mode #region-body .region-item .nearby-num{"
+    },
+    {
+      "line": 3842,
+      "selector": "html.retreat-mode #region-body .region-item .nearby-num{"
+    },
+    {
+      "line": 3846,
+      "selector": "html.retreat-mode #list-body .li-dot{"
+    },
+    {
+      "line": 3853,
+      "selector": "html.retreat-mode .dio-hd{"
+    },
+    {
+      "line": 3860,
+      "selector": "html.retreat-mode .ic-type-badge{"
+    },
+    {
+      "line": 3871,
+      "selector": "html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active{"
+    },
+    {
+      "line": 3897,
+      "selector": "#cover #oai-build-marker {"
+    },
+    {
+      "line": 3941,
+      "selector": ".map-loading-icon {"
+    },
+    {
+      "line": 3977,
+      "selector": "#oai-category-entry-veil.retreat {"
+    },
+    {
+      "line": 4496,
+      "selector": "html.parish-mode #list-body{"
+    },
+    {
+      "line": 4499,
+      "selector": "html.parish-mode #list-body .dio-hd:first-child{"
+    },
+    {
+      "line": 4534,
+      "selector": "#list-body .nearby-item:first-of-type{"
+    }
+  ]
+}
