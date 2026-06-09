@@ -20,7 +20,7 @@
   --border:  #dde3f2;
 
   /* ── 레이아웃 */
-  --tab-h:          74px;
+  --tab-h:          80px;
   --mod-header-h:   70px;
   --sb:             0px;
   --st:             env(safe-area-inset-top, 0);
@@ -28,6 +28,11 @@
   --module-tab-h:   48px;
   --mod-tabbar-h:   55px;
   --tab-btn-h:      40px;
+  --map-tab-btn-h:  66px;
+  --map-tab-fs:     15px;
+  --map-tab-gap:    6px;
+  --map-tab-icon-fs: 20px;
+  --map-tab-icon-active-fs: 22px;
 
   /* ── OAI 표준 컴포넌트 */
   --oai-std-header-h:  70px;
@@ -257,7 +262,7 @@ html.retreat-mode {
 /* ── iOS */
 html.ios-device {
   --ios-inner-font-scale: .91;
-  --tab-h:           64px;
+  --tab-h:           80px;
   --mod-header-h:    60px;
   --oai-std-header-h: 60px;
   --oai-std-tab-h:   30px;
@@ -318,7 +323,7 @@ html, body {
   max-height: var(--cover-h);
 }
 
-/* V4-47: 커버가 가끔 아래로 밀리는 현상 방지.
+/* V4-48: 커버가 가끔 아래로 밀리는 현상 방지.
    JS가 일시적으로 큰 viewport 값을 잡아도 실제 보이는 화면 높이를 우선한다. */
 @supports (height: 100dvh) {
   #cover {
@@ -367,19 +372,19 @@ html.app-active #app { display: block; }
 }
 .tab-btn {
   width: 100%;
-  height: 62px;
-  min-height: 62px;
+  height: var(--map-tab-btn-h);
+  min-height: var(--map-tab-btn-h);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: var(--map-tab-gap);
   padding: 6px 2px 5px;
   border-radius: 13px;
   border: 1.5px solid var(--oai-btn-border);
   background: var(--oai-btn);
   color: var(--oai-btn-text);
-  font-size: 12px;
+  font-size: var(--map-tab-fs);
   font-weight: 800;
   font-family: inherit;
   cursor: pointer;
@@ -425,14 +430,15 @@ html.retreat-mode #tabbar .tab-btn.active {
   box-shadow: 0 4px 12px rgba(107,143,113,.16);
 }
 .tab-icon {
-  font-size: 20px;
+  font-size: var(--map-tab-icon-fs);
   line-height: 1;
   display: block;
   flex: 0 0 auto;
 }
-.tab-btn.active .tab-icon { font-size: 22px; }
+.tab-btn.active .tab-icon { font-size: var(--map-tab-icon-active-fs); }
 .tab-btn span:not(.tab-icon) {
   display: block;
+  font-size: var(--map-tab-fs);
   white-space: nowrap;
   overflow: hidden;
   line-height: 1.05;
@@ -2622,16 +2628,7 @@ html.ios-device #diocese-view .module-bar-ico,
 html.ios-device #qna-view .module-bar-ico { width: 34px; height: 34px; }
 html.ios-device .module-close,
 html.ios-device #prayer-close { width: 40px; height: 40px; min-width: 40px; font-size: 28px; }
-html.ios-device #tabbar {
-  height: calc(var(--tab-h) + env(safe-area-inset-top, 0px));
-  min-height: calc(var(--tab-h) + env(safe-area-inset-top, 0px));
-  padding: calc(env(safe-area-inset-top, 0px) + 6px) 6px 6px;
-  gap: 5px;
-  align-items: stretch;
-}
-html.ios-device #tabbar .tab-btn { height: 50px; min-height: 50px; padding: 5px 2px 6px; gap: 3px; line-height: 1.12; }
-html.ios-device #tabbar .tab-icon { font-size: 17px; }
-html.ios-device #tabbar .tab-btn.active .tab-icon { font-size: 18px; }
+/* iOS에서도 상부탭은 기본 --tab-h/--map-tab-* 기준을 그대로 사용한다. */
 html.ios-device #prayer-tabs,
 html.ios-device #web-view .web-cats,
 html.ios-device #trail-view .trail-tabs,
@@ -2782,11 +2779,8 @@ html.oai-font-global .ic-sub,
 html.oai-font-global .ic-addr-lbl,
 html.oai-font-global .ic-dist-lbl { font-size: var(--app-fs-sub); line-height: 1.35; }
 
-html.oai-font-global .tab-btn { font-size: calc(13px * var(--app-inner-font-scale)); }
 html.oai-font-global .web-cat-btn,
 html.oai-font-global .trail-tab { font-size: calc(15px * var(--app-inner-font-scale)); }
-html.oai-font-global .tab-icon { font-size: calc(20px * var(--app-inner-font-scale)); }
-html.oai-font-global .tab-btn.active .tab-icon { font-size: calc(22px * var(--app-inner-font-scale)); }
 html.oai-font-global .nearby-type,
 html.oai-font-global .li-badge,
 html.oai-font-global .ic-type-badge,
@@ -2881,7 +2875,6 @@ html.oai-font-global #region-body .dio-hd { font-size: calc(17px * var(--app-inn
 }
 @media (min-width: 600px) {
   #sm-tab-bar .sm-tab { font-size: 16px; }
-  .tab-btn { font-size: 12px; }
   #sm-tab-bar { height: 60px; }
 }
 
@@ -3068,7 +3061,7 @@ html.retreat-mode #list-body .li-name{color:var(--v4-text-strong)!important}
 #sm-tab-bar{display:flex;gap:10px;padding:10px 12px;height:55px;align-items:center;background:#f5efe5;border-bottom:1px solid var(--ui-line);box-sizing:border-box}
 /* 일반 sm-tab-bar (srch-modal 밖) 배경 */
 #trail-panel-list:not(.on){display:none}
-@media (min-width:600px){.sm-tab{font-size:16px!important}.tab-btn{font-size:12px!important}#sm-tab-bar{height:60px!important}}
+@media (min-width:600px){.sm-tab{font-size:16px!important}#sm-tab-bar{height:60px!important}}
 html:not(.parish-mode):not(.retreat-mode) #tabbar,html.parish-mode #tabbar,html.retreat-mode #tabbar{background:rgba(255,255,255,.96)!important;border-bottom:1px solid #d8dee6!important}
 .tab-btn .tab-icon{color:inherit!important}
 html:not(.parish-mode):not(.retreat-mode) .sheet-hd,html:not(.parish-mode):not(.retreat-mode) .filter-bar,html:not(.parish-mode):not(.retreat-mode) .region-wrap,html:not(.parish-mode):not(.retreat-mode) .sm-hd,html:not(.parish-mode):not(.retreat-mode) .sm-filter{background:var(--oai-shrine-header)!important}
@@ -4698,22 +4691,7 @@ html.oai-font-global #prayer-bar-ico{
 }
 
 
-/* V3-111: 성당·성지·피정의집 상부 탭/카테고리 헤더 고정 */
-html.oai-font-global #app #tabbar .tab-btn{
-  font-size:13px!important;
-  line-height:1.1!important;
-}
-html.oai-font-global #app #tabbar .tab-icon{
-  font-size:20px!important;
-  line-height:1!important;
-}
-html.oai-font-global #app #tabbar .tab-btn.active .tab-icon{
-  font-size:22px!important;
-}
-html.oai-font-global #app #tabbar .tab-btn span:not(.tab-icon){
-  font-size:13px!important;
-  line-height:1.1!important;
-}
+/* 상부탭 크기 기준은 3.레이아웃 #tabbar/.tab-btn 한 곳에서만 관리한다. */
 
 /* CSS로 그리는 십자가 헤더는 실제 텍스트 십자가를 다시 숨겨 중복 표시를 막는다 */
 html.oai-font-global #web-view .module-bar-ico,
@@ -4828,49 +4806,11 @@ html.oai-font-global #srch-modal .sm-hd .sm-title{
   overflow:hidden!important;
 }
 
-/* V4-47: 성당·성지·피정의집 상부탭 현재 크기 고정 및 아이콘/문구 간격 보정 */
-:root{
-  --oai-v443-map-tabbar-h:80px;
-  --oai-v443-map-tab-btn-h:66px;
-  --oai-v443-map-tab-fs:15px;
-  --oai-v443-map-tab-gap:6px;
-}
-html #app #tabbar{
-  height:calc(var(--oai-v443-map-tabbar-h) + env(safe-area-inset-top,0px))!important;
-  min-height:calc(var(--oai-v443-map-tabbar-h) + env(safe-area-inset-top,0px))!important;
-  padding:calc(env(safe-area-inset-top,0px) + 6px) 7px 6px!important;
-  box-sizing:border-box!important;
-}
-html #app #tabbar .tab-btn{
-  height:var(--oai-v443-map-tab-btn-h)!important;
-  min-height:var(--oai-v443-map-tab-btn-h)!important;
-  font-size:var(--oai-v443-map-tab-fs)!important;
-  line-height:1.1!important;
-  gap:var(--oai-v443-map-tab-gap)!important;
-}
-html #app #tabbar .tab-btn span:not(.tab-icon){
-  font-size:var(--oai-v443-map-tab-fs)!important;
-  line-height:1.1!important;
-}
-html #app #tabbar .tab-icon{
-  margin-bottom:1px!important;
-}
-html #app .panel{
-  top:calc(var(--oai-v443-map-tabbar-h) + env(safe-area-inset-top,0px))!important;
-}
-html.ios-device #app #tabbar .tab-btn{
-  height:var(--oai-v443-map-tab-btn-h)!important;
-  min-height:var(--oai-v443-map-tab-btn-h)!important;
-  font-size:var(--oai-v443-map-tab-fs)!important;
-  gap:var(--oai-v443-map-tab-gap)!important;
-}
-html.ios-device #app #tabbar .tab-btn span:not(.tab-icon){
-  font-size:var(--oai-v443-map-tab-fs)!important;
-}
+/* V4-48: 상부탭 덮어쓰기 보정 제거 완료 - 기준값은 :root와 기본 #tabbar/.tab-btn 규칙에서 관리 */
 
 
 /* ============================================================
-   V4-47: 커버 새로고침 후 하단 안내문구 겹침 방지
+   V4-48: 커버 새로고침 후 하단 안내문구 겹침 방지
    - 안내문구를 fixed overlay가 아니라 커버 flex 흐름의 마지막 줄로 둔다.
    - 나의 신앙생활/새로고침 버튼과 하단 안내문구가 서로 겹치지 않도록 분리한다.
    ============================================================ */
