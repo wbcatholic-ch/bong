@@ -1,9 +1,9 @@
-/* 가톨릭길동무 Service Worker - V4-74
+/* 가톨릭길동무 Service Worker - V4-75
    iOS viewport height stability patch
    캐시를 매번 삭제하지 않고, 버전 변경 시 오래된 캐시만 정리합니다.
    localStorage/사용자 설정은 건드리지 않습니다. */
-const CACHE_VERSION = 'catholic-way-V4-74';
-const ASSET_VERSION = 'V4-74';
+const CACHE_VERSION = 'catholic-way-V4-75';
+const ASSET_VERSION = 'V4-75';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }
@@ -66,7 +66,7 @@ function isVersionedAsset(request) {
   try {
     const url = new URL(request.url);
     return url.searchParams.has('v') ||
-      /parishes(?:-[a-z-]+)?\.js|prayer-data\.js|prayer\.js|retreats\.js|shrines\.js|diocese\.html|diocese\.css|qa-firebase\.html|app\.js|style\.css|module-common\.css|prayer\.css|web\.css|pilgrimage\.css|overlays\.css|cover-modals\.css|myfaith\.css|my-diocese\.css|web\.js|touch-ux\.js|prayer-ui\.js|cover-refresh\.js|app-state-guards\.js|route-web-guards\.js|prayer-back\.js|back-controller\.js|sw-update\.js/.test(url.pathname);
+      /parishes-[a-z-]+\.js|prayer-data\.js|prayer\.js|retreats\.js|shrines\.js|diocese\.html|diocese\.css|qa-firebase\.html|app\.js|style\.css|module-common\.css|prayer\.css|web\.css|pilgrimage\.css|overlays\.css|cover-modals\.css|myfaith\.css|my-diocese\.css|web\.js|touch-ux\.js|prayer-ui\.js|cover-refresh\.js|app-state-guards\.js|route-web-guards\.js|prayer-back\.js|back-controller\.js|sw-update\.js/.test(url.pathname);
   } catch (e) { return false; }
 }
 async function networkFirst(request) {
