@@ -1,0 +1,1635 @@
+{
+  "version": "V4-20",
+  "purpose": "post split structure audit, no runtime code change",
+  "total_files": 81,
+  "total_size": 2619038,
+  "largest_files": [
+    {
+      "rel": "ios-install-step2-safari-open.png",
+      "ext": ".png",
+      "size": 415303,
+      "lines": null
+    },
+    {
+      "rel": "app.js",
+      "ext": ".js",
+      "size": 306064,
+      "lines": 6535
+    },
+    {
+      "rel": "diocese.html",
+      "ext": ".html",
+      "size": 275548,
+      "lines": 2724
+    },
+    {
+      "rel": "style.css",
+      "ext": ".css",
+      "size": 219452,
+      "lines": 5332
+    },
+    {
+      "rel": "prayer.js",
+      "ext": ".js",
+      "size": 209391,
+      "lines": 831
+    },
+    {
+      "rel": "ios-install-step3-share-menu.png",
+      "ext": ".png",
+      "size": 117502,
+      "lines": null
+    },
+    {
+      "rel": "ios-install-step4-home-screen.png",
+      "ext": ".png",
+      "size": 62006,
+      "lines": null
+    },
+    {
+      "rel": "index.html",
+      "ext": ".html",
+      "size": 60024,
+      "lines": 980
+    },
+    {
+      "rel": "icon-512x512.png",
+      "ext": ".png",
+      "size": 52021,
+      "lines": null
+    },
+    {
+      "rel": "parishes-suwon.js",
+      "ext": ".js",
+      "size": 49781,
+      "lines": 6
+    },
+    {
+      "rel": "web.js",
+      "ext": ".js",
+      "size": 46740,
+      "lines": 955
+    },
+    {
+      "rel": "AUDIT_V4-7_raw.json",
+      "ext": ".json",
+      "size": 43206,
+      "lines": 1310
+    },
+    {
+      "rel": "qa-firebase.html",
+      "ext": ".html",
+      "size": 41863,
+      "lines": 1105
+    },
+    {
+      "rel": "parishes-daegu.js",
+      "ext": ".js",
+      "size": 39215,
+      "lines": 6
+    },
+    {
+      "rel": "icon-512x512-maskable.png",
+      "ext": ".png",
+      "size": 39108,
+      "lines": null
+    },
+    {
+      "rel": "shrines.js",
+      "ext": ".js",
+      "size": 38566,
+      "lines": 2
+    },
+    {
+      "rel": "AUDIT_V4-1_raw.json",
+      "ext": ".json",
+      "size": 34656,
+      "lines": 2413
+    },
+    {
+      "rel": "parishes-seoul.js",
+      "ext": ".js",
+      "size": 31763,
+      "lines": 6
+    },
+    {
+      "rel": "parishes-daejeon.js",
+      "ext": ".js",
+      "size": 30681,
+      "lines": 6
+    },
+    {
+      "rel": "js/myfaith.js",
+      "ext": ".js",
+      "size": 30270,
+      "lines": 370
+    },
+    {
+      "rel": "retreats.js",
+      "ext": ".js",
+      "size": 29827,
+      "lines": 9
+    },
+    {
+      "rel": "parishes-incheon.js",
+      "ext": ".js",
+      "size": 25796,
+      "lines": 6
+    },
+    {
+      "rel": "parishes-gwangju.js",
+      "ext": ".js",
+      "size": 25576,
+      "lines": 6
+    },
+    {
+      "rel": "parishes-busan.js",
+      "ext": ".js",
+      "size": 25198,
+      "lines": 6
+    },
+    {
+      "rel": "KakaoTalk_20260514_134255658_04.jpg",
+      "ext": ".jpg",
+      "size": 24547,
+      "lines": null
+    },
+    {
+      "rel": "parishes-jeonju.js",
+      "ext": ".js",
+      "size": 20901,
+      "lines": 6
+    },
+    {
+      "rel": "AUDIT_V4-1.md",
+      "ext": ".md",
+      "size": 20466,
+      "lines": 243
+    },
+    {
+      "rel": "js/back-controller.js",
+      "ext": ".js",
+      "size": 19804,
+      "lines": 429
+    },
+    {
+      "rel": "parishes-uijeongbu.js",
+      "ext": ".js",
+      "size": 18637,
+      "lines": 6
+    },
+    {
+      "rel": "css/myfaith.css",
+      "ext": ".css",
+      "size": 15904,
+      "lines": 240
+    }
+  ],
+  "by_extension": {
+    ".md": {
+      "count": 20,
+      "size": 63311,
+      "lines": 1359
+    },
+    ".json": {
+      "count": 4,
+      "size": 78945,
+      "lines": 3772
+    },
+    ".jpg": {
+      "count": 1,
+      "size": 24547,
+      "lines": 0
+    },
+    ".html": {
+      "count": 5,
+      "size": 396735,
+      "lines": 5236
+    },
+    ".js": {
+      "count": 37,
+      "size": 1091811,
+      "lines": 10916
+    },
+    ".rules": {
+      "count": 1,
+      "size": 1548,
+      "lines": 42
+    },
+    ".sample": {
+      "count": 1,
+      "size": 1548,
+      "lines": 42
+    },
+    ".png": {
+      "count": 7,
+      "size": 705490,
+      "lines": 0
+    },
+    ".css": {
+      "count": 5,
+      "size": 255103,
+      "lines": 6056
+    }
+  },
+  "comparison": {
+    "app_js_lines_v4_1": 6896,
+    "app_js_lines_v4_20": 6535,
+    "style_css_lines_v4_1": 5993,
+    "style_css_lines_v4_20": 5332,
+    "patches_js_lines_v4_1": 1470,
+    "patches_js_lines_v4_20": 0,
+    "new_css_files": [
+      "css/cover-modals.css",
+      "css/my-diocese.css",
+      "css/myfaith.css",
+      "css/overlays.css"
+    ],
+    "new_js_files": [
+      "js/app-state-guards.js",
+      "js/back-controller.js",
+      "js/cover-common.js",
+      "js/cover-refresh.js",
+      "js/myfaith.js",
+      "js/prayer-back.js",
+      "js/prayer-ui.js",
+      "js/route-web-guards.js",
+      "js/touch-ux.js"
+    ]
+  },
+  "css_metrics": [
+    {
+      "rel": "style.css",
+      "size": 219452,
+      "lines": 5332,
+      "selectors": 1816
+    },
+    {
+      "rel": "css/myfaith.css",
+      "size": 15904,
+      "lines": 240,
+      "selectors": 79
+    },
+    {
+      "rel": "css/cover-modals.css",
+      "size": 8905,
+      "lines": 238,
+      "selectors": 55
+    },
+    {
+      "rel": "css/overlays.css",
+      "size": 4808,
+      "lines": 160,
+      "selectors": 29
+    },
+    {
+      "rel": "css/my-diocese.css",
+      "size": 6034,
+      "lines": 86,
+      "selectors": 22
+    }
+  ],
+  "css_selector_total": 2001,
+  "css_selector_unique": 1376,
+  "css_duplicate_count": 326,
+  "top_css_duplicates": [
+    {
+      "selector": ":root",
+      "count": 9,
+      "files": [
+        "css/cover-modals.css",
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode #tabbar .tab-btn.active",
+      "count": 9,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode .dio-hd",
+      "count": 9,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode .filter-bar",
+      "count": 9,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode .li-badge",
+      "count": 9,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode .nearby-dist",
+      "count": 9,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode .nearby-num",
+      "count": 9,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode .nearby-type",
+      "count": 9,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode .region-list-hd",
+      "count": 9,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode .region-wrap",
+      "count": 9,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode .ric-lbl",
+      "count": 9,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode .sheet-hd",
+      "count": 9,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode",
+      "count": 8,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode .ic-type-badge",
+      "count": 8,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode .ric-hd",
+      "count": 8,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode .sm-hd",
+      "count": 8,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode .srch-bar",
+      "count": 8,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#oai-category-entry-veil::after",
+      "count": 7,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": ".map-loading-icon",
+      "count": 7,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.oai-external-return-freeze::after",
+      "count": 7,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.oai-stability-veil::after",
+      "count": 7,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode #region-body .nearby-dist",
+      "count": 7,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode #region-body .nearby-type",
+      "count": 7,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode #region-body .region-item .nearby-type",
+      "count": 7,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active",
+      "count": 7,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode .filter-btn.active",
+      "count": 7,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode .sm-fb.on",
+      "count": 7,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.parish-mode .filter-btn.active",
+      "count": 6,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.parish-mode .sheet-hd",
+      "count": 6,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.parish-mode .sm-fb.on",
+      "count": 6,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode #nearby-body .nearby-num",
+      "count": 6,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#diocese-loading .missa-spinner",
+      "count": 5,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": ".cv-extra-row",
+      "count": 5,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": ".filter-btn.active",
+      "count": 5,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": ".sm-fb.on",
+      "count": 5,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.parish-mode",
+      "count": 5,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.parish-mode #srch-modal #sm-tab-bar .sm-tab.active",
+      "count": 5,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.parish-mode .filter-bar",
+      "count": 5,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.parish-mode .nearby-num",
+      "count": 5,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.parish-mode .region-wrap",
+      "count": 5,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode #region-body .nearby-num",
+      "count": 5,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode #region-body .region-item .nearby-num",
+      "count": 5,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#cover",
+      "count": 4,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#cover .cover-diocese-btn",
+      "count": 4,
+      "files": [
+        "css/myfaith.css",
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#cover-main-block",
+      "count": 4,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#prayer-bar",
+      "count": 4,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#sm-tab-bar",
+      "count": 4,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#trail-view .trail-body",
+      "count": 4,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.oai-font-global #region-body .li-name",
+      "count": 4,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.oai-font-global #region-body .li-sub",
+      "count": 4,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.oai-font-global .module-bar-title",
+      "count": 4,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.parish-mode #nearby-body .nearby-num",
+      "count": 4,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.parish-mode #srch-modal #sm-tab-bar",
+      "count": 4,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.parish-mode #tabbar .tab-btn.active",
+      "count": 4,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.parish-mode .li-badge",
+      "count": 4,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.parish-mode .nearby-dist",
+      "count": 4,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.parish-mode .nearby-type",
+      "count": 4,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.parish-mode .region-list-hd",
+      "count": 4,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.parish-mode .ric-hd",
+      "count": 4,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.parish-mode .ric-lbl",
+      "count": 4,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.parish-mode .srch-bar",
+      "count": 4,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "html.retreat-mode #srch-modal #sm-tab-bar",
+      "count": 4,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#app .ic-name",
+      "count": 3,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#app .li-name",
+      "count": 3,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#app .nearby-name",
+      "count": 3,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#app .sm-name",
+      "count": 3,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#app .sm-place-name",
+      "count": 3,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#cover #cover-action-row.cover-action-single #cover-diocese-box",
+      "count": 3,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#cover #cover-action-row.cover-action-single #cover-update-box",
+      "count": 3,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#cover #cover-update-btn.cover-refresh-main-btn",
+      "count": 3,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#cover .cover-diocese-btn .cover-faith-cross",
+      "count": 3,
+      "files": [
+        "css/myfaith.css",
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#cover .cover-refresh-main-btn",
+      "count": 3,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#cover-bottom-note",
+      "count": 3,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#diocese-bar",
+      "count": 3,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#diocese-frame",
+      "count": 3,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#diocese-loading .missa-spinner::before",
+      "count": 3,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#list-body",
+      "count": 3,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": "#trail-list",
+      "count": 3,
+      "files": [
+        "style.css"
+      ]
+    },
+    {
+      "selector": ".cover-menu-item",
+      "count": 3,
+      "files": [
+        "css/cover-modals.css",
+        "style.css"
+      ]
+    },
+    {
+      "selector": ".cover-menu-panel",
+      "count": 3,
+      "files": [
+        "css/cover-modals.css",
+        "style.css"
+      ]
+    }
+  ],
+  "js_metrics": [
+    {
+      "rel": "app.js",
+      "size": 306064,
+      "lines": 6535,
+      "listeners": 54,
+      "events": {
+        "click": 11,
+        "DOMContentLoaded": 7,
+        "pageshow": 7,
+        "load": 6,
+        "focus": 4,
+        "error": 4,
+        "visibilitychange": 3,
+        "pagehide": 2,
+        "keydown": 2,
+        "touchend": 2,
+        "resize": 2,
+        "beforeinstallprompt": 1,
+        "appinstalled": 1,
+        "blur": 1,
+        "touchstart": 1
+      },
+      "window_refs": 282,
+      "functions_or_arrows": 560,
+      "named_functions": 403
+    },
+    {
+      "rel": "web.js",
+      "size": 46740,
+      "lines": 955,
+      "listeners": 5,
+      "events": {
+        "click": 3,
+        "pageshow": 1,
+        "DOMContentLoaded": 1
+      },
+      "window_refs": 44,
+      "functions_or_arrows": 52,
+      "named_functions": 41
+    },
+    {
+      "rel": "prayer.js",
+      "size": 209391,
+      "lines": 831,
+      "listeners": 11,
+      "events": {
+        "touchstart": 2,
+        "touchmove": 2,
+        "touchend": 2,
+        "click": 2,
+        "touchcancel": 1,
+        "pageshow": 1,
+        "visibilitychange": 1
+      },
+      "window_refs": 57,
+      "functions_or_arrows": 47,
+      "named_functions": 36
+    },
+    {
+      "rel": "js/back-controller.js",
+      "size": 19804,
+      "lines": 429,
+      "listeners": 3,
+      "events": {
+        "popstate": 1,
+        "backbutton": 1,
+        "pageshow": 1
+      },
+      "window_refs": 79,
+      "functions_or_arrows": 13,
+      "named_functions": 13
+    },
+    {
+      "rel": "js/myfaith.js",
+      "size": 30270,
+      "lines": 370,
+      "listeners": 17,
+      "events": {
+        "click": 8,
+        "focus": 2,
+        "resize": 2,
+        "input": 1,
+        "blur": 1,
+        "pageshow": 1,
+        "visibilitychange": 1,
+        "keydown": 1
+      },
+      "window_refs": 27,
+      "functions_or_arrows": 47,
+      "named_functions": 47
+    },
+    {
+      "rel": "js/prayer-back.js",
+      "size": 12876,
+      "lines": 265,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 74,
+      "functions_or_arrows": 24,
+      "named_functions": 24
+    },
+    {
+      "rel": "core.js",
+      "size": 9041,
+      "lines": 209,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 37,
+      "functions_or_arrows": 17,
+      "named_functions": 17
+    },
+    {
+      "rel": "js/touch-ux.js",
+      "size": 6852,
+      "lines": 170,
+      "listeners": 7,
+      "events": {
+        "pointerdown": 2,
+        "pointermove": 1,
+        "pointercancel": 1,
+        "pointerup": 1,
+        "click": 1,
+        "DOMContentLoaded": 1
+      },
+      "window_refs": 3,
+      "functions_or_arrows": 5,
+      "named_functions": 5
+    },
+    {
+      "rel": "js/cover-common.js",
+      "size": 7344,
+      "lines": 169,
+      "listeners": 10,
+      "events": {
+        "load": 3,
+        "DOMContentLoaded": 2,
+        "pageshow": 2,
+        "beforeinstallprompt": 1,
+        "appinstalled": 1,
+        "change": 1
+      },
+      "window_refs": 29,
+      "functions_or_arrows": 16,
+      "named_functions": 16
+    },
+    {
+      "rel": "js/cover-refresh.js",
+      "size": 6677,
+      "lines": 149,
+      "listeners": 6,
+      "events": {
+        "touchstart": 1,
+        "touchmove": 1,
+        "touchend": 1,
+        "touchcancel": 1,
+        "pageshow": 1,
+        "DOMContentLoaded": 1
+      },
+      "window_refs": 22,
+      "functions_or_arrows": 11,
+      "named_functions": 11
+    },
+    {
+      "rel": "js/app-state-guards.js",
+      "size": 6487,
+      "lines": 141,
+      "listeners": 7,
+      "events": {
+        "load": 3,
+        "DOMContentLoaded": 2,
+        "click": 1,
+        "pageshow": 1
+      },
+      "window_refs": 17,
+      "functions_or_arrows": 10,
+      "named_functions": 10
+    },
+    {
+      "rel": "js/route-web-guards.js",
+      "size": 8678,
+      "lines": 136,
+      "listeners": 5,
+      "events": {
+        "touchstart": 1,
+        "touchend": 1,
+        "DOMContentLoaded": 1,
+        "load": 1,
+        "pageshow": 1
+      },
+      "window_refs": 15,
+      "functions_or_arrows": 12,
+      "named_functions": 12
+    },
+    {
+      "rel": "sw-update.js",
+      "size": 6765,
+      "lines": 114,
+      "listeners": 2,
+      "events": {
+        "visibilitychange": 1,
+        "DOMContentLoaded": 1
+      },
+      "window_refs": 22,
+      "functions_or_arrows": 8,
+      "named_functions": 8
+    },
+    {
+      "rel": "sw.js",
+      "size": 3893,
+      "lines": 112,
+      "listeners": 3,
+      "events": {
+        "install": 1,
+        "activate": 1,
+        "fetch": 1
+      },
+      "window_refs": 0,
+      "functions_or_arrows": 21,
+      "named_functions": 6
+    },
+    {
+      "rel": "js/prayer-ui.js",
+      "size": 3442,
+      "lines": 77,
+      "listeners": 4,
+      "events": {
+        "DOMContentLoaded": 2,
+        "click": 1,
+        "load": 1
+      },
+      "window_refs": 8,
+      "functions_or_arrows": 4,
+      "named_functions": 4
+    },
+    {
+      "rel": "constants.js",
+      "size": 2781,
+      "lines": 64,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 2,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    },
+    {
+      "rel": "firebase-functions/qa-notification/index.js",
+      "size": 1303,
+      "lines": 46,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 0,
+      "functions_or_arrows": 3,
+      "named_functions": 1
+    },
+    {
+      "rel": "firebase-messaging-sw.js",
+      "size": 1230,
+      "lines": 32,
+      "listeners": 1,
+      "events": {
+        "notificationclick": 1
+      },
+      "window_refs": 0,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    },
+    {
+      "rel": "retreats.js",
+      "size": 29827,
+      "lines": 9,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 3,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    },
+    {
+      "rel": "parishes-andong.js",
+      "size": 7621,
+      "lines": 6,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 3,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    },
+    {
+      "rel": "parishes-busan.js",
+      "size": 25198,
+      "lines": 6,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 3,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    },
+    {
+      "rel": "parishes-cheongju.js",
+      "size": 15227,
+      "lines": 6,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 3,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    },
+    {
+      "rel": "parishes-chuncheon.js",
+      "size": 13522,
+      "lines": 6,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 3,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    },
+    {
+      "rel": "parishes-daegu.js",
+      "size": 39215,
+      "lines": 6,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 3,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    },
+    {
+      "rel": "parishes-daejeon.js",
+      "size": 30681,
+      "lines": 6,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 3,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    },
+    {
+      "rel": "parishes-gwangju.js",
+      "size": 25576,
+      "lines": 6,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 3,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    },
+    {
+      "rel": "parishes-incheon.js",
+      "size": 25796,
+      "lines": 6,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 3,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    },
+    {
+      "rel": "parishes-jeju.js",
+      "size": 5572,
+      "lines": 6,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 3,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    },
+    {
+      "rel": "parishes-jeonju.js",
+      "size": 20901,
+      "lines": 6,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 3,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    },
+    {
+      "rel": "parishes-masan.js",
+      "size": 12289,
+      "lines": 6,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 3,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    },
+    {
+      "rel": "parishes-military.js",
+      "size": 406,
+      "lines": 6,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 3,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    },
+    {
+      "rel": "parishes-seoul.js",
+      "size": 31763,
+      "lines": 6,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 3,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    },
+    {
+      "rel": "parishes-suwon.js",
+      "size": 49781,
+      "lines": 6,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 3,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    },
+    {
+      "rel": "parishes-uijeongbu.js",
+      "size": 18637,
+      "lines": 6,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 3,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    },
+    {
+      "rel": "parishes-wonju.js",
+      "size": 11294,
+      "lines": 6,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 3,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    },
+    {
+      "rel": "parishes.js",
+      "size": 301,
+      "lines": 5,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 2,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    },
+    {
+      "rel": "shrines.js",
+      "size": 38566,
+      "lines": 2,
+      "listeners": 0,
+      "events": {},
+      "window_refs": 1,
+      "functions_or_arrows": 0,
+      "named_functions": 0
+    }
+  ],
+  "listener_total": 135,
+  "listener_events": [
+    [
+      "click",
+      27
+    ],
+    [
+      "DOMContentLoaded",
+      18
+    ],
+    [
+      "pageshow",
+      16
+    ],
+    [
+      "load",
+      14
+    ],
+    [
+      "visibilitychange",
+      6
+    ],
+    [
+      "focus",
+      6
+    ],
+    [
+      "touchend",
+      6
+    ],
+    [
+      "touchstart",
+      5
+    ],
+    [
+      "error",
+      4
+    ],
+    [
+      "resize",
+      4
+    ],
+    [
+      "keydown",
+      3
+    ],
+    [
+      "touchmove",
+      3
+    ],
+    [
+      "pagehide",
+      2
+    ],
+    [
+      "beforeinstallprompt",
+      2
+    ],
+    [
+      "appinstalled",
+      2
+    ],
+    [
+      "blur",
+      2
+    ],
+    [
+      "touchcancel",
+      2
+    ],
+    [
+      "pointerdown",
+      2
+    ],
+    [
+      "notificationclick",
+      1
+    ],
+    [
+      "install",
+      1
+    ],
+    [
+      "activate",
+      1
+    ],
+    [
+      "fetch",
+      1
+    ],
+    [
+      "input",
+      1
+    ],
+    [
+      "change",
+      1
+    ],
+    [
+      "pointermove",
+      1
+    ],
+    [
+      "pointercancel",
+      1
+    ],
+    [
+      "pointerup",
+      1
+    ],
+    [
+      "popstate",
+      1
+    ],
+    [
+      "backbutton",
+      1
+    ]
+  ],
+  "function_total": 654,
+  "function_duplicate_names": [
+    [
+      "finish",
+      7
+    ],
+    [
+      "run",
+      4
+    ],
+    [
+      "now",
+      3
+    ],
+    [
+      "$",
+      3
+    ],
+    [
+      "_resetCoverExitReady",
+      2
+    ],
+    [
+      "_clearCoverExitArmed",
+      2
+    ],
+    [
+      "_armCoverExitWindow",
+      2
+    ],
+    [
+      "_isCoverExitArmed",
+      2
+    ],
+    [
+      "_isCoverScreenVisible",
+      2
+    ],
+    [
+      "_isAppScreenActive",
+      2
+    ],
+    [
+      "_ensureCoverBackTrap",
+      2
+    ],
+    [
+      "_resetCoverBackTrap",
+      2
+    ],
+    [
+      "_ensureAppBackTrap",
+      2
+    ],
+    [
+      "_resetAppBackTrap",
+      2
+    ],
+    [
+      "done",
+      2
+    ],
+    [
+      "close",
+      2
+    ],
+    [
+      "showModal",
+      2
+    ],
+    [
+      "hideModal",
+      2
+    ],
+    [
+      "init",
+      2
+    ],
+    [
+      "prepareExternalUrl",
+      2
+    ],
+    [
+      "_showBackToast",
+      2
+    ],
+    [
+      "attemptAppExit",
+      2
+    ],
+    [
+      "closeExitDlg",
+      2
+    ],
+    [
+      "doExit",
+      2
+    ],
+    [
+      "isHorizontalSwipe",
+      2
+    ],
+    [
+      "isTypingTarget",
+      2
+    ],
+    [
+      "el",
+      2
+    ],
+    [
+      "boot",
+      2
+    ],
+    [
+      "isRefreshDialogOpen",
+      2
+    ],
+    [
+      "isGuideModalOpen",
+      2
+    ],
+    [
+      "closeGuideModals",
+      2
+    ],
+    [
+      "$b",
+      2
+    ]
+  ],
+  "window_unique_count": 194,
+  "index_css_links": [
+    "manifest.json?v=V4-19",
+    "icon-512x512.png?v=V4-19",
+    "icon-512x512.png?v=V4-19",
+    "icon-192x192.png?v=V4-19",
+    "https://fonts.googleapis.com",
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css",
+    "https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap",
+    "style.css?v=V4-19",
+    "css/overlays.css?v=V4-19",
+    "css/cover-modals.css?v=V4-19",
+    "css/myfaith.css?v=V4-19",
+    "css/my-diocese.css?v=V4-19"
+  ],
+  "index_script_srcs": [
+    "js/myfaith.js?v=V4-19",
+    "app.js?v=V4-19",
+    "js/cover-common.js?v=V4-19",
+    "web.js?v=V4-19",
+    "js/touch-ux.js?v=V4-19",
+    "js/prayer-ui.js?v=V4-19",
+    "js/cover-refresh.js?v=V4-19",
+    "js/app-state-guards.js?v=V4-19",
+    "js/route-web-guards.js?v=V4-19",
+    "js/prayer-back.js?v=V4-19",
+    "js/back-controller.js?v=V4-19",
+    "sw-update.js?v=V4-19"
+  ],
+  "sw_cache_version": "catholic-way-V4-19",
+  "sw_cache_v4_19_asset_count": 21,
+  "loaded_local_paths": [
+    "manifest.json?v=V4-19",
+    "icon-512x512.png?v=V4-19",
+    "icon-512x512.png?v=V4-19",
+    "icon-192x192.png?v=V4-19",
+    "style.css?v=V4-19",
+    "css/overlays.css?v=V4-19",
+    "css/cover-modals.css?v=V4-19",
+    "css/myfaith.css?v=V4-19",
+    "css/my-diocese.css?v=V4-19",
+    "js/myfaith.js?v=V4-19",
+    "app.js?v=V4-19",
+    "js/cover-common.js?v=V4-19",
+    "web.js?v=V4-19",
+    "js/touch-ux.js?v=V4-19",
+    "js/prayer-ui.js?v=V4-19",
+    "js/cover-refresh.js?v=V4-19",
+    "js/app-state-guards.js?v=V4-19",
+    "js/route-web-guards.js?v=V4-19",
+    "js/prayer-back.js?v=V4-19",
+    "js/back-controller.js?v=V4-19",
+    "sw-update.js?v=V4-19"
+  ],
+  "missing_loaded_assets_from_sw_cache_heuristic": [],
+  "recommended_next_steps": [
+    "V4-21 pilgrimage.css split",
+    "V4-22 web.css split",
+    "V4-23 pilgrimage/web js audit or split",
+    "V4-24 prayer.css split",
+    "V4-25 prayer core js cleanup",
+    "V4-26 diocese css split",
+    "V4-27 diocese js split",
+    "V4-28 parish/shrine/retreat common audit"
+  ]
+}
