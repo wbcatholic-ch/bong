@@ -4787,36 +4787,42 @@ html.oai-font-global #srch-modal .sm-hd .sm-title{
   overflow:hidden!important;
 }
 
-/* V4-42: 성당·성지·피정의집 상부탭 글자/세로 높이 추가 증가 */
+/* V4-43: 성당·성지·피정의집 상부탭 현재 크기 고정 및 아이콘/문구 간격 보정 */
 :root{
-  --oai-v441-map-tabbar-h:84px;
-  --oai-v441-map-tab-btn-h:70px;
-  --oai-v441-map-tab-fs:15px;
+  --oai-v443-map-tabbar-h:84px;
+  --oai-v443-map-tab-btn-h:70px;
+  --oai-v443-map-tab-fs:15px;
+  --oai-v443-map-tab-gap:6px;
 }
-#app #tabbar{
-  height:calc(var(--oai-v441-map-tabbar-h) + env(safe-area-inset-top,0px))!important;
-  min-height:calc(var(--oai-v441-map-tabbar-h) + env(safe-area-inset-top,0px))!important;
+html #app #tabbar{
+  height:calc(var(--oai-v443-map-tabbar-h) + env(safe-area-inset-top,0px))!important;
+  min-height:calc(var(--oai-v443-map-tabbar-h) + env(safe-area-inset-top,0px))!important;
   padding:calc(env(safe-area-inset-top,0px) + 6px) 7px 6px!important;
   box-sizing:border-box!important;
 }
-#app #tabbar .tab-btn{
-  height:var(--oai-v441-map-tab-btn-h)!important;
-  min-height:var(--oai-v441-map-tab-btn-h)!important;
-  font-size:var(--oai-v441-map-tab-fs)!important;
+html #app #tabbar .tab-btn{
+  height:var(--oai-v443-map-tab-btn-h)!important;
+  min-height:var(--oai-v443-map-tab-btn-h)!important;
+  font-size:var(--oai-v443-map-tab-fs)!important;
+  line-height:1.1!important;
+  gap:var(--oai-v443-map-tab-gap)!important;
+}
+html #app #tabbar .tab-btn span:not(.tab-icon){
+  font-size:var(--oai-v443-map-tab-fs)!important;
   line-height:1.1!important;
 }
-#app #tabbar .tab-btn span:not(.tab-icon){
-  font-size:var(--oai-v441-map-tab-fs)!important;
-  line-height:1.1!important;
+html #app #tabbar .tab-icon{
+  margin-bottom:1px!important;
 }
-#app .panel{
-  top:calc(var(--oai-v441-map-tabbar-h) + env(safe-area-inset-top,0px))!important;
+html #app .panel{
+  top:calc(var(--oai-v443-map-tabbar-h) + env(safe-area-inset-top,0px))!important;
 }
 html.ios-device #app #tabbar .tab-btn{
-  height:58px!important;
-  min-height:58px!important;
-  font-size:14px!important;
+  height:var(--oai-v443-map-tab-btn-h)!important;
+  min-height:var(--oai-v443-map-tab-btn-h)!important;
+  font-size:var(--oai-v443-map-tab-fs)!important;
+  gap:var(--oai-v443-map-tab-gap)!important;
 }
 html.ios-device #app #tabbar .tab-btn span:not(.tab-icon){
-  font-size:14px!important;
+  font-size:var(--oai-v443-map-tab-fs)!important;
 }

@@ -1,5 +1,5 @@
 /* 가톨릭길동무 PWA - cover-common.js
-   V4-42: patches.js 제거 후 커버 글자 크기/문의·건의/PWA 설치 버튼 보조 로직 분리
+   V4-43: patches.js 제거 후 커버 글자 크기/문의·건의/PWA 설치 버튼 보조 로직 분리
    기능 변경 없이 기존 window 공개 이름을 유지한다.
 */
 'use strict';
@@ -9,7 +9,7 @@
   window.__APP_FONT_SCALE_GUARD__=true;
   // V3-13: 커버 글자 크기 조절은 prayer.js에 의존하지 않는 공통 함수가 담당한다.
   // prayer.js는 기도문 화면이 열렸을 때 같은 localStorage 값을 읽어 자체 UI를 맞춘다.
-  var QA_URL="qa-firebase.html?v=V4-42";
+  var QA_URL="qa-firebase.html?v=V4-43";
   var FONT_KEY='prayer_font_size';
   var BASE=16;
   var FONT_SIZES=[13,14,15,16,17,18,19,20,21,22,24,26,28,30];
