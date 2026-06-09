@@ -21,6 +21,9 @@
 }
 .cover-menu-panel,
 #cover #mass-quick-modal .mass-quick-panel {
+  position: relative !important;
+  z-index: 1 !important;
+  font-family: inherit !important;
   width: min(370px, calc(100vw - 32px)) !important;
   padding: 22px 18px 20px !important;
   border-radius: 24px !important;
