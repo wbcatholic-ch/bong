@@ -690,7 +690,7 @@ function _ensureCoverBackTrap(reason){
 }
 
 function _resetCoverBackTrap(reason){
-  /* V4-39: 커버 trap 재설정도 js/back-controller.js의 공통 armCoverBackTrap을 우선 사용한다.
+  /* V4-41: 커버 trap 재설정도 js/back-controller.js의 공통 armCoverBackTrap을 우선 사용한다.
      이미 trap이 살아 있으면 중복 root/trap을 다시 쌓지 않아 Back을 여러 번 눌러야 하는 상태를 줄인다. */
   try{
     if(_isAppScreenActive()) return;
@@ -1348,6 +1348,7 @@ function missaLoaded(){
 }
 
 function openPrayerBook(opts){
+  try{ if(typeof oaiClearMapInfoSelection === 'function') oaiClearMapInfoSelection('open-prayer'); }catch(e){ console.warn('[가톨릭길동무]', e); }
   // 주요기도문은 앱 내부 카테고리지만, 빠른메뉴에서 들어온 경우 뒤로가기는 팝업으로 복귀한다.
   if(opts && opts.fromMassQuick){
     try{
@@ -1519,6 +1520,7 @@ function _closePrayerAndReturn(){
 })();
 
 function openDioceseView(opts){
+  try{ if(typeof oaiClearMapInfoSelection === 'function') oaiClearMapInfoSelection('open-diocese'); }catch(e){ console.warn('[가톨릭길동무]', e); }
   var view=document.getElementById('diocese-view');
   var frame=document.getElementById('diocese-frame');
   var loading=document.getElementById('diocese-loading');
@@ -1538,7 +1540,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V4-39';
+    frame.src='diocese.html?v=V4-41';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -1929,7 +1931,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V4-39';
+const _PARISH_ASSET_VERSION='V4-41';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -2092,7 +2094,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V4-39';
+const _PRAYER_ASSET_VERSION='V4-41';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -2154,7 +2156,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V4-39';
+const _RETREAT_ASSET_VERSION='V4-41';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2452,7 +2454,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V4-39';
+const _SHRINE_ASSET_VERSION='V4-41';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -3189,6 +3191,7 @@ function openTab(name, opts){
   opts = opts || {};
   var shouldAutoFocusKeyboard = opts.keyboard === true;
   if(_activeTab===name) return;
+  try{ if(typeof oaiClearMapInfoSelection === 'function') oaiClearMapInfoSelection('tab-switch:'+name); }catch(e){ console.warn('[가톨릭길동무]', e); }
   _updateSheetPanelTitles();
   const prevName = _activeTab;
   const dir = window._swipeDir || null;
@@ -3641,6 +3644,20 @@ function closeInfoCard(opts){
     try{ _focusMarkerAboveInfoCard(wasItem.item); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
 }
+
+function oaiClearMapInfoSelection(reason){
+  try{
+    closeInfoCard({keepMap:true});
+    _curInfoItem=null;
+    _curFromRegion=false;
+    if(_mode==='shrine') _clearShrineMarkerSel();
+    else if(_paSelMkr){
+      try{ _paSelMkr.setMap(null); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      _paSelMkr=null;
+    }
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+}
+try{ window.oaiClearMapInfoSelection=oaiClearMapInfoSelection; }catch(e){ console.warn('[가톨릭길동무]', e); }
 
 function openInAppRoute(){
   // 기존 직접 경로검색 함수는 선택창이 없을 때의 안전 fallback으로만 사용한다.

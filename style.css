@@ -26,13 +26,13 @@
   --st:             env(safe-area-inset-top, 0);
   --header-h:       calc(52px + env(safe-area-inset-top, 0));
   --module-tab-h:   48px;
-  --mod-tabbar-h:   52px;
+  --mod-tabbar-h:   55px;
   --tab-btn-h:      40px;
 
   /* ── OAI 표준 컴포넌트 */
   --oai-std-header-h:  70px;
-  --oai-std-tab-h:     36px;
-  --oai-std-tabbar-h:  52px;
+  --oai-std-tab-h:     40px;
+  --oai-std-tabbar-h:  55px;
   --oai-std-btn-h:     36px;
   --oai-std-title-fs:  20px;
   --oai-std-sub-fs:    11px;
@@ -262,8 +262,8 @@ html.ios-device {
   --oai-std-tab-h:   30px;
   --oai-std-btn-h:   30px;
   --oai-std-gap:     6px;
-  --oai-ios-std-tabbar-h: 46px;
-  --oai-ios-std-tab-btn-h: 32px;
+  --oai-ios-std-tabbar-h: 55px;
+  --oai-ios-std-tab-btn-h: 40px;
 }
 
 /* ============================================================
@@ -1980,7 +1980,7 @@ html.app-active #cover-guide-btn { display: none; }
   padding: 0 13px;
   border: 1.5px solid rgba(31,42,68,.16);
   border-radius: 999px;
-  background: #fffbf2;
+  background: #ffffff;
   color: var(--v4-header-navy);
   font-family: inherit;
   font-size: calc(12px * var(--app-font-scale));
@@ -3005,12 +3005,12 @@ html:not(.parish-mode):not(.retreat-mode) .sm-tab.active{background:linear-gradi
 
 .filter-btn,
 .sm-fb{height:34px!important;min-height:34px!important;padding:0 12px!important;display:flex!important;align-items:center!important;justify-content:center;border-radius:12px!important;font-size:14px!important;line-height:1.15!important;white-space:nowrap}
-.trail-tab,
+.trail-tab{height:40px!important;min-height:40px!important;padding:0 12px!important;display:flex!important;align-items:center!important;justify-content:center;border-radius:10px!important;font-size:15px!important;line-height:1!important;white-space:nowrap}
 .region-search-btn{height:46px!important;min-height:46px!important;padding:0 16px!important;display:flex!important;align-items:center!important;justify-content:center;border-radius:16px!important;font-size:16px!important;line-height:1.2!important;white-space:nowrap}
 html.retreat-mode #list-body .li-name{color:var(--v4-text-strong)!important}
 
 
-/* V4-39: 검색 입력창 공통 규격 — 관구·교구 지역검색(#si) 기준 */
+/* V4-41: 검색 입력창 공통 규격 — 관구·교구 지역검색(#si) 기준 */
 :root{
   --oai-search-input-h:44px;
   --oai-search-input-fs:15px;
@@ -4717,7 +4717,7 @@ html.oai-font-global #srch-modal .sm-hd .sm-title{
   font-size:18px!important;
 }
 
-/* V4-39: 검색 입력창 최종 우선순위 보정 */
+/* V4-41: 검색 입력창 최종 우선순위 보정 */
 #app .srch-inner input,
 #app #srch-modal .sm-si input{
   font-size:calc(var(--oai-search-input-fs,15px) * var(--app-inner-font-scale,1))!important;
@@ -4729,3 +4729,93 @@ html.oai-font-global #srch-modal .sm-hd .sm-title{
   color:var(--oai-search-placeholder-color,#8a7d6d)!important;
 }
 
+
+
+/* V4-41: 관구·교구 탭바 기준으로 주요기도문·웹사이트·순례길 탭바 높이 통일 */
+#prayer-tabs,
+#web-view .web-cats,
+#trail-view .trail-tabs{
+  height:55px!important;
+  min-height:55px!important;
+  max-height:55px!important;
+  padding:0 10px!important;
+  align-items:center!important;
+  gap:6px!important;
+  box-sizing:border-box!important;
+}
+#prayer-tabs .pr-tab,
+#web-view .web-cat-btn,
+#trail-view .trail-tab{
+  height:40px!important;
+  min-height:40px!important;
+  padding:0 12px!important;
+  border-radius:10px!important;
+  font-size:15px!important;
+  line-height:1!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  box-sizing:border-box!important;
+}
+
+/* V4-41: 성당·성지 지역검색 검색창 가로폭 피정의집 기준 보정 */
+#app .region-row{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:center!important;
+  gap:8px!important;
+  width:100%!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+#app .region-row .srch-inner{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+#app .region-row .srch-inner input{
+  min-width:0!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+#app .region-wrap{
+  width:100%!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+
+/* V4-41: 성당·성지·피정의집 상부탭 글자/세로 높이 소폭 증가 */
+:root{
+  --oai-v441-map-tabbar-h:78px;
+  --oai-v441-map-tab-btn-h:66px;
+  --oai-v441-map-tab-fs:14px;
+}
+#app #tabbar{
+  height:calc(var(--oai-v441-map-tabbar-h) + env(safe-area-inset-top,0px))!important;
+  min-height:calc(var(--oai-v441-map-tabbar-h) + env(safe-area-inset-top,0px))!important;
+  padding:calc(env(safe-area-inset-top,0px) + 6px) 7px 6px!important;
+  box-sizing:border-box!important;
+}
+#app #tabbar .tab-btn{
+  height:var(--oai-v441-map-tab-btn-h)!important;
+  min-height:var(--oai-v441-map-tab-btn-h)!important;
+  font-size:var(--oai-v441-map-tab-fs)!important;
+  line-height:1.1!important;
+}
+#app #tabbar .tab-btn span:not(.tab-icon){
+  font-size:var(--oai-v441-map-tab-fs)!important;
+  line-height:1.1!important;
+}
+#app .panel{
+  top:calc(var(--oai-v441-map-tabbar-h) + env(safe-area-inset-top,0px))!important;
+}
+html.ios-device #app #tabbar .tab-btn{
+  height:54px!important;
+  min-height:54px!important;
+  font-size:13px!important;
+}
+html.ios-device #app #tabbar .tab-btn span:not(.tab-icon){
+  font-size:13px!important;
+}
