@@ -318,7 +318,7 @@ html, body {
   max-height: var(--cover-h);
 }
 
-/* V4-44: 커버가 가끔 아래로 밀리는 현상 방지.
+/* V4-45: 커버가 가끔 아래로 밀리는 현상 방지.
    JS가 일시적으로 큰 viewport 값을 잡아도 실제 보이는 화면 높이를 우선한다. */
 @supports (height: 100dvh) {
   #cover {
@@ -4806,10 +4806,10 @@ html.oai-font-global #srch-modal .sm-hd .sm-title{
   overflow:hidden!important;
 }
 
-/* V4-44: 성당·성지·피정의집 상부탭 현재 크기 고정 및 아이콘/문구 간격 보정 */
+/* V4-45: 성당·성지·피정의집 상부탭 현재 크기 고정 및 아이콘/문구 간격 보정 */
 :root{
-  --oai-v443-map-tabbar-h:84px;
-  --oai-v443-map-tab-btn-h:70px;
+  --oai-v443-map-tabbar-h:80px;
+  --oai-v443-map-tab-btn-h:66px;
   --oai-v443-map-tab-fs:15px;
   --oai-v443-map-tab-gap:6px;
 }
