@@ -32,13 +32,37 @@
 
 .trail-r1 { display: flex; align-items: center; gap: 7px; padding: 14px 16px 0; }
 
+.trail-card.trail-my-diocese-card {
+  border-color: var(--v4-brown) !important;
+  border-width: 2px !important;
+  box-shadow: 0 8px 18px rgba(183,121,31,.12), 0 2px 8px rgba(31,42,68,.07) !important;
+}
+
+.trail-my-diocese-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #FFF3D8;
+  border: 1.5px solid rgba(183,121,31,.52);
+  color: #7A4F10;
+  font-size: 12px;
+  font-weight: 950;
+  line-height: 1.15;
+  letter-spacing: -.035em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 .trail-bdg { font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 999px; color: var(--v4-surface-white); white-space: nowrap; flex-shrink: 0; }
 
 .trail-bdg.d { background: #1d4ed8; }
 
 .trail-bdg.l { background: #2a8040; }
 
-.trail-reg { font-size: 12px; color: var(--v4-text-muted); }
+.trail-reg { font-size: 12px; color: var(--v4-text-muted); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .trail-r2 { display: flex; align-items: flex-start; gap: 12px; padding: 10px 16px 14px; }
 
@@ -50,7 +74,7 @@
 
 .trail-nm { font-size: 18px; font-weight: 800; color: var(--v4-text-strong); word-break: keep-all; line-height: 1.35; }
 
-.trail-foot { border-top: 1px solid #f0f4fa; padding: 11px 16px; background: rgba(244,238,229,.72); display: flex; align-items: center; justify-content: space-between; background: rgba(244,238,229,.72); }
+.trail-foot { border-top: 1px solid #f0f4fa; padding: 11px 16px; background: rgba(244,238,229,.72); display: flex; align-items: center; justify-content: space-between; }
 
 .trail-url { font-size: 11px; color: #2563eb; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0; }
 

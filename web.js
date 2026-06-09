@@ -238,6 +238,12 @@
   function getMyDioceseName(){
     try{ return (localStorage.getItem(MY_DIOCESE_KEY) || '').trim(); }catch(e){ return ''; }
   }
+  function normalizeDioceseName(name){
+    return String(name || '')
+      .replace(/^천주교\s*/, '')
+      .replace(/\s+/g, '')
+      .trim();
+  }
   function isMyDioceseWebItem(item, myName){
     if(!item || !myName) return false;
     var itemName = String(item.name || '').trim();
@@ -248,6 +254,12 @@
       return itemName === myName;
     }
     return false;
+  }
+  function isMyDioceseTrailItem(item, myName){
+    if(!item || !myName) return false;
+    var my = normalizeDioceseName(myName);
+    var op = normalizeDioceseName(item.op);
+    return !!(my && op && op === my);
   }
   function webCategoryRank(cat){
     var order = {
@@ -283,6 +295,9 @@
   }
   function myDioceseBadgeHtml(){
     return '<span class="web-my-diocese-badge">나의 교구</span>';
+  }
+  function trailMyDioceseBadgeHtml(){
+    return '<span class="trail-my-diocese-badge">나의 교구</span>';
   }
   function webProvinceBadgeHtml(prov){
     if(!prov) return '';
@@ -824,19 +839,34 @@
     });
   }
 
+  function getTrailItemsForList(){
+    if(!Array.isArray(TRAIL_ITEMS) || TRAIL_ITEMS.length < 2) return TRAIL_ITEMS;
+    var myName = getMyDioceseName();
+    if(!myName) return TRAIL_ITEMS;
+    return TRAIL_ITEMS.slice().sort(function(a,b){
+      var aa = isMyDioceseTrailItem(a, myName) ? 0 : 1;
+      var bb = isMyDioceseTrailItem(b, myName) ? 0 : 1;
+      if(aa !== bb) return aa - bb;
+      return TRAIL_ITEMS.indexOf(a) - TRAIL_ITEMS.indexOf(b);
+    });
+  }
+
   function buildTrailList(){
     const wrap = ig$('trail-list');
     if(!wrap) return;
     wrap.innerHTML = '';
     const countEl = ig$('trail-count');
     if(countEl) countEl.textContent = TRAIL_ITEMS.length + '개';
-    TRAIL_ITEMS.forEach(function(d,i){
+    const myName = getMyDioceseName();
+    getTrailItemsForList().forEach(function(d){
       const card = document.createElement('div');
-      card.className = 'trail-card';
+      const isMyTrailCard = isMyDioceseTrailItem(d, myName);
+      card.className = 'trail-card' + (isMyTrailCard ? ' trail-my-diocese-card' : '');
       card.innerHTML = `
         <div class="trail-r1">
           <span class="trail-bdg ${d.t}">${esc(d.op)}</span>
           <span class="trail-reg">📍 ${esc(d.r)}</span>
+          ${isMyTrailCard ? trailMyDioceseBadgeHtml() : ''}
         </div>
         <div class="trail-r2">
           <div class="trail-ico ${d.t}">${esc(d.ico)}</div>

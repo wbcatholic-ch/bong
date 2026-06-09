@@ -3019,18 +3019,12 @@ html.retreat-mode .nearby-type{background:#DDECE5!important;color:var(--v4-retre
 html.retreat-mode .dio-hd{color:var(--v4-retreat-green)!important;background:#F6FBF8!important}
 
 
-
-
-
-
 html.retreat-mode .nearby-num{background:#4F846C!important;color:var(--v4-surface-paper)!important}
 html.retreat-mode .region-item .nearby-num{background:#4F846C!important}
-#trail-list>.trail-card{flex:0 0 auto!important;min-height:118px!important;width:100%!important;display:block!important}
 html.retreat-mode .filter-btn.active{background:#4F846C!important;color:var(--v4-surface-white)!important;border-color:#4F846C!important}
 html.parish-mode .sm-fb.on{background:var(--gold)!important;color:var(--navy)!important;border-color:var(--gold)!important}
 html.retreat-mode .sm-fb.on{background:var(--gold)!important;color:var(--navy)!important;border-color:var(--gold)!important}
 html:not(.parish-mode):not(.retreat-mode) .sm-tab.active{background:linear-gradient(135deg,var(--shrine-main),var(--shrine-main-2))!important;color:var(--v4-surface-paper)!important;border-color:transparent!important}
-#trail-view .trail-body{flex:1!important;min-height:0!important;display:flex!important;flex-direction:column;width:100%!important}
 html.retreat-mode #list-body .li-name{color:var(--v4-text-strong)!important}
 
 
@@ -3041,7 +3035,6 @@ html.retreat-mode #list-body .li-name{color:var(--v4-text-strong)!important}
 .ic-tel-btn,.ic-route-btn,.ic-link-btn,.btn-kakao-nav{font-size:16px!important}
 #sm-tab-bar{display:flex;gap:10px;padding:10px 12px;height:55px;align-items:center;background:#f5efe5;border-bottom:1px solid var(--ui-line);box-sizing:border-box}
 /* 일반 sm-tab-bar (srch-modal 밖) 배경 */
-#trail-panel-list:not(.on){display:none}
 @media (min-width:600px){.sm-tab{font-size:16px!important}#sm-tab-bar{height:60px!important}}
 html:not(.parish-mode):not(.retreat-mode) #tabbar,html.parish-mode #tabbar,html.retreat-mode #tabbar{background:rgba(255,255,255,.96)!important;border-bottom:1px solid #d8dee6!important}
 .tab-btn .tab-icon{color:inherit!important}
