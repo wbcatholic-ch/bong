@@ -262,3 +262,28 @@
 
 /* Q&A */
 .qna-body { background: #f8fafc; display: flex; flex-direction: column; }
+
+/* V4-39: 기도문 검색창도 관구·교구 지역검색 입력창 기준으로 통일 */
+#prayer-search-bar{
+  min-height:calc(var(--oai-search-input-h,44px) + 14px)!important;
+}
+#prayer-search-bar #prayer-search-wrap{
+  height:var(--oai-search-input-h,44px)!important;
+  min-height:var(--oai-search-input-h,44px)!important;
+}
+#prayer-search-bar #prayer-search-inp,
+#prayer-search-inp{
+  height:var(--oai-search-input-h,44px)!important;
+  min-height:var(--oai-search-input-h,44px)!important;
+  font-size:calc(var(--oai-search-input-fs,15px) * var(--app-inner-font-scale,1))!important;
+  font-weight:600!important;
+  color:var(--oai-search-input-color,#111827)!important;
+  line-height:1.2!important;
+  box-sizing:border-box!important;
+}
+#prayer-search-inp::placeholder{
+  font-size:calc(var(--oai-search-input-fs,15px) * var(--app-inner-font-scale,1))!important;
+  font-weight:500!important;
+  color:var(--oai-search-placeholder-color,#8a7d6d)!important;
+}
+

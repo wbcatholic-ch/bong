@@ -3008,6 +3008,39 @@ html:not(.parish-mode):not(.retreat-mode) .sm-tab.active{background:linear-gradi
 .trail-tab,
 .region-search-btn{height:46px!important;min-height:46px!important;padding:0 16px!important;display:flex!important;align-items:center!important;justify-content:center;border-radius:16px!important;font-size:16px!important;line-height:1.2!important;white-space:nowrap}
 html.retreat-mode #list-body .li-name{color:var(--v4-text-strong)!important}
+
+
+/* V4-39: 검색 입력창 공통 규격 — 관구·교구 지역검색(#si) 기준 */
+:root{
+  --oai-search-input-h:44px;
+  --oai-search-input-fs:15px;
+  --oai-search-input-color:#111827;
+  --oai-search-placeholder-color:#8a7d6d;
+}
+#app .srch-inner,
+#app #srch-modal .sm-si{
+  height:var(--oai-search-input-h)!important;
+  min-height:var(--oai-search-input-h)!important;
+  border-radius:10px!important;
+  box-sizing:border-box!important;
+}
+#app .srch-inner input,
+#app #srch-modal .sm-si input{
+  height:100%!important;
+  min-height:var(--oai-search-input-h)!important;
+  font-size:calc(var(--oai-search-input-fs) * var(--app-inner-font-scale,1))!important;
+  font-weight:600!important;
+  color:var(--oai-search-input-color)!important;
+  line-height:1.2!important;
+  font-family:inherit!important;
+}
+#app .srch-inner input::placeholder,
+#app #srch-modal .sm-si input::placeholder{
+  font-size:calc(var(--oai-search-input-fs) * var(--app-inner-font-scale,1))!important;
+  font-weight:500!important;
+  color:var(--oai-search-placeholder-color)!important;
+}
+
 /* ===== /OAI ===== */
 .nearby-name,.li-name,.sm-name,.sm-place-name{font-size:16px;font-weight:800;line-height:1.35;letter-spacing:-.03em;white-space:normal;overflow:visible;word-break:keep-all}
 .nearby-addr,.li-sub,.sm-sub,.sm-place-addr{font-size:13px;line-height:1.45;letter-spacing:-.02em;white-space:normal;overflow:visible;word-break:keep-all}
@@ -4683,3 +4716,16 @@ html.oai-font-global #app .sheet-hd .sheet-title,
 html.oai-font-global #srch-modal .sm-hd .sm-title{
   font-size:18px!important;
 }
+
+/* V4-39: 검색 입력창 최종 우선순위 보정 */
+#app .srch-inner input,
+#app #srch-modal .sm-si input{
+  font-size:calc(var(--oai-search-input-fs,15px) * var(--app-inner-font-scale,1))!important;
+  color:var(--oai-search-input-color,#111827)!important;
+}
+#app .srch-inner input::placeholder,
+#app #srch-modal .sm-si input::placeholder{
+  font-size:calc(var(--oai-search-input-fs,15px) * var(--app-inner-font-scale,1))!important;
+  color:var(--oai-search-placeholder-color,#8a7d6d)!important;
+}
+
