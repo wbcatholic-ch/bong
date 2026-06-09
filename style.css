@@ -37,6 +37,7 @@
   --oai-search-input-fs: 15px;
   --oai-search-input-color: #111827;
   --oai-search-placeholder-color: #8a7d6d;
+  --oai-search-icon-color: #6f675d;
 
   /* ── OAI 표준 컴포넌트 */
   --oai-std-header-h:  70px;
@@ -700,9 +701,11 @@ html.retreat-mode #tabbar .tab-btn.active {
   font-size: calc(var(--oai-search-input-fs) * var(--app-inner-font-scale,1));
   font-weight: 600;
   color: var(--oai-search-input-color);
+  -webkit-text-fill-color: var(--oai-search-input-color);
   line-height: 1.2;
   font-family: inherit;
   box-sizing: border-box;
+  width: 100%;
 }
 .srch-inner input::placeholder, #srch-modal .sm-si input::placeholder {
   font-size: calc(var(--oai-search-input-fs) * var(--app-inner-font-scale,1));
@@ -1052,7 +1055,9 @@ html.retreat-mode #nearby-body { overflow-x: hidden; }
   align-items: center;
   gap: 8px;
 }
-#srch-modal .sm-si { flex: 1 1 auto; min-width: 0; }
+#srch-modal .sm-si { flex: 1 1 auto; min-width: 0; max-width: 100%; box-sizing: border-box; }
+#srch-modal .sm-si span { flex: 0 0 auto; color: var(--oai-search-icon-color); }
+#srch-modal .sm-si input { min-width: 0; max-width: 100%; }
 .sm-map-select-btn{
   flex:0 0 auto;
   height:38px;
