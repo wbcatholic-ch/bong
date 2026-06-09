@@ -1,36 +1,37 @@
-/* 가톨릭길동무 Service Worker - V4-22
+/* 가톨릭길동무 Service Worker - V4-23
    iOS viewport height stability patch
    캐시를 매번 삭제하지 않고, 버전 변경 시 오래된 캐시만 정리합니다.
    localStorage/사용자 설정은 건드리지 않습니다. */
-const CACHE_VERSION = 'catholic-way-V4-22';
+const CACHE_VERSION = 'catholic-way-V4-23';
 /* 다이어트 1: 첫 실행에 꼭 필요한 앱 셸만 선캐시합니다.
    성당/성지/피정의집/기도문/관구교구/문의 페이지는 versioned fetch 시 cacheFirst로 저장됩니다. */
 const APP_SHELL = [
   './',
   './index.html',
-  './style.css?v=V4-22',
-  './css/web.css?v=V4-22',
-  './css/pilgrimage.css?v=V4-22',
-  './css/overlays.css?v=V4-22',
-  './css/cover-modals.css?v=V4-22',
-  './css/myfaith.css?v=V4-22',
-  './css/my-diocese.css?v=V4-22',
-  './js/myfaith.js?v=V4-22',
-  './app.js?v=V4-22',
-  './js/cover-common.js?v=V4-22',
-  './js/touch-ux.js?v=V4-22',
-  './js/prayer-ui.js?v=V4-22',
-  './js/cover-refresh.js?v=V4-22',
-  './js/app-state-guards.js?v=V4-22',
-  './web.js?v=V4-22',
-  './js/route-web-guards.js?v=V4-22',
-  './js/prayer-back.js?v=V4-22',
-  './js/back-controller.js?v=V4-22',
-  './sw-update.js?v=V4-22',
-  './manifest.json?v=V4-22',
-  './icon-192x192.png?v=V4-22',
-  './icon-512x512.png?v=V4-22',
-  './icon-512x512-maskable.png?v=V4-22',
+  './style.css?v=V4-23',
+  './css/prayer.css?v=V4-23',
+  './css/web.css?v=V4-23',
+  './css/pilgrimage.css?v=V4-23',
+  './css/overlays.css?v=V4-23',
+  './css/cover-modals.css?v=V4-23',
+  './css/myfaith.css?v=V4-23',
+  './css/my-diocese.css?v=V4-23',
+  './js/myfaith.js?v=V4-23',
+  './app.js?v=V4-23',
+  './js/cover-common.js?v=V4-23',
+  './js/touch-ux.js?v=V4-23',
+  './js/prayer-ui.js?v=V4-23',
+  './js/cover-refresh.js?v=V4-23',
+  './js/app-state-guards.js?v=V4-23',
+  './web.js?v=V4-23',
+  './js/route-web-guards.js?v=V4-23',
+  './js/prayer-back.js?v=V4-23',
+  './js/back-controller.js?v=V4-23',
+  './sw-update.js?v=V4-23',
+  './manifest.json?v=V4-23',
+  './icon-192x192.png?v=V4-23',
+  './icon-512x512.png?v=V4-23',
+  './icon-512x512-maskable.png?v=V4-23',
 ];
 
 
@@ -60,7 +61,7 @@ function isVersionedAsset(request) {
   try {
     const url = new URL(request.url);
     return url.searchParams.has('v') ||
-      /parishes(?:-[a-z-]+)?\.js|prayer\.js|retreats\.js|shrines\.js|diocese\.html|qa-firebase\.html|app\.js|style\.css|web\.js|touch-ux\.js|prayer-ui\.js|cover-refresh\.js|app-state-guards\.js|sw-update\.js/.test(url.pathname);
+      /parishes(?:-[a-z-]+)?\.js|prayer\.js|retreats\.js|shrines\.js|diocese\.html|qa-firebase\.html|app\.js|style\.css|prayer\.css|web\.css|pilgrimage\.css|overlays\.css|cover-modals\.css|myfaith\.css|my-diocese\.css|web\.js|touch-ux\.js|prayer-ui\.js|cover-refresh\.js|app-state-guards\.js|route-web-guards\.js|prayer-back\.js|back-controller\.js|sw-update\.js/.test(url.pathname);
   } catch (e) { return false; }
 }
 async function networkFirst(request) {
