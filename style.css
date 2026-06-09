@@ -318,7 +318,7 @@ html, body {
   max-height: var(--cover-h);
 }
 
-/* V4-45: 커버가 가끔 아래로 밀리는 현상 방지.
+/* V4-46: 커버가 가끔 아래로 밀리는 현상 방지.
    JS가 일시적으로 큰 viewport 값을 잡아도 실제 보이는 화면 높이를 우선한다. */
 @supports (height: 100dvh) {
   #cover {
@@ -4271,12 +4271,12 @@ html.oai-cover-first-reveal #cover > * {
   justify-content: stretch !important;
   gap: clamp(5px, 1.4vw, 9px) !important;
   width: 100% !important;
-  height: 46px !important;
-  min-height: 46px !important;
-  max-height: 46px !important;
+  height: 50px !important;
+  min-height: 50px !important;
+  max-height: 50px !important;
   margin: 0 !important;
   padding: 0 !important;
-  flex: 0 0 46px !important;
+  flex: 0 0 50px !important;
   box-sizing: border-box !important;
 }
 #cover #cover-action-row.cover-action-single #cover-diocese-box,
@@ -4287,9 +4287,9 @@ html.oai-cover-first-reveal #cover > * {
   width: 100% !important;
   min-width: 0 !important;
   max-width: none !important;
-  height: 46px !important;
-  min-height: 46px !important;
-  max-height: 46px !important;
+  height: 50px !important;
+  min-height: 50px !important;
+  max-height: 50px !important;
   margin: 0 !important;
   flex: 1 1 auto !important;
   box-sizing: border-box !important;
@@ -4300,9 +4300,9 @@ html.oai-cover-first-reveal #cover > * {
 #cover .cover-refresh-main-btn,
 #cover #cover-update-btn.cover-refresh-main-btn {
   width: 100% !important;
-  height: 46px !important;
-  min-height: 46px !important;
-  max-height: 46px !important;
+  height: 50px !important;
+  min-height: 50px !important;
+  max-height: 50px !important;
   border-radius: 16px !important;
   font-family: inherit !important;
   font-size: calc(14px * var(--app-font-scale, 1)) !important;
@@ -4317,6 +4317,28 @@ html.oai-cover-first-reveal #cover > * {
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+#cover .cover-diocese-btn::before,
+#cover .cover-refresh-main-btn::before,
+#cover #cover-update-btn.cover-refresh-main-btn::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 16px !important;
+  right: 16px !important;
+  top: 0 !important;
+  height: 1.5px !important;
+  border-radius: 999px !important;
+  opacity: .72 !important;
+  pointer-events: none !important;
+}
+#cover .cover-diocese-btn::before {
+  background: rgba(198,40,40,.70) !important;
+}
+#cover .cover-refresh-main-btn::before,
+#cover #cover-update-btn.cover-refresh-main-btn::before {
+  background: rgba(31,42,68,.45) !important;
 }
 #cover .cover-diocese-btn {
   border: 1px solid rgba(126,104,74,.28) !important;
@@ -4361,12 +4383,12 @@ html.app-active #cover-diocese-box { display: none !important; }
 
 @media (max-width:370px){
   #cover #cover-main-block{gap:clamp(2px, calc(var(--cover-vh, 1vh) * 0.5), 4px) !important;}
-  #cover #cover-action-row.cover-action-single{height:44px !important;min-height:44px !important;max-height:44px !important;flex-basis:44px !important;gap:clamp(5px,1.4vw,9px) !important;grid-template-columns:repeat(2,minmax(0,1fr)) !important;}
+  #cover #cover-action-row.cover-action-single{height:48px !important;min-height:48px !important;max-height:48px !important;flex-basis:48px !important;gap:clamp(5px,1.4vw,9px) !important;grid-template-columns:repeat(2,minmax(0,1fr)) !important;}
   #cover #cover-action-row.cover-action-single #cover-diocese-box,
   #cover #cover-action-row.cover-action-single #cover-update-box,
   #cover .cover-diocese-btn,
   #cover .cover-refresh-main-btn,
-  #cover #cover-update-btn.cover-refresh-main-btn{height:44px !important;min-height:44px !important;max-height:44px !important;font-size:calc(12.8px * var(--app-font-scale,1)) !important;}
+  #cover #cover-update-btn.cover-refresh-main-btn{height:48px !important;min-height:48px !important;max-height:48px !important;font-size:calc(12.8px * var(--app-font-scale,1)) !important;}
   #cover .cover-diocese-btn .cover-faith-cross{font-size:calc(14.5px * var(--app-font-scale,1)) !important;}
   .my-diocese-list{grid-template-columns:1fr !important;}
 }
@@ -4806,7 +4828,7 @@ html.oai-font-global #srch-modal .sm-hd .sm-title{
   overflow:hidden!important;
 }
 
-/* V4-45: 성당·성지·피정의집 상부탭 현재 크기 고정 및 아이콘/문구 간격 보정 */
+/* V4-46: 성당·성지·피정의집 상부탭 현재 크기 고정 및 아이콘/문구 간격 보정 */
 :root{
   --oai-v443-map-tabbar-h:80px;
   --oai-v443-map-tab-btn-h:66px;
