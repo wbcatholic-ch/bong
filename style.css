@@ -2955,6 +2955,7 @@ html:not(.app-active), html:not(.app-active) body { scroll-behavior: auto; }
 
 
 #cover::before,#cover::after,.cv-orbit,.cv-orbit-a,.cv-orbit-b{display:none;content:none}
+/* V4-65: .cv-shell-stage 공통 기준은 한 곳만 유지하고, 미디어쿼리는 폭/간격 차이만 남긴다. */
 .cv-shell-stage{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;gap:10px;width:min(100%,560px);height:var(--cover-h);min-height:var(--cover-h);padding:calc(env(safe-area-inset-top,0) + 9vh) 0 calc(9vh + env(safe-area-inset-bottom,0));margin:0 auto;box-sizing:border-box}
 .cv-stage{position:relative;align-self:center;width:min(100%,calc((var(--cover-h) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 124px) * .5625));aspect-ratio:9 / 16;min-height:0}
 .cv-stage-art{display:block;width:100%;height:100%;object-fit:contain;border-radius:22px;box-shadow:0 12px 30px rgba(140,112,71,.16);user-select:none;-webkit-user-drag:none;pointer-events:none}
@@ -2977,8 +2978,8 @@ html:not(.app-active), html:not(.app-active) body { scroll-behavior: auto; }
 .cv-extra-btn.cv-btn-diocese{background:linear-gradient(135deg,#dce7f1,#c5d6e6);color:#26384d}
 .cv-extra-btn.cv-btn-web .cv-btn-icon{background:rgba(255,255,255,.34);color:#5a4026}
 .cv-extra-btn.cv-btn-diocese .cv-btn-icon{background:rgba(255,255,255,.34);color:#334c6a}
-@media (max-width:420px){.cv-shell-stage{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;gap:10px;width:min(100%,560px);height:var(--cover-h);min-height:var(--cover-h);padding:calc(env(safe-area-inset-top,0) + 9vh) 0 calc(9vh + env(safe-area-inset-bottom,0));margin:0 auto;box-sizing:border-box}.cv-stage,.cv-extra-row{width:min(100%,calc((var(--cover-h) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 112px) * .5625))}.cv-extra-row{gap:8px}.cv-extra-btn{min-height:78px;border-radius:18px;padding:8px 7px;gap:5px}.cv-extra-btn::before{inset:3px;border-radius:14px}.cv-extra-btn .cv-btn-icon{width:32px;height:32px;font-size:16px;border-radius:11px}.cv-extra-btn .cv-btn-label{font-size:10.4px}}
-@media (max-height:760px){.cv-shell-stage{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;gap:10px;width:min(100%,560px);height:var(--cover-h);min-height:var(--cover-h);padding:calc(env(safe-area-inset-top,0) + 9vh) 0 calc(9vh + env(safe-area-inset-bottom,0));margin:0 auto;box-sizing:border-box}.cv-stage,.cv-extra-row{width:min(100%,calc((var(--cover-h) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 98px) * .5625))}.cv-extra-row{gap:7px}.cv-extra-btn{min-height:70px;border-radius:16px;padding:7px 6px;gap:4px}.cv-extra-btn::before{inset:3px;border-radius:13px}.cv-extra-btn .cv-btn-icon{width:28px;height:28px;font-size:14px;border-radius:10px}.cv-extra-btn .cv-btn-label{font-size:9.6px;line-height:1.06}}
+@media (max-width:420px){.cv-stage,.cv-extra-row{width:min(100%,calc((var(--cover-h) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 112px) * .5625))}.cv-extra-row{gap:8px}.cv-extra-btn{min-height:78px;border-radius:18px;padding:8px 7px;gap:5px}.cv-extra-btn::before{inset:3px;border-radius:14px}.cv-extra-btn .cv-btn-icon{width:32px;height:32px;font-size:16px;border-radius:11px}.cv-extra-btn .cv-btn-label{font-size:10.4px}}
+@media (max-height:760px){.cv-stage,.cv-extra-row{width:min(100%,calc((var(--cover-h) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 98px) * .5625))}.cv-extra-row{gap:7px}.cv-extra-btn{min-height:70px;border-radius:16px;padding:7px 6px;gap:4px}.cv-extra-btn::before{inset:3px;border-radius:13px}.cv-extra-btn .cv-btn-icon{width:28px;height:28px;font-size:14px;border-radius:10px}.cv-extra-btn .cv-btn-label{font-size:9.6px;line-height:1.06}}
 html.parish-mode .srch-bar,html.parish-mode .filter-bar,html.parish-mode .sheet-hd{background:#374151!important}
 html.parish-mode .ric-lbl,html.parish-mode .region-list-hd{color:var(--v4-parish-gray)!important}
 html.parish-mode .dio-hd{color:#374151!important;background:#F8FAFC!important}
@@ -3124,7 +3125,7 @@ html.ios-device #app #sheet-list .sheet-hd { bottom: 0; }
 html.kb-open .sheet.open { bottom: 0; }
 
 /* ============================================================
-   V4-64 CSS 정리: 성당·피정의집 색상/목록/검색탭 최종 규칙 통합
+   V4-65 CSS 정리: 성당·피정의집 색상/목록/검색탭 최종 규칙 통합
    - 중복 보정 블록을 한 곳으로 합침
    - 성지 고유색, JS, 뒤로가기, 보호창, 지도 로직 변경 없음
    ============================================================ */
