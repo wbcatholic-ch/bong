@@ -1,6 +1,5 @@
-/* 가톨릭길동무 관구·교구 전용 CSS - V4-26/V4-27
-   diocese.html의 기존 inline style 블록을 순서 그대로 분리했습니다.
-   디자인 값과 selector는 변경하지 않았습니다. */
+/* 가톨릭길동무 관구·교구 전용 CSS - V4-62
+   관구·교구 헤더/탭 기준을 기본 규칙 한 곳으로 정리했습니다. */
 
 /* ---- original diocese.html <style no-id> block 1 ---- */
 :root{
@@ -53,19 +52,19 @@ header{flex-shrink:0;background:var(--d);border-bottom:none;z-index:30;
 .hd-sub{font-size:var(--fs-sub);color:rgba(255,255,255,.75);font-weight:500;letter-spacing:.02em;}
 
 /* ── 탭 영역 ── */
-.tab-bar{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:0 10px;
+.tab-bar{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:8px 10px;
   height:var(--tab-h);background:var(--card);
-  border-top:1px solid var(--bdr);border-bottom:2px solid var(--bdr);
+  border-top:0;border-bottom:1px solid var(--bdr);
   overflow-x:hidden;scrollbar-width:none;}
 .tab-bar::-webkit-scrollbar{display:none;}
-.tab{flex:1;height:var(--tab-btn-h);padding:0 8px;border-radius:10px;
-  border:1.5px solid var(--d);background:var(--card-sub);
-  color:var(--d);font-size:var(--fs-tab);font-weight:600;
+.tab{flex:1;height:var(--tab-btn-h);padding:0 8px;border-radius:12px;
+  border:1.5px solid #dde3ee;background:#F8FAFC;
+  color:#475569;font-size:calc(var(--fs-tab) * var(--dio-effective-font-scale,1));font-weight:800;
   cursor:pointer;font-family:inherit;white-space:nowrap;
   display:flex;align-items:center;justify-content:center;gap:4px;letter-spacing:-.02em;
   transition:opacity .15s,transform .12s,box-shadow .15s;}
-.tab.on{background:var(--d);color:#fff;border-color:transparent;font-weight:700;
-  box-shadow:0 2px 8px rgba(31,42,68,.28);}
+.tab.on{background:var(--d);color:#fff;border-color:var(--d);font-weight:800;
+  box-shadow:0 3px 10px rgba(31,42,68,.22);}
 .tab:active{transform:scale(.992);}
 .tab.on,.tab.on:active{transform:none!important;}
 
@@ -127,7 +126,7 @@ header{flex-shrink:0;background:var(--d);border-bottom:none;z-index:30;
 #si::placeholder{font-size:calc(var(--oai-search-input-fs) * var(--dio-effective-font-scale,1));font-weight:500;color:var(--oai-search-placeholder-color);}
 #si:focus{border-color:var(--d);box-shadow:0 0 0 3px rgba(43,191,168,.15);}
 #sb{flex:0 0 auto;padding:0 18px;height:var(--oai-search-input-h);min-height:var(--oai-search-input-h);background:var(--d);color:white;border:none;border-radius:10px;
-  font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;box-sizing:border-box;}
+  font-size:calc(var(--oai-search-input-fs) * var(--dio-effective-font-scale,1));font-weight:600;cursor:pointer;font-family:inherit;box-sizing:border-box;}
 #sb:hover{opacity:.88;}
 .sh{font-size:11px;color:#111827;margin-top:6px;line-height:1.6;font-weight:600;}
 #sres{margin-top:4px;}
@@ -200,7 +199,6 @@ header{flex-shrink:0;background:var(--d);border-bottom:none;z-index:30;
   header{padding-top:env(safe-area-inset-top);height:calc(var(--header-h) + env(safe-area-inset-top));}
 }
 @media(max-width:560px){
-  .tab{font-size:13px;padding:0 12px;}
   #card{width:178px;top:6px;right:6px;}
   #gw-bar{flex-direction:row;flex-wrap:wrap;}
 }
@@ -489,18 +487,7 @@ html.oai-dio-external-return *{transition:none!important;animation:none!importan
 }
 
 /* ---- original diocese.html <style id="oai-diocese-tab-standard-20260504"> block 2 ---- */
-/* 관구교구 헤더 아래 탭 버튼 표준화 + 글자 크기 조절(지도 제외) */
-:root{
-  --diocese-font-scale:1;--dio-font-scale:1;--dio-effective-font-scale:calc(var(--dio-font-scale,1) * var(--ios-dio-font-scale,1));--diocese-effective-font-scale:calc(var(--diocese-font-scale,1) * var(--ios-dio-font-scale,1));}
-.tab-bar{height:55px!important;padding:8px 10px!important;gap:8px!important;background:#FFFBF2!important;border-top:0!important;border-bottom:1px solid #DDD5C8!important;align-items:center!important;}
-.tab{height:40px!important;border-radius:12px!important;font-size:calc(15px * var(--dio-effective-font-scale,1))!important;font-weight:800!important;background:#F8FAFC!important;color:#475569!important;border:1.5px solid #dde3ee!important;display:flex!important;align-items:center!important;justify-content:center!important;}
-.tab.on{background:#1F2A44!important;color:#fff!important;border-color:#1F2A44!important;box-shadow:0 3px 10px rgba(31,42,68,.22)!important;}
-
-
-
-
-
-#search-view #si,#search-view #sb{font-size:calc(15px * var(--dio-effective-font-scale,1))!important;}
+/* V4-62: 탭바 크기/색상 기준은 상단 기본 .tab-bar/.tab 규칙으로 통합했습니다. */
 #search-view .sh{font-size:calc(11px * var(--dio-effective-font-scale,1))!important;}
 #search-view .se{font-size:calc(13px * var(--dio-effective-font-scale,1))!important;}
 #search-view .sl{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
@@ -546,8 +533,6 @@ html.oai-dio-returning #map-view.on,html.oai-dio-returning #list-view.on,html.oa
 /* ---- original diocese.html <style id="oai-ios-ui-density-v22"> block 5 ---- */
 /* iPhone 관구·교구 iframe 내부 UI 밀도 보정 */
 html.ios-device{--ios-dio-ui-scale:.96;}
-html.ios-device .tab-bar{height:46px!important;padding:7px 10px!important;gap:6px!important;align-items:center!important;}
-html.ios-device .tab{height:32px!important;min-height:32px!important;border-radius:10px!important;font-size:calc(14px * var(--dio-effective-font-scale,1))!important;line-height:1!important;}
 html.ios-device #gw-bar{gap:6px!important;padding:7px 9px!important;}
 html.ios-device .gb{min-height:34px!important;padding:0 10px!important;border-radius:11px!important;}
 html.ios-device #card{width:170px!important;border-radius:13px!important;}
