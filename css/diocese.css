@@ -1,4 +1,4 @@
-/* 가톨릭길동무 관구·교구 전용 CSS - V4-63
+/* 가톨릭길동무 관구·교구 전용 CSS - V4-64
    관구·교구 헤더/탭 기준을 기본 규칙 한 곳으로 정리했습니다. */
 
 /* ---- original diocese.html <style no-id> block 1 ---- */
@@ -252,7 +252,7 @@ html.oai-dio-external-return *{transition:none!important;animation:none!importan
 /* V3: 부모 앱에서 복귀 상태를 복원하므로 iframe 자체 전체 덮개는 만들지 않는다. */
 
 
-/* V4-63: 관구·교구 지역검색 결과/중복지역 안내 박스 기준은 상단 기본 .ss/#sres/.sob/.si-r/.duplicate-warning-box 규칙으로 통합했습니다. */
+/* V4-64: 관구·교구 지역검색 결과/중복지역 안내 박스 기준은 상단 기본 .ss/#sres/.sob/.si-r/.duplicate-warning-box 규칙으로 통합했습니다. */
 
 /* V3-117: 관구교구 사제찾기 버튼 */
 #c-act{display:flex;flex-direction:column;gap:8px;}
@@ -267,7 +267,7 @@ html.oai-dio-external-return *{transition:none!important;animation:none!importan
 
 
 /* ---- original diocese.html <style id="oai-diocese-tab-standard-20260504"> block 2 ---- */
-/* V4-63: 탭바 크기/색상 기준은 상단 기본 .tab-bar/.tab 규칙으로 통합했습니다. */
+/* V4-64: 탭바 크기/색상 기준은 상단 기본 .tab-bar/.tab 규칙으로 통합했습니다. */
 #search-view .sh{font-size:calc(11px * var(--dio-effective-font-scale,1))!important;}
 #search-view .se{font-size:calc(13px * var(--dio-effective-font-scale,1))!important;}
 #search-view .sl{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
