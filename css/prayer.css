@@ -72,7 +72,11 @@
   gap: 6px;
   overflow-x: auto;
   scrollbar-width: none;
-  padding: 9px 12px;
+  height: 55px;
+  min-height: 55px;
+  max-height: 55px;
+  padding: 0 10px;
+  box-sizing: border-box;
   background: var(--v4-bg-ivory);
   border-bottom: 1px solid #d8d0c8;
   flex-shrink: 0;
@@ -83,11 +87,14 @@
 #prayer-tabs::-webkit-scrollbar { display: none; }
 .pr-tab {
   flex: 0 0 auto;
-  height: 36px;
-  padding: 8px 12px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0 12px;
   border-radius: 10px;
   border: 1.5px solid transparent;
-  font-size: 13px;
+  font-size: 15px;
+  line-height: 1;
+  box-sizing: border-box;
   font-weight: 700;
   font-family: inherit;
   white-space: nowrap;
@@ -224,7 +231,6 @@
   flex: 0 0 42px;
   color: var(--v4-header-navy);
 }
-#prayer-detail-hd .pr-font-ctrl { margin-left: auto; }
 #prayer-detail-hd #pr-detail-star { margin-left: 6px; margin-right: 0; }
 .pr-back { background: none; border: none; width: 42px; height: 42px; border-radius: var(--oai-std-radius); display: flex; align-items: center; justify-content: center; color: var(--v4-header-navy); cursor: pointer; font-size: 28px; font-weight: 900; line-height: 1; }
 #prayer-detail-ttl { display: none; }
@@ -263,6 +269,3 @@
 /* Q&A */
 .qna-body { background: #f8fafc; display: flex; flex-direction: column; }
 
-/* V4-41: 기도문 탭바 높이를 관구·교구 탭 기준(55/40)으로 고정 */
-#prayer-tabs{height:55px!important;min-height:55px!important;max-height:55px!important;padding:0 10px!important;align-items:center!important;box-sizing:border-box!important;}
-#prayer-tabs .pr-tab{height:40px!important;min-height:40px!important;padding:0 12px!important;border-radius:10px!important;font-size:15px!important;line-height:1!important;align-items:center!important;box-sizing:border-box!important;}
