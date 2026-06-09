@@ -236,10 +236,3 @@
   }
 }
 
-
-/* V4-41: 메뉴/매일미사/주요기도문/성가 빠른 메뉴 버튼 배경 흰색 통일 */
-#cover #mass-quick-modal .mass-quick-btn,
-#cover #mass-quick-modal .mass-quick-primary,
-.cover-menu-item{
-  background:#ffffff!important;
-}
