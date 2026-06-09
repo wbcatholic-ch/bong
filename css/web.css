@@ -151,6 +151,4 @@ html.oai-font-global .web-card-name{font-size:calc(17px * var(--app-inner-font-s
 html.oai-font-global .web-card-desc{font-size:calc(15px * var(--app-inner-font-scale,1))!important}
 
 
-/* V4-41: 웹사이트 탭바 높이를 관구·교구 탭 기준(55/40)으로 고정 */
-#web-view .web-cats{height:55px!important;min-height:55px!important;max-height:55px!important;padding:0 10px!important;align-items:center!important;box-sizing:border-box!important;}
-#web-view .web-cat-btn{height:40px!important;min-height:40px!important;padding:0 12px!important;border-radius:10px!important;font-size:15px!important;line-height:1!important;align-items:center!important;box-sizing:border-box!important;}
+/* 웹사이트 탭바 크기 기준은 css/module-common.css에서 관리한다. */

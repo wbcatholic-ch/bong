@@ -4630,31 +4630,6 @@ html.oai-font-global #srch-modal .sm-hd .sm-title{
   font-size:18px!important;
 }
 
-/* V4-41: 관구·교구 탭바 기준으로 주요기도문·웹사이트·순례길 탭바 높이 통일 */
-#prayer-tabs,
-#web-view .web-cats,
-#trail-view .trail-tabs{
-  height:55px!important;
-  min-height:55px!important;
-  max-height:55px!important;
-  padding:0 10px!important;
-  align-items:center!important;
-  gap:6px!important;
-  box-sizing:border-box!important;
-}
-#prayer-tabs .pr-tab,
-#web-view .web-cat-btn,
-#trail-view .trail-tab{
-  height:40px!important;
-  min-height:40px!important;
-  padding:0 12px!important;
-  border-radius:10px!important;
-  font-size:15px!important;
-  line-height:1!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  box-sizing:border-box!important;
-}
+/* 웹사이트·순례길·주요기도문 탭바 기준은 css/module-common.css와 각 기능 CSS에서 관리한다. */
 
 /* 상부탭 덮어쓰기 보정 제거 완료 - 기준값은 :root와 기본 #tabbar/.tab-btn 규칙에서 관리 */
