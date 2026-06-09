@@ -1655,9 +1655,9 @@ html.app-active #qna-cover-btn { display: none; }
    6. 커버 화면
    ============================================================ */
 #cover { overscroll-behavior-y: contain; }
-html.oai-cover-booting body { background: var(--cream); }
+html.oai-cover-booting body { background: var(--cream, var(--v4-bg-cream)) !important; }
 html.oai-cover-booting #cover {
-  background-color: var(--cream);
+  background-color: var(--cream, var(--v4-bg-cream)) !important;
 }
 #cover > * {
   opacity: 1;
@@ -2956,7 +2956,7 @@ html:not(.app-active), html:not(.app-active) body { scroll-behavior: auto; }
 
 
 #cover::before,#cover::after,.cv-orbit,.cv-orbit-a,.cv-orbit-b{display:none;content:none}
-/* V4-66: .cv-shell-stage 공통 기준은 한 곳만 유지하고, 미디어쿼리는 폭/간격 차이만 남긴다. */
+/* .cv-shell-stage 공통 기준은 한 곳만 유지하고, 미디어쿼리는 폭/간격 차이만 남긴다. */
 .cv-shell-stage{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;gap:10px;width:min(100%,560px);height:var(--cover-h);min-height:var(--cover-h);padding:calc(env(safe-area-inset-top,0) + 9vh) 0 calc(9vh + env(safe-area-inset-bottom,0));margin:0 auto;box-sizing:border-box}
 .cv-stage{position:relative;align-self:center;width:min(100%,calc((var(--cover-h) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 124px) * .5625));aspect-ratio:9 / 16;min-height:0}
 .cv-stage-art{display:block;width:100%;height:100%;object-fit:contain;border-radius:22px;box-shadow:0 12px 30px rgba(140,112,71,.16);user-select:none;-webkit-user-drag:none;pointer-events:none}
@@ -3119,7 +3119,7 @@ html.ios-device #app #sheet-list .sheet-hd { bottom: 0; }
 html.kb-open .sheet.open { bottom: 0; }
 
 /* ============================================================
-   V4-66 CSS 정리: 성당·피정의집 색상/목록/검색탭 최종 규칙 통합
+   CSS 정리: 성당·피정의집 색상/목록/검색탭 최종 규칙 통합
    - 중복 보정 블록을 한 곳으로 합침
    - 성지 고유색, JS, 뒤로가기, 보호창, 지도 로직 변경 없음
    ============================================================ */
@@ -3529,12 +3529,7 @@ html.oai-cover-booting body {
 html.oai-cover-booting #cover {
   background-color: var(--cream, var(--v4-bg-cream)) !important;
 }
-html.oai-cover-booting #cover > * {
-  opacity: 0;
-  visibility: visible;
-  transition: none;
-}
-
+/* V4-69: 위쪽 커버 부팅 규칙과 중복되던 동일 블록 제거 */
 
 /* V3-22: 첫 스플래시/로딩 보호막의 금색 십자가를 완전히 숨기고 중립 로딩 원으로 정리 */
 html.oai-first-entry-intro::before {
