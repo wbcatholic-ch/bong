@@ -53,8 +53,6 @@
 .my-diocese-modal.keyboard-open .my-faith-inline-confirm { display:none !important; }
 .my-faith-no-scroll { overflow-y:auto !important; -webkit-overflow-scrolling:touch !important; }
 @media (max-width:370px){
-  #cover .cover-diocese-btn{height:48px;min-height:48px;font-size:calc(12.8px * var(--app-font-scale,1));padding:0 8px;gap:4px;}
-  #cover .cover-diocese-btn .cover-faith-cross{font-size:calc(13px * var(--app-font-scale,1));}
   .my-diocese-list{grid-template-columns:1fr !important;}
 }
 
