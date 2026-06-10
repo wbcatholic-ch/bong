@@ -3511,7 +3511,7 @@ html.oai-external-return-freeze::after {
 }
 
 
-/* V4-79: 위쪽 커버 부팅 규칙과 실제로 중복되던 동일 블록 제거 */
+/* V4-81: 위쪽 커버 부팅 규칙과 실제로 중복되던 동일 블록 제거 */
 
 /* V3-22: 첫 스플래시/로딩 보호막의 금색 십자가를 완전히 숨기고 중립 로딩 원으로 정리 */
 html.oai-first-entry-intro::before {
