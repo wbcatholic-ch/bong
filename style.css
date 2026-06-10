@@ -1739,7 +1739,7 @@ html.oai-cover-booting #cover > * {
   box-sizing: border-box;
   isolation: isolate;
 }
-/* V3-55: 커버 제목 박스 제거 / 카테고리 박스 비율 조정 */
+/* 커버 제목 박스 제거 / 카테고리 박스 비율 조정 */
 .cover-grid::after {
   content: none;
   display: none;
@@ -1980,7 +1980,7 @@ html.app-active #cover-diocese-box { display: none; }
   }
 }
 
-/* V3-12: 커버 새로고침 버튼 버전 세부번호 축소 표시 */
+/* 커버 새로고침 버튼 버전 세부번호 축소 표시 */
 #cover-update-btn .oai-cover-version-sub {
   font-size: 0.68em;
   vertical-align: baseline;
@@ -2301,7 +2301,7 @@ html.app-active #pwa-install-btn { display: none; }
 .guide-mini-list dt { color: #7a5a2b; font-weight: 900; }
 .guide-mini-list dd { margin: 0; color: #5f6675; font-weight: 600; word-break: keep-all; }
 .guide-ok { flex: 0 0 auto; width: 100%; margin-top: 12px; min-height: 40px; }
-/* V3-117: 주요 기능 안내 헤더 제목이 작은 화면에서 두 줄로 꺾이지 않도록 크기 축소 */
+/* 주요 기능 안내 헤더 제목이 작은 화면에서 두 줄로 꺾이지 않도록 크기 축소 */
 .guide-manual-panel .guide-manual-hero {
   flex: 0 0 auto;
   margin: 0 0 22px;
@@ -3337,7 +3337,7 @@ html.retreat-mode .sm-fb.on{
   font-size:17px!important;
 }
 
-/* V3-12: 하단 버전 배지는 내부 비교용으로만 유지하고 화면에서는 숨김 */
+/* 하단 버전 배지는 내부 비교용으로만 유지하고 화면에서는 숨김 */
 #cover #oai-build-marker {
   display: none !important;
   visibility: hidden !important;
@@ -3345,7 +3345,7 @@ html.retreat-mode .sm-fb.on{
   pointer-events: none !important;
 }
 
-/* V3-12: iPhone/PWA 전체 viewport 높이 안정화
+/* iPhone/PWA 전체 viewport 높이 안정화
    - 상태바 아이보리 색은 유지
    - iOS에서 작게 잡힌 viewport 값 때문에 기도문/목록/관구교구 지도 아래에 빈 공간이 생기는 현상을 줄인다.
    - Android 레이아웃에는 적용하지 않는다. */
@@ -3374,14 +3374,13 @@ html.ios-device #qna-view.open {
 }
 
 
-/* V3-12: 성당 카테고리 로딩 십자가 기준으로 내부 로딩 통일
-   - .map-loading-icon의 금빛 십자가 회전 기준을 유지
-   - 피정의집·성지·외부복귀·새로고침 안정막도 같은 십자가/속도 사용
-   - transform translate와 회전 애니메이션이 충돌하지 않도록 margin 중심 정렬 사용 */
+/* 내부 로딩 표시 기준
+   - 지도/카테고리/외부복귀/새로고침 보호막의 로딩 표시를 같은 위치·속도로 맞춘다.
+   - transform translate와 회전 애니메이션이 충돌하지 않도록 margin 중심 정렬을 사용한다. */
 .map-loading-icon {
   color: var(--gold, var(--v4-gold)) !important;
   font-size: 36px !important;
-  animation: oaiLoadingCrossSpinV3-129 2s linear infinite !important;
+  animation: oaiLoadingCrossSpin 2s linear infinite !important;
   transform-origin: 50% 50% !important;
 }
 
@@ -3407,7 +3406,7 @@ html.oai-external-return-freeze::after {
   font-weight: 800 !important;
   line-height: 1 !important;
   transform-origin: 50% 50% !important;
-  animation: oaiLoadingCrossSpinV3-129 2s linear infinite !important;
+  animation: oaiLoadingCrossSpin 2s linear infinite !important;
   pointer-events: none !important;
   z-index: 2147483647 !important;
 }
@@ -3419,10 +3418,8 @@ html.oai-external-return-freeze::after {
 }
 
 
-/* V3-12: 관구·교구 / 문의 이동 로딩도 성당 십자가 회전 기준으로 통일
-   - diocese-loading의 기존 missa-spinner를 십자가 회전으로 표시
-   - 관구·교구 외부 홈페이지 복귀 중에도 같은 십자가 기준 유지
-   - 문의 페이지 이동 전 안정막도 같은 십자가 기준 사용 */
+/* 관구·교구 / 문의 이동 로딩 표시 기준
+   - diocese-loading의 기존 missa-spinner와 보호막 로딩 표시를 같은 기준으로 맞춘다. */
 #diocese-loading .missa-spinner {
   width: 42px !important;
   height: 42px !important;
@@ -3435,7 +3432,7 @@ html.oai-external-return-freeze::after {
   justify-content: center !important;
   margin: 0 0 14px !important;
   color: var(--gold, var(--v4-gold)) !important;
-  animation: oaiLoadingCrossSpinV3-129 2s linear infinite !important;
+  animation: oaiLoadingCrossSpin 2s linear infinite !important;
   transform-origin: 50% 50% !important;
 }
 #diocese-loading .missa-spinner::before {
@@ -3449,10 +3446,9 @@ html.oai-external-return-freeze::after {
   color: var(--v4-text-muted) !important;
   font-weight: 600 !important;
 }
-/* V3-12: 로딩 십자가 회전 고정
-   - transform:none !important가 keyframe transform을 막지 않도록 별도 키프레임 사용
-   - 성당/성지/피정의집/관구교구/외부복귀/새로고침 안정막 모두 같은 회전 속도 */
-@keyframes oaiLoadingCrossSpinV3-129 {
+/* 로딩 회전 애니메이션 기준
+   - transform:none !important가 keyframe transform을 막지 않도록 별도 키프레임을 사용한다. */
+@keyframes oaiLoadingCrossSpin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
@@ -3461,7 +3457,7 @@ html.oai-external-return-freeze::after {
 #oai-category-entry-veil::after,
 html.oai-stability-veil::after,
 html.oai-external-return-freeze::after {
-  animation-name: oaiLoadingCrossSpinV3-129 !important;
+  animation-name: oaiLoadingCrossSpin !important;
   animation-duration: 2s !important;
   animation-timing-function: linear !important;
   animation-iteration-count: infinite !important;
@@ -3469,11 +3465,9 @@ html.oai-external-return-freeze::after {
 }
 
 
-/* V3-12: 짧은 화면 전환에서는 회전 십자가를 바로 보이지 않게 함
-   - 짧은 카테고리 진입/복귀에서는 어지럽지 않게 숨김
-   - 로딩이 길어질 때만 십자가가 나타나 회전
-   - 첫 진입 화면/앱 아이콘/기존 로직은 변경하지 않음 */
-@keyframes oaiLoadingCrossDelayedRevealV3-1220 {
+/* 짧은 화면 전환에서는 로딩 표시를 지연 노출한다.
+   - 짧은 카테고리 진입/복귀에서는 어지럽지 않게 숨기고, 로딩이 길어질 때만 표시한다. */
+@keyframes oaiLoadingCrossDelayedReveal {
   from { opacity: 0; }
   to { opacity: 1; }
 }
@@ -3483,7 +3477,7 @@ html.oai-external-return-freeze::after {
 html.oai-stability-veil::after,
 html.oai-external-return-freeze::after {
   opacity: 0 !important;
-  animation-name: oaiLoadingCrossSpinV3-129, oaiLoadingCrossDelayedRevealV3-1220 !important;
+  animation-name: oaiLoadingCrossSpin, oaiLoadingCrossDelayedReveal !important;
   animation-duration: 2s, .12s !important;
   animation-timing-function: linear, ease-out !important;
   animation-iteration-count: infinite, 1 !important;
@@ -3492,9 +3486,8 @@ html.oai-external-return-freeze::after {
 }
 
 
-/* V3-12: 새로고침 / 외부 페이지 복귀 때는 로딩 십자가 즉시 표시
-   - 카테고리 짧은 진입은 V3-12처럼 지연 표시 유지
-   - refresh/reload/background/external-leave/external-return 안정막은 바로 십자가가 보이도록 override */
+/* 새로고침 / 외부 페이지 복귀 때는 로딩 표시를 즉시 노출한다.
+   - 짧은 카테고리 진입은 지연 표시를 유지한다. */
 html.oai-stability-veil[data-oai-stability-reason*="refresh"]::after,
 html.oai-stability-veil[data-oai-stability-reason*="reload"]::after,
 html.oai-stability-veil[data-oai-stability-reason*="background"]::after,
@@ -3502,7 +3495,7 @@ html.oai-stability-veil[data-oai-stability-reason*="external"]::after,
 html.oai-stability-veil.oai-external-leaving::after,
 html.oai-external-return-freeze::after {
   opacity: 1 !important;
-  animation-name: oaiLoadingCrossSpinV3-129 !important;
+  animation-name: oaiLoadingCrossSpin !important;
   animation-duration: 2s !important;
   animation-timing-function: linear !important;
   animation-iteration-count: infinite !important;
@@ -3535,7 +3528,7 @@ html.oai-first-entry-intro::before {
   line-height: 0 !important;
   text-shadow: none !important;
   transform-origin: 50% 50% !important;
-  animation: oaiLoadingCircleSpinV3-22 .75s linear infinite !important;
+  animation: oaiLoadingCircleSpin .75s linear infinite !important;
 }
 #diocese-loading .missa-spinner::before {
   content: "" !important;
@@ -3562,17 +3555,17 @@ html.oai-external-return-freeze::after {
   line-height: 0 !important;
   text-shadow: none !important;
   transform-origin: 50% 50% !important;
-  animation: oaiLoadingCircleSpinV3-22 .75s linear infinite !important;
+  animation: oaiLoadingCircleSpin .75s linear infinite !important;
   pointer-events: none !important;
   z-index: 2147483647 !important;
 }
-@keyframes oaiLoadingCircleSpinV3-22 {
+@keyframes oaiLoadingCircleSpin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
 
-/* V3-22: 남아 있는 금색 십자가 로더를 마지막 단계에서 한 번 더 무력화 */
+/* 남아 있는 텍스트형 로더가 다시 보이지 않도록 원형 로딩 기준을 마지막에 고정한다. */
 .map-loading-icon,
 #diocese-loading .missa-spinner,
 #oai-category-entry-veil::after,
@@ -3592,7 +3585,7 @@ html.oai-external-return-freeze::after {
   border-radius: 50% !important;
   background: transparent !important;
   box-shadow: none !important;
-  animation: oaiLoadingCircleSpinV3-22 .75s linear infinite !important;
+  animation: oaiLoadingCircleSpin .75s linear infinite !important;
 }
 .map-loading-icon::before,
 .map-loading-icon::after,
@@ -3603,7 +3596,7 @@ html.oai-external-return-freeze::after {
 }
 
 
-/* V3-22: 시작·전환 보호막에서 텍스트 십자가가 다시 보이지 않도록 마지막 단계에서 완전 차단 */
+/* 시작·전환 보호막에서 텍스트형 로더가 다시 보이지 않도록 차단한다. */
 html.oai-stability-veil::after,
 html.oai-external-return-freeze::after,
 #oai-category-entry-veil::after,
@@ -3614,7 +3607,7 @@ html.oai-first-entry-intro::before {
 }
 
 
-/* V3-22: 첫 진입 십자가 사진/금색 십자가 효과 완전 차단 */
+/* 첫 진입의 별도 십자가 사진/금색 십자가 효과를 차단한다. */
 html.oai-first-entry-intro::before,
 html.oai-first-entry-intro::after,
 html.oai-cover-first-reveal #cover > * {
@@ -3723,7 +3716,7 @@ html.oai-cover-first-reveal #cover > * {
 }
 
 
-/* V3-102: 나의 교구 우선 표시 */
+/* 나의 교구 우선 표시 */
 .filter-btn.my-diocese-filter,
 .sm-fb.my-diocese-filter {
   border-color: var(--v4-brown) !important;

@@ -437,7 +437,7 @@
     if(!state || !state.module) return;
 
     if(state.module === 'web'){
-      // V37: 웹사이트 화면은 브라우저가 돌아온 화면을 그대로 복원하게 둔다.
+      // 웹사이트 화면은 브라우저가 돌아온 화면을 그대로 복원하게 둔다.
       // 여기서 openWebView/renderWebList를 다시 호출하면 복귀 순간 배경 지도와 목록이 겹쳐 보인다.
       return;
     }
@@ -666,7 +666,7 @@
           if(webState.curCat==='⭐ 즐겨찾기') renderWebList();
           return;
         }
-        // V37: 교구 카드도 저장/복원 없이 즉시 이동한다.
+        // 교구 카드도 저장/복원 없이 즉시 이동한다.
         if(isDioceseCard){
           openExternalUrl(s.url, { module:'web' });
           return;
@@ -757,7 +757,7 @@
         try{
           const lv = trailState.map.getLevel();
           if(Number.isFinite(lv) && lv < 12) trailState.map.setLevel(12);
-          // V18: 사진 기준처럼 본토와 제주가 함께 자연스럽게 보이도록
+          // 사진 기준처럼 본토와 제주가 함께 자연스럽게 보이도록
           // 백령도·울릉도 같은 극단 외곽 섬은 중심감에서 제외하고, 초기 시야를 우리나라 중심으로 보정한다.
           // 마커 데이터와 기능은 변경하지 않는다.
           trailState.map.setCenter(new kakao.maps.LatLng(36.10, 127.85));

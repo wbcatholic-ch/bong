@@ -181,7 +181,7 @@ function prApplyTabColors(){
   try{ if(typeof window.oaiKeepActiveTabsVisible === 'function') window.oaiKeepActiveTabsVisible('prayer'); }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
 
-// V3-S-1: 주요기도문 탭 표시 안전장치.
+// 주요기도문 탭 표시 안전장치.
 // 일부 화면 전환/캐시 조합에서 목록은 렌더링되지만 탭 컨테이너가 비어 보이는 경우를 막는다.
 function prEnsureTabsVisible(){
   prEnsureCurrentCat();
@@ -511,7 +511,7 @@ function prOpenOfficialPrayer(prayer){
     sessionStorage.setItem('oai_prayer_list_restore', JSON.stringify(window.__oaiPrayerListRestore));
   }catch(e){ console.warn('[가톨릭길동무]', e); }
   prMarkExternalReturnFlag();
-  // V3-38: 기도문 공식 원문 페이지가 늦게 열리는 경우에도
+  // 기도문 공식 원문 페이지가 늦게 열리는 경우에도
   // 보호 안내가 먼저 사라지지 않도록 실제 이동 신호 전까지 유지한다.
   prShowExternalGuide('공식 기도문 페이지로 이동합니다.', 0, { hold:true, maxDuration:6500 });
   window.setTimeout(function(){
