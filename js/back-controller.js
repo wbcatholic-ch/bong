@@ -105,6 +105,28 @@
   function isRefreshDialogOpen(){
     try{ return !!document.getElementById('oai-refresh-content-dialog'); }catch(e){ return false; }
   }
+  function now(){ return Date.now ? Date.now() : new Date().getTime(); }
+  function suppressNextCoverBackToast(ms, reason){
+    try{
+      window.__OAI_SUPPRESS_COVER_BACK_TOAST_UNTIL__ = now() + (ms || 600);
+      window.__OAI_SUPPRESS_COVER_BACK_TOAST_REASON__ = reason || 'cover-state-reset';
+    }catch(e){ console.warn('[가톨릭길동무]', e); }
+  }
+  function consumeSuppressedCoverBackToast(){
+    try{
+      var until = Number(window.__OAI_SUPPRESS_COVER_BACK_TOAST_UNTIL__ || 0);
+      if(until && now() < until){
+        window.__OAI_SUPPRESS_COVER_BACK_TOAST_UNTIL__ = 0;
+        window.__OAI_SUPPRESS_COVER_BACK_TOAST_REASON__ = '';
+        if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
+        if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
+        armCoverBackTrap('suppressed-cover-popstate');
+        return true;
+      }
+    }catch(e){ console.warn('[가톨릭길동무]', e); }
+    return false;
+  }
+  try{ window._oaiSuppressNextCoverBackToast = suppressNextCoverBackToast; }catch(_e){}
   function closeRefreshDialog(){
     try{
       var el = document.getElementById('oai-refresh-content-dialog');
@@ -199,6 +221,17 @@
       return true;
     }
     return false;
+  }
+
+  function isDioceseViewOpen(){
+    try{ var el=$b('diocese-view'); return !!(el && el.classList && el.classList.contains('open')); }catch(e){ return false; }
+  }
+  function closeDioceseViewToCoverDirect(reason){
+    try{
+      if(typeof window.closeDioceseView === 'function') window.closeDioceseView();
+      else { var el=$b('diocese-view'); if(el) el.classList.remove('open'); callGTC(); }
+      return true;
+    }catch(e){ console.warn('[가톨릭길동무]', e); return false; }
   }
 
   function closeExtOrModule(){
@@ -371,8 +404,16 @@
       return;
     }
 
+    /* 관구·교구는 커버 위에 떠 있지만, 커버 종료 흐름보다 먼저 닫아야 한다.
+       여기서는 history.go(1) 복원에 의존하지 않고 즉시 닫은 뒤 커버 trap을 새로 세운다. */
+    if(isDioceseViewOpen()){
+      closeDioceseViewToCoverDirect('diocese-popstate-direct');
+      return;
+    }
+
     /* 커버: 토스트 → 두 번째에 종료. */
     if(!appActive()){
+      if(consumeSuppressedCoverBackToast()) return;
       var exiting = false;
       if(typeof window._showBackToast==='function') exiting = window._showBackToast() === true;
       if(!exiting){ armCoverBackTrap('cover-toast'); }
@@ -397,7 +438,12 @@
     if(typeof window._oaiPrayerBackHandle === 'function' && window._oaiPrayerBackHandle('prayer-hardware-back')) return;
     if(closeRefreshDialog()){ try{ armCoverBackTrap('refresh-dialog-hardware', {force:true}); }catch(e){} return; }
     if(isGuideModalOpen()){ closeGuideModals(); return; }
+    if(isDioceseViewOpen()){
+      closeDioceseViewToCoverDirect('diocese-hardware-direct');
+      return;
+    }
     if(!appActive()){
+      if(consumeSuppressedCoverBackToast()) return;
       if(typeof window._showBackToast==='function') window._showBackToast();
       return;
     }
