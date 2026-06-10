@@ -1,4 +1,4 @@
-/* V4-22: 가톨릭 웹사이트 전용 CSS 분리 1단계. style.css에서 값 변경 없이 이동. */
+/* web.css — 가톨릭 웹사이트 전용 CSS */
 
 /* 웹사이트 탭 카테고리별 색상 */
 #web-view .web-cat-btn.on[data-cat-color="전체"]    { background: #1a2d5a; }

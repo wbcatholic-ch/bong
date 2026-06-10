@@ -1,4 +1,4 @@
-/* V4-21: 순례길 전용 CSS 분리 1단계. style.css에서 값 변경 없이 이동. */
+/* pilgrimage.css — 순례길 전용 CSS */
 
 .trail-body { background: var(--v4-bg-ivory); }
 

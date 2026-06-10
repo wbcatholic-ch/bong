@@ -1,11 +1,7 @@
-/* ============================================================
-   V4-17: 공통 오버레이 CSS 분리
-   - 기도문 외부 이동 안내 오버레이
-   - 길찾기 출발지/도착지 선택 오버레이
-   - 기존 style.css 값 그대로 이동, 디자인 변경 없음
-   ============================================================ */
+/* overlays.css — 공통 오버레이 CSS
+   기도문 외부 이동 안내와 길찾기 출발지/도착지 선택 오버레이를 담당합니다. */
 
-/* V3-38: 기도문 공식 원문 외부 이동/복귀 전용 안정 안내
+/* 기도문 공식 원문 외부 이동/복귀 전용 안정 안내
    - 기도문 링크에서만 사용
    - 상단 앱 헤더가 비쳐 보이지 않도록 전체 배경을 불투명하게 덮는다
    - 별도 상단 헤더 없이 중앙 안내와 금색 회전 십자가만 표시 */
@@ -48,7 +44,7 @@
   font-weight: 900;
   line-height: 1;
   text-shadow: 0 2px 8px rgba(184,150,90,.20);
-  animation: prExternalCrossSpinV3-38 2.4s linear infinite !important;
+  animation: prExternalCrossSpin 2.4s linear infinite !important;
   animation-delay: 0s !important;
   transform-origin: 50% 50%;
   will-change: transform;
@@ -60,12 +56,12 @@
   letter-spacing: -.02em;
   word-break: keep-all;
 }
-@keyframes prExternalCrossSpinV3-38 {
+@keyframes prExternalCrossSpin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-/* V3-38: 기도문 외부 이동 안내 중에는 앱 내부 기도문 헤더와 공통 로딩 표시가 겹쳐 보이지 않게 한다. */
+/* 기도문 외부 이동 안내 중에는 앱 내부 기도문 헤더와 공통 로딩 표시가 겹쳐 보이지 않게 한다. */
 html.pr-external-guide-active #prayer-bar,
 html.pr-external-guide-active #prayer-tabs,
 html.pr-external-guide-active #prayer-search-bar {
