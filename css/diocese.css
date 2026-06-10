@@ -1,7 +1,6 @@
-/* 가톨릭길동무 관구·교구 전용 CSS - V4-81
-   iframe 내부 화면, 지도, 목록, 검색 UI 기준을 관리합니다. */
+/* 가톨릭길동무 관구·교구 전용 CSS
+   부모 PWA 헤더와 iframe 내부 화면 기준을 분리해 관리합니다. */
 
-/* 기본 변수와 공통 레이아웃 */
 :root{
   --diocese-font-scale:1;
   --ios-dio-font-scale:1;
@@ -77,7 +76,7 @@ header{flex-shrink:0;background:var(--d);border-bottom:none;z-index:30;
 .dp{cursor:pointer;transition:filter .08s ease,opacity .08s ease;}
 .dp.oai-dio-pressed{filter:brightness(.82);opacity:.88;}
 
-/* ── 지도 인포카드 ── */
+/* ── 인포카드 ── */
 #card{position:absolute;top:10px;right:10px;width:206px;background:white;border-radius:13px;
   overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,0.15);display:none;z-index:100;}
 #card.on{display:block;}
@@ -213,7 +212,7 @@ header{flex-shrink:0;background:var(--d);border-bottom:none;z-index:30;
   #gw-bar{flex-direction:row;flex-wrap:wrap;}
 }
 
-/* 관구·교구 단독 화면 헤더 기준 */
+/* OAI 20260504-5: 관구·교구 단독 화면 헤더 최종 표준화 */
 :root{
   --diocese-font-scale:1;--d:#1f2a44!important;--header-h:70px!important;--fs-header:20px!important;--fs-sub:11px!important;}
 html,body{width:100%!important;max-width:none!important;margin:0!important;overflow-x:hidden!important;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
@@ -230,7 +229,7 @@ header{width:100%!important;max-width:none!important;min-height:70px!important;h
 @media(min-width:600px){header{border-radius:0!important;width:100%!important;max-width:none!important;}}
 
 
-/* 부모 앱 헤더를 사용하므로 iframe 내부 헤더는 숨김 */
+/* 부모 앱 헤더를 사용하므로 iframe 내부 헤더는 한 곳에서 숨긴다. */
 body > header{display:none!important;visibility:hidden!important;height:0!important;min-height:0!important;padding:0!important;overflow:hidden!important;}
 #main{top:0!important;}
 #card .c-x{display:flex!important;align-items:center!important;justify-content:center!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;}
@@ -244,9 +243,9 @@ html.oai-dio-external-return *{transition:none!important;animation:none!importan
 /* 부모 앱에서 복귀 상태를 복원하므로 iframe 자체 전체 덮개는 만들지 않는다. */
 
 
-/* 지역검색 결과/중복지역 안내 박스 기준은 상단 기본 규칙으로 통합 */
+/* 지역검색 결과/중복지역 안내 박스 기준은 상단 기본 규칙에서 관리한다. */
 
-/* 관구·교구 사제찾기 버튼 */
+/* 관구교구 사제찾기 버튼 */
 #c-act{display:flex;flex-direction:column;gap:8px;}
 .c-btn.c-home-btn,.c-btn.c-priest-btn{min-height:42px;border-radius:10px;font-weight:800;}
 .c-btn.c-home-btn{box-shadow:0 6px 12px rgba(31,42,68,.10);}
@@ -258,7 +257,8 @@ html.oai-dio-external-return *{transition:none!important;animation:none!importan
 @media(max-width:560px){.lv-priest-btn{min-height:32px;padding:0 10px;font-size:11.5px;}#c-act{gap:7px;}}
 
 
-/* 검색/목록 글자 크기 기준 */
+/* ---- original diocese.html <style id="oai-diocese-tab-standard-20260504"> block 2 ---- */
+/* 탭바 크기/색상 기준은 상단 기본 .tab-bar/.tab 규칙에서 관리한다. */
 #search-view .sh{font-size:calc(11px * var(--dio-effective-font-scale,1))!important;}
 #search-view .se{font-size:calc(13px * var(--dio-effective-font-scale,1))!important;}
 #search-view .sl{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
@@ -282,7 +282,8 @@ html.oai-dio-external-return *{transition:none!important;animation:none!importan
 #list-view .lv-url{font-size:calc(12px * var(--dio-effective-font-scale,1))!important;}
 #list-view .lv-arr{font-size:calc(15px * var(--dio-effective-font-scale,1))!important;}
 
-/* 공통 터치 UX */
+/* ---- original diocese.html <style id="oai-touch-ux-standard-20260506"> block 3 ---- */
+/* OAI 20260506: 공통 터치 UX 표준화 */
 .oai-touch-pressed{
   transform:scale(.992)!important;
   filter:brightness(.995)!important;
@@ -293,14 +294,14 @@ html.oai-dio-external-return *{transition:none!important;animation:none!importan
   will-change:transform;
 }
 
-/* 화면 표시/탭 전환 효과 */
+/* ---- original diocese.html <style id="oai-diocese-smooth-entry-20260506"> block 4 ---- */
 /* 관구·교구 첫 표시/탭 전환 부드럽게 */
 #map-view.on,#list-view.on,#search-view.on{animation:oaiDioFadeIn .22s ease both;}
 @keyframes oaiDioFadeIn{from{opacity:.01}to{opacity:1}}
 html.oai-dio-returning #map-view.on,html.oai-dio-returning #list-view.on,html.oai-dio-returning #search-view.on{animation:none!important;}
 
-/* iPhone 관구·교구 UI 밀도 */
-/* iPhone 관구·교구 iframe 내부 UI 밀도 */
+/* ---- original diocese.html <style id="oai-ios-ui-density-v22"> block 5 ---- */
+/* iPhone 관구·교구 iframe 내부 UI 밀도 기준 */
 html.ios-device{--ios-dio-ui-scale:.96;}
 html.ios-device #gw-bar{gap:6px!important;padding:7px 9px!important;}
 html.ios-device .gb{min-height:34px!important;padding:0 10px!important;border-radius:11px!important;}
@@ -318,7 +319,7 @@ html.ios-device .si-r,
 html.ios-device .lv-card{border-radius:12px!important;padding:10px 12px!important;}
 html.ios-device .cb{width:34px!important;height:34px!important;border-radius:10px!important;}
 
-/* 관구·교구 헤더 십자가 */
+/* ---- original diocese.html <style id="oai-diocese-latin-cross"> block 6 ---- */
 /* 관구·교구 단독 화면 헤더 십자가를 라틴 십자가 비율로 통일 */
 .hd-icon{position:relative!important;font-size:0!important;overflow:hidden!important;}
 .hd-icon::before,.hd-icon::after{content:"";position:absolute;left:50%;background:#fff;border-radius:2px;display:block;}

@@ -179,7 +179,7 @@
   --shadow-soft: 0 12px 30px rgba(14,21,53,.10);
   --shadow-card: 0 16px 34px rgba(17,24,39,.11);
 
-  /* ── V4-2 구조개편용 의미 토큰: 기존 색상값을 이름으로 묶어 시각 변화 없이 중복 관리 시작 */
+  /* ── 의미 토큰: 기존 색상값을 이름으로 묶어 시각 변화 없이 관리 */
   --v4-bg-ivory: #F5F1E8;
   --v4-bg-cream: #f5f0e8;
   --v4-surface-white: #fff;
@@ -194,7 +194,7 @@
   --v4-text-muted: #6B7280;
   --v4-line-soft: #e5e7eb;
 
-  /* ── V4-3 공통 컴포넌트 토큰: 기존 수치/색상을 이름으로 묶어 시각 변화 없이 표준화 */
+  /* ── 공통 컴포넌트 토큰: 기존 수치/색상을 이름으로 묶어 관리 */
   --v4-close-size: 40px;
   --v4-close-size-sm: 30px;
   --v4-close-border: 1.5px solid currentColor;
@@ -1602,7 +1602,7 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, var(--v4-retreat
 }
 #diocese-frame { flex: 1 1 auto; min-height: 0; width: 100%; border: 0; background: var(--v4-bg-ivory); }
 
-/* V4-23: 주요기도문 전용 화면 CSS는 css/prayer.css로 분리됨. */
+/* 주요기도문 전용 화면 CSS는 css/prayer.css에서 관리한다. */
 
 .qna-tabs { display: flex; gap: 8px; padding: 12px 14px; background: var(--v4-surface-white); border-bottom: 1px solid var(--v4-line-soft); }
 .qna-tab { flex: 1; height: 42px; border-radius: 12px; border: 1.5px solid #dde3ee; background: var(--v4-surface-white); color: #475569; font-family: inherit; font-size: calc(15px * var(--app-inner-font-scale)); font-weight: 800; }
@@ -2904,7 +2904,7 @@ html.oai-font-global #region-body .dio-hd { font-size: calc(17px * var(--app-inn
 html:not(.app-active), html:not(.app-active) body { scroll-behavior: auto; }
 
 /* ============================================================
-   13. 커버 신규 컴포넌트 (cv-*) & 기타 보정
+   13. 커버 컴포넌트 (cv-*) & 기타 기준
    ============================================================ */
 .cv-title em{color:#e1ba7a;text-shadow:0 8px 24px rgba(212,170,106,.22)}
 .cv-sub{margin:6px 0 0;max-width:420px;font-size:13px;line-height:1.4;color:#667085;letter-spacing:.02em}
@@ -3103,7 +3103,7 @@ html.oai-font-global .trail-reg,html.oai-font-global .trail-url,html.oai-font-gl
 .oai-swipe-left::after,.oai-swipe-right::after,
 .oai-prepaint-view{visibility:hidden!important;opacity:1!important;transform:none!important;transition:none!important}
 html.ios-device #app #sheet-list .sheet-hd { bottom: 0; }
-/* 키보드 오픈 시 sheet 위치 보정 */
+/* 키보드 오픈 시 sheet 위치 기준 */
 html.kb-open .sheet.open { bottom: 0; }
 
 /* ============================================================
@@ -3511,9 +3511,7 @@ html.oai-external-return-freeze::after {
 }
 
 
-/* V4-81: 위쪽 커버 부팅 규칙과 실제로 중복되던 동일 블록 제거 */
-
-/* V3-22: 첫 스플래시/로딩 보호막의 금색 십자가를 완전히 숨기고 중립 로딩 원으로 정리 */
+/* 첫 스플래시/로딩 보호막은 중립 로딩 원으로 표시 */
 html.oai-first-entry-intro::before {
   content: "" !important;
   display: none !important;
@@ -3629,11 +3627,11 @@ html.oai-cover-first-reveal #cover > * {
   transition: none !important;
 }
 
-/* V4-17: 기도문 외부 이동 안내 / 길찾기 선택 오버레이 CSS는 css/overlays.css로 분리 */
+/* 기도문 외부 이동 안내 / 길찾기 선택 오버레이 CSS는 css/overlays.css에서 관리한다. */
 
 
 
-/* V3-102: 교구 미설정 시 커버 안내 배너(WebView 기준) */
+/* 교구 미설정 시 커버 안내 배너 */
 #cover .my-diocese-setup-banner {
   display: none !important;
   position: absolute !important;
@@ -3801,7 +3799,7 @@ html.oai-cover-first-reveal #cover > * {
 }
 
 
-/* V3-102: 성당 목록 상단 빈 영역 정리 + 관구교구 검색 카드 잘림 보정 */
+/* 성당 목록 상단 빈 영역 + 관구·교구 검색 카드 기준 */
 html.parish-mode #list-body{
   padding-top:0 !important;
 }
@@ -3832,7 +3830,7 @@ html.parish-mode #list-body .dio-hd:first-child{
 }
 
 
-/* V3-104: 성지/피정의집/성당 목록 상단 공백 통일 */
+/* 성지/피정의집/성당 목록 상단 공백 기준 */
 #list-body{
   padding-top:0 !important;
 }
@@ -3845,13 +3843,13 @@ html.parish-mode #list-body .dio-hd:first-child{
 }
 
 
-/* V3-107: 관구교구 iframe/검색 카드 잘림 보조 보정 */
+/* 관구·교구 iframe/검색 카드 잘림 방지 */
 #diocese-frame{
   overflow:hidden!important;
 }
 
 
-/* V3-107: 관구교구 iframe 오른쪽 테두리 잘림 보조 */
+/* 관구·교구 iframe 오른쪽 테두리 잘림 방지 */
 #diocese-frame{
   width:100%!important;
   max-width:100%!important;
@@ -3951,4 +3949,4 @@ html.oai-font-global #srch-modal .sm-hd .sm-title{
 
 /* 웹사이트·순례길·주요기도문 탭바 기준은 css/module-common.css와 각 기능 CSS에서 관리한다. */
 
-/* 상부탭 덮어쓰기 보정 제거 완료 - 기준값은 :root와 기본 #tabbar/.tab-btn 규칙에서 관리 */
+/* 상부탭 기준값은 :root와 기본 #tabbar/.tab-btn 규칙에서 관리 */

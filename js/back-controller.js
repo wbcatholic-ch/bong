@@ -49,8 +49,7 @@
   try{ window._oaiArmCoverBackTrap = armCoverBackTrap; }catch(_e){}
 
   /* history 초기화
-     V3-13: 첫 커버 뒤로가기 실패를 만들던 hash/query trap 흔적을 제거하고,
-     최종 뒤로가기 판단은 이 popstate 컨트롤러로 단일화한다. */
+     hash/query trap을 쓰지 않고, 최종 뒤로가기 판단은 이 popstate 컨트롤러로 단일화한다. */
   try{
     var refreshReason = '';
     try{
@@ -276,7 +275,7 @@
   var _restoring = false;
 
 
-  /* V4-14: 기도문 뒤로가기/history/빠른메뉴 복귀 컨트롤러는 js/prayer-back.js로 분리됨. */
+  /* 기도문 뒤로가기/history/빠른메뉴 복귀 컨트롤러는 js/prayer-back.js가 담당한다. */
 
   window.addEventListener('popstate', function(){
     if(window._appExiting) return;
@@ -287,6 +286,16 @@
       _restoring = false;
       if(typeof window._oaiPrayerRunPendingCoverReset === 'function' && window._oaiPrayerRunPendingCoverReset()) return;
       if(typeof window._oaiPrayerRunPendingQuickPopup === 'function') window._oaiPrayerRunPendingQuickPopup();
+      /* 관구·교구 등 일반 모듈을 닫은 직후 history 복원 popstate가
+         뒤늦게 들어오면 커버 첫 Back이 여기서 소비되어 종료 안내가 생략될 수 있다.
+         커버가 이미 보이는 상태라면 화면 처리는 하지 않고 커버 trap만 다시 세운다. */
+      try{
+        if(coverVisible() && !appActive()){
+          if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
+          if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
+          armCoverBackTrap('restore-cover-after-module');
+        }
+      }catch(e){ console.warn('[가톨릭길동무]', e); }
       return;
     }
 

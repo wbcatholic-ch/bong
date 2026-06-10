@@ -28,7 +28,7 @@ let prSwipeBlockUntil = 0;
 let prTabsFirstAlign = true;
 
 // 기도문 데이터 (항목 추가 시 여기에 추가)
-// V4-24: 기도문 본문 데이터는 prayer-data.js에서 먼저 로드합니다.
+// 기도문 본문 데이터는 prayer-data.js에서 먼저 로드합니다.
 // prayer.js는 렌더링/상태/이벤트 로직만 담당합니다.
 const PR_DATA = window.PRAYER_DATA || { favorites: [] };
 

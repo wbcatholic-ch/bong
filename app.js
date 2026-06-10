@@ -29,7 +29,7 @@ var OAI_EXTERNAL_LEAVE_HARD_MS = 6500;
 var OAI_EXTERNAL_RETURN_MIN_MS = 1200;
 var OAI_EXTERNAL_RETURN_MAX_MS = 4000;
 var OAI_EXTERNAL_RETURN_STABLE_TICKS = 3;
-var OAI_REFRESH_VEIL_MS = 2200; // V3-20: refresh veil must remain visible for at least 2.2s
+var OAI_REFRESH_VEIL_MS = 2200; // refresh veil must remain visible for at least 2.2s
 var OAI_REFRESH_CARRY_MS = 15000;
 var OAI_REFRESH_PROGRESS_HOLD_MS = 15000;
 // 새로고침 직전 문서에서 보호막이 먼저 꺼지면 원래 화면이 잠깐 노출되므로,
@@ -690,8 +690,8 @@ function _ensureCoverBackTrap(reason){
 }
 
 function _resetCoverBackTrap(reason){
-  /* V4-81: 커버 trap 재설정도 js/back-controller.js의 공통 armCoverBackTrap을 우선 사용한다.
-     이미 trap이 살아 있으면 중복 root/trap을 다시 쌓지 않아 Back을 여러 번 눌러야 하는 상태를 줄인다. */
+  /* 커버 trap 재설정은 js/back-controller.js의 공통 armCoverBackTrap을 우선 사용한다.
+     이미 trap이 살아 있으면 중복 root/trap을 다시 쌓지 않는다. */
   try{
     if(_isAppScreenActive()) return;
     var modal=document.getElementById('mass-quick-modal');
@@ -1540,7 +1540,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V4-81';
+    frame.src='diocese.html?v=V4-85';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -1552,11 +1552,9 @@ function closeDioceseView(){
   var root=document.documentElement;
 
   /*
-     V4-81: 관구·교구는 커버에서 여는 독립 iframe 화면이므로,
-     닫을 때 성당·성지·피정의집의 지도/경로 정리 루틴(goToCover)을 다시 타지 않는다.
-     goToCover()는 closeTab/resetRoute/지도 마커 정리를 실행해서
-     관구·교구 복귀 순간 뒤쪽 지도 안내문구가 잠깐 보이거나 커버가 크게 흔들릴 수 있었다.
-     여기서는 기존 관구·교구 레이어만 닫고 커버 상태와 뒤로가기 대기값만 직접 정상화한다.
+     관구·교구는 커버에서 여는 독립 iframe 화면이므로, 닫을 때
+     성당·성지·피정의집의 지도/경로 정리 루틴(goToCover)을 다시 타지 않는다.
+     여기서는 관구·교구 레이어만 닫고 커버 상태와 뒤로가기 대기값만 직접 정상화한다.
   */
   try{ if(loading) loading.style.display='none'; }catch(e){ console.warn('[가톨릭길동무]', e); }
   try{
@@ -1593,12 +1591,24 @@ function closeDioceseView(){
     if(document.scrollingElement) document.scrollingElement.scrollTop=0;
   }catch(e){ console.warn('[가톨릭길동무]', e); }
 
-  try{ if(typeof _resetCoverExitReady === 'function') _resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }
-  try{ if(typeof _clearCoverExitArmed === 'function') _clearCoverExitArmed(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+  function primeCoverBackAfterDioceseClose(step){
+    try{ if(typeof _resetCoverExitReady === 'function') _resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+    try{ if(typeof _clearCoverExitArmed === 'function') _clearCoverExitArmed(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+    try{
+      if(typeof _resetCoverBackTrap === 'function') _resetCoverBackTrap('diocese-close-' + step);
+      else if(typeof _ensureCoverBackTrap === 'function') _ensureCoverBackTrap('diocese-close-' + step);
+      else if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap('diocese-close-' + step);
+    }catch(e){ console.warn('[가톨릭길동무]', e); }
+  }
+
+  /* 관구·교구를 Back으로 닫을 때는 공통 컨트롤러가 방금 소비된 trap을 복원한다.
+     복원 popstate가 한 박자 늦게 도착해도 커버 첫 Back이 종료 안내 없이 빠지지 않도록
+     즉시/다음 프레임/지연 지점에서 커버 trap과 종료 대기값을 다시 맞춘다. */
+  primeCoverBackAfterDioceseClose('now');
   try{
-    if(typeof _resetCoverBackTrap === 'function') _resetCoverBackTrap('diocese-close');
-    else if(typeof _ensureCoverBackTrap === 'function') _ensureCoverBackTrap('diocese-close');
-    else if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap('diocese-close');
+    if(window.requestAnimationFrame) requestAnimationFrame(function(){ primeCoverBackAfterDioceseClose('raf'); });
+    setTimeout(function(){ primeCoverBackAfterDioceseClose('120'); }, 120);
+    setTimeout(function(){ primeCoverBackAfterDioceseClose('320'); }, 320);
   }catch(e){ console.warn('[가톨릭길동무]', e); }
 
   /* iframe src를 about:blank로 비우면 닫는 순간 흰 화면이 보이고 재진입도 느려져 유지한다. */
@@ -1956,7 +1966,7 @@ let _parishDataLoadPromise=null;
 let _parishAllDataLoadPromise=null;
 const _PARISH_SPLIT_LAZY_MODE=true;
 
-// V3-20: 성당 데이터를 교구별 parishes-*.js 파일로 실제 분리한다.
+// 성당 데이터는 교구별 parishes-*.js 파일로 실제 분리한다.
 // 지도·마커·길찾기·뒤로가기 로직은 그대로 두고, 데이터 배열만 필요한 시점에 채운다.
 const _PARISH_DIOCESE_ORDER=[
   'SE','IC','SW','UJ','CC','WJ','DJ','CJ',
@@ -1982,7 +1992,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V4-81';
+const _PARISH_ASSET_VERSION='V4-85';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -2145,7 +2155,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V4-81';
+const _PRAYER_ASSET_VERSION='V4-85';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -2207,7 +2217,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V4-81';
+const _RETREAT_ASSET_VERSION='V4-85';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2505,7 +2515,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V4-81';
+const _SHRINE_ASSET_VERSION='V4-85';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){

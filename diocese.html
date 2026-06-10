@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>교구지도</title>
-<link rel="stylesheet" href="css/diocese.css?v=V4-81">
+<link rel="stylesheet" href="css/diocese.css?v=V4-85">
 </head>
 <body>
 <header>
@@ -1549,7 +1549,7 @@ const DIOCESE_DISTRICT_SEARCH=[
   {display:'울산 울주군',d:'부산교구',aliases:['울주','울주군','울산울주','울산 울주','울산울주군','울산 울주군','울산광역시울주군','울산광역시 울주군']}
 ];
 
-/* V3-91: WebView V2-174 관구·교구 구 단위 지역검색 보강
+/* 관구·교구 구 단위 지역검색 보강
    - 기존 PWA diocese.html 구조는 유지하고, 빠진 구/군 검색어만 추가한다.
    - 중복 가능성이 큰 중구/동구/서구/남구/북구/강서구는 도시명 포함 검색만 허용한다. */
 function _dioDistrictAliases(city,district,opts){
@@ -1988,7 +1988,7 @@ window.addEventListener('pageshow',function(){
     var state=window.getDioceseReturnState(source||'link', extra || {});
     try{ sessionStorage.setItem('oai_diocese_last_return_state', JSON.stringify(state)); localStorage.setItem('oai_diocese_last_return_state', JSON.stringify(state)); }catch(e){}
     if(window.parent && window.parent!==window){
-      // V3: iframe 내부 클릭은 부모의 지연 이동에 맡기지 않고, 클릭 흐름 안에서 top을 즉시 이동한다.
+      // iframe 내부 클릭은 부모의 지연 이동에 맡기지 않고, 클릭 흐름 안에서 top을 즉시 이동한다.
       // 이렇게 해야 웹페이지 카테고리처럼 Android/PWA에서도 외부 교구 홈페이지가 바로 열린다.
       try{
         if(typeof window.parent.prepareExternalUrl === 'function') url = window.parent.prepareExternalUrl(url) || url;

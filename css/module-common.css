@@ -135,7 +135,7 @@
 }
 .module-count { display: none; }
 
-/* 주요기도문 전용 헤더 예외 CSS는 css/prayer.css에서 관리 */
+/* 주요기도문 전용 헤더 예외 CSS는 css/prayer.css에서 관리한다. */
 
 /* 웹·순례길·문의·관구교구 헤더 십자가 아이콘 (CSS 드로잉) */
 #web-view .module-bar-ico,
@@ -247,7 +247,7 @@
   background: #0e1535;
 }
 
-/* 주요기도문 탭 카테고리 색상은 css/prayer.css에서 관리 */
+/* 주요기도문 탭 카테고리 색상은 css/prayer.css에서 관리한다. */
 
 
 
