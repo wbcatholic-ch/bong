@@ -309,3 +309,20 @@
 @media (max-width:370px){
   .my-faith-inline-diocese-grid { grid-template-columns: 1fr !important; }
 }
+
+
+/* 나의 설정 본당 선택 터치 보강 */
+.my-faith-list-row.is-clickable {
+  cursor: pointer !important;
+  touch-action: manipulation !important;
+}
+.my-faith-list-row.is-clickable .my-faith-row-main {
+  cursor: pointer !important;
+}
+.my-faith-parish-result,
+.my-faith-inline-diocese-option,
+.my-faith-row-btn,
+.my-faith-small-btn {
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: rgba(183,121,31,.18) !important;
+}
