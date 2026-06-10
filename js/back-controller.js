@@ -398,30 +398,6 @@
 
 })();
 
-/* 자동 ?v=Date.now 리디렉션은 사용하지 않음: 버전 문자열과 서비스워커로 캐시를 관리 */
-
-/* 시작 시 강제 상태 초기화는 사용하지 않음: 뒤로가기와 외부사이트 복귀 상태 보존 */
-
-/* V4-10: 기도문 목록/탭 UI 보조는 js/prayer-ui.js로 분리됨.
-   기도문 뒤로가기/history/복귀 컨트롤러는 prayer-back.js와 이 컨트롤러가 분담한다. */
-
-/* V4-12: 관구교구 본당 수 표시 보정은 js/app-state-guards.js로 분리됨. */
-
-/* 커버 글자 크기/문의·건의/PWA 설치 버튼 보조 로직은 js/cover-common.js로 분리 */
-
-/* V4-12: 경량 성능 보정은 js/app-state-guards.js로 분리됨. */
-
-/* V4-13: 웹사이트 스와이프/경로 마커 복원 보조는 js/route-web-guards.js로 분리됨. */
-
-/* V4-9: swipe overlay helper는 js/touch-ux.js로 분리됨 */
-
-/* V4-12: 매일미사 팝업 잔상 정리는 js/app-state-guards.js로 분리됨. */
-
-/* V4-11: 커버 pull-to-refresh/soft refresh 보조 로직은 js/cover-refresh.js로 분리됨. */
-
-/* V4-12: 피정의집 탭 라벨/커버 종료 토스트 보정은 js/app-state-guards.js로 분리됨. */
-
-/* V4-9: 터치 피드백/키보드 입력 보조는 js/touch-ux.js로 분리됨 */
-
-
-/* V4-14: 기도문 뒤로가기/history/빠른메뉴 복귀 컨트롤러는 js/prayer-back.js로 분리됨. */
+/* 캐시는 Date.now 리디렉션을 쓰지 않고 고정 버전 문자열과 서비스워커로 관리합니다.
+   시작 시 강제 상태 초기화는 하지 않아 뒤로가기와 외부사이트 복귀 상태를 보존합니다.
+   기도문 UI, 커버 공통 기능, 터치 UX, 경로/웹사이트 보조 로직은 각 분리 모듈이 담당합니다. */

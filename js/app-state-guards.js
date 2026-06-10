@@ -47,10 +47,10 @@
 })();
 
 
-/* ====== 성능 최적화 보정 ====== */
+/* ====== 화면 전환 성능 안정화 ====== */
 (function(){
   // 화면 전환 중 불필요한 레이아웃 부담을 줄인다.
-  // cover의 pull-to-refresh: 불필요한 transform 제거
+  // 커버 pull-to-refresh 영역의 불필요한 transform 부담을 줄인다.
   var coverEl = document.getElementById('cover');
   if(coverEl) coverEl.style.willChange = 'auto';
   
