@@ -370,7 +370,7 @@
       results.className = 'my-faith-search-results my-faith-inline-search-results';
       var tools = document.createElement('div');
       tools.className = 'my-faith-tools my-faith-inline-parish-tools';
-      tools.appendChild(smallButton('본당 선택 안함', function(){
+      tools.appendChild(smallButton('선택 안함', function(){
         tempParish = noParishItem(tempDiocese);
         renderEdit();
       }));
@@ -473,30 +473,30 @@
     }
     function renderEdit(){
       if(state !== 'edit-parish') state = 'edit-diocese';
-      setHeader('나의 설정', '교구와 본당을 모두 선택해 주세요');
+      setHeader('나의 설정', '교구와 본당을 선택해 주세요');
       setBodyMode('my-faith-body my-faith-home-list-body my-faith-edit-accordion-body');
 
       var settings = listSection('나의 설정', 'my-faith-settings-section my-faith-setup-editor');
 
       if(state === 'edit-diocese'){
+        appendRow(settings, '내 교구', '교구를 먼저 선택해 주세요.', 'needed', '', null, false, 'my-faith-row-btn-set');
         appendDiocesePicker(settings);
-        appendParishDisabledHint(settings);
       }else{
-        appendEditChoiceCard(settings, '내 교구', tempDiocese, '교구 변경', function(){
+        appendRow(settings, '내 교구', tempDiocese, 'done', '다시 선택', function(){
           tempDiocese = '';
           tempParish = null;
           state = 'edit-diocese';
           renderEdit();
-        }, 'my-faith-edit-diocese-card');
+        }, false, 'my-faith-row-btn-set');
 
         if(tempParish && tempParish.name){
-          appendEditChoiceCard(settings, isNoParishItem(tempParish) ? '본당 선택' : '내 본당', tempParish.name, '본당 변경', function(){
+          appendRow(settings, '내 본당', isNoParishItem(tempParish) ? '선택하지 않아도 저장할 수 있습니다.' : tempParish.name, 'done', '다시 선택', function(){
             tempParish = null;
             state = 'edit-parish';
             renderEdit();
-          }, 'my-faith-edit-parish-card');
+          }, false, 'my-faith-row-btn-set');
         }else{
-          appendEditLabel(settings, '본당 선택');
+          appendRow(settings, '내 본당', '선택하지 않아도 저장할 수 있습니다.', 'done', '', null, false, 'my-faith-row-btn-set');
           appendParishSearch(settings);
         }
       }

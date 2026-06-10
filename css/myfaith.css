@@ -244,7 +244,16 @@
   grid-template-columns: minmax(0, 1fr) auto !important;
   gap: 12px !important;
   align-items: center !important;
-  margin: 6px 14px 0 !important;
+  margin: 14px 14px 0 !important;
+}
+.my-faith-edit-actions .my-faith-edit-cancel-btn {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  justify-self: end !important;
+}
+.my-faith-edit-actions .my-faith-edit-confirm-btn {
+  grid-column: 1 / -1 !important;
+  grid-row: 2 !important;
 }
 .my-faith-inline-confirm { width: 100% !important; margin: 10px 0 0 !important; display: flex !important; }
 .my-faith-confirm-btn,
@@ -300,7 +309,8 @@
 
 @media (max-width: 370px) {
   .my-faith-body { padding-left: 11px !important; padding-right: 11px !important; }
-  .my-faith-inline-diocese-grid { grid-template-columns: 1fr !important; }
+  .my-faith-inline-diocese-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 8px !important; padding-left: 10px !important; padding-right: 10px !important; }
+  .my-faith-inline-diocese-option { min-height: 44px !important; border-radius: 14px !important; font-size: 12.8px !important; }
   .my-faith-section h3 { font-size: 14px !important; padding: 11px 12px 10px !important; }
   .my-faith-row-top strong { font-size: 13px !important; }
   .my-faith-row-sub { font-size: 10.8px !important; }
