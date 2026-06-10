@@ -1462,6 +1462,34 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, var(--v4-retreat
   font-weight: 800;
   line-height: 1.6;
 }
+#nearby-body .nearby-distance-loading {
+  min-height: clamp(260px, calc(var(--cover-vh, 1vh) * 50), 430px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+#nearby-body .nearby-distance-spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid rgba(31,42,68,.16);
+  border-top-color: var(--v4-header-navy);
+  border-radius: 50%;
+  animation: oaiLoadingCircleSpin 1.15s linear infinite;
+}
+#nearby-body .nearby-distance-title {
+  display: block;
+  color: var(--v4-text-strong);
+  font-size: calc(16px * var(--app-inner-font-scale));
+  font-weight: 900;
+}
+#nearby-body .nearby-distance-sub {
+  display: block;
+  color: var(--v4-text-muted);
+  font-size: calc(13px * var(--app-inner-font-scale));
+  font-weight: 700;
+}
 #region-body .empty-msg.region-guide-empty {
   color: var(--v4-text-strong);
   font-size: calc(15px * var(--app-inner-font-scale));

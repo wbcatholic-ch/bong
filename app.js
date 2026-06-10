@@ -1585,7 +1585,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V4-95';
+    frame.src='diocese.html?v=V4-97';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -2035,7 +2035,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V4-95';
+const _PARISH_ASSET_VERSION='V4-97';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -2198,7 +2198,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V4-95';
+const _PRAYER_ASSET_VERSION='V4-97';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -2260,7 +2260,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V4-95';
+const _RETREAT_ASSET_VERSION='V4-97';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2353,8 +2353,15 @@ function _kakaoRestFetch(endpoint, params){
   if(!url) return Promise.reject(new Error('missing kakao rest proxy url'));
   return fetch(url, { method:'GET', credentials:'omit', cache:'no-store' });
 }
-function _kakaoDirectionsFetch(origin, destination){
-  return _kakaoRestFetch('directions', { origin: origin, destination: destination, priority:'RECOMMEND' });
+function _kakaoDirectionsFetch(origin, destination, timeoutMs){
+  const params = { origin: origin, destination: destination, priority:'RECOMMEND' };
+  if(!timeoutMs || typeof AbortController === 'undefined') return _kakaoRestFetch('directions', params);
+  const url = _kakaoRestProxyUrl('directions', params);
+  if(!url) return Promise.reject(new Error('missing kakao rest proxy url'));
+  const controller = new AbortController();
+  const timer = setTimeout(function(){ try{ controller.abort(); }catch(e){} }, timeoutMs);
+  return fetch(url, { method:'GET', credentials:'omit', cache:'no-store', signal: controller.signal })
+    .finally(function(){ clearTimeout(timer); });
 }
 function _kakaoKeywordFetch(query, size, page){
   var params = { query: query, size: String(size || 10) };
@@ -2514,6 +2521,8 @@ const _SU='https://www.cbck.or.kr/Catholic/Shrine/Read?seq=';
    ─────────────────────────────────────────────────────────────── */
 const _navCache = new Map();
 const _NAV_CONCURRENCY = 5;
+const OAI_NEARBY_ROUTE_CANDIDATE_LIMIT = 20;
+const OAI_NEARBY_ROUTE_TIMEOUT_MS = 3000;
 let _navActive = 0;
 const _navQueue = [];
 let _suppressNextRouteGuide = false;
@@ -2524,7 +2533,7 @@ function _navFetch(origin, dest) {
   return new Promise((resolve) => {
     function run() {
       _navActive++;
-      _kakaoDirectionsFetch(origin, dest)
+      _kakaoDirectionsFetch(origin, dest, OAI_NEARBY_ROUTE_TIMEOUT_MS)
         .then(r => r.json())
         .then(data => {
           const route = data.routes?.[0];
@@ -2558,7 +2567,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V4-95';
+const _SHRINE_ASSET_VERSION='V4-97';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -5004,7 +5013,7 @@ function _loadNearbyWithDist(lat,lng,items,getIdx,getColor,getLabel){
   const requestMode=_mode;
   const requestToken=_beginNearbyLoad();
   const POOL=items.filter(p=>p.lat&&p.lng);
-  const prelim=POOL.map(p=>({p,d:calcDist(lat,lng,p.lat,p.lng)})).sort((a,b)=>a.d-b.d).slice(0,30);
+  const prelim=POOL.map(p=>({p,d:calcDist(lat,lng,p.lat,p.lng)})).sort((a,b)=>a.d-b.d).slice(0,OAI_NEARBY_ROUTE_CANDIDATE_LIMIT);
 
   if(!prelim.length){
     if(body && _isNearbyLoadCurrent(requestMode,requestToken,body)) body.innerHTML='<div class="empty-msg">표시할 장소가 없습니다.</div>';
@@ -5012,11 +5021,11 @@ function _loadNearbyWithDist(lat,lng,items,getIdx,getColor,getLabel){
   }
 
   if(body && _isNearbyLoadCurrent(requestMode,requestToken,body)){
-    body.innerHTML='<div class="empty-msg nearby-distance-loading">📍 정확한 거리를 계산 중입니다...</div>';
+    body.innerHTML='<div class="empty-msg nearby-distance-loading"><span class="nearby-distance-spinner" aria-hidden="true"></span><span class="nearby-distance-title">자동차 거리 계산 중</span><span class="nearby-distance-sub">가까운 20곳 후보를 계산한 뒤 10곳을 보여줍니다.</span></div>';
   }
 
-  // 성당 첫 진입/내주변 목록은 정확한 도로거리 계산이 끝난 뒤에 표시한다.
-  // 계산 전 직선거리 목록을 먼저 띄우지 않아 목록 순서가 바뀌는 느낌을 없앤다.
+  // 내주변은 직선거리 가까운 20곳 후보의 자동차 거리를 계산한 뒤 최종 10곳을 표시한다.
+  // 30곳 전체 계산보다 빠르고, 10곳만 계산하는 방식보다 실제 자동차 거리 정렬 정확도를 높인다.
 
   const results=new Array(prelim.length).fill(null);
   let done=0;
@@ -5061,7 +5070,7 @@ function _loadNearbyShrines(lat,lng){
 function _loadNearbyParishes(lat,lng){
   if(!_areAllParishDiocesesReady()){
     const body=$('nearby-body');
-    if(body) body.innerHTML='<div class="empty-msg nearby-distance-loading">📍 위치 확인 완료<br>전체 성당 정보를 불러오는 중입니다...</div>';
+    if(body) body.innerHTML='<div class="empty-msg nearby-distance-loading"><span class="nearby-distance-spinner" aria-hidden="true"></span><span class="nearby-distance-title">성당 정보 불러오는 중</span><span class="nearby-distance-sub">전체 성당 정보를 준비하고 있습니다.</span></div>';
     _ensureAllParishDiocesesLoaded().then(function(){ _loadNearbyParishes(lat,lng); }).catch(function(err){
       console.warn('[가톨릭길동무] 전체 성당 데이터 로드 실패', err);
       if(body) body.innerHTML='<div class="empty-msg">성당 정보를 불러오지 못했습니다. 새로고침 후 다시 시도해 주세요.</div>';
