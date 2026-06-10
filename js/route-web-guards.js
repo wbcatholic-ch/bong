@@ -1,5 +1,5 @@
 /* route-web-guards.js — V4-13 웹사이트 스와이프 / 경로 마커 복원 보조 모듈
-   patches.js에서 분리. 지도/길찾기 핵심 로직은 변경하지 않고 기존 보조 흐름만 유지합니다. */
+   지도/길찾기 핵심 로직은 변경하지 않고 기존 보조 흐름만 유지합니다. */
 (function(){
   'use strict';
   if(window.__APP_BACK_ROUTE_GUARD__) return;

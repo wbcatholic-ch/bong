@@ -1,8 +1,8 @@
 /* back-controller.js — V4-15
-   patches.js에 남아 있던 공통 뒤로가기/history 컨트롤러를 독립 모듈로 분리했습니다.
+   공통 뒤로가기/history 컨트롤러를 담당합니다.
    기능 변경 없이 위치만 이동합니다. */
 
-/* patches.js — 뒤로가기·스와이프·터치 UX 보조 모듈
+/* back-controller.js — 뒤로가기/history 보조 모듈
    history 기반 뒤로가기 컨트롤러, 스와이프 액션,
    터치 피드백과 키보드 입력 보정을 담당합니다. */
 
@@ -35,9 +35,8 @@
   var _href = location.href.split('#')[0];
 
   function armCoverBackTrap(reason, opts){
-    /* V3-13: patches.js를 커버 뒤로가기 trap 생성의 최종 기준으로 둔다.
-       index.html의 조기 guard는 patches.js가 로드되기 전 첫 화면 안전망으로만 사용하고,
-       patches.js 로드 이후에는 여기서 직접 root/trap 한 쌍을 관리한다. */
+    /* 커버 뒤로가기 trap은 이 모듈에서 root/trap 한 쌍으로 관리한다.
+       index.html의 조기 guard는 이 모듈 로드 전 첫 화면 안전망으로만 사용한다. */
     try{
       opts = opts || {};
       var href = location.href.split('#')[0];
@@ -55,7 +54,7 @@
 
   /* history 초기화
      V3-13: 첫 커버 뒤로가기 실패를 만들던 hash/query trap 흔적을 제거하고,
-     최종 뒤로가기 판단은 이 patches.js popstate 컨트롤러로 단일화한다. */
+     최종 뒤로가기 판단은 이 popstate 컨트롤러로 단일화한다. */
   try{
     var refreshReason = '';
     try{
@@ -404,7 +403,7 @@
 /* 시작 시 강제 상태 초기화는 사용하지 않음: 뒤로가기와 외부사이트 복귀 상태 보존 */
 
 /* V4-10: 기도문 목록/탭 UI 보조는 js/prayer-ui.js로 분리됨.
-   기도문 뒤로가기/history/복귀 컨트롤러는 아직 patches.js에 유지. */
+   기도문 뒤로가기/history/복귀 컨트롤러는 prayer-back.js와 이 컨트롤러가 분담한다. */
 
 /* V4-12: 관구교구 본당 수 표시 보정은 js/app-state-guards.js로 분리됨. */
 

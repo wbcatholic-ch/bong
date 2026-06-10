@@ -1,5 +1,5 @@
 /* prayer-back.js — V4-14 기도문 뒤로가기/history/빠른메뉴 복귀 보조 모듈
-   patches.js에서 분리. 기도문 전용 DOM 상태 판단과 복귀 함수만 담당합니다. */
+   기도문 전용 DOM 상태 판단과 복귀 함수만 담당합니다. */
 (function(){
   'use strict';
   if(window.__OAI_PRAYER_BACK_SPLIT__) return;

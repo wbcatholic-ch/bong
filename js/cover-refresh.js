@@ -1,5 +1,5 @@
 /* cover-refresh.js — V4-11: 커버 pull-to-refresh/soft refresh 보조 모듈
-   patches.js에서 기능 변경 없이 분리했습니다. */
+   커버 pull-to-refresh/soft refresh 보조 로직을 담당합니다. */
 (function(){
   'use strict';
   if(window.__APP_PULL_REFRESH_CLEAN_V20_8__) return;

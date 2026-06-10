@@ -555,7 +555,7 @@ function prOpenDetail(prayer){
   detail.classList.add('show');
   try{
     // 본문 진입 시 별도 history state를 만들지 않고, 공통 앱 back trap만 보강한다.
-    // 실제 뒤로가기는 patches.js의 공통 컨트롤러가 DOM 상태를 보고 처리한다.
+    // 실제 뒤로가기는 공통 컨트롤러가 DOM 상태를 보고 처리한다.
     if(typeof window._oaiPrayerPushDetailState === 'function') window._oaiPrayerPushDetailState('prayer-detail-open');
     else if(typeof window._oaiArmPrayerBackTrap === 'function') window._oaiArmPrayerBackTrap('prayer-detail-open');
   }catch(e){

@@ -1,6 +1,6 @@
 /* js/prayer-ui.js — V4-10 기도문 UI 보조 분리
-   patches.js에서 독립 가능한 기도문 목록/탭 표시 보조만 옮겼습니다.
-   뒤로가기/history/기도문 복귀 로직은 patches.js에 그대로 둡니다. */
+   기도문 목록/탭 표시 보조만 담당합니다.
+   뒤로가기/history/기도문 복귀 로직은 prayer-back.js와 공통 컨트롤러가 담당합니다. */
 
 (function(){
   'use strict';
