@@ -230,15 +230,36 @@
       try{ sessionStorage.setItem('oai_my_faith_external_open','1'); sessionStorage.setItem('oai_my_faith_external_ts', String(Date.now ? Date.now() : new Date().getTime())); sessionStorage.setItem('oai_my_faith_scroll_top', String(body && typeof body.scrollTop === 'number' ? body.scrollTop : 0)); modal.classList.add('return-settling'); if(typeof CORE_RETURN_KEY !== 'undefined') sessionStorage.removeItem(CORE_RETURN_KEY); }catch(_e){}
       try{ if(typeof oaiSmoothNavigate === 'function') oaiSmoothNavigate(url, 'my-faith-life'); else location.assign(url); }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
-    function smallButton(label, fn){ var b=document.createElement('button'); b.type='button'; b.className='my-faith-small-btn'; b.textContent=label; b.addEventListener('click', function(e){ if(e&&e.preventDefault)e.preventDefault(); fn&&fn(); }); return b; }
+    var myFaithTapBlockUntil = 0;
+    function nowMyFaithTap(){ return Date.now ? Date.now() : new Date().getTime(); }
+    function isMyFaithSyntheticClickBlocked(e){
+      try{
+        if(e && e.type === 'click' && nowMyFaithTap() < myFaithTapBlockUntil){
+          if(e.preventDefault) e.preventDefault();
+          if(e.stopPropagation) e.stopPropagation();
+          return true;
+        }
+      }catch(_e){}
+      return false;
+    }
+    function smallButton(label, fn){
+      var b=document.createElement('button');
+      b.type='button';
+      b.className='my-faith-small-btn';
+      b.textContent=label;
+      bindMyFaithTapAction(b, function(){ fn&&fn(); });
+      return b;
+    }
     function runMyFaithActionOnce(fn){
       var lastRunAt = 0;
       return function(e){
+        if(isMyFaithSyntheticClickBlocked(e)) return false;
         if(e && e.preventDefault) e.preventDefault();
         if(e && e.stopPropagation) e.stopPropagation();
-        var now = Date.now ? Date.now() : new Date().getTime();
-        if(now - lastRunAt < 260) return false;
+        var now = nowMyFaithTap();
+        if(now - lastRunAt < 700) return false;
         lastRunAt = now;
+        if(e && e.type && e.type !== 'click') myFaithTapBlockUntil = now + 750;
         try{ document.activeElement && document.activeElement.blur && document.activeElement.blur(); }catch(_e){}
         if(typeof fn === 'function') fn();
         return false;
@@ -247,20 +268,31 @@
     function bindMyFaithTapAction(el, fn){
       if(!el || typeof fn !== 'function') return;
       var run = runMyFaithActionOnce(fn);
-      el.addEventListener('click', run, false);
-      try{ el.addEventListener('pointerup', run, false); }catch(_e){}
-      try{ el.addEventListener('touchend', run, {passive:false}); }catch(_e){ try{ el.addEventListener('touchend', run, false); }catch(__e){} }
+      if(window.PointerEvent){
+        el.addEventListener('pointerup', run, false);
+        el.addEventListener('click', run, false);
+      }else{
+        try{ el.addEventListener('touchend', run, {passive:false}); }catch(_e){ try{ el.addEventListener('touchend', run, false); }catch(__e){} }
+        el.addEventListener('click', run, false);
+      }
     }
     function makeMyFaithRowClickable(row, fn){
       if(!row || typeof fn !== 'function') return;
       row.classList.add('is-clickable');
       row.setAttribute('role','button');
       row.setAttribute('tabindex','0');
-      row.addEventListener('click', function(e){
-        try{ if(e && e.target && e.target.closest && e.target.closest('button,a,input,textarea,select')) return; }catch(_e){}
-        if(e && e.preventDefault) e.preventDefault();
-        fn();
-      }, false);
+      function runRow(e){
+        try{ if(e && e.target && e.target.closest && e.target.closest('button,a,input,textarea,select')) return false; }catch(_e){}
+        return rowTap(e);
+      }
+      var rowTap = runMyFaithActionOnce(function(){ fn(); });
+      if(window.PointerEvent){
+        row.addEventListener('pointerup', runRow, false);
+        row.addEventListener('click', runRow, false);
+      }else{
+        try{ row.addEventListener('touchend', runRow, {passive:false}); }catch(_e){ try{ row.addEventListener('touchend', runRow, false); }catch(__e){} }
+        row.addEventListener('click', runRow, false);
+      }
       row.addEventListener('keydown', function(e){
         if(!e || (e.key !== 'Enter' && e.key !== ' ')) return;
         if(e.preventDefault) e.preventDefault();
@@ -268,7 +300,23 @@
       }, false);
     }
     function appendMyFaithPrivacyNote(){ var note=document.createElement('div'); note.className='my-faith-inline-privacy-note'; note.textContent='선택한 교구와 본당 정보는 이 기기 안에만 저장되며, 외부로 수집되거나 전송되지 않습니다.'; body.appendChild(note); }
-    function appendMyFaithConfirmButton(onConfirm){ var wrap=document.createElement('div'); wrap.className='my-faith-inline-confirm'; var ok=document.createElement('button'); ok.type='button'; ok.className='my-faith-confirm-btn'; ok.textContent='확인'; ok.addEventListener('click', function(e){ if(e&&e.preventDefault)e.preventDefault(); var result = true; if(typeof onConfirm === 'function') result = onConfirm(); if(result === false) return; if(result === 'stay') return; closeModal(); }); wrap.appendChild(ok); body.appendChild(wrap); }
+    function appendMyFaithConfirmButton(onConfirm){
+      var wrap=document.createElement('div');
+      wrap.className='my-faith-inline-confirm';
+      var ok=document.createElement('button');
+      ok.type='button';
+      ok.className='my-faith-confirm-btn';
+      ok.textContent='확인';
+      bindMyFaithTapAction(ok, function(){
+        var result = true;
+        if(typeof onConfirm === 'function') result = onConfirm();
+        if(result === false) return;
+        if(result === 'stay') return;
+        closeModal();
+      });
+      wrap.appendChild(ok);
+      body.appendChild(wrap);
+    }
     function settleMyFaithHomeScroll(){ try{ if(!body || !body.classList.contains('my-faith-home-list-body')) return; body.scrollTop=0; body.classList.remove('my-faith-no-scroll'); setTimeout(function(){ try{ body.classList.remove('my-faith-no-scroll'); }catch(_e){} },120); }catch(e){ console.warn('[가톨릭길동무]', e); } }
 
     function appendInlineDiocesePicker(sec){
@@ -423,8 +471,8 @@
     }
     function renderDioceseList(){
       var current=getMyFaithEditName(); setHeader('나의 교구 선택','확인을 눌러야 저장됩니다'); setBodyMode('my-diocese-list');
-      dioceses.forEach(function(name){ var item=document.createElement('button'); item.type='button'; item.className='my-diocese-option'+(current===name?' selected':''); item.textContent=name; item.setAttribute('aria-pressed', current===name?'true':'false'); item.addEventListener('click', function(e){ if(e&&e.preventDefault)e.preventDefault(); setMyFaithEditName(name); returnToMyFaithSettingsEdit(); }); body.appendChild(item); });
-      var noneItem=document.createElement('button'); noneItem.type='button'; noneItem.className='my-diocese-option my-diocese-none'+(!current?' selected':''); noneItem.textContent='선택 안함'; noneItem.setAttribute('aria-pressed', !current?'true':'false'); noneItem.addEventListener('click', function(e){ if(e&&e.preventDefault)e.preventDefault(); setMyFaithEditName(''); setMyFaithEditParish(null); returnToMyFaithSettingsEdit(); }); body.appendChild(noneItem);
+      dioceses.forEach(function(name){ var item=document.createElement('button'); item.type='button'; item.className='my-diocese-option'+(current===name?' selected':''); item.textContent=name; item.setAttribute('aria-pressed', current===name?'true':'false'); bindMyFaithTapAction(item, function(){ setMyFaithEditName(name); returnToMyFaithSettingsEdit(); }); body.appendChild(item); });
+      var noneItem=document.createElement('button'); noneItem.type='button'; noneItem.className='my-diocese-option my-diocese-none'+(!current?' selected':''); noneItem.textContent='선택 안함'; noneItem.setAttribute('aria-pressed', !current?'true':'false'); bindMyFaithTapAction(noneItem, function(){ setMyFaithEditName(''); setMyFaithEditParish(null); returnToMyFaithSettingsEdit(); }); body.appendChild(noneItem);
     }
     function getSelectedDioceseCode(){ var myDio=myFaithPendingActive ? getMyFaithEditName() : selectedName(); if(!myDio) return null; try{ if(typeof _PARISH_DIO_CODE_MAP !== 'undefined' && _PARISH_DIO_CODE_MAP && _PARISH_DIO_CODE_MAP[myDio]) return _PARISH_DIO_CODE_MAP[myDio]; }catch(_e){} try{ for(var code in _DIO){ if(Object.prototype.hasOwnProperty.call(_DIO,code) && _DIO[code]===myDio) return code; } }catch(_e){} return null; }
     function getParishItems(){ try{ if(Array.isArray(PARISHES) && PARISHES.length) return PARISHES; }catch(_e){} return []; }

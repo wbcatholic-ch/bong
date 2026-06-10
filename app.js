@@ -1585,7 +1585,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V4-97';
+    frame.src='diocese.html?v=V4-99';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -2035,7 +2035,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V4-97';
+const _PARISH_ASSET_VERSION='V4-99';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -2198,7 +2198,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V4-97';
+const _PRAYER_ASSET_VERSION='V4-99';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -2260,7 +2260,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V4-97';
+const _RETREAT_ASSET_VERSION='V4-99';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2567,7 +2567,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V4-97';
+const _SHRINE_ASSET_VERSION='V4-99';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -5021,7 +5021,7 @@ function _loadNearbyWithDist(lat,lng,items,getIdx,getColor,getLabel){
   }
 
   if(body && _isNearbyLoadCurrent(requestMode,requestToken,body)){
-    body.innerHTML='<div class="empty-msg nearby-distance-loading"><span class="nearby-distance-spinner" aria-hidden="true"></span><span class="nearby-distance-title">자동차 거리 계산 중</span><span class="nearby-distance-sub">가까운 20곳 후보를 계산한 뒤 10곳을 보여줍니다.</span></div>';
+    body.innerHTML='<div class="empty-msg nearby-distance-loading"><span class="nearby-distance-spinner" aria-hidden="true"></span><span class="nearby-distance-title">📍 내 위치 기준 자동차 거리 계산 중</span><span class="nearby-distance-sub">가까운 20곳 후보를 계산한 뒤 10곳을 보여줍니다.</span></div>';
   }
 
   // 내주변은 직선거리 가까운 20곳 후보의 자동차 거리를 계산한 뒤 최종 10곳을 표시한다.
