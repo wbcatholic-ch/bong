@@ -15,7 +15,7 @@
     return m ? ('본당 수 ' + m[1] + '개') : text;
   }
 
-  function patchDioceseParishCount(){
+  function syncDioceseParishCount(){
     var frame = document.getElementById('diocese-frame');
     if(!frame) return;
     var doc = null;
@@ -30,19 +30,19 @@
   }
 
   window.addEventListener('load',function(){
-    patchDioceseParishCount();
+    syncDioceseParishCount();
     var frame = document.getElementById('diocese-frame');
     if(frame && !frame.__oaiParishCountFinal20260428){
       frame.__oaiParishCountFinal20260428 = true;
       frame.addEventListener('load',function(){
-        setTimeout(patchDioceseParishCount,100);
-        setTimeout(patchDioceseParishCount,500);
+        setTimeout(syncDioceseParishCount,100);
+        setTimeout(syncDioceseParishCount,500);
       });
     }
   });
   document.addEventListener('click',function(){
-    setTimeout(patchDioceseParishCount,150);
-    setTimeout(patchDioceseParishCount,700);
+    setTimeout(syncDioceseParishCount,150);
+    setTimeout(syncDioceseParishCount,700);
   },true);
 })();
 

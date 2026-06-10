@@ -1,9 +1,9 @@
-/* 가톨릭길동무 Service Worker - V4-77
-   iOS viewport height stability patch
+/* 가톨릭길동무 Service Worker - V4-78
+   iOS viewport height stability guard
    캐시를 매번 삭제하지 않고, 버전 변경 시 오래된 캐시만 정리합니다.
    localStorage/사용자 설정은 건드리지 않습니다. */
-const CACHE_VERSION = 'catholic-way-V4-77';
-const ASSET_VERSION = 'V4-77';
+const CACHE_VERSION = 'catholic-way-V4-78';
+const ASSET_VERSION = 'V4-78';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }
