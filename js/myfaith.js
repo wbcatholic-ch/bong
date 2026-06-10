@@ -481,8 +481,9 @@
       if(state === 'edit-diocese'){
         appendRow(settings, '내 교구', '교구를 먼저 선택해 주세요.', 'needed', '', null, false, 'my-faith-row-btn-set');
         appendDiocesePicker(settings);
+        appendParishDisabledHint(settings);
       }else{
-        appendRow(settings, '내 교구', tempDiocese, 'done', '다시 선택', function(){
+        appendRow(settings, '내 교구', tempDiocese, 'done', '교구 변경', function(){
           tempDiocese = '';
           tempParish = null;
           state = 'edit-diocese';
@@ -490,13 +491,13 @@
         }, false, 'my-faith-row-btn-set');
 
         if(tempParish && tempParish.name){
-          appendRow(settings, '내 본당', isNoParishItem(tempParish) ? '선택하지 않아도 저장할 수 있습니다.' : tempParish.name, 'done', '다시 선택', function(){
+          appendRow(settings, '내 본당', isNoParishItem(tempParish) ? '선택하지 않아도 저장할 수 있습니다.' : tempParish.name, 'done', '본당 변경', function(){
             tempParish = null;
             state = 'edit-parish';
             renderEdit();
           }, false, 'my-faith-row-btn-set');
         }else{
-          appendRow(settings, '내 본당', '선택하지 않아도 저장할 수 있습니다.', 'done', '', null, false, 'my-faith-row-btn-set');
+          appendEditLabel(settings, '본당 선택');
           appendParishSearch(settings);
         }
       }
