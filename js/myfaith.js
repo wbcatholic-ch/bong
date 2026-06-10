@@ -68,7 +68,7 @@
       myFaithPendingActive = true;
       myFaithPendingName = selectedName();
       myFaithPendingParish = cloneMyFaithParish(selectedParish());
-      myFaithExpandedSection = myFaithPendingName ? '' : 'diocese';
+      myFaithExpandedSection = 'diocese';
     }
     function beginMyFaithBlankEdit(){
       myFaithPendingActive = true;
@@ -281,8 +281,7 @@
         item.className='my-faith-inline-diocese-option'+(current===name?' selected':'');
         item.textContent=name;
         item.setAttribute('aria-pressed', current===name?'true':'false');
-        item.addEventListener('click', function(e){
-          if(e&&e.preventDefault)e.preventDefault();
+        bindMyFaithTapAction(item, function(){
           setMyFaithEditName(name);
           renderSettingsEdit();
         });
@@ -348,7 +347,7 @@
       var name = selectedName(); var info = name ? DIO_INFO[name] : null; var parish = selectedParish();
       setHeader('나의 신앙생활', '설정 상태와 바로가기를 한곳에서 확인');
       setBodyMode('my-faith-body my-faith-home-list-body');
-      function rowButton(label, fn, disabled, cls){ var b=document.createElement('button'); b.type='button'; b.className='my-faith-row-btn'+(cls?(' '+cls):''); b.textContent=label; if(disabled){ b.disabled=true; } else { b.addEventListener('click', function(e){ if(e&&e.preventDefault)e.preventDefault(); fn&&fn(); }); } return b; }
+      function rowButton(label, fn, disabled, cls){ var b=document.createElement('button'); b.type='button'; b.className='my-faith-row-btn'+(cls?(' '+cls):''); b.textContent=label; if(disabled){ b.disabled=true; } else { bindMyFaithTapAction(b, function(){ fn&&fn(); }); } return b; }
       function listSection(t,c){ var sec=document.createElement('section'); sec.className='my-faith-section my-faith-list-section '+(c||''); var h=document.createElement('h3'); h.textContent=t; sec.appendChild(h); return sec; }
       function appendRow(sec,label,value,status,buttonLabel,fn,disabled,cls){ var row=document.createElement('div'); row.className='my-faith-list-row'+(disabled?' is-disabled':'')+(status?(' has-status-'+status):''); var main=document.createElement('div'); main.className='my-faith-row-main'; var top=document.createElement('div'); top.className='my-faith-row-top'; var strong=document.createElement('strong'); strong.textContent=label; top.appendChild(strong); if(status){ var badge=document.createElement('span'); badge.className='my-faith-row-status '+status; badge.textContent=status==='done'?'설정됨':'설정 필요'; top.appendChild(badge); } main.appendChild(top); if(value){ var sub=document.createElement('span'); sub.className='my-faith-row-sub'; sub.textContent=value; main.appendChild(sub); } row.appendChild(main); row.appendChild(rowButton(buttonLabel, fn, disabled, cls)); sec.appendChild(row); return row; }
       function renderSettingsEdit(){
@@ -412,7 +411,7 @@
         changeBtn.type='button';
         changeBtn.className='my-faith-change-settings-btn';
         changeBtn.textContent='교구·본당 변경';
-        changeBtn.addEventListener('click', function(e){ if(e&&e.preventDefault)e.preventDefault(); beginMyFaithBlankEdit(); renderSettingsEdit(); });
+        bindMyFaithTapAction(changeBtn, function(){ beginMyFaithPendingEdit(); renderSettingsEdit(); });
         changeWrap.appendChild(changeBtn);
         body.appendChild(changeWrap);
       }else{
