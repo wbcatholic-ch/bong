@@ -79,7 +79,25 @@
       return true;
     }catch(e){ return false; }
   }
+  function hasOpenAppSurface(){
+    try{
+      var ids = ['diocese-view','missa-view','prayer-view','qna-view'];
+      for(var i=0;i<ids.length;i++){
+        var el = $b(ids[i]);
+        if(el && el.classList && el.classList.contains('open')) return true;
+      }
+      if(document.querySelector('.module-view.open')) return true;
+      var app = $b('app');
+      if(app && document.documentElement.classList.contains('app-active') && !coverVisible()) return true;
+    }catch(e){ console.warn('[가톨릭길동무]', e); }
+    return false;
+  }
+
   function appActive(){
+    /* 관구·교구/웹사이트/문의 같은 모듈은 커버 위에 덮이는 구조라
+       cover DOM이 뒤에 보이는 상태로 남을 수 있다. 이때도 현재 사용자는
+       앱 내부 화면에 있는 것이므로 커버 종료 흐름보다 모듈 닫기 흐름이 먼저다. */
+    try{ if(hasOpenAppSurface()) return true; }catch(e){}
     try{ if(typeof window._isAppScreenActive === 'function') return window._isAppScreenActive(); }catch(e){}
     return document.documentElement.classList.contains('app-active') && !coverVisible();
   }

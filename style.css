@@ -763,6 +763,20 @@ html.retreat-mode #tabbar .tab-btn.active {
   max-width: 100%;
   box-sizing: border-box;
 }
+
+#region-inp {
+  font-size: calc(var(--oai-search-input-fs) * var(--app-inner-font-scale,1)) !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  color: var(--oai-search-input-color) !important;
+  -webkit-text-fill-color: var(--oai-search-input-color) !important;
+}
+#region-inp::placeholder {
+  font-size: calc(var(--oai-search-input-fs) * var(--app-inner-font-scale,1)) !important;
+  font-weight: 500 !important;
+  color: var(--oai-search-placeholder-color) !important;
+  -webkit-text-fill-color: var(--oai-search-placeholder-color) !important;
+}
 .region-search-btn {
   padding: 0 16px;
   height: 46px;
