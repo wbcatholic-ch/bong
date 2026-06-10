@@ -1,5 +1,4 @@
-/* app-state-guards.js — V4-12 안전 상태 보조 모듈
-   상태/표시 보조 로직만 담당합니다.
+/* app-state-guards.js — 상태/표시 보조 모듈
    뒤로가기 핵심 컨트롤러, 지도/길찾기, 기도문 history 흐름은 이 파일에서 다루지 않습니다. */
 
 (function(){

@@ -1,5 +1,5 @@
-/* cover-refresh.js — V4-11: 커버 pull-to-refresh/soft refresh 보조 모듈
-   커버 pull-to-refresh/soft refresh 보조 로직을 담당합니다. */
+/* cover-refresh.js — 커버 pull-to-refresh / soft refresh 보조 모듈
+   화면 전환과 캐시 초기화 버튼의 보조 동작만 담당합니다. */
 (function(){
   'use strict';
   if(window.__APP_PULL_REFRESH_CLEAN_V20_8__) return;

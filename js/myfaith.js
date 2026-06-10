@@ -1,6 +1,5 @@
-/* myfaith.js — 나의 신앙생활 모듈
-   V4-5: app.js에서 나의 신앙생활 JS를 분리
-   기능 변경 없이 기존 bindMyFaithLifePanel 흐름을 독립 파일로 이동 */
+/* myfaith.js — 나의 신앙생활 전용 JS
+   나의 교구 설정과 신앙생활 홈 화면 표시를 담당합니다. */
 'use strict';
 
 (function(){
