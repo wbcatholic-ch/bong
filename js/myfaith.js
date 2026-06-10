@@ -281,7 +281,7 @@
         bindMyFaithClick(item, function(){
           setMyFaithEditName(name);
           myFaithExpandedSection = 'parish';
-          renderSettingsEdit();
+          returnToMyFaithSettingsEdit();
         });
         grid.appendChild(item);
       });
@@ -304,7 +304,7 @@
       results.className='my-faith-search-results my-faith-inline-search-results';
       var tools=document.createElement('div');
       tools.className='my-faith-tools my-faith-inline-parish-tools';
-      tools.appendChild(smallButton('선택 안함', function(){ setMyFaithEditParish(noParishItem(getMyFaithEditName())); myFaithExpandedSection = ''; renderSettingsEdit(); }));
+      tools.appendChild(smallButton('선택 안함', function(){ setMyFaithEditParish(noParishItem(getMyFaithEditName())); myFaithExpandedSection = ''; returnToMyFaithSettingsEdit(); }));
       wrap.appendChild(input);
       wrap.appendChild(results);
       wrap.appendChild(tools);
@@ -323,7 +323,7 @@
           card.type='button';
           card.className='my-faith-parish-result';
           card.innerHTML='<strong>'+safeText(p.name)+'</strong><span>'+safeText(p.diocese||'')+(p.addr?' · '+safeText(p.addr):'')+'</span>';
-          bindMyFaithClick(card, function(){ setMyFaithEditParish(p); myFaithExpandedSection = ''; renderSettingsEdit(); });
+          bindMyFaithClick(card, function(){ setMyFaithEditParish(p); myFaithExpandedSection = ''; returnToMyFaithSettingsEdit(); });
           results.appendChild(card);
         });
       }
