@@ -1031,11 +1031,18 @@ function openCatholicHymn(){
   try{ if(typeof _clearCoverExitArmed==='function') _clearCoverExitArmed(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   oaiSmoothNavigate(url, 'hymn');
 }
+function openCatholicBible(){
+  const url='https://maria.catholic.or.kr/mobile/bible/read/bible_list.asp';
+  try{ localStorage.setItem('oai_last_bible_url', url); }catch(e){ console.warn("[가톨릭길동무]", e); }
+  try{ if(typeof _resetCoverExitReady==='function') _resetCoverExitReady(); }catch(e){ console.warn("[가톨릭길동무]", e); }
+  try{ if(typeof _clearCoverExitArmed==='function') _clearCoverExitArmed(); }catch(e){ console.warn("[가톨릭길동무]", e); }
+  oaiSmoothNavigate(url, 'bible');
+}
 var _massQuickResumeTimer = null;
 var _massQuickResumeBusy = false;
 function _resumeMassQuickReturnIfNeeded(){
   try{
-    // 매일미사/성가 외부 사이트에서 돌아온 경우에만 빠른메뉴 팝업을 복구한다.
+    // 매일미사/성가/성경 외부 사이트에서 돌아온 경우에만 빠른메뉴 팝업을 복구한다.
     // 기존 보정: pageshow에서 reload 판정으로 먼저 지워버리면 외부 복귀 플래그가 사라질 수 있으므로,
     // 복귀 플래그 확인을 가장 먼저 하고 실제 복구는 한 번만 예약한다.
     if(!_shouldMassQuickReturn()) return false;
@@ -1561,7 +1568,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V4-92';
+    frame.src='diocese.html?v=V4-93';
   }else if(!restore){
     try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   }
@@ -2013,7 +2020,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V4-92';
+const _PARISH_ASSET_VERSION='V4-93';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -2176,7 +2183,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V4-92';
+const _PRAYER_ASSET_VERSION='V4-93';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -2238,7 +2245,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V4-92';
+const _RETREAT_ASSET_VERSION='V4-93';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2536,7 +2543,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V4-92';
+const _SHRINE_ASSET_VERSION='V4-93';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -6372,7 +6379,7 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
   on('cc-6', 'click', function() { hideCoverAndRun(function() { if (typeof openWebView === 'function') openWebView(); }); });
   on('cc-7', 'click', function() { hideCoverAndRun(function() { openDioceseView(); }); });
 
-  // ── 미사·기도·성가 빠른 메뉴 ──
+  // ── 미사·기도·성가·성경 빠른 메뉴 ──
   onQ('[data-mass-quick-close]', 'click', function() { closeMassQuickMenu(); });
   on('mass-quick-missa', 'click', function() {
     // 외부 사이트 이동은 지연 체감이 가장 크므로 팝업 닫기/화면 정리 없이 즉시 이동한다.
@@ -6395,6 +6402,11 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
     // 외부 사이트 이동은 지연 체감이 가장 크므로 팝업 닫기/화면 정리 없이 즉시 이동한다.
     _setMassQuickReturn(true);
     if (typeof openCatholicHymn === 'function') openCatholicHymn();
+  });
+  on('mass-quick-bible', 'click', function() {
+    // 외부 사이트 이동은 지연 체감이 가장 크므로 팝업 닫기/화면 정리 없이 즉시 이동한다.
+    _setMassQuickReturn(true);
+    if (typeof openCatholicBible === 'function') openCatholicBible();
   });
 
   // ── 커버 기타 ──

@@ -64,18 +64,6 @@
    desc:"한국 순교자·성지·교회사 관련 자료 제공"},
 
   /* 신앙 포털 */
-  {cat:"신앙 포털", ico:"✝️", name:"매일미사",
-   op:"한국천주교주교회의", url:"https://missa.cbck.or.kr/DailyMissa/", urlMode:"dailyMissa",
-   desc:"오늘 날짜의 매일미사를 바로 확인"},
-  {cat:"신앙 포털", ico:"🙏", name:"주요기도문",
-   op:"서울대교구 굿뉴스", url:"https://maria.catholic.or.kr/mobile/prayer/",
-   desc:"주요 기도문과 가톨릭 기도 자료 제공"},
-  {cat:"신앙 포털", ico:"🎼", name:"가톨릭 성가",
-   op:"서울대교구 굿뉴스", url:"https://maria.catholic.or.kr/mobile/sungga/sungga.asp",
-   desc:"가톨릭 성가 검색과 악보 자료 제공"},
-  {cat:"신앙 포털", ico:"📖", name:"성경",
-   op:"서울대교구 굿뉴스", url:"https://maria.catholic.or.kr/mobile/bible/read/bible_list.asp",
-   desc:"가톨릭 성경과 신앙 자료를 모바일에서 확인"},
   {cat:"신앙 포털", ico:"✝️", name:"서울대교구 굿뉴스",
    op:"천주교 서울대교구", url:"https://www.catholic.or.kr",
    desc:"매일미사·성경·성인·기도문·전례력·신앙자료 제공"},
@@ -88,6 +76,12 @@
   {cat:"신앙 포털", ico:"🌟", name:"성인/축일",
    op:"서울대교구 굿뉴스", url:"https://maria.catholic.or.kr/mobile/sa_ho/list/list.asp?menugubun=saint&today=on",
    desc:"오늘의 성인과 가톨릭 성인 정보를 확인"},
+  {cat:"신앙 포털", ico:"📖", name:"성경",
+   op:"서울대교구 굿뉴스", url:"https://maria.catholic.or.kr/mobile/bible/read/bible_list.asp",
+   desc:"가톨릭 성경과 신앙 자료를 모바일에서 확인"},
+  {cat:"신앙 포털", ico:"🎼", name:"가톨릭 성가",
+   op:"서울대교구 굿뉴스", url:"https://maria.catholic.or.kr/mobile/sungga/sungga.asp",
+   desc:"가톨릭 성가 검색과 악보 자료 제공"},
   {cat:"신앙 포털", ico:"🎵", name:"가톨릭 생활성가",
    op:"서울대교구 굿뉴스", url:"https://maria.catholic.or.kr/mobile/ccm/main.asp",
    desc:"생활성가와 CCM 자료 제공"},
@@ -241,20 +235,6 @@
   function ig$(id){ return document.getElementById(id); }
   function esc(s){ return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
   function shortUrl(url){ return String(url||'').replace(/^https?:\/\//,'').replace(/\/$/,''); }
-  function buildTodayMissaUrl(){
-    const d = new Date();
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth()+1).padStart(2,'0');
-    const dd = String(d.getDate()).padStart(2,'0');
-    return 'https://missa.cbck.or.kr/DailyMissa/' + yyyy + mm + dd;
-  }
-  function webItemOpenUrl(item){
-    if(item && item.urlMode === 'dailyMissa') return buildTodayMissaUrl();
-    return item && item.url ? item.url : '';
-  }
-  function webItemFavUrl(item){
-    return item && item.url ? item.url : webItemOpenUrl(item);
-  }
   function getMyDioceseName(){
     try{ return (localStorage.getItem(MY_DIOCESE_KEY) || '').trim(); }catch(e){ return ''; }
   }
@@ -556,7 +536,7 @@
       btn.dataset.webCat = c;
       btn.dataset.catColor = c; // CSS 선택자용
       btn.setAttribute('aria-pressed', c===webState.curCat ? 'true' : 'false');
-      const count = c==='⭐ 즐겨찾기' ? WEB_SITES.filter(s => wfHas(webItemFavUrl(s))).length : WEB_SITES.filter(s => s.cat===c).length;
+      const count = c==='⭐ 즐겨찾기' ? WEB_SITES.filter(s => wfHas(s.url)).length : WEB_SITES.filter(s => s.cat===c).length;
       btn.innerHTML = esc(webCatLabel(c)) + (c==='⭐ 즐겨찾기' ? '' : '<span class="cnt">' + count + '</span>');
       btn.addEventListener('click', function(){ setWebCat(c); });
       wrap.appendChild(btn);
@@ -628,7 +608,7 @@
     if(!wrap || !empty) return;
     applyWebCatState(webState.curCat || webDefaultCat());
     Array.from(wrap.querySelectorAll('.web-card')).forEach(el => el.remove());
-    const filtered = sortWebItemsForMyDiocese(webState.curCat==='⭐ 즐겨찾기' ? WEB_SITES.filter(s => wfHas(webItemFavUrl(s))) : WEB_SITES.filter(s => s.cat===webState.curCat));
+    const filtered = sortWebItemsForMyDiocese(webState.curCat==='⭐ 즐겨찾기' ? WEB_SITES.filter(s => wfHas(s.url)) : WEB_SITES.filter(s => s.cat===webState.curCat));
     const countEl = ig$('web-count');
     if(countEl) countEl.textContent = filtered.length + '개';
     empty.classList.toggle('show', filtered.length===0);
@@ -641,8 +621,6 @@
         : (WEB_CAT_COLORS[s.cat] || '#555');
       const bg = WEB_CAT_BG[s.cat] || '#f8f8f8';
       // 관구 헤더 제거됨(v13: CSS .web-prov-hd{display:none} + JS 생성 중단)
-      const itemOpenUrl = webItemOpenUrl(s);
-      const itemFavUrl = webItemFavUrl(s);
       const isDioceseCard = (s.cat === '교구');
       const isPriestCard = (s.cat === '사제찾기');
       const isMyWebCard = isMyDioceseWebItem(s, getMyDioceseName());
@@ -675,25 +653,25 @@
           </div>
         </div>
         <div class="web-card-foot">
-          <span class="web-card-url">${esc(shortUrl(itemOpenUrl))}</span>
-          <span class="web-fav-btn ${wfHas(itemFavUrl)?'on':''}" data-url="${esc(itemFavUrl)}" title="즐겨찾기">★</span>
+          <span class="web-card-url">${esc(shortUrl(s.url))}</span>
+          <span class="web-fav-btn ${wfHas(s.url)?'on':''}" data-url="${esc(s.url)}" title="즐겨찾기">★</span>
         </div>`;
       card.addEventListener('click', function(e){
         const fb = e.target.closest('.web-fav-btn');
         if(fb){
           e.stopPropagation();
-          wfToggle(itemFavUrl);
-          fb.classList.toggle('on', wfHas(itemFavUrl));
+          wfToggle(s.url);
+          fb.classList.toggle('on', wfHas(s.url));
           // 즐겨찾기 탭에서 삭제하면 목록 갱신
           if(webState.curCat==='⭐ 즐겨찾기') renderWebList();
           return;
         }
         // 교구 카드도 저장/복원 없이 즉시 이동한다.
         if(isDioceseCard){
-          openExternalUrl(itemOpenUrl, { module:'web' });
+          openExternalUrl(s.url, { module:'web' });
           return;
         }
-        openExternalUrl(itemOpenUrl, { module:'web' });
+        openExternalUrl(s.url, { module:'web' });
       });
       wrap.appendChild(card);
     });
