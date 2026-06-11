@@ -1353,11 +1353,13 @@ html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {
 }
 .btn-kakao-nav:active { opacity: .85; }
 
+#sheet-route #rs-top { padding-right: 18px !important; }
+
 .rs-route-stack {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 56px;
+  grid-template-columns: minmax(0, 1fr) 64px;
   grid-template-rows: 46px 6px 46px;
-  column-gap: 2px;
+  column-gap: 4px;
   row-gap: 0;
   width: 100%;
   align-items: stretch;
@@ -1388,8 +1390,9 @@ html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {
 .rs-myloc { background: none; border: 1px solid var(--border); border-radius: 14px; padding: 6px 11px; font-size: 12px; color: var(--pilgrim); cursor: pointer; font-family: inherit; white-space: nowrap; }
 .rs-x { width:30px; height:30px; border-radius:0; background: none; border: none; box-shadow:none; color: #999; font-size: 24px; font-weight:900; line-height:1; cursor: pointer; padding: 0; display:flex; align-items:center; justify-content:center; }
 .rs-between-tools {
+  --rs-control-shift-x: 9px;
   display: block;
-  width: 56px;
+  width: 64px;
   min-height: 0;
   height: 100%;
   padding: 0;
@@ -1402,12 +1405,12 @@ html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {
 .rs-route-stack.has-waypoint #rs-start-waypoint-tools { grid-row: 1 / 4; }
 .rs-waypoint-end-tools { grid-column: 2; grid-row: 3 / 6; align-self: stretch; }
 .rs-swap-btn {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: 1.5px solid var(--border);
   background: var(--v4-surface-white);
-  font-size: 16px;
+  font-size: 0;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1416,24 +1419,36 @@ html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {
   color: var(--ink);
   line-height: 1;
   position: absolute;
-  left: 50%;
+  left: calc(50% + var(--rs-control-shift-x));
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 7;
 }
+.rs-swap-btn::before {
+  content: "⇅";
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  font-weight: 900;
+  line-height: 1;
+  transform: translateY(-0.5px);
+}
 .rs-swap-btn:active { opacity:.82; transform: translate(-50%, -50%) translateY(1px); }
 .rs-add-waypoint-btn {
-  width: 56px;
-  min-width: 56px;
-  height: 26px;
-  border-radius: 7px;
+  width: 70px;
+  min-width: 70px;
+  height: 30px;
+  border-radius: 8px;
   border: 1px solid var(--border);
   background: var(--v4-surface-white);
   color: #475569;
-  font-size: 10.5px;
-  font-weight: 800;
+  font-size: 11.5px;
+  font-weight: 900;
   font-family: inherit;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.045em;
   cursor: pointer;
   padding: 0;
   white-space: nowrap;
@@ -1443,8 +1458,8 @@ html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {
   justify-content: center;
   text-align: center;
   position: absolute;
-  left: 50%;
-  top: calc(50% + 23px);
+  left: calc(50% + var(--rs-control-shift-x));
+  top: calc(50% + 25px);
   transform: translateX(-50%);
   z-index: 6;
 }
