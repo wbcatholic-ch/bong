@@ -1444,7 +1444,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-3';
+    frame.src='diocese.html?v=V6-4';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -1825,7 +1825,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-3';
+const _PARISH_ASSET_VERSION='V6-4';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -1988,7 +1988,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-3';
+const _PRAYER_ASSET_VERSION='V6-4';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -2049,7 +2049,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-3';
+const _RETREAT_ASSET_VERSION='V6-4';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2344,7 +2344,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-3';
+const _SHRINE_ASSET_VERSION='V6-4';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -5258,14 +5258,25 @@ function _setRouteWaypointEnabled(enabled){
   _routeWaypointEnabled=!!enabled;
   const box=$('rs-waypoint-box');
   const add=$('rs-add-waypoint-btn');
+  const after=$('rs-waypoint-end-tools');
+  const wx=$('rs-waypoint-x');
   if(box) box.style.display=_routeWaypointEnabled?'flex':'none';
   if(add) add.style.display=_routeWaypointEnabled?'none':'inline-flex';
+  if(after) after.style.display=_routeWaypointEnabled?'flex':'none';
+  if(wx) wx.style.display=_routeWaypointEnabled?'inline-flex':'none';
 }
 function _ensureRouteWaypointBox(){
   _setRouteWaypointEnabled(true);
   _setRouteLabel('waypoint', _rW ? (_rW.name||'경유지') : '');
   _refreshRouteTmpMarkers();
-  if(!_rW) _showRouteGuideText('경유지를 선택하세요');
+  if(!_rW) _showRouteGuideText('지도에서 경유지 마커를 선택하거나 경유지 박스를 눌러 검색하세요');
+}
+function _beginWaypointAddMode(){
+  _ensureRouteWaypointBox();
+  if(_polyline) _clearRouteResultOnly();
+  else _restoreRouteSelectionMarkersAfterReset();
+  _refreshRouteTmpMarkers();
+  _showRouteGuideText('지도에서 경유지를 선택하거나 경유지 박스를 눌러 검색하세요');
 }
 function _syncRouteWaypointBox(){
   _setRouteWaypointEnabled(!!(_routeWaypointEnabled || (_rW&&_rW.lat&&_rW.lng)));
@@ -5278,7 +5289,7 @@ function _setRouteLabel(role,name){
   el.textContent = rawName || emptyText;
   el.className='rs-lbl'+(rawName?' filled':' empty');
   if(role==='end' && $('rs-end-x')) $('rs-end-x').style.display=name?'inline':'none';
-  if(role==='waypoint' && $('rs-waypoint-x')) $('rs-waypoint-x').style.display=name?'inline':'none';
+  if(role==='waypoint' && $('rs-waypoint-x')) $('rs-waypoint-x').style.display=_routeWaypointEnabled?'inline-flex':'none';
   if(role==='waypoint') _setRouteWaypointEnabled(!!(_routeWaypointEnabled || rawName));
   _updateSearchBtn();
 }
@@ -6347,7 +6358,7 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
   on('rs-start-box', 'click', function() { openSearchModal('start'); });
   on('rs-end-box',   'click', function() { openSearchModal('end'); });
   on('rs-waypoint-box', 'click', function() { openSearchModal('waypoint'); });
-  on('rs-add-waypoint-btn', 'click', function(e) { e.stopPropagation(); _ensureRouteWaypointBox(); openSearchModal('waypoint'); });
+  on('rs-add-waypoint-btn', 'click', function(e) { e.stopPropagation(); _beginWaypointAddMode(); });
   on('rs-myloc-btn', 'click', function(e) { e.stopPropagation(); setMyLocAsStart(); });
   on('rs-end-x',     'click', function(e) { e.stopPropagation(); clearRoute('end'); });
   on('rs-waypoint-x','click', function(e) { e.stopPropagation(); clearRoute('waypoint'); });
