@@ -1395,7 +1395,7 @@ html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {
 .rs-route-stack.has-waypoint3 {
   grid-template-rows: 46px 6px 46px 6px 46px 6px 46px 6px 46px;
 }
-.rs-start-box, .rs-waypoint-box, .rs-end-box {
+.rs-start-box, .rs-waypoint-box, .rs-waypoints-summary-box, .rs-end-box {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1411,6 +1411,14 @@ html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {
 .rs-waypoint-box { grid-column: 1; grid-row: 3; background: #fff8e9; border-color: #f39c12; }
 .rs-waypoint2-box { grid-column: 1; grid-row: 5; background: #fff4df; border-color: #d97706; }
 .rs-waypoint3-box { grid-column: 1; grid-row: 7; background: #fff1dc; border-color: #b45309; }
+.rs-waypoints-summary-box { grid-column: 1; grid-row: 3; background: #fff7ea; border-color: #d97706; cursor: default; }
+.rs-waypoints-summary-dot { background: #d97706; }
+.rs-route-stack.has-waypoint-summary { grid-template-rows: 46px 6px 46px 6px 46px; }
+.rs-route-stack.has-waypoint-summary .rs-end-box { grid-row: 5 !important; }
+.rs-route-stack.has-waypoint-summary #rs-start-waypoint-tools,
+.rs-route-stack.has-waypoint-summary .rs-waypoint-end-tools,
+.rs-route-stack.has-waypoint-summary .rs-waypoint2-end-tools,
+.rs-route-stack.has-waypoint-summary .rs-waypoint3-end-tools { display: none !important; }
 .rs-end-box   { grid-column: 1; grid-row: 3; background: #fff5f5; border-color: #c0392b; }
 .rs-route-stack.has-waypoint .rs-end-box { grid-row: 5; }
 .rs-route-stack.has-waypoint2 .rs-end-box { grid-row: 7; }

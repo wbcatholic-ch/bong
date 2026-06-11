@@ -1444,7 +1444,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-18';
+    frame.src='diocese.html?v=V6-19';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -1825,7 +1825,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-18';
+const _PARISH_ASSET_VERSION='V6-19';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -1988,7 +1988,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-18';
+const _PRAYER_ASSET_VERSION='V6-19';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -2049,7 +2049,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-18';
+const _RETREAT_ASSET_VERSION='V6-19';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2344,7 +2344,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-18';
+const _SHRINE_ASSET_VERSION='V6-19';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -5393,17 +5393,22 @@ function _setRouteWaypoint3Enabled(enabled){
 function _syncRouteWaypointBoxes(){
   const stack=$('rs-top') ? $('rs-top').querySelector('.rs-route-stack') : document.querySelector('.rs-route-stack');
   const sheet=$('sheet-route');
+  const routeWaypoints=(typeof _getRouteWaypoints==='function') ? _getRouteWaypoints() : [];
   const w1Visible=!!(_routeWaypointEnabled || (_rW&&_rW.lat&&_rW.lng));
   const w2Visible=!!(_routeWaypoint2Enabled || (_rW2&&_rW2.lat&&_rW2.lng));
   const w3Visible=!!(_routeWaypoint3Enabled || (_rW3&&_rW3.lat&&_rW3.lng));
   const resultShowing=!!(_polyline || ($('rs-result') && $('rs-result').style.display !== 'none'));
-  const shouldScrollForMultiWaypoint=!!(w2Visible || w3Visible || (_getRouteWaypoints && _getRouteWaypoints().length >= 2));
+  const summaryVisible=!!(resultShowing && routeWaypoints.length);
+  const shouldScrollForMultiWaypoint=!!(!summaryVisible && (w2Visible || w3Visible || routeWaypoints.length >= 2));
+  const summaryBox=$('rs-waypoints-summary-box');
+  const summaryLbl=$('rs-waypoints-summary-lbl');
   const box1=$('rs-waypoint-box');
   const box2=$('rs-waypoint2-box');
   const box3=$('rs-waypoint3-box');
   const add1=$('rs-add-waypoint-btn');
   const add2=$('rs-add-waypoint2-btn');
   const add3=$('rs-add-waypoint3-btn');
+  const tools0=$('rs-start-waypoint-tools');
   const tools1=$('rs-waypoint-end-tools');
   const tools2=$('rs-waypoint2-end-tools');
   const tools3=$('rs-waypoint3-end-tools');
@@ -5411,27 +5416,42 @@ function _syncRouteWaypointBoxes(){
   const wx2=$('rs-waypoint2-x');
   const wx3=$('rs-waypoint3-x');
   if(stack){
-    stack.classList.toggle('has-waypoint', w1Visible);
-    stack.classList.toggle('has-waypoint2', w2Visible);
-    stack.classList.toggle('has-waypoint3', w3Visible);
+    stack.classList.toggle('has-waypoint', !summaryVisible && w1Visible);
+    stack.classList.toggle('has-waypoint2', !summaryVisible && w2Visible);
+    stack.classList.toggle('has-waypoint3', !summaryVisible && w3Visible);
+    stack.classList.toggle('has-waypoint-summary', summaryVisible);
     stack.classList.toggle('route-result-showing', resultShowing);
   }
   if(sheet){
     sheet.classList.toggle('route-waypoint-scroll', shouldScrollForMultiWaypoint);
     sheet.classList.toggle('route-result-showing', resultShowing);
   }
-  if(box1) box1.style.display=w1Visible?'flex':'none';
-  if(box2) box2.style.display=w2Visible?'flex':'none';
-  if(box3) box3.style.display=w3Visible?'flex':'none';
-  if(add1) add1.style.display=w1Visible?'none':'inline-flex';
-  if(add2) add2.style.display=(w1Visible && !w2Visible)?'inline-flex':'none';
-  if(add3) add3.style.display=(w2Visible && !w3Visible)?'inline-flex':'none';
-  if(tools1) tools1.style.display=w1Visible?'flex':'none';
-  if(tools2) tools2.style.display=w2Visible?'flex':'none';
-  if(tools3) tools3.style.display=w3Visible?'flex':'none';
-  if(wx1) wx1.style.display=w1Visible?'inline-flex':'none';
-  if(wx2) wx2.style.display=w2Visible?'inline-flex':'none';
-  if(wx3) wx3.style.display=w3Visible?'inline-flex':'none';
+  if(summaryBox){
+    summaryBox.style.display=summaryVisible?'flex':'none';
+    if(summaryVisible){
+      const summaryText='경유지 '+routeWaypoints.length+'곳 · '+routeWaypoints.map(function(p,idx){
+        return (idx+1)+'. '+((p&&p.name)||('경유지'+(idx+1)));
+      }).join(' → ');
+      if(summaryLbl) summaryLbl.textContent=summaryText;
+      summaryBox.setAttribute('title', summaryText);
+    }else{
+      if(summaryLbl) summaryLbl.textContent='경유지 없음';
+      summaryBox.removeAttribute('title');
+    }
+  }
+  if(box1) box1.style.display=(!summaryVisible && w1Visible)?'flex':'none';
+  if(box2) box2.style.display=(!summaryVisible && w2Visible)?'flex':'none';
+  if(box3) box3.style.display=(!summaryVisible && w3Visible)?'flex':'none';
+  if(add1) add1.style.display=(!summaryVisible && !w1Visible)?'inline-flex':'none';
+  if(add2) add2.style.display=(!summaryVisible && w1Visible && !w2Visible)?'inline-flex':'none';
+  if(add3) add3.style.display=(!summaryVisible && w2Visible && !w3Visible)?'inline-flex':'none';
+  if(tools0) tools0.style.display=summaryVisible?'none':'block';
+  if(tools1) tools1.style.display=(!summaryVisible && w1Visible)?'flex':'none';
+  if(tools2) tools2.style.display=(!summaryVisible && w2Visible)?'flex':'none';
+  if(tools3) tools3.style.display=(!summaryVisible && w3Visible)?'flex':'none';
+  if(wx1) wx1.style.display=(!summaryVisible && w1Visible)?'inline-flex':'none';
+  if(wx2) wx2.style.display=(!summaryVisible && w2Visible)?'inline-flex':'none';
+  if(wx3) wx3.style.display=(!summaryVisible && w3Visible)?'inline-flex':'none';
 }
 function _ensureRouteWaypointBox(role){
   role = role || _nextAvailableWaypointRole() || 'waypoint';
@@ -5578,6 +5598,7 @@ function _clearRouteResultOnly(){
     const stack=$('rs-top') ? $('rs-top').querySelector('.rs-route-stack') : document.querySelector('.rs-route-stack'); if(stack) stack.classList.remove('route-result-showing');
     if(_polyline){ _polyline.setMap(null); _polyline=null; }
     _showJukrimgulParkingMkr(false);
+    _syncRouteWaypointBox();
     _restoreRouteSelectionMarkersAfterReset();
   }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
