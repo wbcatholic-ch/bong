@@ -1444,7 +1444,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-13';
+    frame.src='diocese.html?v=V6-14';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -1825,7 +1825,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-13';
+const _PARISH_ASSET_VERSION='V6-14';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -1988,7 +1988,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-13';
+const _PRAYER_ASSET_VERSION='V6-14';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -2049,7 +2049,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-13';
+const _RETREAT_ASSET_VERSION='V6-14';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2344,7 +2344,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-13';
+const _SHRINE_ASSET_VERSION='V6-14';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -3804,12 +3804,12 @@ function openKakaoNav(){
   const navItem = isJuk ? {...item, lat:JUKRIMGUL_PARKING.lat, lng:JUKRIMGUL_PARKING.lng, kw:JUKRIMGUL_PARKING.kw, name:JUKRIMGUL_PARKING.name} : item;
   const ep=_EC(navItem.kw||navItem.name);
   function launch(spLat,spLng,spName){
-  const startName=spName||'현위치';
-  const w=spLat?`https://map.kakao.com/link/from/${_EC(startName)},${spLat},${spLng}/to/${ep},${navItem.lat},${navItem.lng}`:
-         `https://map.kakao.com/link/to/${ep},${navItem.lat},${navItem.lng}`;
-  const a=spLat?`kakaomap://route?sp=${spLat},${spLng}&ep=${navItem.lat},${navItem.lng}&by=CAR`:
-         `kakaomap://route?ep=${navItem.lat},${navItem.lng}&by=CAR`;
-  _kakaoLaunch(w,a);
+    const startName=spName||'현위치';
+    const w=spLat?`https://map.kakao.com/link/from/${_EC(startName)},${spLat},${spLng}/to/${ep},${navItem.lat},${navItem.lng}`:
+           `https://map.kakao.com/link/to/${ep},${navItem.lat},${navItem.lng}`;
+    const a=spLat?`kakaomap://route?sp=${spLat},${spLng}&ep=${navItem.lat},${navItem.lng}&by=CAR`:
+           `kakaomap://route?ep=${navItem.lat},${navItem.lng}&by=CAR`;
+    _kakaoLaunch(w,a);
   }
   if((_curFromRegion || _isRegionSearchActiveForItem(item)) && _regionLat && _regionLng){
     const placeName=_regionPlaceName||_regionName||'검색지';
@@ -3818,8 +3818,8 @@ function openKakaoNav(){
   }
   else if(_myLat) launch(_myLat,_myLng,'현위치');
   else if(_GEO){
-  _GEO.getCurrentPosition(p=>launch(p.coords.latitude,p.coords.longitude),
-   ()=>launch(null,null),{enableHighAccuracy:true,timeout:8000,maximumAge:60000});
+    _GEO.getCurrentPosition(p=>launch(p.coords.latitude,p.coords.longitude),
+     ()=>launch(null,null),{enableHighAccuracy:true,timeout:8000,maximumAge:60000});
   } else launch(null,null);
 }
 
@@ -5687,17 +5687,45 @@ function _kakaoLaunch(w,a){
   setTimeout(()=>{if(document.body.contains(f))document.body.removeChild(f);},2000);
  } else { if(typeof oaiSmoothNavigate==='function') oaiSmoothNavigate(w,'kakao-route'); else location.href=w; }
 }
+function _routeLinkPointName(point, fallback){
+  return _EC((point && (point.kw || point.name)) || fallback || '장소');
+}
+function _getRouteWaypoints(){
+  const list=[];
+  if(_rW && _rW.lat && _rW.lng) list.push(_rW);
+  return list;
+}
+function _buildKakaoRouteWebLink(start, waypoints, end){
+  const points=[start].concat(waypoints || [], [end]).filter(p=>p&&p.lat&&p.lng);
+  if(points.length<2) return '';
+  if(points.length>2){
+    return 'https://map.kakao.com/link/by/car/' + points.map(function(p,i){
+      return `${_routeLinkPointName(p, i===0?'출발지':(i===points.length-1?'도착지':'경유지'))},${p.lat},${p.lng}`;
+    }).join('/');
+  }
+  const sp=_routeLinkPointName(start,'출발지');
+  const ep=_routeLinkPointName(end,'도착지');
+  return `https://map.kakao.com/link/from/${sp},${start.lat},${start.lng}/to/${ep},${end.lat},${end.lng}`;
+}
+function _launchKakaoRouteWebOnly(w){
+  try{ markExternalReturnStabilize('kakao-route'); }catch(e){ console.warn('[가톨릭길동무]', e); }
+  if(typeof oaiSmoothNavigate==='function') oaiSmoothNavigate(w,'kakao-route');
+  else location.href=w;
+}
 function doKakaoRoute(){
   if(!_rS||!_rE) return;
   const isJuk = _rE.idx === JUKRIMGUL_IDX && JUKRIMGUL_IDX >= 0;
   const finalDest = isJuk ? JUKRIMGUL_PARKING : _rE;
-  const dest = (_rW&&_rW.lat&&_rW.lng) ? _rW : finalDest;
-  if(dest===_rW){
-    alert('경유지 포함 경로는 앱 안에서 전체 거리를 확인하고, 카카오내비는 먼저 출발지→경유지 구간을 엽니다. 경유지 도착 후 목적지까지 다시 실행해 주세요.');
+  const waypoints = _getRouteWaypoints();
+  const w=_buildKakaoRouteWebLink(_rS, waypoints, finalDest);
+  if(!w) return;
+
+  if(waypoints.length){
+    _launchKakaoRouteWebOnly(w);
+    return;
   }
-  const sp=_EC(_rS.name),ep=_EC(dest.name||dest.kw);
-  const w=`https://map.kakao.com/link/from/${sp},${_rS.lat},${_rS.lng}/to/${ep},${dest.lat},${dest.lng}`;
-  const a=`kakaomap://route?sp=${_rS.lat},${_rS.lng}&ep=${dest.lat},${dest.lng}&by=CAR`;
+
+  const a=`kakaomap://route?sp=${_rS.lat},${_rS.lng}&ep=${finalDest.lat},${finalDest.lng}&by=CAR`;
   _kakaoLaunch(w,a);
 }
 
