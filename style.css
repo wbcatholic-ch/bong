@@ -1355,9 +1355,9 @@ html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {
 
 .rs-route-stack {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 46px;
+  grid-template-columns: minmax(0, 1fr) 56px;
   grid-template-rows: 46px 6px 46px;
-  column-gap: 10px;
+  column-gap: 2px;
   row-gap: 0;
   width: 100%;
   align-items: stretch;
@@ -1389,7 +1389,7 @@ html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {
 .rs-x { width:30px; height:30px; border-radius:0; background: none; border: none; box-shadow:none; color: #999; font-size: 24px; font-weight:900; line-height:1; cursor: pointer; padding: 0; display:flex; align-items:center; justify-content:center; }
 .rs-between-tools {
   display: block;
-  width: 46px;
+  width: 56px;
   min-height: 0;
   height: 100%;
   padding: 0;
@@ -1402,12 +1402,12 @@ html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {
 .rs-route-stack.has-waypoint #rs-start-waypoint-tools { grid-row: 1 / 4; }
 .rs-waypoint-end-tools { grid-column: 2; grid-row: 3 / 6; align-self: stretch; }
 .rs-swap-btn {
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   border: 1.5px solid var(--border);
   background: var(--v4-surface-white);
-  font-size: 17px;
+  font-size: 16px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1423,17 +1423,17 @@ html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {
 }
 .rs-swap-btn:active { opacity:.82; transform: translate(-50%, -50%) translateY(1px); }
 .rs-add-waypoint-btn {
-  width: 46px;
-  min-width: 46px;
-  height: 22px;
-  border-radius: 6px;
+  width: 56px;
+  min-width: 56px;
+  height: 26px;
+  border-radius: 7px;
   border: 1px solid var(--border);
   background: var(--v4-surface-white);
   color: #475569;
-  font-size: 9.5px;
+  font-size: 10.5px;
   font-weight: 800;
   font-family: inherit;
-  letter-spacing: -0.08em;
+  letter-spacing: -0.04em;
   cursor: pointer;
   padding: 0;
   white-space: nowrap;
@@ -1444,7 +1444,7 @@ html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {
   text-align: center;
   position: absolute;
   left: 50%;
-  top: calc(50% + 22px);
+  top: calc(50% + 23px);
   transform: translateX(-50%);
   z-index: 6;
 }
@@ -1479,7 +1479,7 @@ html.retreat-mode .ric-hd { background: linear-gradient(135deg, var(--v4-retreat
 #exit-dlg { display: none; position: fixed; inset: 0; z-index: 99999; background: rgba(14,21,53,.82); backdrop-filter: blur(4px); align-items: center; justify-content: center; }
 #exit-dlg.open { display: flex; }
 .exit-box { background: var(--v4-surface-white); border-radius: 16px; padding: 28px 24px 20px; width: min(320px,88vw); text-align: center; box-shadow: 0 12px 40px rgba(0,0,0,.3); }
-.exit-box h3 { font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+.exit-box h3 { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
 .exit-box p { font-size: 13px; color: #666; line-height: 1.6; margin-bottom: 22px; }
 .exit-btns { display: flex; gap: 10px; }
 .exit-cancel { flex: 1; padding: 12px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--v4-surface-white); font-size: 15px; font-weight: 600; color: var(--ink); cursor: pointer; font-family: inherit; }
@@ -2716,7 +2716,7 @@ html.ios-device #app .li-sub { line-height: 1.26; }
 html.ios-device #app .nearby-meta, html.ios-device #app .li-badge { margin-top: 0; align-self: center; }
 html.ios-device #app .region-info-card { margin: 5px 10px 6px; border-radius: 9px; }
 html.ios-device #app .ric-hd { padding: 12px 14px; gap: 9px; }
-html.ios-device #app .ric-icon { width: 33px; height: 33px; font-size: 17px; }
+html.ios-device #app .ric-icon { width: 33px; height: 33px; font-size: 16px; }
 html.ios-device #app .ric-body { padding: 6px 12px 8px; }
 
 html.ios-device .trail-card { border-radius: 18px; }

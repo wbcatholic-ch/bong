@@ -1444,7 +1444,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-12';
+    frame.src='diocese.html?v=V6-13';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -1825,7 +1825,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-12';
+const _PARISH_ASSET_VERSION='V6-13';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -1988,7 +1988,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-12';
+const _PRAYER_ASSET_VERSION='V6-13';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -2049,7 +2049,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-12';
+const _RETREAT_ASSET_VERSION='V6-13';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2344,7 +2344,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-12';
+const _SHRINE_ASSET_VERSION='V6-13';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -5274,7 +5274,8 @@ function _setRouteLabel(role,name){
   const emptyText = role==='start' ? '출발지를 선택하세요' : (role==='waypoint' ? '경유지를 선택하세요' : '도착지를 선택하세요');
   el.textContent = rawName || emptyText;
   el.className='rs-lbl'+(rawName?' filled':' empty');
-  if(role==='end' && $('rs-end-x')) $('rs-end-x').style.display=name?'inline':'none';
+  if(role==='start' && $('rs-start-x')) $('rs-start-x').style.display=name?'inline-flex':'none';
+  if(role==='end' && $('rs-end-x')) $('rs-end-x').style.display=name?'inline-flex':'none';
   if(role==='waypoint' && $('rs-waypoint-x')) $('rs-waypoint-x').style.display=_routeWaypointEnabled?'inline-flex':'none';
   if(role==='waypoint') _setRouteWaypointEnabled(!!(_routeWaypointEnabled || rawName));
   _updateSearchBtn();
@@ -6388,6 +6389,7 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
   on('rs-waypoint-box', 'click', function() { openSearchModal('waypoint'); });
   on('rs-add-waypoint-btn', 'click', function(e) { e.stopPropagation(); _beginWaypointAddMode(); });
   on('rs-myloc-btn', 'click', function(e) { e.stopPropagation(); setMyLocAsStart(); });
+  on('rs-start-x',   'click', function(e) { e.stopPropagation(); clearRoute('start'); });
   on('rs-end-x',     'click', function(e) { e.stopPropagation(); clearRoute('end'); });
   on('rs-waypoint-x','click', function(e) { e.stopPropagation(); clearRoute('waypoint'); });
   on('rs-swap-btn',  'click', function() { swapRoute(); });
