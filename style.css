@@ -596,6 +596,22 @@ html.retreat-mode #tab-list-lbl {
   overflow-y: auto;
   position: fixed;
 }
+#sheet-route.route-waypoint-scroll {
+  max-height: min(42vh, 330px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+#sheet-route.route-waypoint-scroll #rs-top,
+#sheet-route.route-waypoint-scroll #rs-bottom {
+  flex-shrink: 0;
+}
+#sheet-route.route-waypoint-scroll .rs-route-stack {
+  min-height: max-content;
+}
+html.ios-device #app #sheet-route.route-waypoint-scroll {
+  max-height: min(40vh, 310px);
+}
 .route-sheet-x {
   position: absolute;
   top: 10px;
