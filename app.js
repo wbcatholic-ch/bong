@@ -1444,7 +1444,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-5';
+    frame.src='diocese.html?v=V6-6';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -1825,7 +1825,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-5';
+const _PARISH_ASSET_VERSION='V6-6';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -1988,7 +1988,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-5';
+const _PRAYER_ASSET_VERSION='V6-6';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -2049,7 +2049,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-5';
+const _RETREAT_ASSET_VERSION='V6-6';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2344,7 +2344,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-5';
+const _SHRINE_ASSET_VERSION='V6-6';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -3679,12 +3679,10 @@ function _prepareRouteChoiceSetUI(){
   const desc=dlg.querySelector('.route-choice-desc');
   const start=$('route-choice-start');
   const end=$('route-choice-end');
-  const waypoint=$('route-choice-waypoint');
   const cancel=$('route-choice-cancel');
   if(desc) desc.textContent='이 장소를 길찾기에 어떻게 사용할까요?';
   if(start){ start.className='route-choice-btn start'; start.textContent='출발지로 설정'; start.style.display=''; }
   if(end){ end.className='route-choice-btn end'; end.textContent='도착지로 설정'; end.style.display=''; }
-  if(waypoint){ waypoint.className='route-choice-btn waypoint'; waypoint.textContent='경유지로 설정'; waypoint.style.display=''; }
   if(cancel){ cancel.className='route-choice-btn cancel'; cancel.textContent='취소'; cancel.style.display=''; }
 }
 function _prepareRouteCancelUI(role){
@@ -3696,13 +3694,11 @@ function _prepareRouteCancelUI(role){
   const desc=dlg.querySelector('.route-choice-desc');
   const start=$('route-choice-start');
   const end=$('route-choice-end');
-  const waypoint=$('route-choice-waypoint');
   const cancel=$('route-choice-cancel');
   if(title) title.textContent=role==='start'?'출발지를 취소하시겠습니까?':(role==='waypoint'?'경유지를 취소하시겠습니까?':'도착지를 취소하시겠습니까?');
   if(desc) desc.textContent='선택을 유지하거나 해당 지점만 취소할 수 있습니다.';
   if(start){ start.className='route-choice-btn keep'; start.textContent='유지'; start.style.display=''; }
   if(end){ end.className='route-choice-btn danger'; end.textContent=role==='start'?'출발지 취소':(role==='waypoint'?'경유지 취소':'도착지 취소'); end.style.display=''; }
-  if(waypoint) waypoint.style.display='none';
   if(cancel) cancel.style.display='none';
 }
 function _openRoutePointCancelChoice(role){
@@ -3719,10 +3715,6 @@ function _handleRouteChoiceStart(){
 function _handleRouteChoiceEnd(){
   if(_routeChoiceMode==='cancel'){ const role=_routeCancelRole; _closeInfoRouteChoice(); if(role) clearRoute(role); return; }
   _setInfoRouteEnd();
-}
-function _handleRouteChoiceWaypoint(){
-  if(_routeChoiceMode==='cancel'){ _closeInfoRouteChoice(); return; }
-  _setInfoRouteWaypoint();
 }
 function _openInfoRouteChoice(){
   if(!_curInfoItem) return;
@@ -3761,14 +3753,6 @@ function _runInfoRouteToEndWithStart(startObj,item,idx){
   _setRouteLabel('start', startObj.name==='현재 위치' ? '현위치' : (startObj.name||'출발지'));
   _setRoutePointFromItem('end',item,idx);
   setTimeout(function(){ try{ _calcRoute(); }catch(e){ console.warn('[가톨릭길동무]', e); } }, OAI_ROUTE_VISUAL_DELAY_MS);
-}
-function _setInfoRouteWaypoint(){
-  if(!_curInfoItem) return;
-  const item=_curInfoItem.item, idx=_curInfoItem.idx;
-  _closeInfoRouteChoice();
-  closeInfoCard({keepMap:true});
-  openTab('route');
-  _setRoutePointFromItem('waypoint',item,idx);
 }
 function _setInfoRouteEnd(){
   if(!_curInfoItem) return;
@@ -6419,7 +6403,6 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
   on('sm-map-select-btn', 'click', function() { selectMapFromSearchModal(); });
   on('route-choice-start', 'click', function() { _handleRouteChoiceStart(); });
   on('route-choice-end', 'click', function() { _handleRouteChoiceEnd(); });
-  on('route-choice-waypoint', 'click', function() { _handleRouteChoiceWaypoint(); });
   on('route-choice-cancel', 'click', function() { _closeInfoRouteChoice(); });
   on('route-choice-backdrop', 'click', function() { _closeInfoRouteChoice(); });
   on('sm-inp', 'input', function() { onSmInp(this.value); });
