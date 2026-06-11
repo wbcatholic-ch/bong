@@ -1444,7 +1444,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-6';
+    frame.src='diocese.html?v=V6-7';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -1825,7 +1825,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-6';
+const _PARISH_ASSET_VERSION='V6-7';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -1988,7 +1988,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-6';
+const _PRAYER_ASSET_VERSION='V6-7';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -2049,7 +2049,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-6';
+const _RETREAT_ASSET_VERSION='V6-7';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2344,7 +2344,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-6';
+const _SHRINE_ASSET_VERSION='V6-7';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -5240,10 +5240,12 @@ function setMyLocAsStart(){
 
 function _setRouteWaypointEnabled(enabled){
   _routeWaypointEnabled=!!enabled;
+  const stack=$('rs-top') ? $('rs-top').querySelector('.rs-route-stack') : document.querySelector('.rs-route-stack');
   const box=$('rs-waypoint-box');
   const add=$('rs-add-waypoint-btn');
   const after=$('rs-waypoint-end-tools');
   const wx=$('rs-waypoint-x');
+  if(stack) stack.classList.toggle('has-waypoint', _routeWaypointEnabled);
   if(box) box.style.display=_routeWaypointEnabled?'flex':'none';
   if(add) add.style.display=_routeWaypointEnabled?'none':'inline-flex';
   if(after) after.style.display=_routeWaypointEnabled?'flex':'none';
