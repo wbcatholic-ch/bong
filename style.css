@@ -1355,15 +1355,15 @@ html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {
 
 .rs-route-stack {
   display:grid;
-  grid-template-columns:minmax(0, 1fr) 62px;
-  grid-template-rows:46px 52px 46px;
-  column-gap:6px;
+  grid-template-columns:minmax(0, 1fr) 54px;
+  grid-template-rows:46px 42px 46px;
+  column-gap:4px;
   row-gap:0;
   width:100%;
   align-items:center;
 }
 .rs-route-stack.has-waypoint {
-  grid-template-rows:46px 52px 46px 52px 46px;
+  grid-template-rows:46px 42px 46px 42px 46px;
 }
 .rs-start-box, .rs-waypoint-box, .rs-end-box {
   display: flex;
@@ -1393,49 +1393,50 @@ html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {
   align-items:flex-start;
   justify-content:flex-start;
   justify-self:end;
-  align-self:start;
-  gap:3px;
+  align-self:center;
+  gap:2px;
   margin:0;
-  padding-top:5px;
-  width:58px;
-  min-height:52px;
+  padding-top:0;
+  width:52px;
+  min-height:42px;
+  transform:translateX(8px);
 }
 #rs-start-waypoint-tools { grid-column:2; grid-row:2; }
 .rs-route-stack.has-waypoint #rs-start-waypoint-tools { grid-row:2; }
-.rs-waypoint-end-tools { grid-column:2; grid-row:4; min-height:52px; }
+.rs-waypoint-end-tools { grid-column:2; grid-row:4; min-height:42px; }
 .rs-swap-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 1.4px solid #d9dee8;
+  width: 28px;
+  height: 26px;
+  border-radius: 13px;
+  border: 1.2px solid #d7dde6;
   background: #fff;
-  font-size: 18px;
+  font-size: 15px;
   font-weight:800;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 1px 4px rgba(14,21,53,.10);
+  box-shadow: 0 1px 3px rgba(14,21,53,.07);
   flex-shrink:0;
-  color:#687385;
+  color:#7b8492;
   line-height:1;
 }
 .rs-swap-btn:active { opacity:.82; transform:translateY(1px); }
 .rs-add-waypoint-btn {
-  width: 58px;
-  height: 23px;
+  width: 52px;
+  height: 18px;
   border-radius: 6px;
-  border: 1.3px solid #d9dee8;
-  background:#f8fafc;
-  color:#4b5563;
-  font-size:11px;
+  border: 1.2px solid #dcc7a6;
+  background:#fff8e9;
+  color:#8a5a12;
+  font-size:10px;
   font-weight:800;
   font-family:inherit;
-  letter-spacing:-.06em;
+  letter-spacing:-.07em;
   cursor:pointer;
   padding:0;
   white-space:nowrap;
-  box-shadow:0 1px 3px rgba(14,21,53,.08);
+  box-shadow:0 1px 2px rgba(14,21,53,.06);
   display:flex;
   align-items:center;
   justify-content:center;
