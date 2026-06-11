@@ -616,7 +616,9 @@ html.ios-device #app #sheet-route.route-waypoint-scroll {
   position: absolute;
   top: 10px;
   right: 12px;
-  z-index: 3;
+  z-index: 50;
+  pointer-events: auto;
+  touch-action: manipulation;
   width: var(--v4-close-size-sm);
   height: var(--v4-close-size-sm);
   border-radius: 0;
@@ -1257,6 +1259,10 @@ html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {
 .ic-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 16px 8px; }
 .ic-name { font-size: 16px; font-weight: 700; color: var(--ink); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ic-close-btn {
+  position: relative;
+  z-index: 60;
+  pointer-events: auto;
+  touch-action: manipulation;
   background: transparent;
   border: var(--v4-close-border);
   border-radius: var(--v4-radius-pill);
@@ -1386,6 +1392,9 @@ html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {
 .rs-route-stack.has-waypoint2 {
   grid-template-rows: 46px 6px 46px 6px 46px 6px 46px;
 }
+.rs-route-stack.has-waypoint3 {
+  grid-template-rows: 46px 6px 46px 6px 46px 6px 46px 6px 46px;
+}
 .rs-start-box, .rs-waypoint-box, .rs-end-box {
   display: flex;
   align-items: center;
@@ -1401,9 +1410,11 @@ html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {
 .rs-start-box { grid-column: 1; grid-row: 1; background: #f0f5ff; border-color: #1565c0; }
 .rs-waypoint-box { grid-column: 1; grid-row: 3; background: #fff8e9; border-color: #f39c12; }
 .rs-waypoint2-box { grid-column: 1; grid-row: 5; background: #fff4df; border-color: #d97706; }
+.rs-waypoint3-box { grid-column: 1; grid-row: 7; background: #fff1dc; border-color: #b45309; }
 .rs-end-box   { grid-column: 1; grid-row: 3; background: #fff5f5; border-color: #c0392b; }
 .rs-route-stack.has-waypoint .rs-end-box { grid-row: 5; }
 .rs-route-stack.has-waypoint2 .rs-end-box { grid-row: 7; }
+.rs-route-stack.has-waypoint3 .rs-end-box { grid-row: 9; }
 .rs-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 .rs-lbl { flex: 1; font-size: 14px; color: #555; font-weight: 500; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rs-lbl.filled { color: var(--ink); font-weight: 700; }
@@ -1426,8 +1437,11 @@ html.retreat-mode #srch-modal #sm-tab-bar .sm-tab.active {
 .rs-route-stack.has-waypoint #rs-start-waypoint-tools { grid-row: 1 / 4; }
 .rs-waypoint-end-tools { grid-column: 2; grid-row: 3 / 6; align-self: stretch; }
 .rs-waypoint2-end-tools { grid-column: 2; grid-row: 5 / 8; align-self: stretch; }
+.rs-waypoint3-end-tools { grid-column: 2; grid-row: 7 / 10; align-self: stretch; }
 .rs-route-stack.has-waypoint:not(.has-waypoint2) .rs-add-waypoint2-btn { display: flex; }
 .rs-route-stack.has-waypoint2 .rs-add-waypoint2-btn { display: none !important; }
+.rs-route-stack.has-waypoint2:not(.has-waypoint3) .rs-add-waypoint3-btn { display: flex; }
+.rs-route-stack.has-waypoint3 .rs-add-waypoint3-btn { display: none !important; }
 .rs-swap-btn {
   width: 36px;
   height: 36px;

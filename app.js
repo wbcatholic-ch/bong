@@ -1444,7 +1444,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-17';
+    frame.src='diocese.html?v=V6-18';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -1825,7 +1825,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-17';
+const _PARISH_ASSET_VERSION='V6-18';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -1988,7 +1988,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-17';
+const _PRAYER_ASSET_VERSION='V6-18';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -2049,7 +2049,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-17';
+const _RETREAT_ASSET_VERSION='V6-18';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2344,7 +2344,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-17';
+const _SHRINE_ASSET_VERSION='V6-18';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -2424,6 +2424,7 @@ const AppState = {
   endTmpMkr:        null,   // 도착지 임시 마커
   wayTmpMkr:        null,   // 경유지1 임시 마커
   way2TmpMkr:       null,   // 경유지2 임시 마커
+  way3TmpMkr:       null,   // 경유지3 임시 마커
   paSelMkr:         null,   // parish/retreat 선택 마커
   selIdx:           -1,     // 현재 선택된 shrine 마커 인덱스
   polyline:         null,   // 경로 폴리라인
@@ -2453,6 +2454,8 @@ const AppState = {
   routeWaypointEnabled: false, // 경유지1 박스 표시 여부
   rW2:              null,  // 경유지2 {lat, lng, name, idx}
   routeWaypoint2Enabled: false, // 경유지2 박스 표시 여부
+  rW3:              null,  // 경유지3 {lat, lng, name, idx}
+  routeWaypoint3Enabled: false, // 경유지3 박스 표시 여부
   rE:               null,  // 도착지
   routeRegionStart: null,  // 지역검색에서 길찾기 시작 시 출발지 보존
   routeStartMarkerExplicitCurrent: false, // 길찾기 탭의 '현위치' 버튼을 눌렀을 때만 출발지 임시 마커 표시
@@ -2494,6 +2497,7 @@ const AppState = {
     ['_endTmpMkr',        'endTmpMkr'],
     ['_wayTmpMkr',        'wayTmpMkr'],
     ['_way2TmpMkr',       'way2TmpMkr'],
+    ['_way3TmpMkr',       'way3TmpMkr'],
     ['_paSelMkr',         'paSelMkr'],
     ['_selIdx',           'selIdx'],
     ['_polyline',         'polyline'],
@@ -2517,6 +2521,8 @@ const AppState = {
     ['_routeWaypointEnabled','routeWaypointEnabled'],
     ['_rW2',              'rW2'],
     ['_routeWaypoint2Enabled','routeWaypoint2Enabled'],
+    ['_rW3',              'rW3'],
+    ['_routeWaypoint3Enabled','routeWaypoint3Enabled'],
     ['_rE',               'rE'],
     ['_routeRegionStart', 'routeRegionStart'],
     ['_routeStartMarkerExplicitCurrent', 'routeStartMarkerExplicitCurrent'],
@@ -3588,34 +3594,43 @@ function _restoreRouteMarkerVisual(role, routeItem){
 }
 
 function _isRouteWaypointRole(role){
-  return role==='waypoint' || role==='waypoint2';
+  return role==='waypoint' || role==='waypoint2' || role==='waypoint3';
 }
 function _routeWaypointIndex(role){
-  return role==='waypoint2' ? 2 : 1;
+  if(role==='waypoint3') return 3;
+  if(role==='waypoint2') return 2;
+  return 1;
 }
 function _routeWaypointColor(role){
-  return role==='waypoint2' ? '#d97706' : '#f39c12';
+  if(role==='waypoint3') return '#b45309';
+  if(role==='waypoint2') return '#d97706';
+  return '#f39c12';
 }
 function _routeRoleColor(role){
   if(role==='start') return '#E53935';
+  if(role==='waypoint3') return '#b45309';
   if(role==='waypoint2') return '#d97706';
   if(role==='waypoint') return '#f39c12';
   return '#2E7D32';
 }
 function _routeRoleShort(role){
   if(role==='start') return '출';
+  if(role==='waypoint3') return '경3';
   if(role==='waypoint2') return '경2';
   if(role==='waypoint') return '경1';
   return '도';
 }
 function _routeSearchTitle(role,noun){
   if(role==='start') return `🔵 출발 ${noun} 검색`;
+  if(role==='waypoint3') return `🟠 경유지3 ${noun} 검색`;
   if(role==='waypoint2') return `🟠 경유지2 ${noun} 검색`;
   if(role==='waypoint') return `🟠 경유지1 ${noun} 검색`;
   return `🔴 도착 ${noun} 검색`;
 }
 function _routeWaypointMarkerText(role){
-  return role==='waypoint2' ? '경2' : '경1';
+  if(role==='waypoint3') return '경3';
+  if(role==='waypoint2') return '경2';
+  return '경1';
 }
 function _routePointCancelTitle(role){
   if(role==='start') return '출발지를 취소하시겠습니까?';
@@ -3631,30 +3646,37 @@ function _getRoutePointByRole(role){
   if(role==='start') return _rS;
   if(role==='waypoint') return _rW;
   if(role==='waypoint2') return _rW2;
+  if(role==='waypoint3') return _rW3;
   return _rE;
 }
 function _setRoutePointByRole(role, obj){
   if(role==='start') _rS=obj;
   else if(role==='waypoint') _rW=obj;
   else if(role==='waypoint2') _rW2=obj;
+  else if(role==='waypoint3') _rW3=obj;
   else _rE=obj;
 }
 function _getRouteWaypointEnabledByRole(role){
-  return role==='waypoint2' ? _routeWaypoint2Enabled : _routeWaypointEnabled;
+  if(role==='waypoint3') return _routeWaypoint3Enabled;
+  if(role==='waypoint2') return _routeWaypoint2Enabled;
+  return _routeWaypointEnabled;
 }
 function _setRouteWaypointEnabledByRole(role, enabled){
-  if(role==='waypoint2') _setRouteWaypoint2Enabled(enabled);
+  if(role==='waypoint3') _setRouteWaypoint3Enabled(enabled);
+  else if(role==='waypoint2') _setRouteWaypoint2Enabled(enabled);
   else _setRouteWaypointEnabled(enabled);
 }
 function _nextAvailableWaypointRole(){
   if(!(_routeWaypointEnabled || (_rW&&_rW.lat&&_rW.lng))) return 'waypoint';
   if(!(_routeWaypoint2Enabled || (_rW2&&_rW2.lat&&_rW2.lng))) return 'waypoint2';
+  if(!(_routeWaypoint3Enabled || (_rW3&&_rW3.lat&&_rW3.lng))) return 'waypoint3';
   return null;
 }
 function _getRouteWaypoints(){
   const list=[];
   if(_rW && _rW.lat && _rW.lng) list.push(_rW);
   if(_rW2 && _rW2.lat && _rW2.lng) list.push(_rW2);
+  if(_rW3 && _rW3.lat && _rW3.lng) list.push(_rW3);
   return list;
 }
 function _routeWaypointsReadyCount(){ return _getRouteWaypoints().length; }
@@ -3672,6 +3694,10 @@ function _refreshExistingRoutePointMarkerImages(){
     if(_rW2 && _rW2.idx>=0 && _markers[_rW2.idx]){
       _markers[_rW2.idx].marker.setImage(_mkrImgRoute(_routeWaypointColor('waypoint2'),_routeWaypointMarkerText('waypoint2')));
       _setRouteMarkerZ(_rW2.idx,'waypoint2');
+    }
+    if(_rW3 && _rW3.idx>=0 && _markers[_rW3.idx]){
+      _markers[_rW3.idx].marker.setImage(_mkrImgRoute(_routeWaypointColor('waypoint3'),_routeWaypointMarkerText('waypoint3')));
+      _setRouteMarkerZ(_rW3.idx,'waypoint3');
     }
     if(_rE && _rE.idx>=0 && _markers[_rE.idx]){
       const s=_markers[_rE.idx].shrine;
@@ -3934,6 +3960,7 @@ function _routeMarkerZ(role){
   if(role==='start') return 340;
   if(role==='waypoint') return 336;
   if(role==='waypoint2') return 335;
+  if(role==='waypoint3') return 334;
   return 330;
 }
 function _setRouteMarkerZ(idx, role){
@@ -3954,6 +3981,7 @@ function _clearRouteTmpMarkers(){
   if(_endTmpMkr){ _endTmpMkr.setMap(null); _endTmpMkr=null; }
   if(_wayTmpMkr){ _wayTmpMkr.setMap(null); _wayTmpMkr=null; }
   if(_way2TmpMkr){ _way2TmpMkr.setMap(null); _way2TmpMkr=null; }
+  if(_way3TmpMkr){ _way3TmpMkr.setMap(null); _way3TmpMkr=null; }
 }
 function _routeEndMarkerColor(){
   if(_mode==='shrine' && _rE && _rE.idx>=0 && _markers[_rE.idx] && _markers[_rE.idx].shrine){
@@ -3974,6 +4002,7 @@ function _refreshRouteTmpMarkers(){
   const needStart = !!(_rS && !_rS.isRegionStart && (routeResultShowing || _shouldShowRouteStartMarker()));
   const needWaypoint = !!(_rW && (_mode!=='shrine' || _rW.idx<0 || !_markers[_rW.idx] || routeResultShowing));
   const needWaypoint2 = !!(_rW2 && (_mode!=='shrine' || _rW2.idx<0 || !_markers[_rW2.idx] || routeResultShowing));
+  const needWaypoint3 = !!(_rW3 && (_mode!=='shrine' || _rW3.idx<0 || !_markers[_rW3.idx] || routeResultShowing));
   const needEnd = !!(_rE && (_mode!=='shrine' || _rE.idx<0 || !_markers[_rE.idx]));
   if(needStart){
     _startTmpMkr = new _MM({
@@ -4001,6 +4030,15 @@ function _refreshRouteTmpMarkers(){
     });
     kakao.maps.event.addListener(_way2TmpMkr,'click',function(){ _openRoutePointCancelChoice('waypoint2'); });
     _way2TmpMkr.setMap(_map);
+  }
+  if(needWaypoint3){
+    _way3TmpMkr = new _MM({
+      position:new _LL(_rW3.lat,_rW3.lng),
+      image:_mkrImgRoute(_routeWaypointColor('waypoint3'),_routeWaypointMarkerText('waypoint3')),
+      zIndex:_routeMarkerZ('waypoint3')
+    });
+    kakao.maps.event.addListener(_way3TmpMkr,'click',function(){ _openRoutePointCancelChoice('waypoint3'); });
+    _way3TmpMkr.setMap(_map);
   }
   if(needEnd){
     _endTmpMkr = new _MM({
@@ -5348,24 +5386,34 @@ function _setRouteWaypoint2Enabled(enabled){
   _routeWaypoint2Enabled=!!enabled;
   _syncRouteWaypointBoxes();
 }
+function _setRouteWaypoint3Enabled(enabled){
+  _routeWaypoint3Enabled=!!enabled;
+  _syncRouteWaypointBoxes();
+}
 function _syncRouteWaypointBoxes(){
   const stack=$('rs-top') ? $('rs-top').querySelector('.rs-route-stack') : document.querySelector('.rs-route-stack');
   const sheet=$('sheet-route');
   const w1Visible=!!(_routeWaypointEnabled || (_rW&&_rW.lat&&_rW.lng));
   const w2Visible=!!(_routeWaypoint2Enabled || (_rW2&&_rW2.lat&&_rW2.lng));
+  const w3Visible=!!(_routeWaypoint3Enabled || (_rW3&&_rW3.lat&&_rW3.lng));
   const resultShowing=!!(_polyline || ($('rs-result') && $('rs-result').style.display !== 'none'));
-  const shouldScrollForMultiWaypoint=!!(w2Visible || (_getRouteWaypoints && _getRouteWaypoints().length >= 2));
+  const shouldScrollForMultiWaypoint=!!(w2Visible || w3Visible || (_getRouteWaypoints && _getRouteWaypoints().length >= 2));
   const box1=$('rs-waypoint-box');
   const box2=$('rs-waypoint2-box');
+  const box3=$('rs-waypoint3-box');
   const add1=$('rs-add-waypoint-btn');
   const add2=$('rs-add-waypoint2-btn');
+  const add3=$('rs-add-waypoint3-btn');
   const tools1=$('rs-waypoint-end-tools');
   const tools2=$('rs-waypoint2-end-tools');
+  const tools3=$('rs-waypoint3-end-tools');
   const wx1=$('rs-waypoint-x');
   const wx2=$('rs-waypoint2-x');
+  const wx3=$('rs-waypoint3-x');
   if(stack){
     stack.classList.toggle('has-waypoint', w1Visible);
     stack.classList.toggle('has-waypoint2', w2Visible);
+    stack.classList.toggle('has-waypoint3', w3Visible);
     stack.classList.toggle('route-result-showing', resultShowing);
   }
   if(sheet){
@@ -5374,12 +5422,16 @@ function _syncRouteWaypointBoxes(){
   }
   if(box1) box1.style.display=w1Visible?'flex':'none';
   if(box2) box2.style.display=w2Visible?'flex':'none';
+  if(box3) box3.style.display=w3Visible?'flex':'none';
   if(add1) add1.style.display=w1Visible?'none':'inline-flex';
   if(add2) add2.style.display=(w1Visible && !w2Visible)?'inline-flex':'none';
+  if(add3) add3.style.display=(w2Visible && !w3Visible)?'inline-flex':'none';
   if(tools1) tools1.style.display=w1Visible?'flex':'none';
   if(tools2) tools2.style.display=w2Visible?'flex':'none';
+  if(tools3) tools3.style.display=w3Visible?'flex':'none';
   if(wx1) wx1.style.display=w1Visible?'inline-flex':'none';
   if(wx2) wx2.style.display=w2Visible?'inline-flex':'none';
+  if(wx3) wx3.style.display=w3Visible?'inline-flex':'none';
 }
 function _ensureRouteWaypointBox(role){
   role = role || _nextAvailableWaypointRole() || 'waypoint';
@@ -5390,7 +5442,7 @@ function _ensureRouteWaypointBox(role){
 }
 function _beginWaypointAddMode(role){
   role = role || _nextAvailableWaypointRole();
-  if(!role){ _showRouteGuideText('경유지는 현재 2곳까지 추가할 수 있습니다.'); return; }
+  if(!role){ _showRouteGuideText('경유지는 현재 3곳까지 추가할 수 있습니다.'); return; }
   _ensureRouteWaypointBox(role);
   if(_polyline) _clearRouteResultOnly();
   else _restoreRouteSelectionMarkersAfterReset();
@@ -5400,6 +5452,7 @@ function _beginWaypointAddMode(role){
 function _syncRouteWaypointBox(){
   _routeWaypointEnabled=!!(_routeWaypointEnabled || (_rW&&_rW.lat&&_rW.lng));
   _routeWaypoint2Enabled=!!(_routeWaypoint2Enabled || (_rW2&&_rW2.lat&&_rW2.lng));
+  _routeWaypoint3Enabled=!!(_routeWaypoint3Enabled || (_rW3&&_rW3.lat&&_rW3.lng));
   _syncRouteWaypointBoxes();
 }
 function _setRouteLabel(role,name){
@@ -5413,6 +5466,7 @@ function _setRouteLabel(role,name){
   if(role==='end' && $('rs-end-x')) $('rs-end-x').style.display=name?'inline-flex':'none';
   if(role==='waypoint' && $('rs-waypoint-x')) $('rs-waypoint-x').style.display=(_routeWaypointEnabled || rawName)?'inline-flex':'none';
   if(role==='waypoint2' && $('rs-waypoint2-x')) $('rs-waypoint2-x').style.display=(_routeWaypoint2Enabled || rawName)?'inline-flex':'none';
+  if(role==='waypoint3' && $('rs-waypoint3-x')) $('rs-waypoint3-x').style.display=(_routeWaypoint3Enabled || rawName)?'inline-flex':'none';
   if(_isRouteWaypointRole(role)) _setRouteWaypointEnabledByRole(role, !!(_getRouteWaypointEnabledByRole(role) || rawName));
   _updateSearchBtn();
 }
@@ -5436,6 +5490,7 @@ function _syncRoutePointLabels(){
   _setRouteLabel('start', _routePointName(_rS));
   _setRouteLabel('waypoint', _routePointName(_rW));
   _setRouteLabel('waypoint2', _routePointName(_rW2));
+  _setRouteLabel('waypoint3', _routePointName(_rW3));
   _setRouteLabel('end', _routePointName(_rE));
   _syncRouteWaypointBox();
 }
@@ -5457,6 +5512,10 @@ function _repaintRoutePointMarkers(){
         _markers[_rW2.idx].marker.setImage(_mkrImgRoute(_routeWaypointColor('waypoint2'),_routeWaypointMarkerText('waypoint2')));
         _setRouteMarkerZ(_rW2.idx,'waypoint2');
       }
+      if(_rW3 && _rW3.idx>=0 && _markers[_rW3.idx]){
+        _markers[_rW3.idx].marker.setImage(_mkrImgRoute(_routeWaypointColor('waypoint3'),_routeWaypointMarkerText('waypoint3')));
+        _setRouteMarkerZ(_rW3.idx,'waypoint3');
+      }
       if(_rE && _rE.idx>=0 && _markers[_rE.idx]){
         _markers[_rE.idx].marker.setImage(_mkrImgRoute(_typeColor(_markers[_rE.idx].shrine.type),'도'));
         _setRouteMarkerZ(_rE.idx,'end');
@@ -5471,10 +5530,11 @@ function _routePointReady(point){
 function _pendingRouteWaypointRole(){
   if(_routeWaypointEnabled && !(_rW && _rW.lat && _rW.lng)) return 'waypoint';
   if(_routeWaypoint2Enabled && !(_rW2 && _rW2.lat && _rW2.lng)) return 'waypoint2';
+  if(_routeWaypoint3Enabled && !(_rW3 && _rW3.lat && _rW3.lng)) return 'waypoint3';
   return null;
 }
 function _swapRouteObjects(a,b){
-  const map = {start:'_rS', waypoint:'_rW', waypoint2:'_rW2', end:'_rE'};
+  const map = {start:'_rS', waypoint:'_rW', waypoint2:'_rW2', waypoint3:'_rW3', end:'_rE'};
   if(!map[a] || !map[b]) return;
   const av = _getRoutePointByRole(a);
   const bv = _getRoutePointByRole(b);
@@ -5486,6 +5546,7 @@ function _swapRouteObjects(a,b){
   _routeStartMarkerExplicitCurrent=!!(_rS && _rS.showStartMarker === true);
   if(!(_rW && _rW.lat && _rW.lng) && !_routeWaypointEnabled) _setRouteWaypointEnabled(false);
   if(!(_rW2 && _rW2.lat && _rW2.lng) && !_routeWaypoint2Enabled) _setRouteWaypoint2Enabled(false);
+  if(!(_rW3 && _rW3.lat && _rW3.lng) && !_routeWaypoint3Enabled) _setRouteWaypoint3Enabled(false);
   _syncRoutePointLabels();
   _repaintRoutePointMarkers();
   if(_rS&&_rE) _updateSearchBtn();
@@ -5499,9 +5560,14 @@ function swapRouteWaypointEnd(){
   else if(_routeWaypointEnabled || (_rW&&_rW.lat&&_rW.lng)) _swapRouteObjects('waypoint','end');
 }
 function swapRouteWaypoint2End(){
-  if(!(_routeWaypoint2Enabled || (_rW2&&_rW2.lat&&_rW2.lng))) return;
-  _swapRouteObjects('waypoint2','end');
+  if(_routeWaypoint3Enabled || (_rW3&&_rW3.lat&&_rW3.lng)) _swapRouteObjects('waypoint2','waypoint3');
+  else if(_routeWaypoint2Enabled || (_rW2&&_rW2.lat&&_rW2.lng)) _swapRouteObjects('waypoint2','end');
 }
+function swapRouteWaypoint3End(){
+  if(!(_routeWaypoint3Enabled || (_rW3&&_rW3.lat&&_rW3.lng))) return;
+  _swapRouteObjects('waypoint3','end');
+}
+
 
 function _clearRouteResultOnly(){
   try{
@@ -5531,17 +5597,27 @@ function clearRoute(role){
   if(_isRouteWaypointRole(role) && (_getRoutePointByRole(role)||_getRouteWaypointEnabledByRole(role))){
     const oldPoint=_getRoutePointByRole(role);
     if(_mode==='shrine'&&oldPoint&&oldPoint.idx>=0&&_markers[oldPoint.idx]) _markers[oldPoint.idx].marker.setImage(_mkrImg(_typeColor(_markers[oldPoint.idx].shrine.type),false));
-    if(role==='waypoint' && (_rW2 || _routeWaypoint2Enabled)){
+    if(role==='waypoint'){
       _rW=_rW2;
-      _rW2=null;
+      _rW2=_rW3;
+      _rW3=null;
       _routeWaypointEnabled=!!(_rW&&_rW.lat&&_rW.lng);
-      _routeWaypoint2Enabled=false;
+      _routeWaypoint2Enabled=!!(_rW2&&_rW2.lat&&_rW2.lng);
+      _routeWaypoint3Enabled=false;
       _setRouteLabel('waypoint', _routePointName(_rW));
-      _setRouteLabel('waypoint2','');
+      _setRouteLabel('waypoint2', _routePointName(_rW2));
+      _setRouteLabel('waypoint3','');
+    }else if(role==='waypoint2'){
+      _rW2=_rW3;
+      _rW3=null;
+      _routeWaypoint2Enabled=!!(_rW2&&_rW2.lat&&_rW2.lng);
+      _routeWaypoint3Enabled=false;
+      _setRouteLabel('waypoint2', _routePointName(_rW2));
+      _setRouteLabel('waypoint3','');
     }else{
-      _setRoutePointByRole(role,null);
-      _setRouteWaypointEnabledByRole(role,false);
-      _setRouteLabel(role,'');
+      _rW3=null;
+      _routeWaypoint3Enabled=false;
+      _setRouteLabel('waypoint3','');
     }
     _clearRouteResultOnly();
     _refreshRouteTmpMarkers();
@@ -5573,15 +5649,18 @@ function resetRoute(opts){
     if(_rS&&_rS.idx>=0&&_markers[_rS.idx]) _markers[_rS.idx].marker.setImage(_mkrImg(_typeColor(_markers[_rS.idx].shrine.type),false));
     if(_rW&&_rW.idx>=0&&_markers[_rW.idx]) _markers[_rW.idx].marker.setImage(_mkrImg(_typeColor(_markers[_rW.idx].shrine.type),false));
     if(_rW2&&_rW2.idx>=0&&_markers[_rW2.idx]) _markers[_rW2.idx].marker.setImage(_mkrImg(_typeColor(_markers[_rW2.idx].shrine.type),false));
+    if(_rW3&&_rW3.idx>=0&&_markers[_rW3.idx]) _markers[_rW3.idx].marker.setImage(_mkrImg(_typeColor(_markers[_rW3.idx].shrine.type),false));
     if(_rE&&_rE.idx>=0&&_markers[_rE.idx]) _markers[_rE.idx].marker.setImage(_mkrImg(_typeColor(_markers[_rE.idx].shrine.type),false));
   }
-  _rS=_rW=_rW2=_rE=null;
+  _rS=_rW=_rW2=_rW3=_rE=null;
   _routeWaypointEnabled=false;
   _routeWaypoint2Enabled=false;
+  _routeWaypoint3Enabled=false;
   _routeStartMarkerExplicitCurrent=false;
-  _setRouteLabel('start','');_setRouteLabel('waypoint','');_setRouteLabel('waypoint2','');_setRouteLabel('end','');
+  _setRouteLabel('start','');_setRouteLabel('waypoint','');_setRouteLabel('waypoint2','');_setRouteLabel('waypoint3','');_setRouteLabel('end','');
   _setRouteWaypointEnabled(false);
   _setRouteWaypoint2Enabled(false);
+  _setRouteWaypoint3Enabled(false);
   _hide($('rs-result'));
   $('rs-hint').style.display='block';
   const sBtn=$('rs-search-btn');
@@ -5651,6 +5730,10 @@ function _selectRouteItem(idx){
   }
   if(_routePointMatchesItem(_rW2,idx,s)){
     _openRoutePointCancelChoice('waypoint2');
+    return;
+  }
+  if(_routePointMatchesItem(_rW3,idx,s)){
+    _openRoutePointCancelChoice('waypoint3');
     return;
   }
   if(_routePointMatchesItem(_rE,idx,s)){
@@ -5809,7 +5892,7 @@ function _drawLine(s1,s2,path,opts){
   if(path){
   _markers.forEach((m,i)=>{
    if(!m) return;
-   const isRoute=(_rS&&_rS.idx===i)||(_rW&&_rW.idx===i)||(_rW2&&_rW2.idx===i)||(_rE&&_rE.idx===i);
+   const isRoute=(_rS&&_rS.idx===i)||(_rW&&_rW.idx===i)||(_rW2&&_rW2.idx===i)||(_rW3&&_rW3.idx===i)||(_rE&&_rE.idx===i);
    m.marker.setMap(isRoute?_map:null);
   });
   if(_mode==='parish'){
@@ -5817,7 +5900,7 @@ function _drawLine(s1,s2,path,opts){
     if(_activeDio) _hideParishDioMkrs(_activeDio);
   } else if(_mode==='retreat'){
     _retreatMarkers.forEach(o=>{
-      const isRoute=(_rS&&_rS.idx===o.index)||(_rW&&_rW.idx===o.index)||(_rW2&&_rW2.idx===o.index)||(_rE&&_rE.idx===o.index);
+      const isRoute=(_rS&&_rS.idx===o.index)||(_rW&&_rW.idx===o.index)||(_rW2&&_rW2.idx===o.index)||(_rW3&&_rW3.idx===o.index)||(_rE&&_rE.idx===o.index);
       o.marker.setMap(isRoute?_map:null);
     });
   }
@@ -5831,6 +5914,7 @@ function _drawLine(s1,s2,path,opts){
   if(_startTmpMkr) bounds.extend(new _LL(s1.lat,s1.lng));
   if(_wayTmpMkr && _rW) bounds.extend(new _LL(_rW.lat,_rW.lng));
   if(_way2TmpMkr && _rW2) bounds.extend(new _LL(_rW2.lat,_rW2.lng));
+  if(_way3TmpMkr && _rW3) bounds.extend(new _LL(_rW3.lat,_rW3.lng));
   if(_endTmpMkr) bounds.extend(new _LL(s2.lat,s2.lng));
   if(opts.fit !== false){
     if(typeof _fitRouteBounds==='function') _fitRouteBounds(bounds, {repeat:false});
@@ -6597,24 +6681,34 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
   on('rs-end-box',   'click', function() { openSearchModal('end'); });
   on('rs-waypoint-box', 'click', function() { openSearchModal('waypoint'); });
   on('rs-waypoint2-box', 'click', function() { openSearchModal('waypoint2'); });
+  on('rs-waypoint3-box', 'click', function() { openSearchModal('waypoint3'); });
   on('rs-add-waypoint-btn', 'click', function(e) { e.stopPropagation(); _beginWaypointAddMode('waypoint'); });
   on('rs-add-waypoint2-btn', 'click', function(e) { e.stopPropagation(); _beginWaypointAddMode('waypoint2'); });
+  on('rs-add-waypoint3-btn', 'click', function(e) { e.stopPropagation(); _beginWaypointAddMode('waypoint3'); });
   on('rs-myloc-btn', 'click', function(e) { e.stopPropagation(); setMyLocAsStart(); });
   on('rs-start-x',   'click', function(e) { e.stopPropagation(); clearRoute('start'); });
   on('rs-end-x',     'click', function(e) { e.stopPropagation(); clearRoute('end'); });
   on('rs-waypoint-x','click', function(e) { e.stopPropagation(); clearRoute('waypoint'); });
   on('rs-waypoint2-x','click', function(e) { e.stopPropagation(); clearRoute('waypoint2'); });
+  on('rs-waypoint3-x','click', function(e) { e.stopPropagation(); clearRoute('waypoint3'); });
   on('rs-swap-btn',  'click', function() { swapRoute(); });
   on('rs-swap-waypoint-end-btn', 'click', function() { swapRouteWaypointEnd(); });
   on('rs-swap-waypoint2-end-btn', 'click', function() { swapRouteWaypoint2End(); });
+  on('rs-swap-waypoint3-end-btn', 'click', function() { swapRouteWaypoint3End(); });
   on('rs-search-btn','click', function() { doSearchRoute(); });
   on('rs-kakao-btn', 'click', function() { doKakaoRoute(); });
   on('rs-reset-btn', 'click', function() { resetRoute({ fromButton: true }); });
 
-  on('ic-close-btn', 'click', function() { closeInfoCard(); });
+  on('ic-close-btn', 'click', function(e) { if(e){ e.preventDefault(); e.stopPropagation(); } closeInfoCard({keepMap:true}); });
   on('ic-route-btn', 'click', function() { _openInfoRouteChoice(); });
   on('ic-guide',     'click', function() { if (typeof openShrineDetail === 'function') openShrineDetail(); });
   on('ic-kakao-nav', 'click', function() { openKakaoNav(); });
+
+  // X 버튼 터치 보강: 경로/인포카드 위에 다른 레이어가 있어도 닫힘이 먼저 실행되도록 캡처 단계에서도 한 번 더 묶는다.
+  ['click','pointerup','touchend'].forEach(function(ev){
+    on('ic-close-btn', ev, function(e){ if(e){ e.preventDefault(); e.stopPropagation(); } closeInfoCard({keepMap:true}); }, true);
+    on('route-close-btn', ev, function(e){ if(e){ e.preventDefault(); e.stopPropagation(); } closeRouteSheetByX(); }, true);
+  });
 
   on('sm-close-btn', 'click', function() { closeSearchModal(); });
   on('sm-map-select-btn', 'click', function() { selectMapFromSearchModal(); });
