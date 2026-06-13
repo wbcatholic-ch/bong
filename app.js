@@ -718,8 +718,8 @@ function _ensureShrineVisitMapFilter(){
   bar=document.createElement('div');
   bar.id='shrine-visit-map-filter';
   bar.className='shrine-visit-map-filter';
-  bar.setAttribute('aria-label','방문한 성지 지도 필터');
-  const buttons=[['all','전체'],['visited','방문한 성지'],['unvisited','미방문 성지']];
+  bar.setAttribute('aria-label','순례한 성지 지도 필터');
+  const buttons=[['all','전체'],['visited','순례한 성지'],['unvisited','미방문 성지']];
   bar.innerHTML=buttons.map(function(b){ return '<button type="button" data-shrine-visit-filter="'+b[0]+'">'+b[1]+'</button>'; }).join('');
   wrap.appendChild(bar);
   bar.querySelectorAll('[data-shrine-visit-filter]').forEach(function(btn){
@@ -753,7 +753,7 @@ function _refreshShrineVisitMapState(){
 function _shrineVisitBadgeHtml(item,context){
   if(_mode!=='shrine'||!item||!_isVisitedShrine(item)) return '';
   const count=_getShrineVisitCount(item);
-  const label=context==='compact'?'방문한 성지':'방문한 성지 · '+count+'회';
+  const label=context==='compact'?'순례한 성지':'순례한 성지 · '+count+'회';
   return '<span class="shrine-visited-chip">'+label+'</span>';
 }
 function _ensureShrineVisitModal(){
@@ -763,7 +763,7 @@ function _ensureShrineVisitModal(){
   modal.id='shrine-visit-modal';
   modal.className='shrine-visit-modal';
   modal.setAttribute('aria-hidden','true');
-  modal.innerHTML='<div class="shrine-visit-backdrop" data-shrine-visit-close="1"></div><div class="shrine-visit-panel" role="dialog" aria-modal="true" aria-label="방문한 성지 등록"><div class="shrine-visit-head"><div><div class="shrine-visit-kicker">방문한 성지</div><div id="shrine-visit-title" class="shrine-visit-title"></div></div><button id="shrine-visit-x" class="shrine-visit-x" type="button" aria-label="닫기">×</button></div><label class="shrine-visit-label">방문 날짜<input id="shrine-visit-date" type="date"></label><div class="shrine-visit-actions"><button id="shrine-visit-save" type="button" class="shrine-visit-save">등록</button><button id="shrine-visit-cancel" type="button" class="shrine-visit-cancel">취소</button></div><div id="shrine-visit-list" class="shrine-visit-list"></div></div>';
+  modal.innerHTML='<div class="shrine-visit-backdrop" data-shrine-visit-close="1"></div><div class="shrine-visit-panel" role="dialog" aria-modal="true" aria-label="순례한 성지 등록"><div class="shrine-visit-head"><div><div class="shrine-visit-kicker">순례한 성지</div><div id="shrine-visit-title" class="shrine-visit-title"></div></div><button id="shrine-visit-x" class="shrine-visit-x" type="button" aria-label="닫기">×</button></div><label class="shrine-visit-label">방문 날짜<input id="shrine-visit-date" type="date"></label><div class="shrine-visit-actions"><button id="shrine-visit-save" type="button" class="shrine-visit-save">등록</button><button id="shrine-visit-cancel" type="button" class="shrine-visit-cancel">취소</button></div><div id="shrine-visit-list" class="shrine-visit-list"></div></div>';
   document.body.appendChild(modal);
   function close(){ _closeShrineVisitModal(); }
   modal.querySelectorAll('[data-shrine-visit-close],#shrine-visit-x,#shrine-visit-cancel').forEach(function(el){ el.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); close(); }); });
@@ -831,23 +831,8 @@ function _renderInfoCardShrinePilgrimBadge(item){
 }
 function _renderInfoCardShrineVisit(item){
   _renderInfoCardShrinePilgrimBadge(item);
-  let box=document.getElementById('ic-shrine-visit');
-  if(!box){
-    box=document.createElement('div');
-    box.id='ic-shrine-visit';
-    const addrRow=document.querySelector('#info-card .ic-addr-row');
-    if(addrRow) addrRow.insertAdjacentElement('afterend', box);
-  }
-  if(!box) return;
-  if(_mode!=='shrine'||!item){ box.style.display='none'; return; }
-  const visits=_getShrineVisitDates(item);
-  const count=visits.length;
-  const recent=count?visits[0].date:'';
-  box.style.display='block';
-  box.className='ic-shrine-visit '+(count?'visited':'not-visited');
-  box.innerHTML='<div class="ic-shrine-visit-text"><strong>'+(count?'방문한 성지':'아직 방문 미등록')+'</strong><span>'+(count?'방문 '+count+'회 · 최근 '+_formatVisitDate(recent):'방문 날짜를 수동으로 등록할 수 있습니다.')+'</span></div><button id="ic-shrine-visit-btn" type="button">'+(count?'방문 추가/날짜 보기':'방문한 성지로 등록')+'</button>';
-  const btn=document.getElementById('ic-shrine-visit-btn');
-  if(btn) btn.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); _openShrineVisitModal(item); });
+  const box=document.getElementById('ic-shrine-visit');
+  if(box){ box.style.display='none'; box.innerHTML=''; }
 }
 
 function _setMassQuickReturn(on){
@@ -1854,7 +1839,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-38';
+    frame.src='diocese.html?v=V6-39';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -2235,7 +2220,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-38';
+const _PARISH_ASSET_VERSION='V6-39';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -2398,7 +2383,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-38';
+const _PRAYER_ASSET_VERSION='V6-39';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -2459,7 +2444,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-38';
+const _RETREAT_ASSET_VERSION='V6-39';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2754,7 +2739,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-38';
+const _SHRINE_ASSET_VERSION='V6-39';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
