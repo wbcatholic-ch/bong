@@ -620,6 +620,8 @@ function openFaithPortal(kind, opts){
 function openMissa(){ openFaithPortal('missa', {forceReload:true}); }
 
 const OAI_SHRINE_VISITS_KEY = 'oai_shrine_visits_v1';
+const OAI_SHRINE_AUTO_VISIT_PROMPT_KEY = 'oai_shrine_auto_visit_prompt_v1';
+const OAI_SHRINE_AUTO_VISIT_RADIUS_M = 500;
 let _shrineVisitMapFilter = 'all';
 function _visitHtmlEsc(v){
   return String(v == null ? '' : v).replace(/[&<>"']/g, function(ch){
@@ -670,6 +672,9 @@ function _getShrineVisitDates(item){
 }
 function _getShrineVisitCount(item){ return _getShrineVisitDates(item).length; }
 function _isVisitedShrine(item){ return _getShrineVisitCount(item)>0; }
+function _hasShrineVisitOnDate(item,date){
+  return _getShrineVisitDates(item).some(function(v){ return String(v.date||'')===String(date||''); });
+}
 function _addShrineVisit(item,date,method){
   const key=_getShrineVisitKey(item);
   if(!key) return false;
@@ -836,6 +841,109 @@ function _renderShrineVisitCardsModal(){
       if(idx>=0 && SHRINES[idx]) selectItem(idx,{fromRegion:false});
     });
   });
+}
+
+function _loadShrineAutoVisitPrompts(){
+  try{
+    const raw=localStorage.getItem(OAI_SHRINE_AUTO_VISIT_PROMPT_KEY);
+    const data=raw?JSON.parse(raw):{};
+    return data && typeof data==='object' ? data : {};
+  }catch(e){ console.warn('[가톨릭길동무]', e); return {}; }
+}
+function _saveShrineAutoVisitPrompts(data){
+  try{ localStorage.setItem(OAI_SHRINE_AUTO_VISIT_PROMPT_KEY, JSON.stringify(data||{})); }
+  catch(e){ console.warn('[가톨릭길동무]', e); }
+}
+function _autoVisitPromptKey(item,date){
+  return _getShrineVisitKey(item)+'|'+String(date||_todayISODate());
+}
+function _wasAutoVisitPromptedToday(item,date){
+  const data=_loadShrineAutoVisitPrompts();
+  return !!data[_autoVisitPromptKey(item,date)];
+}
+function _markAutoVisitPromptedToday(item,date,action){
+  const data=_loadShrineAutoVisitPrompts();
+  data[_autoVisitPromptKey(item,date)]={date:date||_todayISODate(),action:action||'later',savedAt:new Date().toISOString()};
+  _saveShrineAutoVisitPrompts(data);
+}
+function _nearestShrineWithinAutoVisitRadius(lat,lng){
+  if(_mode!=='shrine'||!Array.isArray(SHRINES)) return null;
+  let best=null,bestM=Infinity;
+  SHRINES.forEach(function(s,idx){
+    if(!s||!s.lat||!s.lng) return;
+    const m=calcDist(lat,lng,s.lat,s.lng)*1000;
+    if(m<bestM){ bestM=m; best={item:s,idx:idx,meters:m}; }
+  });
+  if(best && best.meters<=OAI_SHRINE_AUTO_VISIT_RADIUS_M) return best;
+  return null;
+}
+function _ensureShrineAutoVisitModal(){
+  let modal=document.getElementById('shrine-auto-visit-modal');
+  if(modal) return modal;
+  modal=document.createElement('div');
+  modal.id='shrine-auto-visit-modal';
+  modal.className='shrine-auto-visit-modal';
+  modal.setAttribute('aria-hidden','true');
+  modal.innerHTML='<div class="shrine-auto-visit-backdrop" data-shrine-auto-close="1"></div><div class="shrine-auto-visit-panel" role="dialog" aria-modal="true" aria-label="GPS 순례등록"><div class="shrine-auto-visit-kicker">GPS 자동 감지</div><div class="shrine-auto-visit-title">가까운 성지에 도착한 것 같습니다.</div><div id="shrine-auto-visit-name" class="shrine-auto-visit-name"></div><div id="shrine-auto-visit-dist" class="shrine-auto-visit-dist"></div><div class="shrine-auto-visit-actions"><button type="button" id="shrine-auto-visit-save" class="shrine-auto-visit-save">오늘 순례등록</button><button type="button" id="shrine-auto-visit-later" class="shrine-auto-visit-later">나중에</button></div></div>';
+  document.body.appendChild(modal);
+  modal.querySelectorAll('[data-shrine-auto-close],#shrine-auto-visit-later').forEach(function(el){
+    el.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      const entry=window.__OAI_SHRINE_AUTO_VISIT_ENTRY__;
+      if(entry&&entry.item) _markAutoVisitPromptedToday(entry.item,_todayISODate(),'later');
+      _closeShrineAutoVisitModal();
+    });
+  });
+  const save=modal.querySelector('#shrine-auto-visit-save');
+  if(save) save.addEventListener('click', function(e){
+    e.preventDefault(); e.stopPropagation();
+    const entry=window.__OAI_SHRINE_AUTO_VISIT_ENTRY__;
+    if(!entry||!entry.item){ _closeShrineAutoVisitModal(); return; }
+    const date=_todayISODate();
+    if(!_hasShrineVisitOnDate(entry.item,date)) _addShrineVisit(entry.item,date,'gps');
+    _markAutoVisitPromptedToday(entry.item,date,'registered');
+    if(_curInfoItem&&_curInfoItem.item===entry.item) _renderInfoCardShrineVisit(entry.item);
+    try{ if(_activeTab==='list') renderList(); }catch(_e){}
+    try{ if(_activeTab==='nearby') _loadNearby(); }catch(_e){}
+    _refreshShrineVisitMapState();
+    _closeShrineAutoVisitModal();
+  });
+  return modal;
+}
+function _openShrineAutoVisitModal(entry){
+  if(!entry||!entry.item) return;
+  const modal=_ensureShrineAutoVisitModal();
+  window.__OAI_SHRINE_AUTO_VISIT_ENTRY__=entry;
+  const name=document.getElementById('shrine-auto-visit-name');
+  const dist=document.getElementById('shrine-auto-visit-dist');
+  if(name) name.textContent=entry.item.name||'성지';
+  if(dist) dist.textContent='현재 위치에서 약 '+Math.max(1,Math.round(entry.meters))+'m';
+  modal.classList.add('show');
+  modal.setAttribute('aria-hidden','false');
+}
+function _closeShrineAutoVisitModal(){
+  const modal=document.getElementById('shrine-auto-visit-modal');
+  if(modal){ modal.classList.remove('show'); modal.setAttribute('aria-hidden','true'); }
+  window.__OAI_SHRINE_AUTO_VISIT_PROMPTING__=false;
+}
+function _isAnyVisitModalOpen(){
+  return !!(document.querySelector('#shrine-visit-modal.show,#shrine-visit-cards-modal.show,#shrine-auto-visit-modal.show'));
+}
+function _maybePromptAutoShrineVisit(lat,lng){
+  try{
+    if(_mode!=='shrine'||!lat||!lng) return;
+    if(window.__OAI_SHRINE_AUTO_VISIT_PROMPTING__||_isAnyVisitModalOpen()) return;
+    const entry=_nearestShrineWithinAutoVisitRadius(lat,lng);
+    if(!entry||!entry.item) return;
+    const date=_todayISODate();
+    if(_hasShrineVisitOnDate(entry.item,date)) return;
+    if(_wasAutoVisitPromptedToday(entry.item,date)) return;
+    window.__OAI_SHRINE_AUTO_VISIT_PROMPTING__=true;
+    setTimeout(function(){
+      if(_mode==='shrine'&&!_isAnyVisitModalOpen()) _openShrineAutoVisitModal(entry);
+      else window.__OAI_SHRINE_AUTO_VISIT_PROMPTING__=false;
+    }, 700);
+  }catch(e){ console.warn('[가톨릭길동무]', e); window.__OAI_SHRINE_AUTO_VISIT_PROMPTING__=false; }
 }
 function _shrineVisitBadgeHtml(item,context){
   if(_mode!=='shrine'||!item||!_isVisitedShrine(item)) return '';
@@ -1989,7 +2097,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-44';
+    frame.src='diocese.html?v=V6-45';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -2370,7 +2478,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-44';
+const _PARISH_ASSET_VERSION='V6-45';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -2533,7 +2641,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-44';
+const _PRAYER_ASSET_VERSION='V6-45';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -2594,7 +2702,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-44';
+const _RETREAT_ASSET_VERSION='V6-45';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2889,7 +2997,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-44';
+const _SHRINE_ASSET_VERSION='V6-45';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -5310,6 +5418,7 @@ function _setMyLoc(lat,lng){
   _myMkr.setMap(_map);
   _raiseMyLocationMarker();
   setTimeout(_showCurrentParishDioIfIdle, 80);
+  if(_mode==='shrine') setTimeout(function(){ _maybePromptAutoShrineVisit(lat,lng); }, 180);
 }
 
 function goMyLoc(){
