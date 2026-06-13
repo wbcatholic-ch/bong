@@ -779,8 +779,21 @@ function _ensureShrineVisitModal(){
     try{ if(_activeTab==='list') renderList(); }catch(_e){}
     try{ if(_activeTab==='nearby') _loadNearby(); }catch(_e){}
     _refreshShrineVisitMapState();
+    _closeShrineVisitModal();
   });
   return modal;
+}
+
+function _isShrineVisitModalOpen(){
+  const modal=document.getElementById('shrine-visit-modal');
+  return !!(modal && modal.classList.contains('show'));
+}
+function _pushShrineVisitModalHistory(){
+  try{
+    if(window.__OAI_SHRINE_VISIT_MODAL_HISTORY__) return;
+    history.pushState({oaiShrineVisitModal:true}, '', location.href);
+    window.__OAI_SHRINE_VISIT_MODAL_HISTORY__=true;
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
 function _openShrineVisitModal(item){
   if(_mode!=='shrine'||!item) return;
@@ -793,11 +806,39 @@ function _openShrineVisitModal(item){
   _renderShrineVisitModalList(item);
   modal.classList.add('show');
   modal.setAttribute('aria-hidden','false');
+  _pushShrineVisitModalHistory();
 }
-function _closeShrineVisitModal(){
+function _closeShrineVisitModal(opts){
+  opts=opts||{};
   const modal=document.getElementById('shrine-visit-modal');
+  const wasOpen=!!(modal&&modal.classList.contains('show'));
   if(modal){ modal.classList.remove('show'); modal.setAttribute('aria-hidden','true'); }
+  if(wasOpen && window.__OAI_SHRINE_VISIT_MODAL_HISTORY__ && !opts.fromPopstate){
+    try{
+      window.__OAI_SHRINE_VISIT_MODAL_HISTORY__=false;
+      window.__OAI_SHRINE_VISIT_MODAL_CLOSING_BY_CODE__=true;
+      history.back();
+      setTimeout(function(){ window.__OAI_SHRINE_VISIT_MODAL_CLOSING_BY_CODE__=false; }, 450);
+    }catch(e){ console.warn('[가톨릭길동무]', e); }
+  }else if(opts.fromPopstate){
+    window.__OAI_SHRINE_VISIT_MODAL_HISTORY__=false;
+  }
 }
+try{
+  if(!window.__OAI_SHRINE_VISIT_POPSTATE_BOUND__){
+    window.__OAI_SHRINE_VISIT_POPSTATE_BOUND__=true;
+    window.addEventListener('popstate', function(e){
+      if(_isShrineVisitModalOpen()){
+        if(e){ try{ e.preventDefault(); e.stopImmediatePropagation(); }catch(_e){} }
+        _closeShrineVisitModal({fromPopstate:true});
+      }else if(window.__OAI_SHRINE_VISIT_MODAL_CLOSING_BY_CODE__){
+        if(e){ try{ e.preventDefault(); e.stopImmediatePropagation(); }catch(_e){} }
+        window.__OAI_SHRINE_VISIT_MODAL_CLOSING_BY_CODE__=false;
+      }
+    }, true);
+  }
+}catch(e){ console.warn('[가톨릭길동무]', e); }
+
 function _renderShrineVisitModalList(item){
   const list=document.getElementById('shrine-visit-list');
   if(!list) return;
@@ -1839,7 +1880,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-39';
+    frame.src='diocese.html?v=V6-40';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -2220,7 +2261,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-39';
+const _PARISH_ASSET_VERSION='V6-40';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -2383,7 +2424,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-39';
+const _PRAYER_ASSET_VERSION='V6-40';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -2444,7 +2485,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-39';
+const _RETREAT_ASSET_VERSION='V6-40';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2739,7 +2780,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-39';
+const _SHRINE_ASSET_VERSION='V6-40';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -5394,12 +5435,19 @@ function renderList(){
    d.innerHTML=`<div class="li-dot" style="background:${dotColor}"></div>
     <div class="li-info"><div class="li-name">${s.name}</div><div class="li-sub">${s.addr.substring(0,28)}${s.addr.length>28?'…':''}</div>${_shrineVisitBadgeHtml(s,'list')}</div>
     <div class="li-side"><span class="li-badge" style="background:${c}18!important;color:${c}!important">${_mode==='shrine'?s.type:(_mode==='retreat'?'피정의 집':'성당')}</span>${pilgrimBtn}</div>`;
-   d.onclick=()=>selectItem(i);
+   d.onclick=(ev)=>{ if(ev&&ev.target&&ev.target.closest&&ev.target.closest('.li-pilgrim-register')) return; selectItem(i); };
    const pilgrimRegister=d.querySelector('.li-pilgrim-register');
    if(pilgrimRegister){
-    pilgrimRegister.addEventListener('click', function(e){
-      e.preventDefault(); e.stopPropagation();
+    let lastOpenAt=0;
+    const openPilgrimRegister=function(e){
+      if(e){ e.preventDefault(); e.stopPropagation(); if(e.stopImmediatePropagation) e.stopImmediatePropagation(); }
+      const now=Date.now?Date.now():(new Date()).getTime();
+      if(now-lastOpenAt<450) return;
+      lastOpenAt=now;
       _openShrineVisitModal(s);
+    };
+    ['click','pointerup','touchend'].forEach(function(type){
+      pilgrimRegister.addEventListener(type, openPilgrimRegister, {passive:false});
     });
    }
    body.appendChild(d);
