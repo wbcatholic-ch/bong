@@ -862,14 +862,27 @@ function _renderShrineVisitModalList(item){
 function _renderInfoCardShrinePilgrimBadge(item){
   const icTypeEl=$('ic-type');
   if(!icTypeEl) return;
-  icTypeEl.classList.remove('shrine-pilgrim-visited');
-  if(_mode==='shrine' && item && _isVisitedShrine(item)){
-    icTypeEl.textContent='순례한 성지';
-    icTypeEl.classList.add('shrine-pilgrim-visited');
+  icTypeEl.classList.remove('shrine-pilgrim-visited','shrine-pilgrim-register-badge');
+  icTypeEl.removeAttribute('role');
+  icTypeEl.removeAttribute('tabindex');
+  icTypeEl.onclick=null;
+  icTypeEl.onkeydown=null;
+  if(_mode==='shrine' && item){
+    icTypeEl.textContent='순례등록';
+    icTypeEl.classList.add('shrine-pilgrim-register-badge');
+    icTypeEl.setAttribute('role','button');
+    icTypeEl.setAttribute('tabindex','0');
+    const open=function(e){
+      if(e){ e.preventDefault(); e.stopPropagation(); if(e.stopImmediatePropagation) e.stopImmediatePropagation(); }
+      _openShrineVisitModal(item);
+    };
+    icTypeEl.onclick=open;
+    icTypeEl.onkeydown=function(e){ if(e && (e.key==='Enter'||e.key===' ')) open(e); };
   }else if(item){
-    icTypeEl.textContent = _mode==='shrine' ? item.type : (_mode==='retreat' ? '피정의 집' : '성당');
+    icTypeEl.textContent = _mode==='retreat' ? '피정의 집' : '성당';
   }
 }
+
 function _renderInfoCardShrineVisit(item){
   _renderInfoCardShrinePilgrimBadge(item);
   const box=document.getElementById('ic-shrine-visit');
@@ -1880,7 +1893,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-40';
+    frame.src='diocese.html?v=V6-41';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -2261,7 +2274,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-40';
+const _PARISH_ASSET_VERSION='V6-41';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -2424,7 +2437,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-40';
+const _PRAYER_ASSET_VERSION='V6-41';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -2485,7 +2498,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-40';
+const _RETREAT_ASSET_VERSION='V6-41';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2780,7 +2793,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-40';
+const _SHRINE_ASSET_VERSION='V6-41';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -3839,16 +3852,7 @@ function _showInfoCard(item, idx){
 
   $('ic-name').textContent = item.name;
   $('ic-sub').textContent  = item.diocese;
-  const icTypeEl=$('ic-type');
-  if(icTypeEl){
-    icTypeEl.classList.remove('shrine-pilgrim-visited');
-    if(_mode==='shrine' && _isVisitedShrine(item)){
-      icTypeEl.textContent='순례한 성지';
-      icTypeEl.classList.add('shrine-pilgrim-visited');
-    }else{
-      icTypeEl.textContent = _mode==='shrine' ? item.type : (_mode==='retreat' ? '피정의 집' : '성당');
-    }
-  }
+  _renderInfoCardShrinePilgrimBadge(item);
   $('ic-addr').textContent = item.addr;
   let noteEl=$('ic-note');
   if(!noteEl){
@@ -5438,16 +5442,23 @@ function renderList(){
    d.onclick=(ev)=>{ if(ev&&ev.target&&ev.target.closest&&ev.target.closest('.li-pilgrim-register')) return; selectItem(i); };
    const pilgrimRegister=d.querySelector('.li-pilgrim-register');
    if(pilgrimRegister){
-    let lastOpenAt=0;
-    const openPilgrimRegister=function(e){
-      if(e){ e.preventDefault(); e.stopPropagation(); if(e.stopImmediatePropagation) e.stopImmediatePropagation(); }
+    let touchMoved=false, sx=0, sy=0, lastOpenAt=0;
+    pilgrimRegister.addEventListener('touchstart', function(e){
+      const t=e.touches&&e.touches[0];
+      touchMoved=false;
+      if(t){ sx=t.clientX; sy=t.clientY; }
+    }, {passive:true});
+    pilgrimRegister.addEventListener('touchmove', function(e){
+      const t=e.touches&&e.touches[0];
+      if(t && (Math.abs(t.clientX-sx)>10 || Math.abs(t.clientY-sy)>10)) touchMoved=true;
+    }, {passive:true});
+    pilgrimRegister.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation(); if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+      if(touchMoved){ touchMoved=false; return; }
       const now=Date.now?Date.now():(new Date()).getTime();
-      if(now-lastOpenAt<450) return;
+      if(now-lastOpenAt<500) return;
       lastOpenAt=now;
       _openShrineVisitModal(s);
-    };
-    ['click','pointerup','touchend'].forEach(function(type){
-      pilgrimRegister.addEventListener(type, openPilgrimRegister, {passive:false});
     });
    }
    body.appendChild(d);
