@@ -620,6 +620,7 @@ function openFaithPortal(kind, opts){
 function openMissa(){ openFaithPortal('missa', {forceReload:true}); }
 
 const OAI_SHRINE_VISITS_KEY = 'oai_shrine_visits_v1';
+let _shrineVisitMapFilter = 'all';
 function _visitHtmlEsc(v){
   return String(v == null ? '' : v).replace(/[&<>"']/g, function(ch){
     return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
@@ -700,10 +701,59 @@ function _deleteShrineVisitAt(item,idx){
   _saveShrineVisits(data);
   return true;
 }
+
+function _shrineMarkerColor(item){
+  return (_mode==='shrine' && item && _isVisitedShrine(item)) ? '#111111' : _typeColor(item && item.type);
+}
+function _isShrineVisibleByVisitFilter(item){
+  if(_mode!=='shrine') return true;
+  if(_shrineVisitMapFilter==='visited') return _isVisitedShrine(item);
+  if(_shrineVisitMapFilter==='unvisited') return !_isVisitedShrine(item);
+  return true;
+}
+function _ensureShrineVisitMapFilter(){
+  let bar=document.getElementById('shrine-visit-map-filter');
+  if(bar) return bar;
+  const wrap=document.getElementById('map-wrap') || document.body;
+  bar=document.createElement('div');
+  bar.id='shrine-visit-map-filter';
+  bar.className='shrine-visit-map-filter';
+  bar.setAttribute('aria-label','방문한 성지 지도 필터');
+  const buttons=[['all','전체'],['visited','방문한 성지'],['unvisited','미방문 성지']];
+  bar.innerHTML=buttons.map(function(b){ return '<button type="button" data-shrine-visit-filter="'+b[0]+'">'+b[1]+'</button>'; }).join('');
+  wrap.appendChild(bar);
+  bar.querySelectorAll('[data-shrine-visit-filter]').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      _shrineVisitMapFilter = btn.getAttribute('data-shrine-visit-filter') || 'all';
+      _applyShrineVisitMapFilter();
+    });
+  });
+  return bar;
+}
+function _updateShrineVisitMapFilterUI(){
+  const bar=_ensureShrineVisitMapFilter();
+  if(!bar) return;
+  const show=(_mode==='shrine' && _screen==='map');
+  bar.classList.toggle('show', !!show);
+  bar.querySelectorAll('[data-shrine-visit-filter]').forEach(function(btn){
+    const val=btn.getAttribute('data-shrine-visit-filter') || 'all';
+    btn.classList.toggle('active', val===_shrineVisitMapFilter);
+  });
+}
+function _applyShrineVisitMapFilter(){
+  _updateShrineVisitMapFilterUI();
+  if(_mode==='shrine' && _map){
+    try{ _restoreMapMarkers(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+  }
+}
+function _refreshShrineVisitMapState(){
+  try{ _applyShrineVisitMapFilter(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+}
 function _shrineVisitBadgeHtml(item,context){
   if(_mode!=='shrine'||!item||!_isVisitedShrine(item)) return '';
   const count=_getShrineVisitCount(item);
-  const label=context==='compact'?'가본 성지':'가본 성지 · '+count+'회';
+  const label=context==='compact'?'방문한 성지':'방문한 성지 · '+count+'회';
   return '<span class="shrine-visited-chip">'+label+'</span>';
 }
 function _ensureShrineVisitModal(){
@@ -713,7 +763,7 @@ function _ensureShrineVisitModal(){
   modal.id='shrine-visit-modal';
   modal.className='shrine-visit-modal';
   modal.setAttribute('aria-hidden','true');
-  modal.innerHTML='<div class="shrine-visit-backdrop" data-shrine-visit-close="1"></div><div class="shrine-visit-panel" role="dialog" aria-modal="true" aria-label="가본 성지 등록"><div class="shrine-visit-head"><div><div class="shrine-visit-kicker">가본 성지</div><div id="shrine-visit-title" class="shrine-visit-title"></div></div><button id="shrine-visit-x" class="shrine-visit-x" type="button" aria-label="닫기">×</button></div><label class="shrine-visit-label">방문 날짜<input id="shrine-visit-date" type="date"></label><div class="shrine-visit-actions"><button id="shrine-visit-save" type="button" class="shrine-visit-save">등록</button><button id="shrine-visit-cancel" type="button" class="shrine-visit-cancel">취소</button></div><div id="shrine-visit-list" class="shrine-visit-list"></div></div>';
+  modal.innerHTML='<div class="shrine-visit-backdrop" data-shrine-visit-close="1"></div><div class="shrine-visit-panel" role="dialog" aria-modal="true" aria-label="방문한 성지 등록"><div class="shrine-visit-head"><div><div class="shrine-visit-kicker">방문한 성지</div><div id="shrine-visit-title" class="shrine-visit-title"></div></div><button id="shrine-visit-x" class="shrine-visit-x" type="button" aria-label="닫기">×</button></div><label class="shrine-visit-label">방문 날짜<input id="shrine-visit-date" type="date"></label><div class="shrine-visit-actions"><button id="shrine-visit-save" type="button" class="shrine-visit-save">등록</button><button id="shrine-visit-cancel" type="button" class="shrine-visit-cancel">취소</button></div><div id="shrine-visit-list" class="shrine-visit-list"></div></div>';
   document.body.appendChild(modal);
   function close(){ _closeShrineVisitModal(); }
   modal.querySelectorAll('[data-shrine-visit-close],#shrine-visit-x,#shrine-visit-cancel').forEach(function(el){ el.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); close(); }); });
@@ -728,6 +778,7 @@ function _ensureShrineVisitModal(){
     if(_curInfoItem&&_curInfoItem.item===item) _renderInfoCardShrineVisit(item);
     try{ if(_activeTab==='list') renderList(); }catch(_e){}
     try{ if(_activeTab==='nearby') _loadNearby(); }catch(_e){}
+    _refreshShrineVisitMapState();
   });
   return modal;
 }
@@ -762,6 +813,7 @@ function _renderShrineVisitModalList(item){
       if(_curInfoItem&&_curInfoItem.item===item) _renderInfoCardShrineVisit(item);
       try{ if(_activeTab==='list') renderList(); }catch(_e){}
       try{ if(_activeTab==='nearby') _loadNearby(); }catch(_e){}
+      _refreshShrineVisitMapState();
     }
   }); });
 }
@@ -780,7 +832,7 @@ function _renderInfoCardShrineVisit(item){
   const recent=count?visits[0].date:'';
   box.style.display='block';
   box.className='ic-shrine-visit '+(count?'visited':'not-visited');
-  box.innerHTML='<div class="ic-shrine-visit-text"><strong>'+(count?'가본 성지':'아직 방문 미등록')+'</strong><span>'+(count?'방문 '+count+'회 · 최근 '+_formatVisitDate(recent):'방문 날짜를 수동으로 등록할 수 있습니다.')+'</span></div><button id="ic-shrine-visit-btn" type="button">'+(count?'방문 추가/날짜 보기':'가본 성지로 등록')+'</button>';
+  box.innerHTML='<div class="ic-shrine-visit-text"><strong>'+(count?'방문한 성지':'아직 방문 미등록')+'</strong><span>'+(count?'방문 '+count+'회 · 최근 '+_formatVisitDate(recent):'방문 날짜를 수동으로 등록할 수 있습니다.')+'</span></div><button id="ic-shrine-visit-btn" type="button">'+(count?'방문 추가/날짜 보기':'방문한 성지로 등록')+'</button>';
   const btn=document.getElementById('ic-shrine-visit-btn');
   if(btn) btn.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); _openShrineVisitModal(item); });
 }
@@ -1789,7 +1841,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-36';
+    frame.src='diocese.html?v=V6-37';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -2041,8 +2093,8 @@ window.addEventListener('focus', function(){
 function clearRouteNoFocus(){
   try{
     if(_mode==='shrine'){
-      if(_rS&&_rS.idx>=0&&_markers[_rS.idx]) _markers[_rS.idx].marker.setImage(_mkrImg(_typeColor(_markers[_rS.idx].shrine.type),false));
-      if(_rE&&_rE.idx>=0&&_markers[_rE.idx]) _markers[_rE.idx].marker.setImage(_mkrImg(_typeColor(_markers[_rE.idx].shrine.type),false));
+      if(_rS&&_rS.idx>=0&&_markers[_rS.idx]) _markers[_rS.idx].marker.setImage(_mkrImg(_shrineMarkerColor(_markers[_rS.idx].shrine),false));
+      if(_rE&&_rE.idx>=0&&_markers[_rE.idx]) _markers[_rE.idx].marker.setImage(_mkrImg(_shrineMarkerColor(_markers[_rE.idx].shrine),false));
     }
     _rS=null; _rE=null; _routeMode=false;
     if(typeof _setRouteLabel==='function'){ _setRouteLabel('start',''); _setRouteLabel('end',''); }
@@ -2170,7 +2222,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-36';
+const _PARISH_ASSET_VERSION='V6-37';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -2333,7 +2385,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-36';
+const _PRAYER_ASSET_VERSION='V6-37';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -2394,7 +2446,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-36';
+const _RETREAT_ASSET_VERSION='V6-37';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -2689,7 +2741,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-36';
+const _SHRINE_ASSET_VERSION='V6-37';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -3196,6 +3248,7 @@ function startApp(mode){
     return;
   }
   _mode=mode;
+  _shrineVisitMapFilter='all';
   _filterDio='all';
   _listSrch='';
   window._noAutoNearby = false;  // 직접 진입 시 nearby 열기 허용
@@ -3220,6 +3273,7 @@ function startApp(mode){
   document.documentElement.classList.add('app-active');
   document.documentElement.classList.toggle('parish-mode',mode==='parish');
   document.documentElement.classList.toggle('retreat-mode',mode==='retreat');
+  try{ _ensureShrineVisitMapFilter(); _updateShrineVisitMapFilterUI(); }catch(e){ console.warn('[가톨릭길동무]', e); }
   const _setTxt=(id,v)=>{const el=$(id);if(el)el.textContent=v;};
   const listLbl = mode==='parish' ? '성당찾기' : (mode==='retreat' ? '피정의집 찾기' : '성지찾기');
   const listSearchInput=$('list-srch-inp');
@@ -3275,6 +3329,7 @@ function goToCover(){
   try{ _clearParishNearbyMarkers(); }catch(e){ console.warn('[가톨릭길동무]',e); }
   if(_myMkr){try{_myMkr.setMap(null);}catch(e){ console.warn("[가톨릭길동무]", e); } _myMkr=null;}
   _screen='cover';
+  try{ _updateShrineVisitMapFilterUI(); }catch(e){ console.warn('[가톨릭길동무]', e); }
   if(typeof oaiSetMainMapLayerHidden==='function') oaiSetMainMapLayerHidden(false);
   document.documentElement.classList.remove('app-active','parish-mode','retreat-mode');
   const _coverEl=$('cover');
@@ -3339,6 +3394,7 @@ function _onMapReady(){
     openTab('nearby');
   }
   window._noAutoNearby = false;
+  try{ _updateShrineVisitMapFilterUI(); }catch(e){ console.warn('[가톨릭길동무]', e); }
   if(typeof oaiHideCategoryEntryVeil==='function') setTimeout(oaiHideCategoryEntryVeil, 260);
 }
 
@@ -3933,7 +3989,7 @@ function _restoreRouteMarkerVisual(role, routeItem){
     if(!routeItem || routeItem.idx<0) return;
     if(_mode==='shrine' && _markers[routeItem.idx]){
       const s=_markers[routeItem.idx].shrine;
-      _markers[routeItem.idx].marker.setImage(_mkrImg(_typeColor(s.type),false));
+      _markers[routeItem.idx].marker.setImage(_mkrImg(_shrineMarkerColor(s),false));
       _markers[routeItem.idx].marker.setZIndex(1);
     }
   }catch(e){ console.warn('[가톨릭길동무]', e); }
@@ -4410,7 +4466,7 @@ function _buildShrineMarkers(){
    if(!s.lat||!s.lng||s.lat<33||s.lat>38||s.lng<124||s.lng>132) continue;
    const mk=new _MM({
     position:new _LL(s.lat,s.lng),
-    image:_mkrImg(_typeColor(s.type),false),title:s.name
+    image:_mkrImg(_shrineMarkerColor(s),false),title:s.name
    });
    mk.setMap(_map);
    (function(index){
@@ -4456,7 +4512,12 @@ function _restoreMapMarkers(){
   if(!m) return;
   const s=m.shrine;
   const ok=(_filterDio==='all'||s.diocese===_filterDio)&&
-      (!_listSrch||_itemSearchBlob(s).includes(_listSrch)||_itemSearchNorm(s).includes(String(_listSrch).replace(/\s+/g,'')));
+      (!_listSrch||_itemSearchBlob(s).includes(_listSrch)||_itemSearchNorm(s).includes(String(_listSrch).replace(/\s+/g,'')))&&
+      _isShrineVisibleByVisitFilter(s);
+  if(ok){
+    m.marker.setImage(_mkrImg(_shrineMarkerColor(s),false));
+    m.marker.setZIndex(1);
+  }
   m.marker.setMap(ok?_map:null);
   });
 }
@@ -4467,8 +4528,8 @@ function _restoreAllCategoryMarkersForSelection(){
     _markers.forEach(m=>{
       if(!m||!m.marker) return;
       try{
-        m.marker.setMap(_map);
-        m.marker.setImage(_mkrImg(_typeColor(m.shrine.type),false));
+        m.marker.setMap(_isShrineVisibleByVisitFilter(m.shrine)?_map:null);
+        m.marker.setImage(_mkrImg(_shrineMarkerColor(m.shrine),false));
         m.marker.setZIndex(1);
       }catch(e){ console.warn("[가톨릭길동무]", e); }
     });
@@ -4491,7 +4552,7 @@ function _restoreAllCategoryMarkersForSelection(){
 
 function _selectShrineMarker(idx){
   if(_selIdx>=0&&_markers[_selIdx]){
-  _markers[_selIdx].marker.setImage(_mkrImg(_typeColor(_markers[_selIdx].shrine.type),false));
+  _markers[_selIdx].marker.setImage(_mkrImg(_shrineMarkerColor(_markers[_selIdx].shrine),false));
   _markers[_selIdx].marker.setZIndex(1);
   }
   if(idx>=0&&_markers[idx]){
@@ -4503,7 +4564,7 @@ function _selectShrineMarker(idx){
 
 function _clearShrineMarkerSel(){
   if(_selIdx>=0&&_markers[_selIdx]){
-  _markers[_selIdx].marker.setImage(_mkrImg(_typeColor(_markers[_selIdx].shrine.type),false));
+  _markers[_selIdx].marker.setImage(_mkrImg(_shrineMarkerColor(_markers[_selIdx].shrine),false));
   _markers[_selIdx].marker.setZIndex(1);
   }
   _selIdx=-1;
@@ -4573,17 +4634,23 @@ function _showParishNearbyMarkersOnMap(items, lat, lng, phase){
 function _showItemsOnMap(items){
   _markers.forEach(m=>{if(m)m.marker.setMap(null);});
   const bounds=new _LB();
-  items.forEach(s=>{
+  let shownCount=0;
+  const shown=(Array.isArray(items)?items:[]).filter(function(s){ return _isShrineVisibleByVisitFilter(s); });
+  shown.forEach(s=>{
   const i=SHRINES.indexOf(s);
   if(i>=0&&_markers[i]){
+   _markers[i].marker.setImage(_mkrImg(_shrineMarkerColor(s),false));
+   _markers[i].marker.setZIndex(1);
    _markers[i].marker.setMap(_map);
-   if(s.lat&&s.lng) bounds.extend(new _LL(s.lat,s.lng));
+   if(s.lat&&s.lng){ bounds.extend(new _LL(s.lat,s.lng)); shownCount++; }
   }
   });
-  if(typeof _setBoundsByInfoCardStandard==='function'){
-    _setBoundsByInfoCardStandard(bounds,60,60,60,60);
-  }else{
-    try{_map.setBounds(bounds,60,60,60,60);}catch(e){ console.warn("[가톨릭길동무]", e); }
+  if(shownCount>0){
+    if(typeof _setBoundsByInfoCardStandard==='function'){
+      _setBoundsByInfoCardStandard(bounds,60,60,60,60);
+    }else{
+      try{_map.setBounds(bounds,60,60,60,60);}catch(e){ console.warn("[가톨릭길동무]", e); }
+    }
   }
   _raiseMyLocationMarker();
 }
@@ -4595,10 +4662,10 @@ function _showAllShrinesOnMapWithNearbyBounds(items, lat, lng){
     _markers.forEach(function(m){
       if(!m || !m.marker || !m.shrine) return;
       const s=m.shrine;
-      const valid=s.lat&&s.lng&&s.lat>=33&&s.lat<=38&&s.lng>=124&&s.lng<=132;
+      const valid=s.lat&&s.lng&&s.lat>=33&&s.lat<=38&&s.lng>=124&&s.lng<=132&&_isShrineVisibleByVisitFilter(s);
       m.marker.setMap(valid?_map:null);
       if(valid){
-        m.marker.setImage(_mkrImg(_typeColor(s.type),false));
+        m.marker.setImage(_mkrImg(_shrineMarkerColor(s),false));
         m.marker.setZIndex(1);
       }
     });
@@ -4608,7 +4675,7 @@ function _showAllShrinesOnMapWithNearbyBounds(items, lat, lng){
     let count=0;
     if(lat && lng){ bounds.extend(new _LL(lat,lng)); count++; }
     items.forEach(function(s){
-      if(!s || !s.lat || !s.lng) return;
+      if(!s || !s.lat || !s.lng || !_isShrineVisibleByVisitFilter(s)) return;
       bounds.extend(new _LL(s.lat,s.lng));
       count++;
     });
@@ -5704,7 +5771,7 @@ function setMyLocAsStart(){
   function applyCurrentStart(lat,lng){
     _setMyLoc(lat,lng);
     _clearRouteTmpMarkers();
-    if(_mode==='shrine'&&_rS&&_rS.idx>=0&&_markers[_rS.idx]) _markers[_rS.idx].marker.setImage(_mkrImg(_typeColor(_markers[_rS.idx].shrine.type),false));
+    if(_mode==='shrine'&&_rS&&_rS.idx>=0&&_markers[_rS.idx]) _markers[_rS.idx].marker.setImage(_mkrImg(_shrineMarkerColor(_markers[_rS.idx].shrine),false));
     _routeStartMarkerExplicitCurrent=true;
     _rS={idx:-1,name:'현재 위치',lat:lat,lng:lng,isImplicitCurrentLocation:false,showStartMarker:true};
     _setRouteLabel('start','현위치');
@@ -5986,7 +6053,7 @@ function _clearRouteResultOnly(){
 }
 function clearRoute(role){
   if(role==='start'&&_rS){
-    if(_mode==='shrine'&&_rS.idx>=0&&_markers[_rS.idx]) _markers[_rS.idx].marker.setImage(_mkrImg(_typeColor(_markers[_rS.idx].shrine.type),false));
+    if(_mode==='shrine'&&_rS.idx>=0&&_markers[_rS.idx]) _markers[_rS.idx].marker.setImage(_mkrImg(_shrineMarkerColor(_markers[_rS.idx].shrine),false));
     _rS=null;
     _routeStartMarkerExplicitCurrent=false;
     _routeRegionStart=null;
@@ -5999,7 +6066,7 @@ function clearRoute(role){
   }
   if(_isRouteWaypointRole(role) && (_getRoutePointByRole(role)||_getRouteWaypointEnabledByRole(role))){
     const oldPoint=_getRoutePointByRole(role);
-    if(_mode==='shrine'&&oldPoint&&oldPoint.idx>=0&&_markers[oldPoint.idx]) _markers[oldPoint.idx].marker.setImage(_mkrImg(_typeColor(_markers[oldPoint.idx].shrine.type),false));
+    if(_mode==='shrine'&&oldPoint&&oldPoint.idx>=0&&_markers[oldPoint.idx]) _markers[oldPoint.idx].marker.setImage(_mkrImg(_shrineMarkerColor(_markers[oldPoint.idx].shrine),false));
     if(role==='waypoint'){
       _rW=_rW2;
       _rW2=_rW3;
@@ -6030,7 +6097,7 @@ function clearRoute(role){
     return;
   }
   if(role==='end'&&_rE){
-    if(_mode==='shrine'&&_rE.idx>=0&&_markers[_rE.idx]) _markers[_rE.idx].marker.setImage(_mkrImg(_typeColor(_markers[_rE.idx].shrine.type),false));
+    if(_mode==='shrine'&&_rE.idx>=0&&_markers[_rE.idx]) _markers[_rE.idx].marker.setImage(_mkrImg(_shrineMarkerColor(_markers[_rE.idx].shrine),false));
     _rE=null;
     _setRouteLabel('end','');
     _clearRouteResultOnly();
@@ -6049,11 +6116,11 @@ function resetRoute(opts){
   const regionStart = (!fresh && _routeRegionStart && _routeRegionStart.lat) ? Object.assign({}, _routeRegionStart) : null;
 
   if(_mode==='shrine'){
-    if(_rS&&_rS.idx>=0&&_markers[_rS.idx]) _markers[_rS.idx].marker.setImage(_mkrImg(_typeColor(_markers[_rS.idx].shrine.type),false));
-    if(_rW&&_rW.idx>=0&&_markers[_rW.idx]) _markers[_rW.idx].marker.setImage(_mkrImg(_typeColor(_markers[_rW.idx].shrine.type),false));
-    if(_rW2&&_rW2.idx>=0&&_markers[_rW2.idx]) _markers[_rW2.idx].marker.setImage(_mkrImg(_typeColor(_markers[_rW2.idx].shrine.type),false));
-    if(_rW3&&_rW3.idx>=0&&_markers[_rW3.idx]) _markers[_rW3.idx].marker.setImage(_mkrImg(_typeColor(_markers[_rW3.idx].shrine.type),false));
-    if(_rE&&_rE.idx>=0&&_markers[_rE.idx]) _markers[_rE.idx].marker.setImage(_mkrImg(_typeColor(_markers[_rE.idx].shrine.type),false));
+    if(_rS&&_rS.idx>=0&&_markers[_rS.idx]) _markers[_rS.idx].marker.setImage(_mkrImg(_shrineMarkerColor(_markers[_rS.idx].shrine),false));
+    if(_rW&&_rW.idx>=0&&_markers[_rW.idx]) _markers[_rW.idx].marker.setImage(_mkrImg(_shrineMarkerColor(_markers[_rW.idx].shrine),false));
+    if(_rW2&&_rW2.idx>=0&&_markers[_rW2.idx]) _markers[_rW2.idx].marker.setImage(_mkrImg(_shrineMarkerColor(_markers[_rW2.idx].shrine),false));
+    if(_rW3&&_rW3.idx>=0&&_markers[_rW3.idx]) _markers[_rW3.idx].marker.setImage(_mkrImg(_shrineMarkerColor(_markers[_rW3.idx].shrine),false));
+    if(_rE&&_rE.idx>=0&&_markers[_rE.idx]) _markers[_rE.idx].marker.setImage(_mkrImg(_shrineMarkerColor(_markers[_rE.idx].shrine),false));
   }
   _rS=_rW=_rW2=_rW3=_rE=null;
   _routeWaypointEnabled=false;
@@ -6444,7 +6511,7 @@ function selectFromPlaceModal(lat,lng,name,addr){
   const locObj={idx:-1,name:name,lat:lat,lng:lng,isPlace:true};
   if(role==='start'){
     _routeRegionStart=null;
-    if(_mode==='shrine'&&_rS&&_rS.idx>=0&&_markers[_rS.idx]) _markers[_rS.idx].marker.setImage(_mkrImg(_typeColor(_markers[_rS.idx].shrine.type),false));
+    if(_mode==='shrine'&&_rS&&_rS.idx>=0&&_markers[_rS.idx]) _markers[_rS.idx].marker.setImage(_mkrImg(_shrineMarkerColor(_markers[_rS.idx].shrine),false));
     _rS=locObj;
     _setRouteLabel('start',name);
     _refreshRouteTmpMarkers();
@@ -6453,7 +6520,7 @@ function selectFromPlaceModal(lat,lng,name,addr){
     else{ _showRouteGuideText(`도착 ${_getRouteGuideTarget()}를 탭하세요`); }
   } else if(_isRouteWaypointRole(role)) {
     const oldPoint=_getRoutePointByRole(role);
-    if(_mode==='shrine'&&oldPoint&&oldPoint.idx>=0&&_markers[oldPoint.idx]) _markers[oldPoint.idx].marker.setImage(_mkrImg(_typeColor(_markers[oldPoint.idx].shrine.type),false));
+    if(_mode==='shrine'&&oldPoint&&oldPoint.idx>=0&&_markers[oldPoint.idx]) _markers[oldPoint.idx].marker.setImage(_mkrImg(_shrineMarkerColor(_markers[oldPoint.idx].shrine),false));
     _setRouteWaypointEnabledByRole(role,true);
     _setRoutePointByRole(role,locObj);
     _setRouteLabel(role,name);
@@ -6461,7 +6528,7 @@ function selectFromPlaceModal(lat,lng,name,addr){
     _hideRouteGuide();
     if(_rS&&_rE) _updateSearchBtn();
   } else {
-    if(_mode==='shrine'&&_rE&&_rE.idx>=0&&_markers[_rE.idx]) _markers[_rE.idx].marker.setImage(_mkrImg(_typeColor(_markers[_rE.idx].shrine.type),false));
+    if(_mode==='shrine'&&_rE&&_rE.idx>=0&&_markers[_rE.idx]) _markers[_rE.idx].marker.setImage(_mkrImg(_shrineMarkerColor(_markers[_rE.idx].shrine),false));
     _rE=locObj;
     _setRouteLabel('end',name);
     _refreshRouteTmpMarkers();
@@ -6640,7 +6707,7 @@ function selectFromModal(idx){
   if(role==='start'){
   _routeRegionStart=null;
   _routeStartMarkerExplicitCurrent=false;
-  if(_mode==='shrine'&&_rS&&_rS.idx>=0&&_markers[_rS.idx]) _markers[_rS.idx].marker.setImage(_mkrImg(_typeColor(_markers[_rS.idx].shrine.type),false));
+  if(_mode==='shrine'&&_rS&&_rS.idx>=0&&_markers[_rS.idx]) _markers[_rS.idx].marker.setImage(_mkrImg(_shrineMarkerColor(_markers[_rS.idx].shrine),false));
   _clearRouteTmpMarkers();
   _rS={idx,name:s.name,lat:s.lat,lng:s.lng};
   if(_mode==='shrine'&&_shouldShowRouteStartMarker()){ _markers[idx]?.marker.setImage(_mkrImgRoute(_typeColor(s.type),'출')); _setRouteMarkerZ(idx,'start'); }
@@ -6653,7 +6720,7 @@ function selectFromModal(idx){
   }
   } else if(_isRouteWaypointRole(role)) {
   const oldPoint=_getRoutePointByRole(role);
-  if(_mode==='shrine'&&oldPoint&&oldPoint.idx>=0&&_markers[oldPoint.idx]) _markers[oldPoint.idx].marker.setImage(_mkrImg(_typeColor(_markers[oldPoint.idx].shrine.type),false));
+  if(_mode==='shrine'&&oldPoint&&oldPoint.idx>=0&&_markers[oldPoint.idx]) _markers[oldPoint.idx].marker.setImage(_mkrImg(_shrineMarkerColor(_markers[oldPoint.idx].shrine),false));
   _setRouteWaypointEnabledByRole(role,true);
   _clearRouteTmpMarkers();
   _setRoutePointByRole(role,{idx,name:s.name,lat:s.lat,lng:s.lng});
@@ -6663,7 +6730,7 @@ function selectFromModal(idx){
   _hideRouteGuide();
   if(_rS&&_rE) _updateSearchBtn();
   } else {
-  if(_mode==='shrine'&&_rE&&_rE.idx>=0&&_markers[_rE.idx]) _markers[_rE.idx].marker.setImage(_mkrImg(_typeColor(_markers[_rE.idx].shrine.type),false));
+  if(_mode==='shrine'&&_rE&&_rE.idx>=0&&_markers[_rE.idx]) _markers[_rE.idx].marker.setImage(_mkrImg(_shrineMarkerColor(_markers[_rE.idx].shrine),false));
   _rE={idx,name:s.name,lat:s.lat,lng:s.lng};
   if(_mode==='shrine'){ _markers[idx]?.marker.setImage(_mkrImgRoute(_typeColor(s.type),'도')); _setRouteMarkerZ(idx,'end'); }
   _setRouteLabel('end',s.name);

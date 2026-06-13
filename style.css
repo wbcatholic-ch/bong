@@ -3958,7 +3958,7 @@ html.oai-font-global #srch-modal .sm-hd .sm-title{
 
 
 
-/* V6-36: 가본 성지 1단계 - 수동 등록/표시 */
+/* V6-37: 방문한 성지 2단계 - 지도 필터/수동 등록 표시 */
 .shrine-visited-chip{display:inline-flex;align-items:center;width:max-content;margin-top:5px;padding:3px 7px;border-radius:999px;background:#111;color:#f6d58a;border:1px solid rgba(212,170,106,.78);font-size:11px;font-weight:900;line-height:1.1;box-shadow:0 1px 4px rgba(0,0,0,.14)}
 .list-item.shrine-visited-card,.nearby-item.shrine-visited-card,.region-item.shrine-visited-card{background:#fffdf7!important;border-color:rgba(17,17,17,.22)!important;box-shadow:0 2px 10px rgba(0,0,0,.08)!important}
 .ic-shrine-visit{margin:8px 14px 0;padding:10px 11px;border-radius:12px;border:1px solid rgba(17,17,17,.16);background:#fffdf7;display:none;box-shadow:0 1px 6px rgba(14,21,53,.05)}
@@ -3973,3 +3973,14 @@ html.oai-font-global #srch-modal .sm-hd .sm-title{
 .shrine-visit-actions{display:flex;gap:8px;margin-top:10px}.shrine-visit-actions button{flex:1;height:42px;border-radius:12px;font-size:14px;font-weight:900}.shrine-visit-save{border:1px solid #111;background:#111;color:#f6d58a}.shrine-visit-cancel{border:1px solid #ddd2bb;background:#fff8e8;color:#5b3c00}
 .shrine-visit-list{margin-top:12px;border-top:1px solid #f0e6d2;padding-top:10px;max-height:28vh;overflow:auto}.shrine-visit-list-title{font-size:13px;font-weight:900;color:#111;margin-bottom:7px}.shrine-visit-empty{font-size:13px;font-weight:700;color:#8b6914;background:#fff8e8;border-radius:10px;padding:10px}.shrine-visit-date-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #f4eedf;font-size:14px;font-weight:800;color:#111}.shrine-visit-date-row button{border:1px solid #e5d7bd;background:#fff;color:#8b0000;border-radius:9px;padding:5px 8px;font-size:12px;font-weight:900}
 html.oai-font-global .shrine-visited-chip{font-size:calc(11px * var(--app-inner-font-scale,1))!important}html.oai-font-global .ic-shrine-visit-text strong{font-size:calc(13px * var(--app-inner-font-scale,1))!important}html.oai-font-global .ic-shrine-visit-text span,html.oai-font-global #ic-shrine-visit-btn{font-size:calc(12px * var(--app-inner-font-scale,1))!important}
+
+/* V6-37: 방문한 성지 지도 필터 */
+.shrine-visit-map-filter{position:absolute;left:12px;top:12px;z-index:36;display:none;align-items:center;gap:6px;padding:6px;border-radius:999px;background:rgba(255,255,255,.92);border:1px solid rgba(17,17,17,.12);box-shadow:0 4px 14px rgba(0,0,0,.16);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.shrine-visit-map-filter.show{display:flex}
+.shrine-visit-map-filter button{height:30px;padding:0 10px;border-radius:999px;border:1px solid #d8ccb8;background:#fffdf7;color:#3b2e18;font-size:12px;font-weight:900;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.shrine-visit-map-filter button[data-shrine-visit-filter="visited"]{border-color:#111;color:#111}
+.shrine-visit-map-filter button[data-shrine-visit-filter="unvisited"]{border-color:#b9c6d8;color:#26415f}
+.shrine-visit-map-filter button.active{background:#111;color:#f6d58a;border-color:#d4aa6a;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.shrine-visit-map-filter button[data-shrine-visit-filter="unvisited"].active{background:#e9f3ff;color:#1d3d63;border-color:#6a93c2}
+html.oai-font-global .shrine-visit-map-filter button{font-size:calc(12px * var(--app-inner-font-scale,1))!important}
+@media (max-width:390px){.shrine-visit-map-filter{left:8px;top:8px;gap:4px;padding:5px}.shrine-visit-map-filter button{height:29px;padding:0 8px;font-size:11px}}
