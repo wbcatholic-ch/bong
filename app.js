@@ -884,8 +884,8 @@ function _ensureShrineVisitFloatingListButton(){
   btn.id='shrine-visit-floating-list-btn';
   btn.type='button';
   btn.className='shrine-visit-floating-list-btn';
-  btn.textContent='나의순례';
-  btn.setAttribute('aria-label','나의 순례기록 열기');
+  btn.textContent='나의순례현황';
+  btn.setAttribute('aria-label','나의 순례현황 열기');
   app.appendChild(btn);
   btn.addEventListener('click', function(e){
     e.preventDefault(); e.stopPropagation();
@@ -896,12 +896,18 @@ function _ensureShrineVisitFloatingListButton(){
 function _updateShrineVisitFloatingListButtonUI(){
   const btn=_ensureShrineVisitFloatingListButton();
   if(!btn) return;
-  const count=_getShrineVisitEntries().length;
   const srch=document.getElementById('srch-modal');
   const searchOpen=!!(srch&&srch.classList.contains('open'));
-  const show=(_mode==='shrine' && ['nearby','list','region'].indexOf(_activeTab)>=0 && !searchOpen);
+  const info=document.getElementById('info-card');
+  const infoOpen=!!(info&&info.classList.contains('open'));
+  const route=document.getElementById('sheet-route');
+  const routeOpen=(_activeTab==='route') || !!(route&&route.classList.contains('open'));
+  const ae=document.activeElement;
+  const keyboardOpen=!!(ae && (ae.tagName==='INPUT'||ae.tagName==='TEXTAREA') && (ae.id==='list-srch-inp'||ae.id==='sm-inp'));
+  const visitOpen=(typeof _isAnyVisitModalOpen==='function'&&_isAnyVisitModalOpen()) || (typeof _isShrineVisitDetailOpen==='function'&&_isShrineVisitDetailOpen()) || (typeof _isShrineVisitCardsModalOpen==='function'&&_isShrineVisitCardsModalOpen());
+  const show=(_mode==='shrine' && ['nearby','list','region'].indexOf(_activeTab)>=0 && !searchOpen && !keyboardOpen && !infoOpen && !routeOpen && !visitOpen);
   btn.classList.toggle('show', !!show);
-  btn.textContent=count ? '나의순례 '+count : '나의순례';
+  btn.textContent='나의순례현황';
 }
 
 function _updateShrineVisitCardsButtonUI(){
@@ -2433,7 +2439,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-55';
+    frame.src='diocese.html?v=V6-56';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -2814,7 +2820,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-55';
+const _PARISH_ASSET_VERSION='V6-56';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -2977,7 +2983,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-55';
+const _PRAYER_ASSET_VERSION='V6-56';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -3038,7 +3044,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-55';
+const _RETREAT_ASSET_VERSION='V6-56';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -3333,7 +3339,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-55';
+const _SHRINE_ASSET_VERSION='V6-56';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -4461,6 +4467,7 @@ function _showInfoCard(item, idx){
 
   _renderInfoCardShrineVisit(item);
   $('info-card').classList.add('open');
+  try{ _updateShrineVisitCardsButtonUI(); }catch(_e){}
   setTimeout(_fitInfoCardButtons, 0);
   setTimeout(_fitInfoCardButtons, 80);
 }
@@ -4470,6 +4477,7 @@ function closeInfoCard(opts){
   const wasItem = _curInfoItem; // 닫기 전에 저장
   const card = $('info-card');
   if(card) card.classList.remove('open');
+  try{ _updateShrineVisitCardsButtonUI(); }catch(_e){}
   _curInfoItem=null;
   _curFromRegion=false;
   if(_mode==='shrine') _clearShrineMarkerSel();
