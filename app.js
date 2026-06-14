@@ -621,7 +621,7 @@ function openMissa(){ openFaithPortal('missa', {forceReload:true}); }
 
 const OAI_SHRINE_VISITS_KEY = 'oai_shrine_visits_v1';
 const OAI_SHRINE_AUTO_VISIT_PROMPT_KEY = 'oai_shrine_auto_visit_prompt_v1';
-const OAI_SHRINE_AUTO_VISIT_RADIUS_M = 500;
+const OAI_SHRINE_AUTO_VISIT_RADIUS_M = 200;
 let _shrineVisitMapFilter = 'all';
 let _shrineVisitCardsTab = 'visited';
 let _shrineVisitCardsDiocese = 'all';
@@ -852,13 +852,13 @@ function _renderShrineVisitDioceseTabs(visitedCount,totalCount){
     const visited=visitedEntries.filter(function(entry){ return String(entry.item&&entry.item.diocese||'')===String(key); }).length;
     return {visited:visited,total:total,pct:total?Math.round((visited/total)*100):0};
   }
-  const my=rawEntries.filter(function(pair){ return pair&&pair[0]!=='all'&&isMy(pair); });
   const all=rawEntries.filter(function(pair){ return pair&&pair[0]==='all'; });
+  const my=rawEntries.filter(function(pair){ return pair&&pair[0]!=='all'&&isMy(pair); });
   const rest=rawEntries.filter(function(pair){ return pair&&pair[0]!=='all'&&!isMy(pair); }).sort(function(a,b){
     const sa=statOf(a), sb=statOf(b);
     return (sb.pct-sa.pct) || (sb.visited-sa.visited) || (sb.total-sa.total) || String(a[1]||'').localeCompare(String(b[1]||''),'ko');
   });
-  const entries=my.concat(all,rest);
+  const entries=all.concat(my,rest);
   wrap.innerHTML=entries.map(function(pair){
     const v=pair[0], l=pair[1];
     const selected=String(v)===String(_shrineVisitCardsDiocese||'all');
@@ -1362,7 +1362,7 @@ function _ensureShrineAutoVisitModal(){
   modal.id='shrine-auto-visit-modal';
   modal.className='shrine-auto-visit-modal';
   modal.setAttribute('aria-hidden','true');
-  modal.innerHTML='<div class="shrine-auto-visit-backdrop" data-shrine-auto-close="1"></div><div class="shrine-auto-visit-panel" role="dialog" aria-modal="true" aria-label="GPS 순례등록"><div class="shrine-auto-visit-kicker">GPS 자동 감지</div><div class="shrine-auto-visit-title">가까운 성지에 도착한 것 같습니다.</div><div id="shrine-auto-visit-name" class="shrine-auto-visit-name"></div><div id="shrine-auto-visit-dist" class="shrine-auto-visit-dist"></div><div class="shrine-auto-visit-actions"><button type="button" id="shrine-auto-visit-save" class="shrine-auto-visit-save">오늘 순례등록</button><button type="button" id="shrine-auto-visit-later" class="shrine-auto-visit-later">나중에</button></div></div>';
+  modal.innerHTML='<div class="shrine-auto-visit-backdrop" data-shrine-auto-close="1"></div><div class="shrine-auto-visit-panel" role="dialog" aria-modal="true" aria-label="GPS 순례등록"><div class="shrine-auto-visit-kicker">GPS 자동 감지</div><div id="shrine-auto-visit-title" class="shrine-auto-visit-title"></div><div id="shrine-auto-visit-name" class="shrine-auto-visit-name"></div><div id="shrine-auto-visit-dist" class="shrine-auto-visit-dist"></div><div class="shrine-auto-visit-actions"><button type="button" id="shrine-auto-visit-save" class="shrine-auto-visit-save">오늘 순례등록</button><button type="button" id="shrine-auto-visit-later" class="shrine-auto-visit-later">나중에</button></div></div>';
   document.body.appendChild(modal);
   modal.querySelectorAll('[data-shrine-auto-close],#shrine-auto-visit-later').forEach(function(el){
     el.addEventListener('click', function(e){
@@ -1392,9 +1392,12 @@ function _openShrineAutoVisitModal(entry){
   if(!entry||!entry.item) return;
   const modal=_ensureShrineAutoVisitModal();
   window.__OAI_SHRINE_AUTO_VISIT_ENTRY__=entry;
+  const title=document.getElementById('shrine-auto-visit-title');
   const name=document.getElementById('shrine-auto-visit-name');
   const dist=document.getElementById('shrine-auto-visit-dist');
-  if(name) name.textContent=entry.item.name||'성지';
+  const placeName=entry.item.name||'성지';
+  if(title) title.textContent=placeName+'에 도착했습니다.';
+  if(name) name.textContent='';
   if(dist) dist.textContent='현재 위치에서 약 '+Math.max(1,Math.round(entry.meters))+'m';
   modal.classList.add('show');
   modal.setAttribute('aria-hidden','false');
@@ -2631,7 +2634,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-67';
+    frame.src='diocese.html?v=V6-70';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -3012,7 +3015,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-67';
+const _PARISH_ASSET_VERSION='V6-70';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -3175,7 +3178,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-67';
+const _PRAYER_ASSET_VERSION='V6-70';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -3236,7 +3239,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-67';
+const _RETREAT_ASSET_VERSION='V6-70';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -3531,7 +3534,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-67';
+const _SHRINE_ASSET_VERSION='V6-70';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
