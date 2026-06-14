@@ -1008,6 +1008,7 @@ function _ensureShrineVisitCardsModal(){
       e.preventDefault(); e.stopPropagation(); if(e.stopImmediatePropagation) e.stopImmediatePropagation();
       _shrineVisitCardsDiocese=dio.getAttribute('data-shrine-visit-diocese')||'all';
       _renderShrineVisitCardsModal();
+      setTimeout(function(){ _scrollShrineVisitDioceseTabIntoView(_shrineVisitCardsDiocese,'smooth'); }, 60);
       return;
     }
     const statRow=e.target&&e.target.closest&&e.target.closest('[data-shrine-stat-diocese]');
@@ -1017,7 +1018,9 @@ function _ensureShrineVisitCardsModal(){
       _shrineVisitCardsDiocese=dioVal;
       _shrineVisitCardsTab='visited';
       _renderShrineVisitCardsModal();
-      setTimeout(function(){ _scrollShrineVisitDioceseTabIntoView(dioVal,'smooth'); }, 60);
+      try{ const body=document.getElementById('shrine-visit-cards-body'); if(body) body.scrollTop=0; }catch(_e){}
+      setTimeout(function(){ _scrollShrineVisitDioceseTabIntoView(dioVal,'smooth'); }, 80);
+      setTimeout(function(){ _scrollShrineVisitDioceseTabIntoView(dioVal,'smooth'); }, 260);
       return;
     }
     const card=e.target&&e.target.closest&&e.target.closest('[data-shrine-visit-card]');
@@ -1167,8 +1170,15 @@ function _scrollShrineVisitDioceseTabIntoView(value, behavior){
   try{
     const wrap=document.getElementById('shrine-visit-cards-diocese');
     if(!wrap) return;
-    const btn=wrap.querySelector('[data-shrine-visit-diocese="'+String(value).replace(/"/g,'\\"')+'"]');
-    if(btn&&btn.scrollIntoView) btn.scrollIntoView({behavior:behavior||'smooth', block:'nearest', inline:'center'});
+    let btn=null;
+    wrap.querySelectorAll('[data-shrine-visit-diocese]').forEach(function(el){
+      if(String(el.getAttribute('data-shrine-visit-diocese')||'')===String(value)) btn=el;
+    });
+    if(!btn) return;
+    const target=Math.max(0, btn.offsetLeft - Math.max(0,(wrap.clientWidth-btn.offsetWidth)/2));
+    if(typeof wrap.scrollTo==='function') wrap.scrollTo({left:target, behavior:behavior||'smooth'});
+    else wrap.scrollLeft=target;
+    if(btn.scrollIntoView) setTimeout(function(){ try{ btn.scrollIntoView({behavior:behavior||'smooth', block:'nearest', inline:'center'}); }catch(_e){} }, 80);
   }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
 
@@ -2550,7 +2560,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-62';
+    frame.src='diocese.html?v=V6-63';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -2931,7 +2941,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-62';
+const _PARISH_ASSET_VERSION='V6-63';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -3094,7 +3104,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-62';
+const _PRAYER_ASSET_VERSION='V6-63';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -3155,7 +3165,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-62';
+const _RETREAT_ASSET_VERSION='V6-63';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -3450,7 +3460,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-62';
+const _SHRINE_ASSET_VERSION='V6-63';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
