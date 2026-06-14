@@ -952,7 +952,8 @@ function _updateShrineVisitFloatingListButtonUI(){
   const allowedTabs=['nearby','list','region'];
   const sheetOpen=_isShrineVisitFloatingListSurfaceOpen();
   const activeAllowed=allowedTabs.indexOf(_activeTab)>=0;
-  const show=(_mode==='shrine' && (sheetOpen||activeAllowed) && !searchOpen && !keyboardOpen && !infoOpen && !routeOpen && !visitOpen);
+  const mapOpen=(_screen==='map' && !sheetOpen);
+  const show=(_mode==='shrine' && (sheetOpen||activeAllowed||mapOpen) && !searchOpen && !keyboardOpen && !infoOpen && !routeOpen && !visitOpen);
   btn.classList.toggle('show', !!show);
   btn.textContent='나의순례현황';
 }
@@ -1016,9 +1017,9 @@ function _ensureShrineVisitCardsModal(){
       e.preventDefault(); e.stopPropagation(); if(e.stopImmediatePropagation) e.stopImmediatePropagation();
       const dioVal=statRow.getAttribute('data-shrine-stat-diocese')||'all';
       _shrineVisitCardsDiocese=dioVal;
-      _shrineVisitCardsTab='visited';
+      window.__OAI_SHRINE_VISIT_STATS_EXPANDED_DIO__=dioVal;
+      _shrineVisitCardsTab='stats';
       _renderShrineVisitCardsModal();
-      try{ const body=document.getElementById('shrine-visit-cards-body'); if(body) body.scrollTop=0; }catch(_e){}
       setTimeout(function(){ _scrollShrineVisitDioceseTabIntoView(dioVal,'smooth'); }, 80);
       setTimeout(function(){ _scrollShrineVisitDioceseTabIntoView(dioVal,'smooth'); }, 260);
       return;
@@ -1046,8 +1047,9 @@ function _pushShrineVisitCardsHistory(){
 function _openShrineVisitCardsModal(){
   if(_mode!=='shrine') return;
   const modal=_ensureShrineVisitCardsModal();
-  if(!_shrineVisitCardsTab) _shrineVisitCardsTab='visited';
+  _shrineVisitCardsTab='visited';
   _renderShrineVisitCardsModal();
+  try{ const body=document.getElementById('shrine-visit-cards-body'); if(body) body.scrollTop=0; }catch(_e){}
   modal.classList.add('show');
   modal.setAttribute('aria-hidden','false');
   _pushShrineVisitCardsHistory();
@@ -1087,6 +1089,31 @@ function _ensureShrineVisitDetailView(){
       e.preventDefault(); e.stopPropagation();
       const idx=parseInt(add.getAttribute('data-shrine-detail-add'),10);
       if(idx>=0&&SHRINES[idx]) _openShrineVisitModal(SHRINES[idx]);
+      return;
+    }
+    const route=e.target&&e.target.closest&&e.target.closest('[data-shrine-detail-route]');
+    if(route){
+      e.preventDefault(); e.stopPropagation();
+      const idx=parseInt(route.getAttribute('data-shrine-detail-route'),10);
+      if(idx>=0&&SHRINES[idx]){
+        const item=SHRINES[idx];
+        _closeShrineVisitDetail({fromPopstate:true});
+        _closeShrineVisitCardsModal({fromPopstate:true});
+        _curInfoItem={item:item,idx:idx};
+        _curFromRegion=false;
+        openInAppRoute();
+      }
+      return;
+    }
+    const kakao=e.target&&e.target.closest&&e.target.closest('[data-shrine-detail-kakao]');
+    if(kakao){
+      e.preventDefault(); e.stopPropagation();
+      const idx=parseInt(kakao.getAttribute('data-shrine-detail-kakao'),10);
+      if(idx>=0&&SHRINES[idx]){
+        _curInfoItem={item:SHRINES[idx],idx:idx};
+        _curFromRegion=false;
+        openKakaoNav();
+      }
       return;
     }
     const hp=e.target&&e.target.closest&&e.target.closest('[data-shrine-detail-hp]');
@@ -1132,11 +1159,12 @@ function _renderShrineVisitDetail(idx){
   const guideUrl=item.seq?(_SU+item.seq):'';
   const telText=item.tel?_visitHtmlEsc(item.tel):'—';
   const telHref=item.tel?'tel:'+String(item.tel).replace(/[^0-9+]/g,''):'';
-  const hpBtn=hpUrl?'<button type="button" class="shrine-visit-detail-action" data-shrine-detail-hp="'+_visitHtmlEsc(hpUrl)+'">홈페이지</button>':'';
-  const guideBtn=guideUrl?'<button type="button" class="shrine-visit-detail-action" data-shrine-detail-guide="'+_visitHtmlEsc(guideUrl)+'">성지 상세페이지</button>':'';
-  const telBtn=telHref?'<a class="shrine-visit-detail-action" href="'+_visitHtmlEsc(telHref)+'">전화 걸기</a>':'';
-  const addBtn=count?('<button type="button" class="shrine-visit-detail-add" data-shrine-detail-add="'+idx+'">순례 날짜 추가</button>'):'';
-  body.innerHTML='<section class="shrine-visit-detail-hero"><div class="shrine-visit-detail-kicker">순례 기록</div><div class="shrine-visit-detail-count">순례 '+count+'회</div><div class="shrine-visit-detail-recent">최근 순례일 '+_visitHtmlEsc(recent)+'</div><div class="shrine-visit-detail-date-title">순례 날짜</div><div class="shrine-visit-detail-date-list">'+dateHtml+'</div>'+addBtn+'</section><section class="shrine-visit-detail-info"><div class="shrine-visit-detail-section-title">성지 정보</div><div class="shrine-visit-detail-name">'+_visitHtmlEsc(item.name||'')+'</div><div class="shrine-visit-detail-row"><span>교구</span><strong>'+_visitHtmlEsc(item.diocese||'—')+'</strong></div><div class="shrine-visit-detail-row"><span>주소</span><strong>'+_visitHtmlEsc(item.addr||'—')+'</strong></div><div class="shrine-visit-detail-row"><span>전화</span><strong>'+telText+'</strong></div><div class="shrine-visit-detail-actions">'+telBtn+hpBtn+guideBtn+'</div></section>';
+  const hpBtn=hpUrl?'<button type="button" class="shrine-visit-detail-action detail-home" data-shrine-detail-hp="'+_visitHtmlEsc(hpUrl)+'">홈페이지</button>':'';
+  const guideBtn=guideUrl?'<button type="button" class="shrine-visit-detail-action detail-guide" data-shrine-detail-guide="'+_visitHtmlEsc(guideUrl)+'">성지 상세페이지</button>':'';
+  const telBtn=telHref?'<a class="shrine-visit-detail-action detail-tel" href="'+_visitHtmlEsc(telHref)+'">전화 걸기</a>':'';
+  const routeBtn='<button type="button" class="shrine-visit-detail-action detail-route" data-shrine-detail-route="'+idx+'">길찾기</button>';
+  const kakaoBtn='<button type="button" class="shrine-visit-detail-action detail-kakao" data-shrine-detail-kakao="'+idx+'">카카오내비</button>';
+  body.innerHTML='<section class="shrine-visit-detail-hero"><div class="shrine-visit-detail-kicker">순례 기록</div><div class="shrine-visit-detail-count">순례 '+count+'회</div><div class="shrine-visit-detail-recent">최근 순례일 '+_visitHtmlEsc(recent)+'</div><div class="shrine-visit-detail-date-title">순례 날짜</div><div class="shrine-visit-detail-date-list">'+dateHtml+'</div></section><section class="shrine-visit-detail-info"><div class="shrine-visit-detail-section-title">성지 정보</div><div class="shrine-visit-detail-name">'+_visitHtmlEsc(item.name||'')+'</div><div class="shrine-visit-detail-row"><span>교구</span><strong>'+_visitHtmlEsc(item.diocese||'—')+'</strong></div><div class="shrine-visit-detail-row"><span>주소</span><strong>'+_visitHtmlEsc(item.addr||'—')+'</strong></div><div class="shrine-visit-detail-row"><span>전화</span><strong>'+telText+'</strong></div><div class="shrine-visit-detail-actions">'+telBtn+routeBtn+kakaoBtn+hpBtn+guideBtn+'</div></section>';
 }
 function _openShrineVisitDetail(idx){
   idx=parseInt(idx,10);
@@ -1186,18 +1214,25 @@ function _renderShrineVisitCardsStatsView(allVisited,allUnvisited,visited,unvisi
   const allTotal=(Array.isArray(SHRINES)?SHRINES.length:(allVisited.length+allUnvisited.length));
   const allCount=allVisited.length;
   const allPct=allTotal?Math.round((allCount/allTotal)*100):0;
+  const expanded=window.__OAI_SHRINE_VISIT_STATS_EXPANDED_DIO__||'';
   const entries=_getShrineVisitDioceseEntries().filter(function(pair){ return pair&&pair[0]&&pair[0]!=='all'; });
   const rows=entries.map(function(pair){
     const key=pair[0], label=pair[1];
     const totalBy=(Array.isArray(SHRINES)?SHRINES.filter(function(item){ return String(item&&item.diocese||'')===String(key); }).length:0);
-    const visitBy=allVisited.filter(function(entry){ return String(entry.item&&entry.item.diocese||'')===String(key); }).length;
+    const visitEntries=allVisited.filter(function(entry){ return String(entry.item&&entry.item.diocese||'')===String(key); });
+    const visitBy=visitEntries.length;
     const pct=totalBy?Math.round((visitBy/totalBy)*100):0;
-    return {key:key,label:label,total:totalBy,visited:visitBy,pct:pct};
+    return {key:key,label:label,total:totalBy,visited:visitBy,pct:pct,entries:visitEntries};
   }).filter(function(row){ return row.total>0; }).sort(function(a,b){
     return (b.pct-a.pct) || (b.visited-a.visited) || (b.total-a.total) || String(a.label||'').localeCompare(String(b.label||''),'ko');
   }).map(function(row){
     const active=String(_shrineVisitCardsDiocese||'all')===String(row.key);
-    return '<button type="button" class="shrine-visit-stat-row'+(active?' active':'')+'" data-shrine-stat-diocese="'+_visitHtmlEsc(row.key)+'"><span class="shrine-visit-stat-name">'+_visitHtmlEsc(row.label)+'</span><strong>'+row.visited+' / '+row.total+'</strong><em>'+row.pct+'%</em></button>';
+    const open=String(expanded)===String(row.key);
+    const itemHtml=open?('<div class="shrine-visit-stat-items">'+(row.entries.length?row.entries.map(function(entry){
+      const recent=entry.recent?_formatVisitDate(entry.recent):'—';
+      return '<div class="shrine-visit-stat-item"><span>'+_visitHtmlEsc(entry.item&&entry.item.name||'')+'</span><strong>순례 '+entry.count+'회</strong><em>'+_visitHtmlEsc(recent)+'</em></div>';
+    }).join(''):'<div class="shrine-visit-stat-item empty">순례 기록이 없습니다.</div>')+'</div>'):'';
+    return '<button type="button" class="shrine-visit-stat-row'+(active?' active':'')+'" data-shrine-stat-diocese="'+_visitHtmlEsc(row.key)+'"><span class="shrine-visit-stat-name">'+_visitHtmlEsc(row.label)+'</span><strong>'+row.visited+' / '+row.total+'</strong><em>'+row.pct+'%</em></button>'+itemHtml;
   }).join('');
   return '<div class="shrine-visit-stats-view"><section class="shrine-visit-stat-total"><div class="shrine-visit-stat-kicker">전체 순례 현황</div><strong>'+allCount+'곳 순례 / '+allTotal+'곳</strong><span>'+allPct+'% 순례</span></section><section class="shrine-visit-stat-list"><div class="shrine-visit-stat-kicker">교구별 순례 현황 · 순례율 높은 순</div>'+rows+'</section></div>';
 }
@@ -2560,7 +2595,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-63';
+    frame.src='diocese.html?v=V6-64';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -2941,7 +2976,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-63';
+const _PARISH_ASSET_VERSION='V6-64';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -3104,7 +3139,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-63';
+const _PRAYER_ASSET_VERSION='V6-64';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -3165,7 +3200,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-63';
+const _RETREAT_ASSET_VERSION='V6-64';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -3460,7 +3495,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-63';
+const _SHRINE_ASSET_VERSION='V6-64';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -6017,7 +6052,10 @@ function _renderNearbyDone(prelim,results,getIdx,getColor,getLabel,phase,request
     const dur=(!isEst&&o.r.dur)?`<span style="font-size:10px;color:#aaa;font-weight:400;margin-left:3px">${_fmtTime(o.r.dur)}</span>`:'';
     return `<div class="nearby-item${(_mode==='shrine'&&_isVisitedShrine(o.x.p))?' shrine-visited-card':''}" onclick="selectItem(${idx},{fromNearby:true})"><div class="nearby-num" style="background:${c}!important">${i+1}</div><div class="nearby-info"><div class="nearby-name">${o.x.p.name}</div><div class="nearby-addr">${o.x.p.addr.substring(0,26)}${o.x.p.addr.length>26?'…':''}</div>${_shrineVisitBadgeHtml(o.x.p,'nearby')}</div><div class="nearby-meta"><div class="nearby-type" style="background:${c}18!important;color:${c}!important">${lbl}</div><div class="nearby-dist" style="color:${isEst?'#aaa':c}!important">${distTxt}${dur}</div></div></div>`;
   }).join('');
-  if(phase==='final') body.scrollTop=scrollTop;
+  if(phase==='final'){
+    body.scrollTop=scrollTop;
+    try{ _updateShrineVisitCardsButtonUI(); }catch(_e){}
+  }
 }
 function _loadNearbyShrines(lat,lng){
   _loadNearbyWithDist(lat,lng,SHRINES,p=>SHRINES.indexOf(p),p=>TC[p.type]||'#555',p=>p.type);
