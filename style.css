@@ -3958,7 +3958,7 @@ html.oai-font-global #srch-modal .sm-hd .sm-title{
 
 
 
-/* V6-46: 방문한 성지 2단계 - 지도 필터/수동 등록 표시 */
+/* V6-47: 방문한 성지 2단계 - 지도 필터/수동 등록 표시 */
 .shrine-visited-chip{display:inline-flex;align-items:center;width:max-content;margin-top:5px;padding:3px 7px;border-radius:999px;background:#111;color:#f6d58a;border:1px solid rgba(212,170,106,.78);font-size:11px;font-weight:900;line-height:1.1;box-shadow:0 1px 4px rgba(0,0,0,.14)}
 .list-item.shrine-visited-card,.nearby-item.shrine-visited-card,.region-item.shrine-visited-card{background:#fffdf7!important;border-color:rgba(17,17,17,.22)!important;box-shadow:0 2px 10px rgba(0,0,0,.08)!important}
 .ic-shrine-visit{margin:8px 14px 0;padding:10px 11px;border-radius:12px;border:1px solid rgba(17,17,17,.16);background:#fffdf7;display:none;box-shadow:0 1px 6px rgba(14,21,53,.05)}
@@ -3974,7 +3974,7 @@ html.oai-font-global #srch-modal .sm-hd .sm-title{
 .shrine-visit-list{margin-top:12px;border-top:1px solid #f0e6d2;padding-top:10px;max-height:28vh;overflow:auto}.shrine-visit-list-title{font-size:13px;font-weight:900;color:#111;margin-bottom:7px}.shrine-visit-empty{font-size:13px;font-weight:700;color:#8b6914;background:#fff8e8;border-radius:10px;padding:10px}.shrine-visit-date-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #f4eedf;font-size:14px;font-weight:800;color:#111}.shrine-visit-date-row button{border:1px solid #e5d7bd;background:#fff;color:#8b0000;border-radius:9px;padding:5px 8px;font-size:12px;font-weight:900}
 html.oai-font-global .shrine-visited-chip{font-size:calc(11px * var(--app-inner-font-scale,1))!important}html.oai-font-global .ic-shrine-visit-text strong{font-size:calc(13px * var(--app-inner-font-scale,1))!important}html.oai-font-global .ic-shrine-visit-text span,html.oai-font-global #ic-shrine-visit-btn{font-size:calc(12px * var(--app-inner-font-scale,1))!important}
 
-/* V6-46: 방문한 성지 지도 필터 */
+/* V6-47: 방문한 성지 지도 필터 */
 .shrine-visit-map-filter{position:absolute;left:12px;top:12px;z-index:36;display:none;align-items:center;gap:6px;padding:6px;border-radius:999px;background:rgba(255,255,255,.92);border:1px solid rgba(17,17,17,.12);box-shadow:0 4px 14px rgba(0,0,0,.16);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .shrine-visit-map-filter.show{display:flex}
 .shrine-visit-map-filter button{height:30px;padding:0 10px;border-radius:999px;border:1px solid #d8ccb8;background:#fffdf7;color:#3b2e18;font-size:12px;font-weight:900;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.06)}
@@ -3985,7 +3985,7 @@ html.oai-font-global .shrine-visited-chip{font-size:calc(11px * var(--app-inner-
 html.oai-font-global .shrine-visit-map-filter button{font-size:calc(12px * var(--app-inner-font-scale,1))!important}
 @media (max-width:390px){.shrine-visit-map-filter{left:8px;top:8px;gap:4px;padding:5px}.shrine-visit-map-filter button{height:29px;padding:0 8px;font-size:11px}}
 
-/* V6-46: 성지찾기 순례등록 버튼 / 인포카드 순례한 성지 표시 */
+/* V6-47: 성지찾기 순례등록 버튼 / 인포카드 순례한 성지 표시 */
 .li-side{display:flex;flex-shrink:0;flex-direction:column;align-items:flex-end;justify-content:center;gap:6px;max-width:96px}
 .li-pilgrim-register{min-width:72px;height:28px;padding:0 9px;border-radius:999px;border:1px solid #d4aa6a;background:#111;color:#f6d58a;font-size:12px;font-weight:900;letter-spacing:-.03em;white-space:nowrap;box-shadow:0 2px 7px rgba(0,0,0,.18);font-family:inherit}
 .li-pilgrim-register:active{transform:translateY(1px);filter:brightness(.95)}
@@ -3993,10 +3993,10 @@ html.oai-font-global .shrine-visit-map-filter button{font-size:calc(12px * var(-
 html.oai-font-global .li-pilgrim-register{font-size:calc(12px * var(--app-inner-font-scale,1))!important}
 @media (max-width:390px){.li-side{max-width:88px}.li-pilgrim-register{min-width:68px;padding:0 7px;font-size:11px}}
 
-/* V6-46: 지도 인포카드 주소 라벨 숨김 */
+/* V6-47: 지도 인포카드 주소 라벨 숨김 */
 #info-card .ic-addr-lbl{display:none!important}
 
-/* V6-46: 순례등록/지도필터/인포카드 위치 보정 */
+/* V6-47: 순례등록/지도필터/인포카드 위치 보정 */
 #info-card .ic-header{gap:8px;align-items:center}
 #info-card .ic-name{flex:1 1 auto;min-width:0}
 #info-card .ic-header .ic-type-badge{margin-left:8px;align-self:center;max-width:94px;overflow:hidden;text-overflow:ellipsis;text-align:center}
@@ -4010,11 +4010,11 @@ html.oai-font-global .li-pilgrim-register{font-size:calc(12px * var(--app-inner-
 .shrine-visit-map-filter button[data-shrine-visit-filter="unvisited"]{min-width:92px}
 @media (max-width:390px){.shrine-visit-map-filter button{min-width:68px;padding-left:10px!important;padding-right:10px!important}.shrine-visit-map-filter button[data-shrine-visit-filter="visited"]{min-width:94px}.shrine-visit-map-filter button[data-shrine-visit-filter="unvisited"]{min-width:84px}#info-card .ic-header .ic-type-badge{max-width:86px}}
 
-/* V6-46: 순례등록 버튼 터치 보강 */
+/* V6-47: 순례등록 버튼 터치 보강 */
 .li-pilgrim-register{position:relative!important;z-index:30!important;pointer-events:auto!important;touch-action:manipulation!important}
 .li-side{pointer-events:auto!important}
 
-/* V6-46: 인포카드 순례등록 버튼 / 거리 위치 / 리스트 등록 감도 보정 */
+/* V6-47: 인포카드 순례등록 버튼 / 거리 위치 / 리스트 등록 감도 보정 */
 #info-card .ic-meta{align-items:center!important;justify-content:space-between!important;gap:10px!important;padding-top:0!important;padding-bottom:6px!important}
 #info-card .ic-meta .ic-sub{min-width:0;flex:1 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #info-card .ic-meta .ic-dist-col{visibility:hidden;display:flex!important;flex-direction:row!important;align-items:center!important;gap:6px!important;min-width:0!important;flex-shrink:0!important;transform:none!important;margin:0!important}
@@ -4027,12 +4027,12 @@ html.oai-font-global .li-pilgrim-register{font-size:calc(12px * var(--app-inner-
 .li-pilgrim-register{touch-action:pan-y!important}
 @media (max-width:390px){#info-card .ic-meta .ic-dist-lbl{font-size:9px!important}#info-card .ic-meta .ic-dist-box{font-size:12px!important;padding:4px 7px!important}#info-card .ic-header .ic-type-badge.shrine-pilgrim-register-badge{min-width:68px!important;font-size:11px!important}}
 
-/* V6-46: 등록된 성지 인포카드 표시 */
+/* V6-47: 등록된 성지 인포카드 표시 */
 #info-card .ic-header .ic-type-badge.shrine-pilgrim-visited{max-width:none!important;min-width:86px!important;height:30px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;padding:0 10px!important;border-radius:999px!important;cursor:default!important;touch-action:auto!important}
 @media (max-width:390px){#info-card .ic-header .ic-type-badge.shrine-pilgrim-visited{min-width:78px!important;font-size:11px!important}}
 
 
-/* V6-46: 인포카드 이름 확대 / 순례기록 카드 */
+/* V6-47: 인포카드 이름 확대 / 순례기록 카드 */
 #app #info-card .ic-name{font-size:18px!important;font-weight:900!important;line-height:1.25!important}
 .shrine-visit-cards-btn{position:absolute;right:12px;top:12px;z-index:37;display:none;height:34px;padding:0 12px;border-radius:999px;border:1px solid #d4aa6a;background:#fff3c4;color:#6c4a00;font-size:12px;font-weight:900;box-shadow:0 3px 12px rgba(0,0,0,.16);font-family:inherit;touch-action:manipulation}
 .shrine-visit-cards-btn.show{display:inline-flex;align-items:center;justify-content:center}
@@ -4046,13 +4046,29 @@ html.oai-font-global .li-pilgrim-register{font-size:calc(12px * var(--app-inner-
 html.oai-font-global #app #info-card .ic-name{font-size:calc(18px * var(--app-inner-font-scale,1))!important}html.oai-font-global .shrine-visit-cards-btn,html.oai-font-global .shrine-visit-card-dio,html.oai-font-global .shrine-visit-card-dates{font-size:calc(12px * var(--app-inner-font-scale,1))!important}html.oai-font-global .shrine-visit-card strong{font-size:calc(17px * var(--app-inner-font-scale,1))!important}html.oai-font-global .shrine-visit-card-count{font-size:calc(13px * var(--app-inner-font-scale,1))!important}
 @media (max-width:390px){.shrine-visit-cards-btn{right:8px;top:50px;height:32px;padding:0 10px;font-size:11px}.shrine-visit-card strong{font-size:16px}}
 
-/* V6-46: 순례한 성지 라벨도 추가 등록 가능 */
+/* V6-47: 순례한 성지 라벨도 추가 등록 가능 */
 #info-card .ic-header .ic-type-badge.shrine-pilgrim-visited{cursor:pointer!important;touch-action:manipulation!important}
 #info-card .ic-header .ic-type-badge.shrine-pilgrim-visited:active{transform:translateY(1px);filter:brightness(.94)}
 
 
-/* V6-46: GPS 500m 순례등록 확인창 */
+/* V6-47: GPS 500m 순례등록 확인창 */
 .shrine-auto-visit-modal{position:fixed;inset:0;z-index:10070;display:none;align-items:flex-end;justify-content:center}.shrine-auto-visit-modal.show{display:flex}.shrine-auto-visit-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.38)}
 .shrine-auto-visit-panel{position:relative;width:min(520px,100%);background:#fff;border-radius:22px 22px 0 0;padding:18px 16px max(18px,env(safe-area-inset-bottom));box-shadow:0 -10px 28px rgba(0,0,0,.24);border:1px solid rgba(212,170,106,.35)}
 .shrine-auto-visit-kicker{font-size:12px;font-weight:900;color:#8b6914;margin-bottom:5px}.shrine-auto-visit-title{font-size:16px;font-weight:900;color:#111;line-height:1.35}.shrine-auto-visit-name{margin-top:8px;font-size:20px;font-weight:900;color:#111;line-height:1.28;word-break:keep-all}.shrine-auto-visit-dist{margin-top:5px;font-size:13px;font-weight:800;color:#6b7280}.shrine-auto-visit-actions{display:flex;gap:8px;margin-top:14px}.shrine-auto-visit-actions button{flex:1;height:44px;border-radius:13px;font-size:14px;font-weight:900;font-family:inherit}.shrine-auto-visit-save{border:1px solid #111;background:#111;color:#f6d58a}.shrine-auto-visit-later{border:1px solid #ddd2bb;background:#fff8e8;color:#5b3c00}
 html.oai-font-global .shrine-auto-visit-title{font-size:calc(16px * var(--app-inner-font-scale,1))!important}html.oai-font-global .shrine-auto-visit-name{font-size:calc(20px * var(--app-inner-font-scale,1))!important}html.oai-font-global .shrine-auto-visit-dist{font-size:calc(13px * var(--app-inner-font-scale,1))!important}
+
+/* V6-47: 순례기록 카드 전체화면 상세 */
+.shrine-visit-detail-view{position:fixed;inset:0;z-index:10045;display:none;flex-direction:column;background:#fffdf7;color:#111;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+.shrine-visit-detail-view.show{display:flex}
+.shrine-visit-detail-head{height:56px;min-height:56px;display:flex;align-items:center;gap:10px;padding:0 12px;background:#fff8e8;border-bottom:1px solid #eadfcd;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.shrine-visit-detail-back,.shrine-visit-detail-x{width:38px;height:38px;border-radius:50%;border:1px solid #e2d2b7;background:#fffdf7;color:#5b3c00;font-size:27px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;font-family:inherit;line-height:1;touch-action:manipulation}
+.shrine-visit-detail-x{font-size:23px}.shrine-visit-detail-back:active,.shrine-visit-detail-x:active{transform:translateY(1px);background:#fff0c9}
+.shrine-visit-detail-head-title{flex:1;min-width:0;text-align:center;font-size:18px;font-weight:900;color:#111;letter-spacing:-.03em}
+.shrine-visit-detail-body{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:14px 14px max(24px,env(safe-area-inset-bottom))}
+.shrine-visit-detail-hero{border:1px solid rgba(212,170,106,.5);background:linear-gradient(180deg,#fff8e8 0%,#fffdf7 100%);border-radius:22px;padding:18px 16px;box-shadow:0 4px 16px rgba(14,21,53,.08);margin-bottom:13px}
+.shrine-visit-detail-kicker{font-size:12px;font-weight:900;color:#8b6914;margin-bottom:5px}.shrine-visit-detail-count{font-size:32px;font-weight:900;line-height:1.08;color:#111;letter-spacing:-.04em}.shrine-visit-detail-recent{margin-top:5px;font-size:14px;font-weight:900;color:#4b3a1a}
+.shrine-visit-detail-date-title{margin-top:16px;margin-bottom:7px;font-size:13px;font-weight:900;color:#5b3c00}.shrine-visit-detail-date-list{display:flex;flex-wrap:wrap;gap:7px}.shrine-visit-detail-date-chip{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;background:#111;color:#f6d58a;border:1px solid #d4aa6a;padding:6px 10px;font-size:13px;font-weight:900;line-height:1}.shrine-visit-detail-empty-date{font-size:13px;font-weight:800;color:#8b6914;background:#fff3c4;border-radius:12px;padding:9px 10px}
+.shrine-visit-detail-add{width:100%;height:42px;margin-top:14px;border-radius:14px;border:1px solid #d4aa6a;background:#111;color:#f6d58a;font-size:14px;font-weight:900;font-family:inherit;box-shadow:0 2px 8px rgba(0,0,0,.12);touch-action:manipulation}.shrine-visit-detail-add:active{transform:translateY(1px);filter:brightness(.94)}
+.shrine-visit-detail-info{border:1px solid rgba(17,17,17,.12);background:#fff;border-radius:18px;padding:15px 14px;box-shadow:0 2px 10px rgba(14,21,53,.05)}.shrine-visit-detail-section-title{font-size:12px;font-weight:900;color:#8b6914;margin-bottom:5px}.shrine-visit-detail-name{font-size:22px;font-weight:900;line-height:1.25;color:#111;letter-spacing:-.04em;word-break:keep-all;margin-bottom:12px}.shrine-visit-detail-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px solid #f0e7d8}.shrine-visit-detail-row span{width:48px;flex-shrink:0;font-size:13px;font-weight:900;color:#8b6914}.shrine-visit-detail-row strong{flex:1;min-width:0;font-size:14px;font-weight:800;color:#1f2937;line-height:1.45;word-break:keep-all}.shrine-visit-detail-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.shrine-visit-detail-action{height:40px;display:inline-flex;align-items:center;justify-content:center;padding:0 12px;border-radius:12px;border:1px solid #d8ccb8;background:#fff8e8;color:#5b3c00;font-size:13px;font-weight:900;text-decoration:none;font-family:inherit;touch-action:manipulation}.shrine-visit-detail-action:active{transform:translateY(1px);filter:brightness(.96)}.shrine-visit-detail-empty{margin:18px;padding:16px;border-radius:16px;background:#fff8e8;color:#6c4a00;font-size:14px;font-weight:900;text-align:center}
+html.oai-font-global .shrine-visit-detail-head-title{font-size:calc(18px * var(--app-inner-font-scale,1))!important}html.oai-font-global .shrine-visit-detail-kicker,html.oai-font-global .shrine-visit-detail-section-title{font-size:calc(12px * var(--app-inner-font-scale,1))!important}html.oai-font-global .shrine-visit-detail-count{font-size:calc(32px * var(--app-inner-font-scale,1))!important}html.oai-font-global .shrine-visit-detail-recent,html.oai-font-global .shrine-visit-detail-add{font-size:calc(14px * var(--app-inner-font-scale,1))!important}html.oai-font-global .shrine-visit-detail-date-chip,html.oai-font-global .shrine-visit-detail-action,html.oai-font-global .shrine-visit-detail-row span{font-size:calc(13px * var(--app-inner-font-scale,1))!important}html.oai-font-global .shrine-visit-detail-name{font-size:calc(22px * var(--app-inner-font-scale,1))!important}html.oai-font-global .shrine-visit-detail-row strong{font-size:calc(14px * var(--app-inner-font-scale,1))!important}
+@media (max-width:390px){.shrine-visit-detail-head{height:52px;min-height:52px}.shrine-visit-detail-body{padding:12px 12px max(22px,env(safe-area-inset-bottom))}.shrine-visit-detail-count{font-size:29px}.shrine-visit-detail-name{font-size:20px}.shrine-visit-detail-row span{width:42px}.shrine-visit-detail-action{height:38px;padding:0 10px;font-size:12px}}
