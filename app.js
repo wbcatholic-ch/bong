@@ -732,6 +732,7 @@ function _ensureShrineVisitMapFilter(){
   bar.querySelectorAll('[data-shrine-visit-filter]').forEach(function(btn){
     btn.addEventListener('click', function(e){
       e.preventDefault(); e.stopPropagation();
+      try{ closeInfoCard({keepMap:true}); }catch(_e){}
       _shrineVisitMapFilter = btn.getAttribute('data-shrine-visit-filter') || 'all';
       _applyShrineVisitMapFilter();
     });
@@ -2610,7 +2611,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-65';
+    frame.src='diocese.html?v=V6-66';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -2991,7 +2992,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-65';
+const _PARISH_ASSET_VERSION='V6-66';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -3154,7 +3155,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-65';
+const _PRAYER_ASSET_VERSION='V6-66';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -3215,7 +3216,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-65';
+const _RETREAT_ASSET_VERSION='V6-66';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -3510,7 +3511,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-65';
+const _SHRINE_ASSET_VERSION='V6-66';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -7100,7 +7101,7 @@ async function _calcRoute(){
       $('rs-km').textContent=(distance/1000).toFixed(1);
       $('rs-time').textContent=_fmtTime(duration);
       _drawLine(_rS, navDest, path.length>1?path:null, {waypoints:waypoints});
-      if(!isJuk) setRouteNote('경유지 '+waypoints.length+'곳 포함 경로입니다.', false);
+      if(!isJuk) setRouteNote('', false);
       return;
     }
     const leg=await fetchLeg(_rS, navDest);
@@ -7117,7 +7118,7 @@ async function _calcRoute(){
     d *= 1.4;
     $('rs-km').textContent=d.toFixed(1);
     $('rs-time').textContent=_fmtTime(d/70*3600);
-    if(!isJuk) setRouteNote(waypoints.length?'* 경유지 포함 직선거리 기반 추정값':'* 직선거리 기반 추정값', false);
+    if(!isJuk) setRouteNote('* 직선거리 기반 추정값', false);
     _drawLine(_rS, navDest, null, {fit:true, waypoints:waypoints});
   }
 }
