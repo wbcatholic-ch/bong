@@ -4037,6 +4037,9 @@ html.oai-font-global .li-pilgrim-register{font-size:calc(12px * var(--app-inner-
 
 /* V6-77: 인포카드 이름 확대 / 순례기록 카드 */
 #app #info-card .ic-name{font-size:18px!important;font-weight:900!important;line-height:1.25!important}
+html.oai-font-global #app #info-card .ic-name{font-size:calc(18px * var(--app-inner-font-scale,1))!important}
+html.oai-font-global .shrine-visit-cards-btn{font-size:calc(12px * var(--app-inner-font-scale,1))!important}
+@media (max-width:390px){.shrine-visit-cards-btn{right:8px;top:50px;height:32px;padding:0 10px;font-size:11px}}
 .shrine-visit-cards-btn{position:absolute;right:12px;top:12px;z-index:37;display:none;height:34px;padding:0 12px;border-radius:999px;border:1px solid #d4aa6a;background:#fff3c4;color:#6c4a00;font-size:12px;font-weight:900;box-shadow:0 3px 12px rgba(0,0,0,.16);font-family:inherit;touch-action:manipulation}
 .shrine-visit-cards-btn.show{display:inline-flex;align-items:center;justify-content:center}
 .shrine-visit-cards-btn:active{transform:translateY(1px);filter:brightness(.96)}
@@ -4044,10 +4047,6 @@ html.oai-font-global .li-pilgrim-register{font-size:calc(12px * var(--app-inner-
 .shrine-visit-cards-panel{position:relative;width:min(540px,100%);max-height:72vh;background:#fff;border-radius:22px 22px 0 0;padding:16px 14px max(18px,env(safe-area-inset-bottom));box-shadow:0 -10px 28px rgba(0,0,0,.24);border:1px solid rgba(212,170,106,.35);display:flex;flex-direction:column}
 .shrine-visit-cards-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.shrine-visit-cards-kicker{font-size:12px;font-weight:900;color:#8b6914}.shrine-visit-cards-title{font-size:19px;font-weight:900;color:#111}.shrine-visit-cards-x{width:34px;height:34px;border-radius:50%;border:1px solid #e6dcc8;background:#fff8e8;color:#5b3c00;font-size:22px;font-weight:900}
 .shrine-visit-cards-body{overflow:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:9px;padding:1px 2px 4px}.shrine-visit-cards-empty{padding:18px;border-radius:14px;background:#fff8e8;color:#6c4a00;font-size:14px;font-weight:800;text-align:center}
-.shrine-visit-card{width:100%;text-align:left;border:1px solid rgba(17,17,17,.14);border-radius:16px;background:#fffdf7;padding:12px 13px;box-shadow:0 2px 8px rgba(14,21,53,.07);font-family:inherit;display:flex;flex-direction:column;gap:4px;touch-action:manipulation}
-.shrine-visit-card-dio{font-size:12px;font-weight:900;color:#8b6914}.shrine-visit-card strong{font-size:17px;font-weight:900;color:#111;line-height:1.25;word-break:keep-all}.shrine-visit-card-count{font-size:13px;font-weight:900;color:#2f2517}.shrine-visit-card-dates{font-size:12px;font-weight:700;color:#6b7280;line-height:1.4;word-break:keep-all}
-html.oai-font-global #app #info-card .ic-name{font-size:calc(18px * var(--app-inner-font-scale,1))!important}html.oai-font-global .shrine-visit-cards-btn,html.oai-font-global .shrine-visit-card-dio,html.oai-font-global .shrine-visit-card-dates{font-size:calc(12px * var(--app-inner-font-scale,1))!important}html.oai-font-global .shrine-visit-card strong{font-size:calc(17px * var(--app-inner-font-scale,1))!important}html.oai-font-global .shrine-visit-card-count{font-size:calc(13px * var(--app-inner-font-scale,1))!important}
-@media (max-width:390px){.shrine-visit-cards-btn{right:8px;top:50px;height:32px;padding:0 10px;font-size:11px}.shrine-visit-card strong{font-size:16px}}
 
 /* V6-77: 순례한 성지 라벨도 추가 등록 가능 */
 #info-card .ic-header .ic-type-badge.shrine-pilgrim-visited{cursor:pointer!important;touch-action:manipulation!important}
@@ -4786,18 +4785,15 @@ html.oai-font-global .shrine-visit-detail-action{font-size:calc(14px * var(--app
 }
 
 /* V6-77: 순례등록 모달 색상 가독성 개선 및 지도 필터 시 정보카드 숨김 */
-.shirne-visit-panel{}
 .shrine-visit-panel{
   border:2px solid #1976d2!important;
   background:#ffffff!important;
   box-shadow:0 -12px 30px rgba(15,23,42,.25)!important;
 }
-.shirne-visit-head{}
 .shrine-visit-head{
   padding-bottom:10px!important;
   border-bottom:1px solid #d7e9ff!important;
 }
-.shirne-visit-kicker{}
 .shrine-visit-kicker{
   color:#0d47a1!important;
   font-weight:900!important;
@@ -4843,7 +4839,6 @@ html.oai-font-global .shrine-visit-detail-action{font-size:calc(14px * var(--app
 }
 
 /* V6-77: GPS 순례등록 안내 문구 2줄 정리 */
-.shirne-auto-visit-title{}
 .shrine-auto-visit-title{
   font-size:19px!important;
   line-height:1.35!important;
@@ -4974,70 +4969,6 @@ html.oai-font-global .shrine-auto-visit-dist{font-size:calc(15px * var(--app-inn
 }
 .shrine-visit-cards-tabs{
   box-shadow:none!important;
-}
-
-
-/* V6-77: 지도 필터/닫기 위치 정렬, 내위치·나의순례현황 위치 교체, 스탬프북 선 두께 통일 */
-#map-wrap .shrine-visit-map-filter{
-  top:4px!important;
-  left:8px!important;
-  height:38px!important;
-  min-height:38px!important;
-  padding:4px 5px!important;
-  gap:5px!important;
-  border-radius:14px!important;
-  align-items:center!important;
-  box-sizing:border-box!important;
-}
-#map-wrap .shrine-visit-map-filter button{
-  height:30px!important;
-  min-height:30px!important;
-  padding:0 9px!important;
-  border-radius:10px!important;
-  display:inline-flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  line-height:1!important;
-}
-#map-wrap .map-category-close{
-  top:5px!important;
-  right:9px!important;
-  width:36px!important;
-  height:36px!important;
-  min-width:36px!important;
-  min-height:36px!important;
-  font-size:24px!important;
-  line-height:1!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-}
-#loc-btn{
-  right:12px!important;
-  bottom:calc(env(safe-area-inset-bottom,0px) + 132px)!important;
-  z-index:858!important;
-}
-.shrine-visit-floating-list-btn{
-  right:12px!important;
-  bottom:calc(env(safe-area-inset-bottom,0px) + 18px)!important;
-  z-index:860!important;
-}
-.shrine-visit-cards-head,
-.shrine-visit-cards-head.module-bar,
-.shrine-visit-cards-tabs,
-.shrine-visit-cards-diocese{
-  border-bottom:0.5px solid rgba(212,170,106,.45)!important;
-  box-shadow:none!important;
-}
-.shrine-visit-cards-tabs{
-  border-top:0!important;
-}
-@media (max-width:390px){
-  #map-wrap .shrine-visit-map-filter{top:3px!important;left:6px!important;height:36px!important;min-height:36px!important;padding:3px 4px!important;gap:4px!important;}
-  #map-wrap .shrine-visit-map-filter button{height:28px!important;min-height:28px!important;padding:0 7px!important;font-size:11px!important;}
-  #map-wrap .map-category-close{top:4px!important;right:7px!important;width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;font-size:22px!important;}
-  #loc-btn{right:10px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 124px)!important;}
-  .shrine-visit-floating-list-btn{right:10px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 16px)!important;}
 }
 
 
@@ -5330,7 +5261,7 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
 }
 
 
-/* V6-93: V6-83 상단 배치 폐기, 기존 하단 기준에서 버튼만 조금 위로 조정 */
+/* V6-96: V6-83 상단 배치 폐기, 기존 하단 기준에서 버튼만 조금 위로 조정 */
 .shrine-visit-floating-list-btn{
   right:12px!important;
   bottom:calc(env(safe-area-inset-bottom,0px) + 34px)!important;
@@ -5353,7 +5284,7 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
 }
 
 
-/* V6-93: 스탬프북 성지 정보 박스 우측 상단 지도 보기 버튼 */
+/* V6-96: 스탬프북 성지 정보 박스 우측 상단 지도 보기 버튼 */
 .shrine-visit-detail-info-head{
   display:flex!important;
   align-items:center!important;
@@ -5396,7 +5327,7 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
 }
 
 
-/* V6-93: 스탬프북 카드 배경은 건드리지 않고 바탕 영역만 아이보리 적용 */
+/* V6-96: 스탬프북 카드 배경은 건드리지 않고 바탕 영역만 아이보리 적용 */
 .shrine-visit-cards-modal,
 .shrine-visit-cards-panel,
 .shrine-visit-cards-body{
@@ -5411,7 +5342,7 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
 }
 
 
-/* V6-93: 통계 화면 상단 여백과 펼침 목록 하단 잘림 방지 */
+/* V6-96: 통계 화면 상단 여백과 펼침 목록 하단 잘림 방지 */
 .shrine-visit-cards-body.stats{
   padding-top:14px!important;
   padding-bottom:max(68px,calc(env(safe-area-inset-bottom,0px) + 58px))!important;
@@ -5448,3 +5379,4 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
     padding-bottom:16px!important;
   }
 }
+/* V6-96: 스탬프북 CSS 2차 안전 정리 - 사용되지 않는 옛 카드 스타일/중복 지도 필터 블록/빈 오타 선택자 제거 */
