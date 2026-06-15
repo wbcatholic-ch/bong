@@ -49,6 +49,31 @@ html.oai-cover-first-reveal #cover > * {
     document.documentElement.classList.add('ios-device');
   }
   // iPhone/iPad에서만 iOS 전용 화면 보정을 적용한다.
+  // V6-97: iOS는 기존 보정을 유지하고, Android/비 iOS만 화면 높이·폭 기준으로 분류한다.
+  function applyAndroidScreenClass(){
+    var root = document.documentElement;
+    if(!root || !root.classList) return;
+    var classes = ['oai-screen-compact-short','oai-screen-tall-phone','oai-screen-fold-wide'];
+    for(var i=0;i<classes.length;i++) root.classList.remove(classes[i]);
+    if(isIOS) return;
+    var vv = window.visualViewport;
+    var w = Math.round((vv && vv.width) || window.innerWidth || root.clientWidth || screen.width || 0);
+    var h = Math.round((vv && vv.height) || window.innerHeight || root.clientHeight || screen.height || 0);
+    if(!w || !h) return;
+    root.setAttribute('data-oai-vw', String(w));
+    root.setAttribute('data-oai-vh', String(h));
+    if(w >= 600){
+      root.classList.add('oai-screen-fold-wide');
+    }else if(w <= 410 && h < 790){
+      root.classList.add('oai-screen-compact-short');
+    }else{
+      root.classList.add('oai-screen-tall-phone');
+    }
+  }
+  applyAndroidScreenClass();
+  window.addEventListener('resize', applyAndroidScreenClass, {passive:true});
+  if(window.visualViewport) window.visualViewport.addEventListener('resize', applyAndroidScreenClass, {passive:true});
+  window.addEventListener('orientationchange', function(){ setTimeout(applyAndroidScreenClass, 80); }, {passive:true});
   /* Android 카카오톡에서만 Chrome으로 연결합니다. iPhone/iPad/Safari/PWA에서는 실행하지 않습니다. */
   if(isAndroid && isKakao){
     var url = location.href;
@@ -704,7 +729,7 @@ window.APP_CONFIG = {
           </button>
           <button id="cc-3" class="cover-card">
               <div class="cover-icon-wrap"><span class="cover-emoji" aria-hidden="true">🙏</span></div>
-              <span class="cover-name">성지순례 188곳</span>
+              <span class="cover-name">성지순례 167곳</span>
           </button>
           <button id="cc-4" class="cover-card">
               <div class="cover-icon-wrap"><span class="cover-emoji" aria-hidden="true">🌿</span></div>
