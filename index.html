@@ -8,7 +8,7 @@ html.oai-stability-veil { background:#f5f0e8 !important; }
 html.oai-stability-veil *, html.oai-external-return-freeze * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 html.oai-stability-veil::before { content:""; position:fixed; inset:0; z-index:2147483000; background:#f5f0e8; pointer-events:none; opacity:1; animation:oaiStabilityVeilIn .12s ease-out both; }
 html.oai-stability-veil.oai-stability-veil-releasing::before { animation:oaiStabilityVeilOut .18s ease-in both; }
-html.oai-stability-veil::after { content:""; position:fixed; left:50%; top:50%; width:28px; height:28px; margin:-14px 0 0 -14px; border-radius:50%; border:3px solid rgba(31,42,68,.16); border-top-color:#1f2a44; z-index:2147483001; pointer-events:none; animation:oaiStabilitySpin .75s linear infinite; }
+html.oai-stability-veil::after { content:"✝"; position:fixed; left:50%; top:50%; width:34px; height:34px; margin:-17px 0 0 -17px; display:flex; align-items:center; justify-content:center; border:0; border-radius:0; background:transparent; color:#d4aa6a; font-size:30px; font-weight:900; line-height:1; z-index:2147483001; pointer-events:none; animation:oaiStabilitySpin 2.8s linear infinite; }
 @keyframes oaiStabilityVeilIn { from { opacity:0; } to { opacity:1; } }
 @keyframes oaiStabilityVeilOut { from { opacity:1; } to { opacity:0; } }
 @keyframes oaiStabilitySpin { to { transform:rotate(360deg); } }
@@ -527,7 +527,7 @@ html.oai-cover-first-reveal #cover > * {
     try{
       var ts=parseInt(sessionStorage.getItem('oai_external_nav_started_at')||'0',10)||0;
       var pending=sessionStorage.getItem('oai_external_nav_pending')==='1' || sessionStorage.getItem('oai_external_nav_pagehide')==='1';
-      return (!!ts && (now()-ts) < 10*60*1000) || pending;
+      return !!(pending && ts && (now()-ts) < 10*60*1000);
     }catch(e){ return false; }
   }
   function hold(){
@@ -545,7 +545,7 @@ html.oai-cover-first-reveal #cover > * {
           document.documentElement.removeAttribute('data-oai-external-return-early');
         }
       }catch(e){}
-    }, 4800);
+    }, 1800);
   }
   if(hasPendingExternalReturn()) hold();
   window.addEventListener('pageshow', function(){ if(hasPendingExternalReturn()) hold(); }, true);
