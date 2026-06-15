@@ -5284,3 +5284,47 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
   .shrine-visit-detail-actions{gap:6px!important;}
   .shrine-visit-detail-action{height:43px!important;min-height:43px!important;font-size:14px!important;padding:0 6px!important;}
 }
+
+
+/* V6-80: 지도 필터 선택 시 확대/이동 제거, 성지 상세 버튼 행 구조를 정보카드처럼 안정화 */
+.shrine-visit-detail-actions{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:7px!important;
+  padding-top:2px!important;
+}
+.shrine-visit-detail-action-row{
+  display:flex!important;
+  align-items:stretch!important;
+  gap:7px!important;
+  width:100%!important;
+}
+.shrine-visit-detail-action-row > .shrine-visit-detail-action{
+  flex:1 1 0!important;
+  min-width:0!important;
+  max-width:100%!important;
+}
+.shrine-visit-detail-action.detail-kakao{
+  grid-column:auto!important;
+  width:100%!important;
+}
+@media (max-width:390px){
+  .shrine-visit-detail-actions,
+  .shrine-visit-detail-action-row{gap:6px!important;}
+}
+
+
+/* V6-82: 스탬프북 상단탭/통계 스크롤 안정화 및 자체 스와이프 보강 */
+.shrine-visit-cards-panel{
+  overscroll-behavior:contain!important;
+}
+.shrine-visit-cards-body{
+  touch-action:pan-y!important;
+}
+.shrine-visit-cards-tabs,
+.shrine-visit-cards-diocese{
+  touch-action:pan-x!important;
+}
+.shrine-visit-stat-row.active{
+  scroll-margin-top:8px!important;
+}
