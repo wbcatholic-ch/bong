@@ -223,7 +223,7 @@
 
 
 
-/* V6-103: iOS는 기존 ios-device 보정을 유지하고, Android/비 iOS만 화면 비율별 기본 스케일을 분류한다. */
+/* V6-104: iOS는 기존 ios-device 보정을 유지하고, Android/비 iOS만 화면 비율별 기본 스케일을 분류한다. */
 html:not(.ios-device).oai-screen-compact-short {
   --app-font-scale: .94;
   --tab-h: 74px;
@@ -5305,7 +5305,7 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
 }
 
 
-/* V6-103: V6-83 상단 배치 폐기, 기존 하단 기준에서 버튼만 조금 위로 조정 */
+/* V6-104: V6-83 상단 배치 폐기, 기존 하단 기준에서 버튼만 조금 위로 조정 */
 .shrine-visit-floating-list-btn{
   right:12px!important;
   bottom:calc(env(safe-area-inset-bottom,0px) + 34px)!important;
@@ -5328,7 +5328,7 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
 }
 
 
-/* V6-103: 스탬프북 성지 정보 박스 우측 상단 지도 보기 버튼 */
+/* V6-104: 스탬프북 성지 정보 박스 우측 상단 지도 보기 버튼 */
 .shrine-visit-detail-info-head{
   display:flex!important;
   align-items:center!important;
@@ -5371,7 +5371,7 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
 }
 
 
-/* V6-103: 스탬프북 카드 배경은 건드리지 않고 바탕 영역만 아이보리 적용 */
+/* V6-104: 스탬프북 카드 배경은 건드리지 않고 바탕 영역만 아이보리 적용 */
 .shrine-visit-cards-modal,
 .shrine-visit-cards-panel,
 .shrine-visit-cards-body{
@@ -5386,7 +5386,7 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
 }
 
 
-/* V6-103: 통계 화면 상단 여백과 펼침 목록 하단 잘림 방지 */
+/* V6-104: 통계 화면 상단 여백과 펼침 목록 하단 잘림 방지 */
 .shrine-visit-cards-body.stats{
   padding-top:14px!important;
   padding-bottom:max(68px,calc(env(safe-area-inset-bottom,0px) + 58px))!important;
@@ -5423,9 +5423,9 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
     padding-bottom:16px!important;
   }
 }
-/* V6-103: 스탬프북 CSS 2차 안전 정리 - 사용되지 않는 옛 카드 스타일/중복 지도 필터 블록/빈 오타 선택자 제거 */
+/* V6-104: 스탬프북 CSS 2차 안전 정리 - 사용되지 않는 옛 카드 스타일/중복 지도 필터 블록/빈 오타 선택자 제거 */
 
-/* V6-103: Android/비 iOS 화면 분류 2단계 적용 - 커버, 지도 정보카드, 기본 목록 세로 비율 조정 */
+/* V6-104: Android/비 iOS 화면 분류 2단계 적용 - 커버, 지도 정보카드, 기본 목록 세로 비율 조정 */
 html:not(.ios-device).oai-screen-compact-short #cover-main-block{
   gap:5px!important;
   padding-left:8px!important;
@@ -5542,7 +5542,7 @@ html:not(.ios-device).oai-screen-fold-wide #app .region-item{
   gap:10px!important;
 }
 
-/* V6-103: Android/비 iOS 화면 분류 3단계 적용 - 순례 스탬프북 세로 비율 조정 */
+/* V6-104: Android/비 iOS 화면 분류 3단계 적용 - 순례 스탬프북 세로 비율 조정 */
 html:not(.ios-device).oai-screen-compact-short .shrine-visit-cards-head.module-bar,
 html:not(.ios-device).oai-screen-compact-short .shrine-visit-cards-head{
   min-height:calc(58px + env(safe-area-inset-top,0px))!important;
@@ -5661,7 +5661,7 @@ html:not(.ios-device).oai-screen-fold-wide .shrine-visit-detail-name{font-size:1
 html:not(.ios-device).oai-screen-fold-wide .shrine-visit-detail-row{padding:8px 0!important;}
 html:not(.ios-device).oai-screen-fold-wide .shrine-visit-detail-action{height:39px!important;min-height:39px!important;font-size:13px!important;}
 
-/* V6-103: 폴드 큰 화면에서 순례카드가 가로폭에 비례해 세로로 과하게 커지는 문제 보정 */
+/* V6-104: 폴드 큰 화면에서 순례카드가 가로폭에 비례해 세로로 과하게 커지는 문제 보정 */
 html:not(.ios-device).oai-screen-fold-wide .shrine-visit-card-grid{
   grid-template-columns:repeat(3,minmax(0,1fr))!important;
   gap:8px!important;
@@ -5699,7 +5699,7 @@ html:not(.ios-device).oai-screen-fold-wide .shrine-visit-card-stamp{
   font-size:8.5px!important;
 }
 
-/* V6-103: 순례한 성지 카드 오른쪽 아래 CSS 원형 도장 - 이미지 파일 사용 없음 */
+/* V6-104: 순례한 성지 카드 오른쪽 아래 CSS 원형 도장 - 이미지 파일 사용 없음 */
 .shrine-visit-card-badge.visited .shrine-visit-card-seal{
   position:absolute!important;
   right:13px!important;
@@ -5772,6 +5772,31 @@ html:not(.ios-device).oai-screen-fold-wide .shrine-visit-card-badge.visited .shr
 }
 html:not(.ios-device).oai-screen-fold-wide .shrine-visit-card-badge.visited .shrine-visit-card-seal::before{
   inset:3.5px!important;
+}
+html:not(.ios-device).oai-screen-fold-wide .shrine-visit-card-badge.visited .shrine-visit-card-seal::after{
+  font-size:10.5px!important;
+}
+
+/* V6-104: 통계 교구 선택 강조는 교구 탭과 분리하고, 강조색을 테두리까지 적용 */
+.shrine-visit-stat-row.active{
+  background:#eaf4ff!important;
+  border:2px solid rgba(22,140,255,.50)!important;
+  border-radius:0!important;
+  box-shadow:inset 4px 0 0 rgba(22,140,255,.72)!important;
+}
+.shrine-visit-stat-row.active + .shrine-visit-stat-items{
+  border:2px solid rgba(22,140,255,.32)!important;
+  border-top:0!important;
+  box-shadow:0 8px 16px rgba(22,140,255,.08)!important;
+}
+.shrine-visit-card-badge.visited .shrine-visit-card-seal::after{
+  font-size:13px!important;
+}
+@media (max-width:390px){
+  .shrine-visit-card-badge.visited .shrine-visit-card-seal::after{font-size:12px!important;}
+}
+html:not(.ios-device).oai-screen-compact-short .shrine-visit-card-badge.visited .shrine-visit-card-seal::after{
+  font-size:11.5px!important;
 }
 html:not(.ios-device).oai-screen-fold-wide .shrine-visit-card-badge.visited .shrine-visit-card-seal::after{
   font-size:10.5px!important;
