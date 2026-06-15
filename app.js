@@ -3987,7 +3987,12 @@ function _stabilizeCoverBackAfterFaithPortal(reason){
     reason = reason || 'faith-portal-cover';
     _resetCoverExitReady();
     _clearCoverExitArmed();
-    var delays = [0, 80, 240, 520];
+    try{
+      window.__OAI_SUPPRESS_COVER_BACK_TOAST_UNTIL__ = 0;
+      window.__OAI_SUPPRESS_COVER_BACK_TOAST_REASON__ = '';
+    }catch(_e){}
+    try{ _forceNextCoverBackToast(reason + '-first-toast'); }catch(_e){}
+    var delays = [0, 60, 160, 320, 620];
     delays.forEach(function(delay){
       setTimeout(function(){
         try{
@@ -3996,9 +4001,15 @@ function _stabilizeCoverBackAfterFaithPortal(reason){
           if(mq && mq.classList.contains('show')) return;
           _resetCoverExitReady();
           _clearCoverExitArmed();
+          try{
+            window.__OAI_SUPPRESS_COVER_BACK_TOAST_UNTIL__ = 0;
+            window.__OAI_SUPPRESS_COVER_BACK_TOAST_REASON__ = '';
+          }catch(_e){}
+          try{ _forceNextCoverBackToast(reason + '-first-toast-' + delay); }catch(_e){}
           if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap(reason + '-' + delay, {force:true});
           else if(typeof _resetCoverBackTrap === 'function') _resetCoverBackTrap(reason + '-' + delay);
           else if(typeof _ensureCoverBackTrap === 'function') _ensureCoverBackTrap(reason + '-' + delay);
+          try{ if(typeof window.__oaiArmEarlyCoverBackGuard === 'function') window.__oaiArmEarlyCoverBackGuard(reason + '-early-' + delay, true); }catch(_e){}
         }catch(e){ console.warn('[가톨릭길동무]', e); }
       }, delay);
     });
@@ -4046,7 +4057,7 @@ function _showBackToast(){
   const t=document.createElement('div');
   t.id='_bt';
   t.textContent='한 번 더 누르면 앱이 종료됩니다';
-  t.style.cssText='position:fixed;top:50%;left:50%;bottom:auto;transform:translate(-50%,-50%);background:rgba(14,21,53,.94);color:#fff;padding:12px 24px;border-radius:24px;font-size:14px;font-weight:800;z-index:99999;white-space:nowrap;pointer-events:none;box-shadow:0 14px 36px rgba(0,0,0,.32);';
+  t.style.cssText='position:fixed;top:50%;left:50%;bottom:auto;transform:translate(-50%,-50%);background:rgba(14,21,53,.94);color:#fff;padding:12px 24px;border-radius:24px;font-size:14px;font-weight:800;z-index:2147483600;white-space:nowrap;pointer-events:none;box-shadow:0 14px 36px rgba(0,0,0,.32);';
   document.body.appendChild(t);
   _exitTimer=setTimeout(function(){
     _exitReady=false;
