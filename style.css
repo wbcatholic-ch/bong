@@ -5212,3 +5212,75 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
   #loc-btn{right:10px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 72px)!important;}
   .shrine-visit-floating-list-btn{right:10px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 16px)!important;}
 }
+
+
+/* V6-79: 통계 중복 상단 박스 제거, 활성 교구탭 자동 노출 보강, 방문 성지 상세 버튼을 정보카드와 동일 구조/색상으로 정리 */
+.shrine-visit-cards-stats.stats-tab-hidden{
+  display:none!important;
+  height:0!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  overflow:hidden!important;
+}
+.shrine-visit-cards-diocese .filter-btn.active{
+  scroll-margin-left:14px!important;
+  scroll-margin-right:14px!important;
+}
+.shrine-visit-detail-actions{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:7px!important;
+  padding-top:2px!important;
+}
+.shrine-visit-detail-action{
+  height:46px!important;
+  min-height:46px!important;
+  border-radius:10px!important;
+  padding:0 8px!important;
+  font-size:16px!important;
+  font-weight:800!important;
+  font-family:inherit!important;
+  text-decoration:none!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:7px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+  box-shadow:none!important;
+}
+.shrine-visit-detail-action.detail-tel{
+  background:#f0f7ff!important;
+  color:#1565c0!important;
+  border:1.5px solid #c5d9f5!important;
+}
+.shrine-visit-detail-action.detail-route{
+  background:var(--pilgrim,#1565c0)!important;
+  color:var(--v4-surface-white,#ffffff)!important;
+  border:0!important;
+}
+.shrine-visit-detail-action.detail-home{
+  background:#1b7a3e!important;
+  color:var(--v4-surface-white,#ffffff)!important;
+  border:0!important;
+}
+.shrine-visit-detail-action.detail-guide{
+  background:var(--cream,#fff8e8)!important;
+  color:#8b6914!important;
+  border:1px solid #ddd3b0!important;
+}
+.shrine-visit-detail-action.detail-kakao{
+  grid-column:1 / -1!important;
+  background:#fee500!important;
+  color:#3a1d1d!important;
+  border:0!important;
+  width:100%!important;
+}
+.shrine-visit-detail-action .detail-tel-icon{font-size:18px!important;line-height:1!important;}
+@media (max-width:390px){
+  .shrine-visit-detail-actions{gap:6px!important;}
+  .shrine-visit-detail-action{height:43px!important;min-height:43px!important;font-size:14px!important;padding:0 6px!important;}
+}

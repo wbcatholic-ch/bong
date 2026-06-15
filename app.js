@@ -1204,10 +1204,10 @@ function _renderShrineVisitDetail(idx){
   const telHref=item.tel?'tel:'+String(item.tel).replace(/[^0-9+]/g,''):'';
   const hpBtn=hpUrl?'<button type="button" class="shrine-visit-detail-action detail-home" data-shrine-detail-hp="'+_visitHtmlEsc(hpUrl)+'">홈페이지</button>':'';
   const guideBtn=guideUrl?'<button type="button" class="shrine-visit-detail-action detail-guide" data-shrine-detail-guide="'+_visitHtmlEsc(guideUrl)+'">성지 상세페이지</button>':'';
-  const telBtn=telHref?'<a class="shrine-visit-detail-action detail-tel" href="'+_visitHtmlEsc(telHref)+'">전화 걸기</a>':'';
-  const routeBtn='<button type="button" class="shrine-visit-detail-action detail-route" data-shrine-detail-route="'+idx+'">길찾기</button>';
+  const telBtn=telHref?'<a class="shrine-visit-detail-action detail-tel" href="'+_visitHtmlEsc(telHref)+'"><span class="detail-tel-icon">📞</span><span>'+telText+'</span></a>':'';
+  const routeBtn='<button type="button" class="shrine-visit-detail-action detail-route" data-shrine-detail-route="'+idx+'">경로검색</button>';
   const kakaoBtn='<button type="button" class="shrine-visit-detail-action detail-kakao" data-shrine-detail-kakao="'+idx+'">카카오내비</button>';
-  body.innerHTML='<section class="shrine-visit-detail-hero"><div class="shrine-visit-detail-kicker">순례 기록</div><div class="shrine-visit-detail-count">순례 '+count+'회</div><div class="shrine-visit-detail-recent">최근 순례일 '+_visitHtmlEsc(recent)+'</div><div class="shrine-visit-detail-date-title">순례 날짜</div><div class="shrine-visit-detail-date-list">'+dateHtml+'</div></section><section class="shrine-visit-detail-info"><div class="shrine-visit-detail-section-title">성지 정보</div><div class="shrine-visit-detail-name">'+_visitHtmlEsc(item.name||'')+'</div><div class="shrine-visit-detail-row"><span>교구</span><strong>'+_visitHtmlEsc(item.diocese||'—')+'</strong></div><div class="shrine-visit-detail-row"><span>주소</span><strong>'+_visitHtmlEsc(item.addr||'—')+'</strong></div><div class="shrine-visit-detail-row"><span>전화</span><strong>'+telText+'</strong></div><div class="shrine-visit-detail-actions">'+telBtn+routeBtn+kakaoBtn+hpBtn+guideBtn+'</div></section>';
+  body.innerHTML='<section class="shrine-visit-detail-hero"><div class="shrine-visit-detail-kicker">순례 기록</div><div class="shrine-visit-detail-count">순례 '+count+'회</div><div class="shrine-visit-detail-recent">최근 순례일 '+_visitHtmlEsc(recent)+'</div><div class="shrine-visit-detail-date-title">순례 날짜</div><div class="shrine-visit-detail-date-list">'+dateHtml+'</div></section><section class="shrine-visit-detail-info"><div class="shrine-visit-detail-section-title">성지 정보</div><div class="shrine-visit-detail-name">'+_visitHtmlEsc(item.name||'')+'</div><div class="shrine-visit-detail-row"><span>교구</span><strong>'+_visitHtmlEsc(item.diocese||'—')+'</strong></div><div class="shrine-visit-detail-row"><span>주소</span><strong>'+_visitHtmlEsc(item.addr||'—')+'</strong></div><div class="shrine-visit-detail-row"><span>전화</span><strong>'+telText+'</strong></div><div class="shrine-visit-detail-actions">'+telBtn+routeBtn+hpBtn+guideBtn+kakaoBtn+'</div></section>';
 }
 function _openShrineVisitDetail(idx){
   idx=parseInt(idx,10);
@@ -1315,11 +1315,16 @@ function _renderShrineVisitCardsModal(){
   }
   const stats=document.getElementById('shrine-visit-cards-stats');
   if(stats){
-    const displayVisited=(active==='stats')?allVisited.length:visited.length;
-    const displayTotal=(active==='stats')?(Array.isArray(SHRINES)?SHRINES.length:total):total;
+    const hideTopStats=(active==='stats');
+    stats.classList.toggle('stats-tab-hidden', hideTopStats);
+    const displayVisited=visited.length;
+    const displayTotal=total;
     const pct=displayTotal?Math.round((displayVisited/displayTotal)*100):0;
-    const dioLabel=(active==='stats')?'전체':_getShrineVisitDioceseLabel(_shrineVisitCardsDiocese||'all');
-    stats.innerHTML='<strong>'+displayVisited+'곳 순례</strong><span>/ '+displayTotal+'곳</span><b>ㅣ</b><span>'+pct+'% 순례</span><em>'+_visitHtmlEsc(dioLabel)+'</em>';
+    const dioLabel=_getShrineVisitDioceseLabel(_shrineVisitCardsDiocese||'all');
+    stats.innerHTML=hideTopStats?'':'<strong>'+displayVisited+'곳 순례</strong><span>/ '+displayTotal+'곳</span><b>ㅣ</b><span>'+pct+'% 순례</span><em>'+_visitHtmlEsc(dioLabel)+'</em>';
+  }
+  if(active!=='stats'){
+    setTimeout(function(){ _scrollShrineVisitDioceseTabIntoView(_shrineVisitCardsDiocese||'all','auto'); }, 40);
   }
   const modal=document.getElementById('shrine-visit-cards-modal');
   if(modal){
@@ -2673,7 +2678,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-78';
+    frame.src='diocese.html?v=V6-79';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -3054,7 +3059,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-78';
+const _PARISH_ASSET_VERSION='V6-79';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -3217,7 +3222,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-78';
+const _PRAYER_ASSET_VERSION='V6-79';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -3278,7 +3283,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-78';
+const _RETREAT_ASSET_VERSION='V6-79';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -3573,7 +3578,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-78';
+const _SHRINE_ASSET_VERSION='V6-79';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
