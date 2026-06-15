@@ -5330,7 +5330,7 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
 }
 
 
-/* V6-85: V6-83 상단 배치 폐기, 기존 하단 기준에서 버튼만 조금 위로 조정 */
+/* V6-86: V6-83 상단 배치 폐기, 기존 하단 기준에서 버튼만 조금 위로 조정 */
 .shrine-visit-floating-list-btn{
   right:12px!important;
   bottom:calc(env(safe-area-inset-bottom,0px) + 34px)!important;
@@ -5353,7 +5353,7 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
 }
 
 
-/* V6-85: 스탬프북 성지 정보 박스 우측 상단 지도 보기 버튼 */
+/* V6-86: 스탬프북 성지 정보 박스 우측 상단 지도 보기 버튼 */
 .shrine-visit-detail-info-head{
   display:flex!important;
   align-items:center!important;
@@ -5392,5 +5392,59 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
     min-height:30px!important;
     padding:0 9px!important;
     font-size:12px!important;
+  }
+}
+
+
+/* V6-86: 스탬프북 카드 배경은 건드리지 않고 바탕 영역만 아이보리 적용 */
+.shrine-visit-cards-modal,
+.shrine-visit-cards-panel,
+.shrine-visit-cards-body{
+  background:#f7eddc!important;
+}
+.shrine-visit-card-badge,
+.shrine-visit-card-badge:before,
+.shrine-visit-detail-hero,
+.shrine-visit-detail-info,
+.shrine-visit-cards-empty{
+  /* 카드/정보 박스 배경은 기존 스타일 유지 */
+}
+
+
+/* V6-86: 통계 화면 상단 여백과 펼침 목록 하단 잘림 방지 */
+.shrine-visit-cards-body.stats{
+  padding-top:14px!important;
+  padding-bottom:max(68px,calc(env(safe-area-inset-bottom,0px) + 58px))!important;
+}
+.shrine-visit-stats-view{
+  gap:14px!important;
+  padding-top:4px!important;
+  padding-bottom:52px!important;
+}
+.shrine-visit-stat-total{
+  margin-top:2px!important;
+}
+.shrine-visit-stat-list{
+  padding-bottom:24px!important;
+}
+.shrine-visit-stat-items{
+  margin-bottom:30px!important;
+  padding-bottom:18px!important;
+  scroll-margin-bottom:62px!important;
+}
+.shrine-visit-stat-item:last-child{
+  margin-bottom:8px!important;
+}
+@media (max-width:390px){
+  .shrine-visit-cards-body.stats{
+    padding-top:12px!important;
+    padding-bottom:max(62px,calc(env(safe-area-inset-bottom,0px) + 54px))!important;
+  }
+  .shrine-visit-stats-view{
+    padding-bottom:46px!important;
+  }
+  .shrine-visit-stat-items{
+    margin-bottom:26px!important;
+    padding-bottom:16px!important;
   }
 }

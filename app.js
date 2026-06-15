@@ -1374,9 +1374,22 @@ function _scrollShrineVisitExpandedStatsIntoView(){
     if(!body||!target) return;
     const bodyRect=body.getBoundingClientRect();
     const targetRect=target.getBoundingClientRect();
-    const top=body.scrollTop+(targetRect.top-bodyRect.top)-8;
+    const top=body.scrollTop+(targetRect.top-bodyRect.top)-12;
     if(typeof body.scrollTo==='function') body.scrollTo({top:Math.max(0,top),behavior:'smooth'});
     else body.scrollTop=Math.max(0,top);
+    setTimeout(function(){
+      try{
+        if(!items) return;
+        const br=body.getBoundingClientRect();
+        const ir=items.getBoundingClientRect();
+        const overflow=(ir.bottom-br.bottom)+22;
+        if(overflow>0){
+          const nextTop=body.scrollTop+Math.min(overflow,84);
+          if(typeof body.scrollTo==='function') body.scrollTo({top:Math.max(0,nextTop),behavior:'smooth'});
+          else body.scrollTop=Math.max(0,nextTop);
+        }
+      }catch(_e){}
+    },220);
   }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
 
@@ -2792,7 +2805,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-85';
+    frame.src='diocese.html?v=V6-86';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -2918,14 +2931,14 @@ function _isShrineDetailGuideUrl(url){
 function _getShrineHomepageUrl(item){
   var hp = item && item.hp ? normalizeCatholicExternalUrl(item.hp) : '';
   if(!hp) return '';
-  /* V6-85: 신규 성지는 성지추가.xlsx의 '홈페이지' 열을 그대로 홈페이지 버튼에 연결한다. */
+  /* V6-86: 신규 성지는 성지추가.xlsx의 '홈페이지' 열을 그대로 홈페이지 버튼에 연결한다. */
   if(item && item.isNew) return hp;
   if(_isShrineDetailGuideUrl(hp)) return '';
   return hp;
 }
 function _getShrineGuideUrl(item){
   if(!item) return '';
-  /* V6-85: 성지추가.xlsx의 '주교회의 성지안내/성지 상세' URL을 우선 사용한다. */
+  /* V6-86: 성지추가.xlsx의 '주교회의 성지안내/성지 상세' URL을 우선 사용한다. */
   if(item.guideUrl) return normalizeCatholicExternalUrl(item.guideUrl);
   if(item.seq) return _SU + item.seq;
   var hp = item.hp ? normalizeCatholicExternalUrl(item.hp) : '';
@@ -3227,7 +3240,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-85';
+const _PARISH_ASSET_VERSION='V6-86';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -3390,7 +3403,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-85';
+const _PRAYER_ASSET_VERSION='V6-86';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -3451,7 +3464,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-85';
+const _RETREAT_ASSET_VERSION='V6-86';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -3746,7 +3759,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-85';
+const _SHRINE_ASSET_VERSION='V6-86';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
