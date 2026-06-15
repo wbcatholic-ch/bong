@@ -49,7 +49,7 @@ html.oai-cover-first-reveal #cover > * {
     document.documentElement.classList.add('ios-device');
   }
   // iPhone/iPad에서만 iOS 전용 화면 보정을 적용한다.
-  // V6-102: iOS는 기존 보정을 유지하고, Android/비 iOS만 화면 높이·폭 기준으로 분류한다.
+  // V6-103: iOS는 기존 보정을 유지하고, Android/비 iOS만 화면 높이·폭 기준으로 분류한다.
   function applyAndroidScreenClass(){
     var root = document.documentElement;
     if(!root || !root.classList) return;
