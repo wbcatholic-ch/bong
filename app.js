@@ -2810,7 +2810,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-87';
+    frame.src='diocese.html?v=V6-88';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -2878,6 +2878,7 @@ function dioceseLoaded(){
   if(loading) loading.style.display='none';
 }
 const CORE_RETURN_KEY='catholic_core_return_v1';
+const CORE_RETURN_BACKUP_KEY='catholic_core_return_backup_v1';
 function saveCoreReturnState(extra){
   let mapCenter = null, mapLevel = null;
   try{
@@ -2897,7 +2898,11 @@ function saveCoreReturnState(extra){
     mapCenter: mapCenter,
     mapLevel: mapLevel
   };
-  try{ sessionStorage.setItem(CORE_RETURN_KEY, JSON.stringify(Object.assign(state, extra||{}))); }catch(e){ console.warn("[가톨릭길동무]", e); }
+  try{
+    const payload=JSON.stringify(Object.assign(state, extra||{}));
+    sessionStorage.setItem(CORE_RETURN_KEY, payload);
+    try{ localStorage.setItem(CORE_RETURN_BACKUP_KEY, payload); }catch(_e){}
+  }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
 function normalizeCatholicExternalUrl(url){
   url = String(url || '').trim();
@@ -2936,14 +2941,14 @@ function _isShrineDetailGuideUrl(url){
 function _getShrineHomepageUrl(item){
   var hp = item && item.hp ? normalizeCatholicExternalUrl(item.hp) : '';
   if(!hp) return '';
-  /* V6-87: 신규 성지는 성지추가.xlsx의 '홈페이지' 열을 그대로 홈페이지 버튼에 연결한다. */
+  /* V6-88: 신규 성지는 성지추가.xlsx의 '홈페이지' 열을 그대로 홈페이지 버튼에 연결한다. */
   if(item && item.isNew) return hp;
   if(_isShrineDetailGuideUrl(hp)) return '';
   return hp;
 }
 function _getShrineGuideUrl(item){
   if(!item) return '';
-  /* V6-87: 성지추가.xlsx의 '주교회의 성지안내/성지 상세' URL을 우선 사용한다. */
+  /* V6-88: 성지추가.xlsx의 '주교회의 성지안내/성지 상세' URL을 우선 사용한다. */
   if(item.guideUrl) return normalizeCatholicExternalUrl(item.guideUrl);
   if(item.seq) return _SU + item.seq;
   var hp = item.hp ? normalizeCatholicExternalUrl(item.hp) : '';
@@ -2963,6 +2968,7 @@ function openCatholicExternalPreserveApp(url, kind){
   try{
     var token=String(Date.now())+'-'+String(Math.random()).slice(2);
     sessionStorage.setItem('oai_external_return_token', token);
+    try{ localStorage.setItem('oai_external_return_token', token); }catch(_e){}
     var base=location.href.split('#')[0];
     history.pushState({oaiExternalReturn:true, token:token, kind:kind||'external'}, '', base+'#external-return-'+token);
   }catch(e){ console.warn("[가톨릭길동무]", e); }
@@ -3121,10 +3127,12 @@ function clearRouteNoFocus(){
 function restoreCoreReturnState(){
   let raw=null;
   try{ raw=sessionStorage.getItem(CORE_RETURN_KEY); }catch(e){ console.warn("[가톨릭길동무]", e); }
+  if(!raw){ try{ raw=localStorage.getItem(CORE_RETURN_BACKUP_KEY); }catch(e){ console.warn("[가톨릭길동무]", e); } }
   if(!raw) return false;
   let state=null;
   try{ state=JSON.parse(raw); }catch(e){ console.warn("[가톨릭길동무]", e); }
   try{ sessionStorage.removeItem(CORE_RETURN_KEY); }catch(e){ console.warn("[가톨릭길동무]", e); }
+  try{ localStorage.removeItem(CORE_RETURN_BACKUP_KEY); }catch(e){ console.warn("[가톨릭길동무]", e); }
   if(!state||!state.mode) return false;
 
   _mode=state.mode;
@@ -3204,8 +3212,13 @@ window.addEventListener('pageshow', function(e){
 });
 function restoreCoreReturnStateFromExternalGuard(){
   try{
-    if(location.hash && location.hash.indexOf('#external-return-')===0){
-      history.replaceState(null, '', location.href.split('#')[0]);
+    const hasHash=!!(location.hash && location.hash.indexOf('#external-return-')===0);
+    let hasBackup=false;
+    try{ hasBackup=!!(sessionStorage.getItem(CORE_RETURN_KEY)||localStorage.getItem(CORE_RETURN_BACKUP_KEY)); }catch(_e){}
+    if(hasHash || hasBackup){
+      if(hasHash) history.replaceState(null, '', location.href.split('#')[0]);
+      try{ sessionStorage.removeItem('oai_external_return_token'); }catch(_e){}
+      try{ localStorage.removeItem('oai_external_return_token'); }catch(_e){}
       setTimeout(function(){ try{ restoreCoreReturnState(); }catch(e){ console.warn("[가톨릭길동무]", e); } }, 0);
       return true;
     }
@@ -3221,6 +3234,8 @@ window.addEventListener('popstate', function(e){
   }catch(err){ console.warn("[가톨릭길동무]", err); }
 }, true);
 window.addEventListener('hashchange', function(){ restoreCoreReturnStateFromExternalGuard(); }, true);
+window.addEventListener('focus', function(){ setTimeout(restoreCoreReturnStateFromExternalGuard, 0); }, true);
+document.addEventListener('visibilitychange', function(){ if(!document.hidden) setTimeout(restoreCoreReturnStateFromExternalGuard, 0); }, true);
 
 let _SH_RAW = [];
 
@@ -3260,7 +3275,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-87';
+const _PARISH_ASSET_VERSION='V6-88';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -3423,7 +3438,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-87';
+const _PRAYER_ASSET_VERSION='V6-88';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -3484,7 +3499,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-87';
+const _RETREAT_ASSET_VERSION='V6-88';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -3779,7 +3794,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-87';
+const _SHRINE_ASSET_VERSION='V6-88';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -3788,10 +3803,22 @@ function _decodeShrineHomePage(hp){
   if(_URL_T[hp[0]]) return _URL_T[hp[0]] + hp.slice(1);
   return hp;
 }
+const OAI_NEW_SHRINE_URL_FIXES={"석정 보름 우물":{"hp":"","guideUrl":"https://www.cbck.or.kr/Catholic/Shrine/Read?seq=20190179&diocese=201000011&gb=3"},"강경 김대건 신부 유숙지 (구순오의 집)":{"hp":"","guideUrl":"https://www.djcatholic.or.kr/home/pages/re_shrine_view.php?ids=shrine25"},"강경 성당":{"hp":"","guideUrl":"https://www.djcatholic.or.kr/home/pages/re_shrine_view.php?ids=shrine25"},"대전교구청 성모당 순례지":{"hp":"","guideUrl":""},"덕산 순교 성지":{"hp":"","guideUrl":""},"정산 순교 성지":{"hp":"","guideUrl":"https://www.djcatholic.or.kr/home/pages/re_shrine_view.php?ids=shrine25"},"서지 마을":{"hp":"","guideUrl":"https://www.seoji.net/mass/memorial_4"},"성 베네딕도회 왜관 수도원과 구)왜관 성당":{"hp":"http://www.osb.or.kr/","guideUrl":"https://www.daegu-archdiocese.or.kr/page/shrine.html?srl=pilgrimage&process=read&idx=16&view_option="},"음성 봉암 성지(방축골, 계마대 교우촌)":{"hp":"","guideUrl":"https://www.cdcj.or.kr/parish/holyland/9"},"충주 숲거리 순교 성지":{"hp":"","guideUrl":"https://www.cdcj.or.kr/parish/holyland/8"},"순교자 서응권 요한과 아내 파평 윤씨 안나 묘":{"hp":"","guideUrl":"https://cathms.kr/F_7"},"되재 성당지":{"hp":"","guideUrl":"https://www.martyr.co.kr/assets/holy/view.html?sid=17"},"범바위":{"hp":"","guideUrl":"https://www.martyr.co.kr/assets/holy/view.html?sid=18"},"수류 성당":{"hp":"","guideUrl":"https://www.martyr.co.kr/assets/holy/view.html?sid=19"},"수분 공소":{"hp":"","guideUrl":"https://www.martyr.co.kr/assets/holy/view.html?sid=20"},"신성 공소":{"hp":"","guideUrl":"https://www.martyr.co.kr/assets/holy/view.html?sid=21"},"신시도 최양업 공원":{"hp":"","guideUrl":"https://www.martyr.co.kr/assets/holy/view.html?sid=16"},"안대동 성당지":{"hp":"","guideUrl":"https://www.martyr.co.kr/assets/holy/view.html?sid=22"},"어은 공소":{"hp":"","guideUrl":"https://www.martyr.co.kr/assets/holy/view.html?sid=23"},"전라 감영":{"hp":"","guideUrl":"https://www.martyr.co.kr/assets/holy/view.html?sid=24"},"초록바위 순교 터":{"hp":"","guideUrl":"https://www.martyr.co.kr/assets/holy/view.html?sid=9"}};
+function _applyNewShrineUrlFix(s){
+  try{
+    if(!s || !s.isNew || !s.name) return s;
+    const fix=OAI_NEW_SHRINE_URL_FIXES[String(s.name)]||null;
+    if(!fix) return s;
+    if(fix.hp) s.hp=fix.hp; else delete s.hp;
+    if(fix.guideUrl) s.guideUrl=fix.guideUrl; else delete s.guideUrl;
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+  return s;
+}
 function _buildShrineList(raw){
   return (Array.isArray(raw) ? raw : []).map(function(src){
-    const s = Object.assign({}, src);
+    const s = _applyNewShrineUrlFix(Object.assign({}, src));
     if(s.hp) s.hp = _decodeShrineHomePage(s.hp);
+    if(s.guideUrl) s.guideUrl = _decodeShrineHomePage(s.guideUrl);
     if(_DIO[s.diocese]) s.diocese = _DIO[s.diocese];
     if(_TY[s.type]) s.type = _TY[s.type];
     return s;

@@ -5330,7 +5330,7 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
 }
 
 
-/* V6-87: V6-83 상단 배치 폐기, 기존 하단 기준에서 버튼만 조금 위로 조정 */
+/* V6-88: V6-83 상단 배치 폐기, 기존 하단 기준에서 버튼만 조금 위로 조정 */
 .shrine-visit-floating-list-btn{
   right:12px!important;
   bottom:calc(env(safe-area-inset-bottom,0px) + 34px)!important;
@@ -5353,7 +5353,7 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
 }
 
 
-/* V6-87: 스탬프북 성지 정보 박스 우측 상단 지도 보기 버튼 */
+/* V6-88: 스탬프북 성지 정보 박스 우측 상단 지도 보기 버튼 */
 .shrine-visit-detail-info-head{
   display:flex!important;
   align-items:center!important;
@@ -5396,7 +5396,7 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
 }
 
 
-/* V6-87: 스탬프북 카드 배경은 건드리지 않고 바탕 영역만 아이보리 적용 */
+/* V6-88: 스탬프북 카드 배경은 건드리지 않고 바탕 영역만 아이보리 적용 */
 .shrine-visit-cards-modal,
 .shrine-visit-cards-panel,
 .shrine-visit-cards-body{
@@ -5411,7 +5411,7 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
 }
 
 
-/* V6-87: 통계 화면 상단 여백과 펼침 목록 하단 잘림 방지 */
+/* V6-88: 통계 화면 상단 여백과 펼침 목록 하단 잘림 방지 */
 .shrine-visit-cards-body.stats{
   padding-top:14px!important;
   padding-bottom:max(68px,calc(env(safe-area-inset-bottom,0px) + 58px))!important;
