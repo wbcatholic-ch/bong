@@ -5330,7 +5330,7 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
 }
 
 
-/* V6-84: V6-83 상단 배치 폐기, 기존 하단 기준에서 버튼만 조금 위로 조정 */
+/* V6-85: V6-83 상단 배치 폐기, 기존 하단 기준에서 버튼만 조금 위로 조정 */
 .shrine-visit-floating-list-btn{
   right:12px!important;
   bottom:calc(env(safe-area-inset-bottom,0px) + 34px)!important;
@@ -5349,5 +5349,48 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
   #loc-btn{
     right:10px!important;
     bottom:calc(env(safe-area-inset-bottom,0px) + 86px)!important;
+  }
+}
+
+
+/* V6-85: 스탬프북 성지 정보 박스 우측 상단 지도 보기 버튼 */
+.shrine-visit-detail-info-head{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:10px!important;
+  margin-bottom:8px!important;
+}
+.shrine-visit-detail-info-head .shrine-visit-detail-section-title{
+  margin:0!important;
+  flex:1 1 auto!important;
+}
+.shrine-visit-detail-map-btn{
+  flex:0 0 auto!important;
+  height:32px!important;
+  min-height:32px!important;
+  padding:0 11px!important;
+  border-radius:999px!important;
+  border:1.5px solid rgba(255,196,0,.72)!important;
+  background:#fff8d7!important;
+  color:#5b4300!important;
+  font-size:12.5px!important;
+  font-weight:900!important;
+  font-family:inherit!important;
+  letter-spacing:-.04em!important;
+  box-shadow:0 5px 14px rgba(255,196,0,.18)!important;
+  white-space:nowrap!important;
+}
+.shrine-visit-detail-map-btn:active{
+  transform:translateY(1px)!important;
+  filter:brightness(.96)!important;
+}
+@media (max-width:390px){
+  .shrine-visit-detail-info-head{gap:7px!important;}
+  .shrine-visit-detail-map-btn{
+    height:30px!important;
+    min-height:30px!important;
+    padding:0 9px!important;
+    font-size:12px!important;
   }
 }
