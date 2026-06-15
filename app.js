@@ -689,6 +689,7 @@ function _addShrineVisit(item,date,method){
   rec.name=item.name||rec.name||'';
   rec.diocese=item.diocese||rec.diocese||'';
   rec.seq=item.seq||rec.seq||'';
+  if(rec.visits.some(function(v){ return String((typeof v==='string'?v:(v&&v.date))||'')===String(date); })) return false;
   rec.visits.push({date:date,method:method||'manual',savedAt:new Date().toISOString()});
   rec.visits.sort(function(a,b){ return String(b.date).localeCompare(String(a.date)); });
   data[key]=rec;
@@ -703,6 +704,8 @@ function _deleteShrineVisitAt(item,idx){
   const rec=data[key];
   if(!rec||!Array.isArray(rec.visits)) return false;
   if(idx<0||idx>=rec.visits.length) return false;
+  var target=rec.visits[idx];
+  if(target && typeof target==='object' && String(target.method||'').toLowerCase()==='gps') return false;
   rec.visits.splice(idx,1);
   if(rec.visits.length) data[key]=rec;
   else delete data[key];
@@ -1672,6 +1675,7 @@ function _ensureShrineVisitModal(){
     const item=window.__OAI_CURRENT_SHRINE_VISIT_ITEM__;
     const inp=document.getElementById('shrine-visit-date');
     const date=inp&&inp.value?inp.value:_todayISODate();
+    if(_hasShrineVisitOnDate(item,date)){ alert('이미 등록된 순례 날짜입니다.'); return; }
     if(!_addShrineVisit(item,date,'manual')){ alert('방문 날짜를 확인해 주세요.'); return; }
     _renderShrineVisitModalList(item);
     if(_curInfoItem&&_curInfoItem.item===item) _renderInfoCardShrineVisit(item);
@@ -1679,7 +1683,7 @@ function _ensureShrineVisitModal(){
     try{ if(_activeTab==='nearby') _loadNearby(); }catch(_e){}
     _refreshShrineVisitMapState();
     try{ if(_isShrineVisitDetailOpen() && window.__OAI_CURRENT_SHRINE_VISIT_DETAIL_IDX__!=null) _renderShrineVisitDetail(window.__OAI_CURRENT_SHRINE_VISIT_DETAIL_IDX__); }catch(_e){}
-    _closeShrineVisitModal();
+    try{ if(inp) inp.value=_todayISODate(); }catch(_e){}
   });
   return modal;
 }
@@ -1756,10 +1760,15 @@ function _renderShrineVisitModalList(item){
   if(!list) return;
   const visits=_getShrineVisitDates(item);
   if(!visits.length){ list.innerHTML='<div class="shrine-visit-empty">아직 등록된 방문 날짜가 없습니다.</div>'; return; }
-  list.innerHTML='<div class="shrine-visit-list-title">방문 날짜 '+visits.length+'회</div>'+visits.map(function(v,i){ return '<div class="shrine-visit-date-row"><span>'+_formatVisitDate(v.date)+'</span><button type="button" data-visit-del="'+i+'">삭제</button></div>'; }).join('');
+  list.innerHTML='<div class="shrine-visit-list-title">방문 날짜 '+visits.length+'회</div>'+visits.map(function(v,i){
+    const isGps=String(v&&v.method||'').toLowerCase()==='gps';
+    return '<div class="shrine-visit-date-row'+(isGps?' gps':'')+'"><span>'+_formatVisitDate(v.date)+'</span>'+(isGps?'<em class="shrine-visit-gps-lock">GPS 등록</em>':'<button type="button" data-visit-del="'+i+'">삭제</button>')+'</div>';
+  }).join('');
   list.querySelectorAll('[data-visit-del]').forEach(function(btn){ btn.addEventListener('click', function(e){
     e.preventDefault(); e.stopPropagation();
     const idx=parseInt(btn.getAttribute('data-visit-del'),10);
+    const target=_getShrineVisitDates(item)[idx];
+    if(target && String(target.method||'').toLowerCase()==='gps'){ alert('GPS로 등록된 순례 기록은 삭제할 수 없습니다.'); return; }
     if(confirm('이 방문 날짜를 삭제할까요?')){
       _deleteShrineVisitAt(item,idx);
       _renderShrineVisitModalList(item);
@@ -2827,7 +2836,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-104';
+    frame.src='diocese.html?v=V6-105';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -2894,7 +2903,7 @@ function dioceseLoaded(){
   var loading=document.getElementById('diocese-loading');
   if(loading) loading.style.display='none';
 }
-/* V6-104: 새 창 방식으로 전환된 성지 외부 링크의 옛 core return 저장 함수 제거 */
+/* V6-105: 새 창 방식으로 전환된 성지 외부 링크의 옛 core return 저장 함수 제거 */
 function normalizeCatholicExternalUrl(url){
   url = String(url || '').trim();
   if(!url) return '';
@@ -2932,14 +2941,14 @@ function _isShrineDetailGuideUrl(url){
 function _getShrineHomepageUrl(item){
   var hp = item && item.hp ? normalizeCatholicExternalUrl(item.hp) : '';
   if(!hp) return '';
-  /* V6-104: 신규 성지는 성지추가.xlsx의 '홈페이지' 열을 그대로 홈페이지 버튼에 연결한다. */
+  /* V6-105: 신규 성지는 성지추가.xlsx의 '홈페이지' 열을 그대로 홈페이지 버튼에 연결한다. */
   if(item && item.isNew) return hp;
   if(_isShrineDetailGuideUrl(hp)) return '';
   return hp;
 }
 function _getShrineGuideUrl(item){
   if(!item) return '';
-  /* V6-104: 성지추가.xlsx의 '주교회의 성지안내/성지 상세' URL을 우선 사용한다. */
+  /* V6-105: 성지추가.xlsx의 '주교회의 성지안내/성지 상세' URL을 우선 사용한다. */
   if(item.guideUrl) return normalizeCatholicExternalUrl(item.guideUrl);
   if(item.seq) return _SU + item.seq;
   var hp = item.hp ? normalizeCatholicExternalUrl(item.hp) : '';
@@ -2955,7 +2964,7 @@ function openCatholicExternalPreserveApp(url, kind){
   url = prepareExternalUrl(url);
   if(!url) return false;
   try{ document.activeElement && document.activeElement.blur && document.activeElement.blur(); }catch(e){ console.warn("[가톨릭길동무]", e); }
-  /* V6-104: 새 창/외부 브라우저 방식은 앱 화면을 떠나지 않으므로 남은 외부 복귀 흔적만 정리한다. */
+  /* V6-105: 새 창/외부 브라우저 방식은 앱 화면을 떠나지 않으므로 남은 외부 복귀 흔적만 정리한다. */
   try{
     sessionStorage.removeItem('catholic_core_return_v1');
     localStorage.removeItem('catholic_core_return_backup_v1');
@@ -2997,7 +3006,7 @@ function openShrineExternalLikeFaithPortal(url, extra){
   url = prepareExternalUrl(url);
   if(!url) return;
   extra = extra || {};
-  /* V6-104: 새 창 방식에서는 현재 화면을 그대로 유지하므로 복귀 상태 저장/복원은 하지 않는다. */
+  /* V6-105: 새 창 방식에서는 현재 화면을 그대로 유지하므로 복귀 상태 저장/복원은 하지 않는다. */
   openCatholicExternalPreserveApp(url, extra.source || 'shrine-external');
 }
 function openCoreExternalUrl(url, extra){
@@ -3125,7 +3134,7 @@ window.addEventListener('pageshow', function(ev){
   }catch(ex){}
   setTimeout(function(){ restoreDioceseExternalState({persisted: !!(ev && ev.persisted)}); }, 20);
 }, true);
-/* V6-104: 동작 없는 빈 포커스 리스너와 빈 지도 진입 훅 제거 */
+/* V6-105: 동작 없는 빈 포커스 리스너와 빈 지도 진입 훅 제거 */
 function clearRouteNoFocus(){
   try{
     if(_mode==='shrine'){
@@ -3143,7 +3152,7 @@ function clearRouteNoFocus(){
     var guide=document.getElementById('route-guide'); if(guide) guide.classList.remove('on');
   }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
-/* V6-104: 현재 성지 외부 링크는 새 창 방식이므로 옛 core external return 복원 로직은 제거하고,
+/* V6-105: 현재 성지 외부 링크는 새 창 방식이므로 옛 core external return 복원 로직은 제거하고,
    pageshow 시 지도 DOM이 비어 있는 경우에만 기존 지도 재로딩 보호 흐름을 유지한다. */
 window.addEventListener('pageshow', function(e){
   setTimeout(()=>{
@@ -3196,7 +3205,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-104';
+const _PARISH_ASSET_VERSION='V6-105';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -3359,7 +3368,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-104';
+const _PRAYER_ASSET_VERSION='V6-105';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -3420,7 +3429,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-104';
+const _RETREAT_ASSET_VERSION='V6-105';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -3715,7 +3724,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-104';
+const _SHRINE_ASSET_VERSION='V6-105';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
