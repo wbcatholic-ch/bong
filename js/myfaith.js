@@ -307,13 +307,14 @@
       if(!url) return;
       try{ document.activeElement && document.activeElement.blur && document.activeElement.blur(); }catch(_e){}
       markMyFaithExternalLink();
-      try{ if(typeof window.markExternalReturnStabilize === 'function') window.markExternalReturnStabilize('my-faith-external'); }catch(_e){}
       try{
-        var opened = window.open(url, '_blank', 'noopener,noreferrer');
-        if(opened && typeof opened.focus === 'function') opened.focus();
-        if(opened) return;
+        if(typeof window.oaiSmoothNavigate === 'function'){
+          window.oaiSmoothNavigate(url, 'my-faith-external');
+          return;
+        }
       }catch(_e){}
-      try{ alert('외부 홈페이지는 새 브라우저 창에서 열어 주세요.'); }catch(_e){}
+      try{ if(typeof window.markExternalReturnStabilize === 'function') window.markExternalReturnStabilize('my-faith-external'); }catch(_e){}
+      setTimeout(function(){ try{ location.assign(url); }catch(e){ try{ location.href = url; }catch(_e){} } }, 70);
     }
     function bindMyFaithClick(el, fn){
       if(!el || typeof fn !== 'function') return;
