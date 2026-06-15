@@ -1988,7 +1988,8 @@ window.addEventListener('pageshow',function(){
         window.parent.localStorage.setItem('catholic_diocese_external_return_v1', payload);
         window.parent.__OAI_DIOCESE_EXTERNAL_LEAVING__ = true;
       }catch(e){}
-      // 관구·교구 외부 홈페이지 복귀 시 부모 앱의 안정막/페이드 효과를 호출하지 않는다.
+      // V6-107: 관구·교구 외부 홈페이지도 웹사이트처럼 부모 앱의 복귀 보호창을 사용한다.
+      try{ if(typeof window.parent.markExternalReturnStabilize === 'function') window.parent.markExternalReturnStabilize('diocese-external'); }catch(e){}
       document.documentElement.classList.remove('oai-dio-external-stabilize','oai-dio-external-return','oai-dio-returning');
       try{ window.top.location.assign(url); }
       catch(e){ try{ window.top.location.href = url; }catch(_e){ window.__OAI_DIO_EXTERNAL_LEAVING__ = false; } }
