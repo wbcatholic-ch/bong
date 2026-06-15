@@ -5328,3 +5328,22 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
 .shrine-visit-stat-row.active{
   scroll-margin-top:8px!important;
 }
+
+
+/* V6-83: 지도 내위치/나의순례현황 버튼을 상단 영역으로 이동 */
+#loc-btn{
+  top:58px!important;
+  bottom:auto!important;
+  right:12px!important;
+  z-index:858!important;
+}
+.shrine-visit-floating-list-btn{
+  top:calc(var(--tab-h, 64px) + env(safe-area-inset-top,0px) + 104px)!important;
+  bottom:auto!important;
+  right:12px!important;
+  z-index:860!important;
+}
+@media (max-width:390px){
+  #loc-btn{top:56px!important;right:10px!important;bottom:auto!important;}
+  .shrine-visit-floating-list-btn{top:calc(var(--tab-h, 64px) + env(safe-area-inset-top,0px) + 100px)!important;right:10px!important;bottom:auto!important;}
+}
