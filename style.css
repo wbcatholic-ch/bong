@@ -5330,7 +5330,7 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
 }
 
 
-/* V6-92: V6-83 상단 배치 폐기, 기존 하단 기준에서 버튼만 조금 위로 조정 */
+/* V6-93: V6-83 상단 배치 폐기, 기존 하단 기준에서 버튼만 조금 위로 조정 */
 .shrine-visit-floating-list-btn{
   right:12px!important;
   bottom:calc(env(safe-area-inset-bottom,0px) + 34px)!important;
@@ -5353,7 +5353,7 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
 }
 
 
-/* V6-92: 스탬프북 성지 정보 박스 우측 상단 지도 보기 버튼 */
+/* V6-93: 스탬프북 성지 정보 박스 우측 상단 지도 보기 버튼 */
 .shrine-visit-detail-info-head{
   display:flex!important;
   align-items:center!important;
@@ -5396,7 +5396,7 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
 }
 
 
-/* V6-92: 스탬프북 카드 배경은 건드리지 않고 바탕 영역만 아이보리 적용 */
+/* V6-93: 스탬프북 카드 배경은 건드리지 않고 바탕 영역만 아이보리 적용 */
 .shrine-visit-cards-modal,
 .shrine-visit-cards-panel,
 .shrine-visit-cards-body{
@@ -5411,7 +5411,7 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
 }
 
 
-/* V6-92: 통계 화면 상단 여백과 펼침 목록 하단 잘림 방지 */
+/* V6-93: 통계 화면 상단 여백과 펼침 목록 하단 잘림 방지 */
 .shrine-visit-cards-body.stats{
   padding-top:14px!important;
   padding-bottom:max(68px,calc(env(safe-area-inset-bottom,0px) + 58px))!important;
@@ -5448,82 +5448,3 @@ html.oai-font-global .shrine-visit-cards-tabs button{font-size:calc(13px * var(-
     padding-bottom:16px!important;
   }
 }
-
-
-/* V6-92: 홈페이지/성지 상세페이지를 앱 안의 외부 페이지 뷰어로 열어 비정상 종료 방지 */
-.core-external-view{
-  position:fixed!important;
-  inset:0!important;
-  z-index:10120!important;
-  display:none!important;
-  flex-direction:column!important;
-  background:#ffffff!important;
-  color:#1f2a24!important;
-}
-.core-external-view.show{
-  display:flex!important;
-}
-.core-external-head{
-  flex:0 0 auto!important;
-  height:calc(58px + env(safe-area-inset-top,0px))!important;
-  padding:env(safe-area-inset-top,0px) 14px 0!important;
-  display:grid!important;
-  grid-template-columns:52px minmax(0,1fr) 52px!important;
-  align-items:center!important;
-  gap:8px!important;
-  background:#fffdf7!important;
-  border-bottom:1px solid rgba(15,23,42,.12)!important;
-  box-shadow:0 2px 10px rgba(15,23,42,.08)!important;
-}
-.core-external-title{
-  text-align:center!important;
-  font-size:18px!important;
-  font-weight:900!important;
-  letter-spacing:-.04em!important;
-  overflow:hidden!important;
-  text-overflow:ellipsis!important;
-  white-space:nowrap!important;
-}
-.core-external-back,
-.core-external-close{
-  width:44px!important;
-  height:44px!important;
-  border-radius:50%!important;
-  border:1px solid rgba(15,23,42,.14)!important;
-  background:#ffffff!important;
-  color:#203127!important;
-  font-size:32px!important;
-  font-weight:900!important;
-  line-height:1!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  box-shadow:0 2px 8px rgba(15,23,42,.08)!important;
-}
-.core-external-frame{
-  flex:1 1 auto!important;
-  width:100%!important;
-  height:100%!important;
-  border:0!important;
-  background:#ffffff!important;
-}
-@media (max-width:390px){
-  .core-external-head{
-    height:calc(54px + env(safe-area-inset-top,0px))!important;
-    grid-template-columns:48px minmax(0,1fr) 48px!important;
-    padding-left:10px!important;
-    padding-right:10px!important;
-  }
-  .core-external-title{font-size:17px!important;}
-  .core-external-back,
-  .core-external-close{
-    width:40px!important;
-    height:40px!important;
-    font-size:29px!important;
-  }
-}
-
-
-/* V6-92: 성지 홈페이지/상세페이지는 매일미사·성가와 같은 내부 웹뷰로 열고 하단 신앙포털 탭은 숨김 */
-#missa-view.shrine-external-mode #missa-faith-nav{display:none!important;}
-#missa-view.shrine-external-mode #missa-frame{flex:1 1 auto!important;min-height:0!important;}
