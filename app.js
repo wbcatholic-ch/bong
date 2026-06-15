@@ -1474,6 +1474,13 @@ function _shrineVisitBadgeHtml(item,context){
   const label=context==='compact'?'순례한 성지':'순례한 성지 · '+count+'회';
   return '<span class="shrine-visited-chip">'+label+'</span>';
 }
+function _isNewShrineItem(item){
+  return !!(item && (item.isNew === true || item.addedGroup));
+}
+function _shrineNewBadgeHtml(item){
+  if(_mode!=='shrine'||!_isNewShrineItem(item)) return '';
+  return '<span class="shrine-new-chip">신규</span>';
+}
 function _ensureShrineVisitModal(){
   let modal=document.getElementById('shrine-visit-modal');
   if(modal) return modal;
@@ -2634,7 +2641,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-70';
+    frame.src='diocese.html?v=V6-72';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -3015,7 +3022,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-70';
+const _PARISH_ASSET_VERSION='V6-72';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -3178,7 +3185,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-70';
+const _PRAYER_ASSET_VERSION='V6-72';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -3239,7 +3246,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-70';
+const _RETREAT_ASSET_VERSION='V6-72';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -3534,7 +3541,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-70';
+const _SHRINE_ASSET_VERSION='V6-72';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -4591,7 +4598,7 @@ function _fitInfoCardButtons(){
 function _showInfoCard(item, idx){
   _curInfoItem = {item, idx};
 
-  $('ic-name').textContent = item.name;
+  $('ic-name').innerHTML = String(item.name||'') + _shrineNewBadgeHtml(item);
   $('ic-sub').textContent  = item.diocese;
   _renderInfoCardShrinePilgrimBadge(item);
   $('ic-addr').textContent = item.addr;
@@ -6092,7 +6099,7 @@ function _renderNearbyDone(prelim,results,getIdx,getColor,getLabel,phase,request
     const isEst=(phase==='est');
     const distTxt=isEst?`~${km}km`:`🚗${km}km`;
     const dur=(!isEst&&o.r.dur)?`<span style="font-size:10px;color:#aaa;font-weight:400;margin-left:3px">${_fmtTime(o.r.dur)}</span>`:'';
-    return `<div class="nearby-item${(_mode==='shrine'&&_isVisitedShrine(o.x.p))?' shrine-visited-card':''}" onclick="selectItem(${idx},{fromNearby:true})"><div class="nearby-num" style="background:${c}!important">${i+1}</div><div class="nearby-info"><div class="nearby-name">${o.x.p.name}</div><div class="nearby-addr">${o.x.p.addr.substring(0,26)}${o.x.p.addr.length>26?'…':''}</div>${_shrineVisitBadgeHtml(o.x.p,'nearby')}</div><div class="nearby-meta"><div class="nearby-type" style="background:${c}18!important;color:${c}!important">${lbl}</div><div class="nearby-dist" style="color:${isEst?'#aaa':c}!important">${distTxt}${dur}</div></div></div>`;
+    return `<div class="nearby-item${(_mode==='shrine'&&_isVisitedShrine(o.x.p))?' shrine-visited-card':''}" onclick="selectItem(${idx},{fromNearby:true})"><div class="nearby-num" style="background:${c}!important">${i+1}</div><div class="nearby-info"><div class="nearby-name">${o.x.p.name}${_shrineNewBadgeHtml(o.x.p)}</div><div class="nearby-addr">${o.x.p.addr.substring(0,26)}${o.x.p.addr.length>26?'…':''}</div>${_shrineVisitBadgeHtml(o.x.p,'nearby')}</div><div class="nearby-meta"><div class="nearby-type" style="background:${c}18!important;color:${c}!important">${lbl}</div><div class="nearby-dist" style="color:${isEst?'#aaa':c}!important">${distTxt}${dur}</div></div></div>`;
   }).join('');
   if(phase==='final'){
     body.scrollTop=scrollTop;
@@ -6188,7 +6195,7 @@ function renderList(){
    d.className='list-item'+((_mode==='shrine'&&_isVisitedShrine(s))?' shrine-visited-card':'');
    const pilgrimBtn = _mode==='shrine' ? `<button type="button" class="li-pilgrim-register" data-shrine-idx="${i}">순례등록</button>` : '';
    d.innerHTML=`<div class="li-dot" style="background:${dotColor}"></div>
-    <div class="li-info"><div class="li-name">${s.name}</div><div class="li-sub">${s.addr.substring(0,28)}${s.addr.length>28?'…':''}</div>${_shrineVisitBadgeHtml(s,'list')}</div>
+    <div class="li-info"><div class="li-name">${s.name}${_shrineNewBadgeHtml(s)}</div><div class="li-sub">${s.addr.substring(0,28)}${s.addr.length>28?'…':''}</div>${_shrineVisitBadgeHtml(s,'list')}</div>
     <div class="li-side"><span class="li-badge" style="background:${c}18!important;color:${c}!important">${_mode==='shrine'?s.type:(_mode==='retreat'?'피정의 집':'성당')}</span>${pilgrimBtn}</div>`;
    d.onclick=(ev)=>{ if(ev&&ev.target&&ev.target.closest&&ev.target.closest('.li-pilgrim-register')) return; selectItem(i); };
    body.appendChild(d);
@@ -6444,7 +6451,7 @@ function _showRegionResults(q,lat,lng,doc){
         if(rgl) rgl.innerHTML=sorted.map((o,i)=>{
           const idx=items.indexOf(o.x.s);const c=_getModeMarkerColor(o.x.s);const lbl=_getModeTypeLabel(o.x.s);
           const km=o.r.km.toFixed(1);const dur=o.r.dur?`<span style="font-size:10px;color:#aaa;font-weight:400;margin-left:3px">${_fmtTime(o.r.dur)}</span>`:'';
-          return `<div class="region-item${(_mode==='shrine'&&_isVisitedShrine(o.x.s))?' shrine-visited-card':''}" onclick="selectItem(${idx},{fromRegion:true})"><div class="nearby-num" style="background:${c}!important;width:28px;height:28px;font-size:12px">${i+1}</div><div class="nearby-info"><div class="nearby-name">${o.x.s.name}</div><div class="nearby-addr">${o.x.s.addr.substring(0,26)}${o.x.s.addr.length>26?'…':''}</div>${_shrineVisitBadgeHtml(o.x.s,'region')}</div><div class="nearby-meta"><div class="nearby-type" style="background:${c}18!important;color:${c}!important">${lbl}</div><div class="nearby-dist" style="color:${c}!important">🚗${km}km${dur}</div></div></div>`;
+          return `<div class="region-item${(_mode==='shrine'&&_isVisitedShrine(o.x.s))?' shrine-visited-card':''}" onclick="selectItem(${idx},{fromRegion:true})"><div class="nearby-num" style="background:${c}!important;width:28px;height:28px;font-size:12px">${i+1}</div><div class="nearby-info"><div class="nearby-name">${o.x.s.name}${_shrineNewBadgeHtml(o.x.s)}</div><div class="nearby-addr">${o.x.s.addr.substring(0,26)}${o.x.s.addr.length>26?'…':''}</div>${_shrineVisitBadgeHtml(o.x.s,'region')}</div><div class="nearby-meta"><div class="nearby-type" style="background:${c}18!important;color:${c}!important">${lbl}</div><div class="nearby-dist" style="color:${c}!important">🚗${km}km${dur}</div></div></div>`;
         }).join('');
       }
     });
@@ -6478,7 +6485,7 @@ function _showRegionFallback(q){
   const c=_getModeMarkerColor(s);
   return `<div class="region-item${(_mode==='shrine'&&_isVisitedShrine(s))?' shrine-visited-card':''}" onclick="selectItem(${idx},{fromRegion:true})">
    <div class="nearby-num" style="background:${c}!important;width:26px;height:26px;font-size:12px">${i+1}</div>
-   <div class="nearby-info"><div class="nearby-name">${s.name}</div><div class="nearby-addr">${s.addr.substring(0,26)}…</div>${_shrineVisitBadgeHtml(s,'region')}</div>
+   <div class="nearby-info"><div class="nearby-name">${s.name}${_shrineNewBadgeHtml(s)}</div><div class="nearby-addr">${s.addr.substring(0,26)}…</div>${_shrineVisitBadgeHtml(s,'region')}</div>
    <div class="nearby-meta"><div class="nearby-type" style="background:${c}18!important;color:${c}!important">${_mode==='shrine'?s.type:(_mode==='retreat'?'피정의 집':'성당')}</div></div>
   </div>`;
   }).join('');
