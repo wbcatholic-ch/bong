@@ -136,9 +136,18 @@ function resetPrayerToCover(reason){
     hidePrayerOnly();
     showCoverOnlyForPrayer();
     resetPrayerFlags();
-    try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(_e){}
-    try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(_e){}
-    settleCoverTrapAfterPrayer(reason || 'prayer-cover-reset');
+    try{
+      if(typeof window._primeCoverExitGuardAfterCoverReturn === 'function') window._primeCoverExitGuardAfterCoverReturn(reason || 'prayer-cover-reset');
+      else {
+        if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
+        if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
+        settleCoverTrapAfterPrayer(reason || 'prayer-cover-reset');
+      }
+    }catch(_e){
+      try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(__e){}
+      try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(__e){}
+      settleCoverTrapAfterPrayer(reason || 'prayer-cover-reset');
+    }
     return true;
   }catch(e){ console.warn('[가톨릭길동무]', e); return true; }
 }

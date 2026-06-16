@@ -2404,7 +2404,7 @@ window.addEventListener('focus', function(){
 if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(_tryResumeMassQuickSoon, 80); }, {once:true});
 else setTimeout(_tryResumeMassQuickSoon, 80);
 window.addEventListener('load', function(){ setTimeout(_tryResumeMassQuickSoon, 80); }, {once:true});
-try{ window.openFaithPortal=openFaithPortal; window._shouldMassQuickReturn=_shouldMassQuickReturn; window._shouldPrayerQuickReturn=_shouldPrayerQuickReturn; window._setPrayerQuickReturn=_setPrayerQuickReturn; window._clearMassQuickReturnForReload=_clearMassQuickReturnForReload; window._clearPrayerQuickReturn=_clearPrayerQuickReturn; window._returnToMassQuickMenu=_returnToMassQuickMenu; window._closePrayerAndReturn=_closePrayerAndReturn; window._resetCoverExitReady=_resetCoverExitReady; window._clearCoverExitArmed=_clearCoverExitArmed; window._isCoverScreenVisible=_isCoverScreenVisible; window._isAppScreenActive=_isAppScreenActive; window._hasOpenAppSurface=_hasOpenAppSurface; window._ensureCoverBackTrap=_ensureCoverBackTrap; window._ensureAppBackTrap=_ensureAppBackTrap; window._resetAppBackTrap=_resetAppBackTrap; window._pushCoverOverlayBackTrap=_pushCoverOverlayBackTrap; window._hideMassQuickMenuOnly=_hideMassQuickMenuOnly; window._setPrayerPopupReturnSource=_setPrayerPopupReturnSource; window._isPrayerPopupReturnSource=_isPrayerPopupReturnSource; window._forceCoverAfterPrayerQuickPopup=_forceCoverAfterPrayerQuickPopup; window._resetCoverBackTrap=_resetCoverBackTrap; window._stabilizeCoverBackAfterFaithPortal=_stabilizeCoverBackAfterFaithPortal; window._consumePrayerCoverNeedsFirstToast=_consumePrayerCoverNeedsFirstToast; window.openMassQuickMenu=openMassQuickMenu; window.closeMassQuickMenu=closeMassQuickMenu; window._openFaithPortalFromMassQuick=_openFaithPortalFromMassQuick; window._setFaithReturnTarget=_setFaithReturnTarget; window._clearFaithReturnTarget=_clearFaithReturnTarget; window._shouldFaithReturnToMassQuick=_shouldFaithReturnToMassQuick; }catch(e){ console.warn('[가톨릭길동무]', e); }
+try{ window.openFaithPortal=openFaithPortal; window._shouldMassQuickReturn=_shouldMassQuickReturn; window._shouldPrayerQuickReturn=_shouldPrayerQuickReturn; window._setPrayerQuickReturn=_setPrayerQuickReturn; window._clearMassQuickReturnForReload=_clearMassQuickReturnForReload; window._clearPrayerQuickReturn=_clearPrayerQuickReturn; window._returnToMassQuickMenu=_returnToMassQuickMenu; window._closePrayerAndReturn=_closePrayerAndReturn; window._resetCoverExitReady=_resetCoverExitReady; window._clearCoverExitArmed=_clearCoverExitArmed; window._isCoverScreenVisible=_isCoverScreenVisible; window._isAppScreenActive=_isAppScreenActive; window._hasOpenAppSurface=_hasOpenAppSurface; window._ensureCoverBackTrap=_ensureCoverBackTrap; window._ensureAppBackTrap=_ensureAppBackTrap; window._resetAppBackTrap=_resetAppBackTrap; window._pushCoverOverlayBackTrap=_pushCoverOverlayBackTrap; window._hideMassQuickMenuOnly=_hideMassQuickMenuOnly; window._setPrayerPopupReturnSource=_setPrayerPopupReturnSource; window._isPrayerPopupReturnSource=_isPrayerPopupReturnSource; window._forceCoverAfterPrayerQuickPopup=_forceCoverAfterPrayerQuickPopup; window._resetCoverBackTrap=_resetCoverBackTrap; window._stabilizeCoverBackAfterFaithPortal=_stabilizeCoverBackAfterFaithPortal; window._primeCoverExitGuardAfterCoverReturn=_primeCoverExitGuardAfterCoverReturn; window._forceNextCoverBackToast=_forceNextCoverBackToast; window._consumePrayerCoverNeedsFirstToast=_consumePrayerCoverNeedsFirstToast; window.openMassQuickMenu=openMassQuickMenu; window.closeMassQuickMenu=closeMassQuickMenu; window._openFaithPortalFromMassQuick=_openFaithPortalFromMassQuick; window._setFaithReturnTarget=_setFaithReturnTarget; window._clearFaithReturnTarget=_clearFaithReturnTarget; window._shouldFaithReturnToMassQuick=_shouldFaithReturnToMassQuick; }catch(e){ console.warn('[가톨릭길동무]', e); }
 
 function _runRefreshAppFilesOnly(){
   var btn = document.getElementById('cover-update-btn');
@@ -4005,39 +4005,42 @@ function _forceNextCoverBackToast(reason){
   }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
 
-
-function _stabilizeCoverBackAfterFaithPortal(reason){
+function _primeCoverExitGuardAfterCoverReturn(reason, opts){
   try{
-    reason = reason || 'faith-portal-cover';
+    reason = reason || 'cover-return';
+    opts = opts || {};
+    function arm(tag){
+      try{
+        if(document.documentElement.classList.contains('app-active')) return;
+        var mq=document.getElementById('mass-quick-modal');
+        if(mq && mq.classList.contains('show')) return;
+        _resetCoverExitReady();
+        _clearCoverExitArmed();
+        try{
+          window.__OAI_SUPPRESS_COVER_BACK_TOAST_UNTIL__ = 0;
+          window.__OAI_SUPPRESS_COVER_BACK_TOAST_REASON__ = '';
+        }catch(_e){}
+        _forceNextCoverBackToast(reason + '-first-toast-' + tag);
+        if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap(reason + '-' + tag, {force:true});
+        else if(typeof _resetCoverBackTrap === 'function') _resetCoverBackTrap(reason + '-' + tag);
+        else if(typeof _ensureCoverBackTrap === 'function') _ensureCoverBackTrap(reason + '-' + tag);
+        try{ if(typeof window.__oaiArmEarlyCoverBackGuard === 'function') window.__oaiArmEarlyCoverBackGuard(reason + '-early-' + tag, true); }catch(_e){}
+      }catch(e){ console.warn('[가톨릭길동무]', e); }
+    }
     _resetCoverExitReady();
     _clearCoverExitArmed();
     try{
       window.__OAI_SUPPRESS_COVER_BACK_TOAST_UNTIL__ = 0;
       window.__OAI_SUPPRESS_COVER_BACK_TOAST_REASON__ = '';
     }catch(_e){}
-    try{ _forceNextCoverBackToast(reason + '-first-toast'); }catch(_e){}
-    var delays = [0, 60, 160, 320, 620];
-    delays.forEach(function(delay){
-      setTimeout(function(){
-        try{
-          if(document.documentElement.classList.contains('app-active')) return;
-          var mq=document.getElementById('mass-quick-modal');
-          if(mq && mq.classList.contains('show')) return;
-          _resetCoverExitReady();
-          _clearCoverExitArmed();
-          try{
-            window.__OAI_SUPPRESS_COVER_BACK_TOAST_UNTIL__ = 0;
-            window.__OAI_SUPPRESS_COVER_BACK_TOAST_REASON__ = '';
-          }catch(_e){}
-          try{ _forceNextCoverBackToast(reason + '-first-toast-' + delay); }catch(_e){}
-          if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap(reason + '-' + delay, {force:true});
-          else if(typeof _resetCoverBackTrap === 'function') _resetCoverBackTrap(reason + '-' + delay);
-          else if(typeof _ensureCoverBackTrap === 'function') _ensureCoverBackTrap(reason + '-' + delay);
-          try{ if(typeof window.__oaiArmEarlyCoverBackGuard === 'function') window.__oaiArmEarlyCoverBackGuard(reason + '-early-' + delay, true); }catch(_e){}
-        }catch(e){ console.warn('[가톨릭길동무]', e); }
-      }, delay);
-    });
+    _forceNextCoverBackToast(reason + '-first-toast');
+    var delays = opts.delays || [0, 60, 160, 320, 620];
+    delays.forEach(function(delay){ setTimeout(function(){ arm(String(delay)); }, delay); });
   }catch(e){ console.warn('[가톨릭길동무]', e); }
+}
+
+function _stabilizeCoverBackAfterFaithPortal(reason){
+  _primeCoverExitGuardAfterCoverReturn(reason || 'faith-portal-cover');
 }
 
 function _consumeForceNextCoverBackToast(){
@@ -4371,7 +4374,7 @@ function goToCover(){
     _coverEl.style.pointerEvents='';
     _coverEl.scrollTop=0;
   }
-  try{ if(typeof _resetCoverExitReady === 'function') _resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+  try{ if(typeof _primeCoverExitGuardAfterCoverReturn === 'function') _primeCoverExitGuardAfterCoverReturn('go-to-cover'); }catch(e){ console.warn('[가톨릭길동무]', e); }
   try{
     if(typeof window.oaiSettleCoverSize === 'function'){
       window.oaiSettleCoverSize('cover-return');
