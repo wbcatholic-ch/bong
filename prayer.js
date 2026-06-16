@@ -495,6 +495,16 @@ function prOpenOfficialPrayer(prayer){
   prMarkExternalReturnFlag();
   prShowExternalGuide('공식 기도문 페이지로 이동합니다.', 0, { hold:true, maxDuration:6500 });
   window.setTimeout(function(){
+    try{
+      if(typeof window.oaiOpenExternalSite === 'function'){
+        window.oaiOpenExternalSite(url, {kind:'prayer-external', delay:0});
+        return;
+      }
+      if(typeof window.oaiSmoothNavigate === 'function'){
+        window.oaiSmoothNavigate(url, 'prayer-external');
+        return;
+      }
+    }catch(e){ console.warn('[가톨릭길동무]', e); }
     try{ window.location.href = url; }
     catch(e){ location.href = url; }
   }, 650);
