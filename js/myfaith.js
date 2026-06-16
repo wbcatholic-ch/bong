@@ -203,12 +203,13 @@
       try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(e){ console.warn('[가톨릭길동무]', e); }
       try{ if(typeof window._forceNextCoverBackToast === 'function') window._forceNextCoverBackToast(reason || 'my-faith-close'); }catch(e){ console.warn('[가톨릭길동무]', e); }
       try{
+        reason = reason || 'my-faith-close';
         if(typeof window._oaiArmCoverBackTrap === 'function'){
-          window._oaiArmCoverBackTrap(reason || 'my-faith-close', {force:true});
+          window._oaiArmCoverBackTrap(reason, {force:true});
         }else{
           var href = location.href.split('#')[0];
-          history.replaceState({_p:0, oai_cover_root:reason||'my-faith-root'}, '', href);
-          history.pushState({_p:1, oai_cover_trap:reason||'my-faith-trap'}, '', href);
+          history.replaceState({_p:0, oai_cover_root:reason}, '', href);
+          history.pushState({_p:1, oai_cover_trap:reason}, '', href);
         }
       }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
