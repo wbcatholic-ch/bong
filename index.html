@@ -49,7 +49,9 @@ html.oai-cover-first-reveal #cover > * {
     document.documentElement.classList.add('ios-device');
   }
   // iPhone/iPad에서만 iOS 전용 화면 보정을 적용한다.
-  // V6-102: iOS는 기존 보정을 유지하고, Android/비 iOS만 화면 높이·폭 기준으로 분류한다.
+  // V6-115: Android 화면 분류는 키보드로 줄어든 visualViewport가 아니라 안정된 레이아웃 높이 기준으로만 판단한다.
+  var oaiScreenStableW = 0;
+  var oaiScreenStableH = 0;
   function applyAndroidScreenClass(){
     var root = document.documentElement;
     if(!root || !root.classList) return;
@@ -57,11 +59,18 @@ html.oai-cover-first-reveal #cover > * {
     for(var i=0;i<classes.length;i++) root.classList.remove(classes[i]);
     if(isIOS) return;
     var vv = window.visualViewport;
-    var w = Math.round((vv && vv.width) || window.innerWidth || root.clientWidth || screen.width || 0);
-    var h = Math.round((vv && vv.height) || window.innerHeight || root.clientHeight || screen.height || 0);
+    var layoutW = Math.round(window.innerWidth || root.clientWidth || screen.width || 0);
+    var layoutH = Math.round(window.innerHeight || root.clientHeight || screen.height || 0);
+    var vvH = Math.round((vv && vv.height) || 0);
+    var keyboardLikely = !!(vvH && layoutH && vvH / layoutH < 0.78);
+    if(layoutW && (!oaiScreenStableW || !keyboardLikely)) oaiScreenStableW = layoutW;
+    if(layoutH && (!oaiScreenStableH || layoutH > oaiScreenStableH || !keyboardLikely)) oaiScreenStableH = Math.max(oaiScreenStableH || 0, layoutH);
+    var w = oaiScreenStableW || layoutW || Math.round((vv && vv.width) || 0);
+    var h = oaiScreenStableH || layoutH || vvH;
     if(!w || !h) return;
     root.setAttribute('data-oai-vw', String(w));
     root.setAttribute('data-oai-vh', String(h));
+    root.classList.toggle('oai-screen-keyboard-likely', keyboardLikely);
     if(w >= 600){
       root.classList.add('oai-screen-fold-wide');
     }else if(w <= 410 && h < 790){
@@ -73,7 +82,7 @@ html.oai-cover-first-reveal #cover > * {
   applyAndroidScreenClass();
   window.addEventListener('resize', applyAndroidScreenClass, {passive:true});
   if(window.visualViewport) window.visualViewport.addEventListener('resize', applyAndroidScreenClass, {passive:true});
-  window.addEventListener('orientationchange', function(){ setTimeout(applyAndroidScreenClass, 80); }, {passive:true});
+  window.addEventListener('orientationchange', function(){ oaiScreenStableW=0; oaiScreenStableH=0; setTimeout(applyAndroidScreenClass, 80); }, {passive:true});
   /* Android 카카오톡에서만 Chrome으로 연결합니다. iPhone/iPad/Safari/PWA에서는 실행하지 않습니다. */
   if(isAndroid && isKakao){
     var url = location.href;

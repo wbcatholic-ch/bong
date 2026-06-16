@@ -8286,13 +8286,13 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
   window.__OAI_MAP_SEARCH_KEYBOARD_VIEWPORT_LOCK__=true;
   var lock=null;
   function isTargetInput(el){
-    try{ return !!(el && (el.id==='list-srch-inp' || el.id==='region-inp')); }catch(_e){ return false; }
+    try{ return !!(el && (el.id==='list-srch-inp' || el.id==='region-inp' || el.id==='sm-inp')); }catch(_e){ return false; }
   }
   function getActiveTarget(){
     try{ return isTargetInput(document.activeElement) ? document.activeElement : null; }catch(_e){ return null; }
   }
-  function getSheetNameForInput(el){ return el && el.id==='region-inp' ? 'region' : 'list'; }
-  function getScrollBox(name){ return name==='region' ? document.getElementById('region-body') : document.getElementById('list-body'); }
+  function getSheetNameForInput(el){ return el && el.id==='region-inp' ? 'region' : (el && el.id==='sm-inp' ? 'sm' : 'list'); }
+  function getScrollBox(name){ return name==='region' ? document.getElementById('region-body') : (name==='sm' ? document.getElementById('sm-body') : document.getElementById('list-body')); }
   function makeLock(el){
     var name=getSheetNameForInput(el);
     var sheet=document.getElementById('sheet-'+name);
