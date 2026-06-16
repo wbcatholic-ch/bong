@@ -89,17 +89,12 @@ function resetPrayerFlags(){
 }
 function ensureCoverTrapAfterPrayer(reason){
   try{
-    reason = reason || 'prayer-cover-reset';
-    if(typeof window._oaiArmCoverBackTrap === 'function'){
-      window._oaiArmCoverBackTrap(reason, {force:true});
-    }else if(typeof window._resetCoverBackTrap === 'function'){
-      window._resetCoverBackTrap(reason);
-    }else if(typeof window._ensureCoverBackTrap === 'function'){
-      window._ensureCoverBackTrap(reason);
-    }else {
+    if(typeof window._resetCoverBackTrap === 'function') window._resetCoverBackTrap(reason || 'prayer-cover-reset');
+    else if(typeof window._ensureCoverBackTrap === 'function') window._ensureCoverBackTrap(reason || 'prayer-cover-reset');
+    else {
       var href = location.href.split('#')[0];
-      history.replaceState({_p:0, oai_cover_root:reason}, '', href);
-      history.pushState({_p:1, oai_cover_trap:reason}, '', href);
+      history.replaceState({_p:0, oai_cover_root:reason||'prayer-cover-reset'}, '', href);
+      history.pushState({_p:1, oai_cover_trap:reason||'prayer-cover-reset'}, '', href);
     }
   }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
@@ -111,12 +106,10 @@ function settleCoverTrapAfterPrayer(reason){
       if(mq && mq.classList.contains('show')) return;
       if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
       if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
-      var trapReason = (reason||'prayer-cover') + '-' + tag;
-      if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap(trapReason, {force:true});
-      else if(typeof window._ensureCoverBackTrap === 'function') window._ensureCoverBackTrap(trapReason);
+      if(typeof window._ensureCoverBackTrap === 'function') window._ensureCoverBackTrap((reason||'prayer-cover') + '-' + tag);
       else {
         var st = history.state;
-        if(!(st && st._p === 1)) ensureCoverTrapAfterPrayer(trapReason);
+        if(!(st && st._p === 1)) ensureCoverTrapAfterPrayer((reason||'prayer-cover') + '-' + tag);
       }
     }catch(e){ console.warn('[가톨릭길동무]', e); }
   }
@@ -136,18 +129,9 @@ function resetPrayerToCover(reason){
     hidePrayerOnly();
     showCoverOnlyForPrayer();
     resetPrayerFlags();
-    try{
-      if(typeof window._primeCoverExitGuardAfterCoverReturn === 'function') window._primeCoverExitGuardAfterCoverReturn(reason || 'prayer-cover-reset');
-      else {
-        if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
-        if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
-        settleCoverTrapAfterPrayer(reason || 'prayer-cover-reset');
-      }
-    }catch(_e){
-      try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(__e){}
-      try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(__e){}
-      settleCoverTrapAfterPrayer(reason || 'prayer-cover-reset');
-    }
+    try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(_e){}
+    try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(_e){}
+    settleCoverTrapAfterPrayer(reason || 'prayer-cover-reset');
     return true;
   }catch(e){ console.warn('[가톨릭길동무]', e); return true; }
 }
