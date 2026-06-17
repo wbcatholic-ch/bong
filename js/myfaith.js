@@ -300,6 +300,7 @@
         }
       }catch(_e){}
     }
+    try{ window.oaiMarkMyFaithExternalLink = markMyFaithExternalLink; }catch(_e){}
     function clearMyFaithExternalLinkFlag(){
       try{ sessionStorage.removeItem(MYFAITH_EXTERNAL_FLAG); sessionStorage.removeItem(MYFAITH_EXTERNAL_TS); }catch(_e){}
     }

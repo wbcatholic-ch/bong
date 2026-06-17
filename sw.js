@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V6-150-MYFAITH-QUICK-BACK-CHECK';
-const ASSET_VERSION = 'V6-150-MYFAITH-QUICK-BACK-CHECK';
+const CACHE_VERSION = 'catholic-way-V6-151-MYFAITH-DAILY-REF-X-CIRCLE-CHECK';
+const ASSET_VERSION = 'V6-151-MYFAITH-DAILY-REF-X-CIRCLE-CHECK';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }

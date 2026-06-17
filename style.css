@@ -6007,3 +6007,31 @@ html.oai-font-global .shrine-visit-floating-list-btn{
 .shrine-visit-modal.show{
   z-index:10080!important;
 }
+
+/* V6-151: 모든 X 닫기/삭제 버튼은 속이 투명한 원형 테두리로 통일 */
+.module-close,
+#prayer-close,
+#pr-back-btn,
+.pr-back,
+.my-diocese-close,
+.cover-menu-close,
+.guide-x,
+.mass-quick-close,
+.ios-safari-banner-x,
+.sheet-x,
+.sm-x,
+.route-sheet-x,
+.map-category-close,
+.ic-close-btn,
+.trail-sh-close,
+.srch-x,
+.rs-x {
+  border-radius: 999px !important;
+  background: transparent !important;
+  border: 1.5px solid currentColor !important;
+  box-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+}

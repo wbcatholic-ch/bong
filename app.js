@@ -473,6 +473,15 @@ document.addEventListener('click', function(e){
     if(!raw || raw.charAt(0)==='#' || /^(tel:|mailto:|sms:|javascript:)/i.test(raw)) return;
     var u = new URL(raw, location.href);
     if(u.origin === location.origin) return;
+    try{
+      var inMyFaithExternal = false;
+      if(a.getAttribute && a.getAttribute('data-myfaith-external-link') === '1') inMyFaithExternal = true;
+      if(!inMyFaithExternal && a.closest && a.closest('#my-diocese-modal')) inMyFaithExternal = true;
+      if(inMyFaithExternal){
+        if(typeof window.oaiMarkMyFaithExternalLink === 'function') window.oaiMarkMyFaithExternalLink();
+        if(typeof window.markExternalReturnStabilize === 'function') window.markExternalReturnStabilize('my-faith-external');
+      }
+    }catch(_e){}
     if(typeof a.onclick === 'function') return;
     e.preventDefault();
     e.stopPropagation();
