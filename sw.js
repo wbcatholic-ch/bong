@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V6-149-WEB-TAB-ORDER-CHECK';
-const ASSET_VERSION = 'V6-149-WEB-TAB-ORDER-CHECK';
+const CACHE_VERSION = 'catholic-way-V6-150-MYFAITH-QUICK-BACK-CHECK';
+const ASSET_VERSION = 'V6-150-MYFAITH-QUICK-BACK-CHECK';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }

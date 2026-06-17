@@ -46,7 +46,12 @@ function isPrayerReturnPopupOpen(){
 }
 function armPrayerBackTrap(reason){
   try{
-    if(isPrayerOpen() && typeof window._ensureAppBackTrap === 'function'){
+    if(!isPrayerOpen()) return;
+    if(isPrayerQuickSource() && typeof window._resetAppBackTrap === 'function'){
+      window._resetAppBackTrap(reason || 'prayer-quick-state');
+      return;
+    }
+    if(typeof window._ensureAppBackTrap === 'function'){
       window._ensureAppBackTrap(reason || 'prayer-ui-state');
     }
   }catch(e){ console.warn('[가톨릭길동무]', e); }
