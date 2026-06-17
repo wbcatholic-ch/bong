@@ -1032,7 +1032,8 @@ function _updateShrineVisitFloatingListButtonUI(){
   const sheetOpen=_isShrineVisitFloatingListSurfaceOpen();
   const activeAllowed=allowedTabs.indexOf(_activeTab)>=0;
   const nearbyOpen=(_activeTab==='nearby') || !!(document.getElementById('sheet-nearby')&&document.getElementById('sheet-nearby').classList.contains('open'));
-  const nearbyReady=!nearbyOpen || !!window.__OAI_SHRINE_NEARBY_DISTANCE_DONE__;
+  const nearbyLoading=nearbyOpen && _mode==='shrine' && window.__OAI_SHRINE_NEARBY_LOADING__ === true;
+  const nearbyReady=!nearbyOpen || (!!window.__OAI_SHRINE_NEARBY_DISTANCE_DONE__ && !nearbyLoading);
   const mapOpen=(_screen==='map' && !sheetOpen);
   const show=(_mode==='shrine' && (sheetOpen||activeAllowed||mapOpen) && nearbyReady && !searchOpen && !keyboardOpen && !infoOpen && !routeOpen && !visitOpen);
   btn.classList.toggle('show', !!show);
@@ -1255,7 +1256,11 @@ function _ensureShrineVisitDetailView(){
     if(register){
       e.preventDefault(); e.stopPropagation();
       const idx=parseInt(window.__OAI_CURRENT_SHRINE_VISIT_DETAIL_IDX__,10);
-      if(idx>=0&&SHRINES[idx]) _openShrineVisitModal(SHRINES[idx]);
+      if(idx>=0&&SHRINES[idx]){
+        try{ _closeShrineVisitDetail({fromPopstate:true}); }catch(_e){}
+        try{ _mode='shrine'; }catch(_e){}
+        _openShrineVisitModal(SHRINES[idx]);
+      }
       return;
     }
     const add=e.target&&e.target.closest&&e.target.closest('[data-shrine-detail-add]');
@@ -1692,6 +1697,18 @@ function _bindPilgrimRegisterDelegation(){
       if(t && (Math.abs(t.clientX-sx)>10 || Math.abs(t.clientY-sy)>10)) moved=true;
     }, {capture:true, passive:true});
     document.addEventListener('click', function(e){
+      const detailBtn=e.target&&e.target.closest&&e.target.closest('[data-shrine-detail-register]');
+      if(detailBtn){
+        e.preventDefault(); e.stopPropagation(); if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+        const idx=parseInt(window.__OAI_CURRENT_SHRINE_VISIT_DETAIL_IDX__,10);
+        if(idx>=0 && SHRINES[idx]){
+          try{ _closeShrineVisitDetail({fromPopstate:true}); }catch(_e){}
+          try{ _mode='shrine'; }catch(_e){}
+          _openShrineVisitModal(SHRINES[idx]);
+        }
+        activeBtn=null;
+        return;
+      }
       const btn=e.target&&e.target.closest&&e.target.closest('.li-pilgrim-register');
       if(!btn) return;
       e.preventDefault(); e.stopPropagation(); if(e.stopImmediatePropagation) e.stopImmediatePropagation();
@@ -1885,7 +1902,7 @@ function _setMassQuickReturn(on){
       var stamp = String(Date.now());
       sessionStorage.setItem('oai_mass_quick_return','1');
       sessionStorage.setItem('oai_mass_quick_return_ts', stamp);
-      /* V6-137: 매일미사/성가/성경 배너 복귀 상태는 장기 보존하지 않고 세션 안에서만 유지한다. */
+      /* V6-138: 매일미사/성가/성경 배너 복귀 상태는 장기 보존하지 않고 세션 안에서만 유지한다. */
       try{ localStorage.removeItem('oai_mass_quick_return'); localStorage.removeItem('oai_mass_quick_return_ts'); }catch(_e){}
     }else{
       sessionStorage.removeItem('oai_mass_quick_return');
@@ -2887,7 +2904,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-137';
+    frame.src='diocese.html?v=V6-138';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -2954,7 +2971,7 @@ function dioceseLoaded(){
   var loading=document.getElementById('diocese-loading');
   if(loading) loading.style.display='none';
 }
-/* V6-137: 성지 외부 링크는 웹사이트 카테고리와 같은 보호창 이동 흐름으로 통일하고 옛 core return 저장 함수는 제거 */
+/* V6-138: 성지 외부 링크는 웹사이트 카테고리와 같은 보호창 이동 흐름으로 통일하고 옛 core return 저장 함수는 제거 */
 function normalizeCatholicExternalUrl(url){
   url = String(url || '').trim();
   if(!url) return '';
@@ -2992,14 +3009,14 @@ function _isShrineDetailGuideUrl(url){
 function _getShrineHomepageUrl(item){
   var hp = item && item.hp ? normalizeCatholicExternalUrl(item.hp) : '';
   if(!hp) return '';
-  /* V6-137: 신규 성지는 성지추가.xlsx의 '홈페이지' 열을 그대로 홈페이지 버튼에 연결한다. */
+  /* V6-138: 신규 성지는 성지추가.xlsx의 '홈페이지' 열을 그대로 홈페이지 버튼에 연결한다. */
   if(item && item.isNew) return hp;
   if(_isShrineDetailGuideUrl(hp)) return '';
   return hp;
 }
 function _getShrineGuideUrl(item){
   if(!item) return '';
-  /* V6-137: 성지추가.xlsx의 '주교회의 성지안내/성지 상세' URL을 우선 사용한다. */
+  /* V6-138: 성지추가.xlsx의 '주교회의 성지안내/성지 상세' URL을 우선 사용한다. */
   if(item.guideUrl) return normalizeCatholicExternalUrl(item.guideUrl);
   if(item.seq) return _SU + item.seq;
   var hp = item.hp ? normalizeCatholicExternalUrl(item.hp) : '';
@@ -3023,7 +3040,7 @@ function openCatholicExternalPreserveApp(url, kind){
   }catch(e){ console.warn("[가톨릭길동무]", e); }
   try{ if(typeof _resetCoverExitReady==='function') _resetCoverExitReady(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   try{ if(typeof _clearCoverExitArmed==='function') _clearCoverExitArmed(); }catch(e){ console.warn("[가톨릭길동무]", e); }
-  /* V6-137: 성지·성당·피정 외부 웹사이트도 웹사이트 카테고리와 같은 보호창 이동 흐름으로 통일한다. */
+  /* V6-138: 성지·성당·피정 외부 웹사이트도 웹사이트 카테고리와 같은 보호창 이동 흐름으로 통일한다. */
   try{
     if(typeof oaiSmoothNavigate === 'function'){
       oaiSmoothNavigate(url, kind || 'external-site');
@@ -3040,7 +3057,7 @@ function openShrineExternalLikeFaithPortal(url, extra){
   url = prepareExternalUrl(url);
   if(!url) return;
   extra = extra || {};
-  /* V6-137: 성지 상세/홈페이지 외부 링크는 웹사이트 카테고리와 같은 보호창 이동 흐름을 사용한다. */
+  /* V6-138: 성지 상세/홈페이지 외부 링크는 웹사이트 카테고리와 같은 보호창 이동 흐름을 사용한다. */
   openCatholicExternalPreserveApp(url, extra.source || 'shrine-external');
 }
 function openCoreExternalUrl(url, extra){
@@ -3174,7 +3191,7 @@ window.addEventListener('pageshow', function(ev){
   }catch(ex){}
   setTimeout(function(){ restoreDioceseExternalState({persisted: !!(ev && ev.persisted)}); }, 20);
 }, true);
-/* V6-137: 동작 없는 빈 포커스 리스너와 빈 지도 진입 훅 제거 */
+/* V6-138: 동작 없는 빈 포커스 리스너와 빈 지도 진입 훅 제거 */
 function clearRouteNoFocus(){
   try{
     if(_mode==='shrine'){
@@ -3192,7 +3209,7 @@ function clearRouteNoFocus(){
     var guide=document.getElementById('route-guide'); if(guide) guide.classList.remove('on');
   }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
-/* V6-137: 현재 성지 외부 링크는 웹사이트 카테고리와 같은 보호창 이동 방식이므로 옛 core external return 복원 로직은 제거하고,
+/* V6-138: 현재 성지 외부 링크는 웹사이트 카테고리와 같은 보호창 이동 방식이므로 옛 core external return 복원 로직은 제거하고,
    pageshow 시 지도 DOM이 비어 있는 경우에만 기존 지도 재로딩 보호 흐름을 유지한다. */
 window.addEventListener('pageshow', function(e){
   setTimeout(()=>{
@@ -3245,7 +3262,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-137';
+const _PARISH_ASSET_VERSION='V6-138';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -3408,7 +3425,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-137';
+const _PRAYER_ASSET_VERSION='V6-138';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -3469,7 +3486,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-137';
+const _RETREAT_ASSET_VERSION='V6-138';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -3764,7 +3781,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-137';
+const _SHRINE_ASSET_VERSION='V6-138';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -4551,6 +4568,11 @@ function openTab(name, opts){
   if(!(_mode==='parish' && name==='nearby')) _restoreMapMarkers();
   else { try{ _clearParishNearbyMarkers(); }catch(e){ console.warn('[가톨릭길동무]',e); } }
   _resetTabWork(name);
+  if(_mode==='shrine' && name==='nearby'){
+    window.__OAI_SHRINE_NEARBY_DISTANCE_DONE__=false;
+    window.__OAI_SHRINE_NEARBY_LOADING__=true;
+    try{ _updateShrineVisitCardsButtonUI(); }catch(_e){}
+  }
   _activeTab=name;
 
   const sheet=$('sheet-'+name);
@@ -6251,6 +6273,8 @@ function goMyLoc(){
   if(typeof _setMapCenterByInfoCardStandard==='function') _setMapCenterByInfoCardStandard(new _LL(p.coords.latitude,p.coords.longitude));
   else _map.setCenter(new _LL(p.coords.latitude,p.coords.longitude));
   },err=>{
+  if(_mode==='shrine') window.__OAI_SHRINE_NEARBY_LOADING__=false;
+  try{ _updateShrineVisitCardsButtonUI(); }catch(_e){}
   alert(err.code===1?'위치 권한을 허용해 주세요.':'위치를 가져올 수 없습니다.');
   },_GO1);
 }
@@ -6282,11 +6306,15 @@ function _isNearbyLoadCurrent(mode, token, body){
 function _loadNearby(){
   const body=$('nearby-body');
   _cancelNearbyLoad();
-  if(_mode==='shrine') window.__OAI_SHRINE_NEARBY_DISTANCE_DONE__=false;
+  if(_mode==='shrine'){
+    window.__OAI_SHRINE_NEARBY_DISTANCE_DONE__=false;
+    window.__OAI_SHRINE_NEARBY_LOADING__=true;
+  }
   try{ _updateShrineVisitCardsButtonUI(); }catch(_e){}
   body.innerHTML='<div class="empty-msg">📍 위치를 확인하는 중...</div>';
 
   if(!_GEO){
+  if(_mode==='shrine') window.__OAI_SHRINE_NEARBY_LOADING__=false;
   body.innerHTML='<div style="padding:30px;text-align:center;color:#c0392b;font-size:13px">⚠️ 위치 기능을 지원하지 않습니다</div>';
   return;
   }
@@ -6334,7 +6362,11 @@ function _loadNearbyWithDist(lat,lng,items,getIdx,getColor,getLabel){
 
   if(!prelim.length){
     if(body && _isNearbyLoadCurrent(requestMode,requestToken,body)) body.innerHTML='<div class="empty-msg">표시할 장소가 없습니다.</div>';
-    if(requestMode==='shrine'){ window.__OAI_SHRINE_NEARBY_DISTANCE_DONE__=true; try{ _updateShrineVisitCardsButtonUI(); }catch(_e){} }
+    if(requestMode==='shrine'){
+      window.__OAI_SHRINE_NEARBY_LOADING__=false;
+      window.__OAI_SHRINE_NEARBY_DISTANCE_DONE__=true;
+      try{ _updateShrineVisitCardsButtonUI(); }catch(_e){}
+    }
     return;
   }
 
@@ -6379,7 +6411,10 @@ function _renderNearbyDone(prelim,results,getIdx,getColor,getLabel,phase,request
   }).join('');
   if(phase==='final'){
     body.scrollTop=scrollTop;
-    if(_mode==='shrine') window.__OAI_SHRINE_NEARBY_DISTANCE_DONE__=true;
+    if(_mode==='shrine'){
+      window.__OAI_SHRINE_NEARBY_LOADING__=false;
+      window.__OAI_SHRINE_NEARBY_DISTANCE_DONE__=true;
+    }
     try{ _updateShrineVisitCardsButtonUI(); }catch(_e){}
   }
 }
