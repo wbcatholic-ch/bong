@@ -6000,3 +6000,10 @@ html.oai-font-global .shrine-visit-floating-list-btn{
     bottom:calc(env(safe-area-inset-bottom,0px) + 30px)!important;
   }
 }
+
+
+/* V6-140: 순례등록 창은 순례기록 상세 위에 표시 */
+#shrine-visit-modal.show,
+.shrine-visit-modal.show{
+  z-index:10080!important;
+}
