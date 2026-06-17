@@ -1849,7 +1849,7 @@ function _setMassQuickReturn(on){
       var stamp = String(Date.now());
       sessionStorage.setItem('oai_mass_quick_return','1');
       sessionStorage.setItem('oai_mass_quick_return_ts', stamp);
-      /* V6-120: 매일미사/성가/성경 배너 복귀 상태는 장기 보존하지 않고 세션 안에서만 유지한다. */
+      /* V6-121: 매일미사/성가/성경 배너 복귀 상태는 장기 보존하지 않고 세션 안에서만 유지한다. */
       try{ localStorage.removeItem('oai_mass_quick_return'); localStorage.removeItem('oai_mass_quick_return_ts'); }catch(_e){}
     }else{
       sessionStorage.removeItem('oai_mass_quick_return');
@@ -2851,7 +2851,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-120';
+    frame.src='diocese.html?v=V6-121';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -2918,7 +2918,7 @@ function dioceseLoaded(){
   var loading=document.getElementById('diocese-loading');
   if(loading) loading.style.display='none';
 }
-/* V6-120: 성지 외부 링크는 웹사이트 카테고리와 같은 보호창 이동 흐름으로 통일하고 옛 core return 저장 함수는 제거 */
+/* V6-121: 성지 외부 링크는 웹사이트 카테고리와 같은 보호창 이동 흐름으로 통일하고 옛 core return 저장 함수는 제거 */
 function normalizeCatholicExternalUrl(url){
   url = String(url || '').trim();
   if(!url) return '';
@@ -2956,14 +2956,14 @@ function _isShrineDetailGuideUrl(url){
 function _getShrineHomepageUrl(item){
   var hp = item && item.hp ? normalizeCatholicExternalUrl(item.hp) : '';
   if(!hp) return '';
-  /* V6-120: 신규 성지는 성지추가.xlsx의 '홈페이지' 열을 그대로 홈페이지 버튼에 연결한다. */
+  /* V6-121: 신규 성지는 성지추가.xlsx의 '홈페이지' 열을 그대로 홈페이지 버튼에 연결한다. */
   if(item && item.isNew) return hp;
   if(_isShrineDetailGuideUrl(hp)) return '';
   return hp;
 }
 function _getShrineGuideUrl(item){
   if(!item) return '';
-  /* V6-120: 성지추가.xlsx의 '주교회의 성지안내/성지 상세' URL을 우선 사용한다. */
+  /* V6-121: 성지추가.xlsx의 '주교회의 성지안내/성지 상세' URL을 우선 사용한다. */
   if(item.guideUrl) return normalizeCatholicExternalUrl(item.guideUrl);
   if(item.seq) return _SU + item.seq;
   var hp = item.hp ? normalizeCatholicExternalUrl(item.hp) : '';
@@ -2987,7 +2987,7 @@ function openCatholicExternalPreserveApp(url, kind){
   }catch(e){ console.warn("[가톨릭길동무]", e); }
   try{ if(typeof _resetCoverExitReady==='function') _resetCoverExitReady(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   try{ if(typeof _clearCoverExitArmed==='function') _clearCoverExitArmed(); }catch(e){ console.warn("[가톨릭길동무]", e); }
-  /* V6-120: 성지·성당·피정 외부 웹사이트도 웹사이트 카테고리와 같은 보호창 이동 흐름으로 통일한다. */
+  /* V6-121: 성지·성당·피정 외부 웹사이트도 웹사이트 카테고리와 같은 보호창 이동 흐름으로 통일한다. */
   try{
     if(typeof oaiSmoothNavigate === 'function'){
       oaiSmoothNavigate(url, kind || 'external-site');
@@ -3004,7 +3004,7 @@ function openShrineExternalLikeFaithPortal(url, extra){
   url = prepareExternalUrl(url);
   if(!url) return;
   extra = extra || {};
-  /* V6-120: 성지 상세/홈페이지 외부 링크는 웹사이트 카테고리와 같은 보호창 이동 흐름을 사용한다. */
+  /* V6-121: 성지 상세/홈페이지 외부 링크는 웹사이트 카테고리와 같은 보호창 이동 흐름을 사용한다. */
   openCatholicExternalPreserveApp(url, extra.source || 'shrine-external');
 }
 function openCoreExternalUrl(url, extra){
@@ -3138,7 +3138,7 @@ window.addEventListener('pageshow', function(ev){
   }catch(ex){}
   setTimeout(function(){ restoreDioceseExternalState({persisted: !!(ev && ev.persisted)}); }, 20);
 }, true);
-/* V6-120: 동작 없는 빈 포커스 리스너와 빈 지도 진입 훅 제거 */
+/* V6-121: 동작 없는 빈 포커스 리스너와 빈 지도 진입 훅 제거 */
 function clearRouteNoFocus(){
   try{
     if(_mode==='shrine'){
@@ -3156,7 +3156,7 @@ function clearRouteNoFocus(){
     var guide=document.getElementById('route-guide'); if(guide) guide.classList.remove('on');
   }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
-/* V6-120: 현재 성지 외부 링크는 웹사이트 카테고리와 같은 보호창 이동 방식이므로 옛 core external return 복원 로직은 제거하고,
+/* V6-121: 현재 성지 외부 링크는 웹사이트 카테고리와 같은 보호창 이동 방식이므로 옛 core external return 복원 로직은 제거하고,
    pageshow 시 지도 DOM이 비어 있는 경우에만 기존 지도 재로딩 보호 흐름을 유지한다. */
 window.addEventListener('pageshow', function(e){
   setTimeout(()=>{
@@ -3209,7 +3209,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-120';
+const _PARISH_ASSET_VERSION='V6-121';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -3372,7 +3372,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-120';
+const _PRAYER_ASSET_VERSION='V6-121';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -3433,7 +3433,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-120';
+const _RETREAT_ASSET_VERSION='V6-121';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -3728,7 +3728,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-120';
+const _SHRINE_ASSET_VERSION='V6-121';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 function _decodeShrineHomePage(hp){
@@ -3737,7 +3737,7 @@ function _decodeShrineHomePage(hp){
   if(_URL_T[hp[0]]) return _URL_T[hp[0]] + hp.slice(1);
   return hp;
 }
-const OAI_NEW_SHRINE_URL_FIXES={"석정 보름 우물":{"hp":"","guideUrl":"https://www.cbck.or.kr/Catholic/Shrine/Read?seq=20190179&diocese=201000011&gb=3"},"강경 김대건 신부 유숙지 (구순오의 집)":{"hp":"","guideUrl":"https://www.djcatholic.or.kr/home/pages/re_shrine_view.php?ids=shrine25"},"강경 성당":{"hp":"","guideUrl":"https://www.djcatholic.or.kr/home/pages/re_shrine_view.php?ids=shrine25"},"대전교구청 성모당 순례지":{"hp":"","guideUrl":""},"덕산 순교 성지":{"hp":"","guideUrl":""},"정산 순교 성지":{"hp":"","guideUrl":"https://www.djcatholic.or.kr/home/pages/re_shrine_view.php?ids=shrine25"},"서지 마을":{"hp":"","guideUrl":"https://www.seoji.net/mass/memorial_4"},"성 베네딕도회 왜관 수도원과 구)왜관 성당":{"hp":"http://www.osb.or.kr/","guideUrl":"https://www.daegu-archdiocese.or.kr/page/shrine.html?srl=pilgrimage&process=read&idx=16&view_option="},"음성 봉암 성지(방축골, 계마대 교우촌)":{"hp":"","guideUrl":"https://www.cdcj.or.kr/parish/holyland/9"},"충주 숲거리 순교 성지":{"hp":"","guideUrl":"https://www.cdcj.or.kr/parish/holyland/8"},"순교자 서응권 요한과 아내 파평 윤씨 안나 묘":{"hp":"","guideUrl":"https://cathms.kr/F_7"},"되재 성당지":{"hp":"","guideUrl":"https://www.martyr.co.kr/assets/holy/view.html?sid=17"},"범바위":{"hp":"","guideUrl":"https://www.martyr.co.kr/assets/holy/view.html?sid=18"},"수류 성당":{"hp":"","guideUrl":"https://www.martyr.co.kr/assets/holy/view.html?sid=19"},"수분 공소":{"hp":"","guideUrl":"https://www.martyr.co.kr/assets/holy/view.html?sid=20"},"신성 공소":{"hp":"","guideUrl":"https://www.martyr.co.kr/assets/holy/view.html?sid=21"},"신시도 최양업 공원":{"hp":"","guideUrl":"https://www.martyr.co.kr/assets/holy/view.html?sid=16"},"안대동 성당지":{"hp":"","guideUrl":"https://www.martyr.co.kr/assets/holy/view.html?sid=22"},"어은 공소":{"hp":"","guideUrl":"https://www.martyr.co.kr/assets/holy/view.html?sid=23"},"전라 감영":{"hp":"","guideUrl":"https://www.martyr.co.kr/assets/holy/view.html?sid=24"},"초록바위 순교 터":{"hp":"","guideUrl":"https://www.martyr.co.kr/assets/holy/view.html?sid=9"}};
+const OAI_NEW_SHRINE_URL_FIXES={};
 function _applyNewShrineUrlFix(s){
   try{
     if(!s || !s.isNew || !s.name) return s;
