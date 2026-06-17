@@ -213,17 +213,29 @@
         }
       }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
+    function goFreshCoverAfterMyFaith(reason){
+      try{
+        reason = reason || 'my-faith-close';
+        sessionStorage.setItem('oai_myfaith_return_cover_reason', reason);
+        sessionStorage.setItem('oai_myfaith_return_cover_ts', String(Date.now ? Date.now() : new Date().getTime()));
+        sessionStorage.setItem('oai_cover_toast_on_return', reason);
+        sessionStorage.setItem('oai_cover_toast_on_return_ts', String(Date.now ? Date.now() : new Date().getTime()));
+      }catch(_e){}
+      try{
+        var url = new URL('index.html', location.href);
+        url.searchParams.set('oai_cover_return', reason);
+        url.searchParams.set('v', 'V6-155-RESTORE-MYFAITH-QNA-BACK-CHECK');
+        location.replace(url.href);
+        return true;
+      }catch(e){
+        try{ location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason) + '&v=V6-155-RESTORE-MYFAITH-QNA-BACK-CHECK'); return true; }catch(_e){}
+      }
+      return false;
+    }
     function clearGenericCoverToastFlag(){
       try{
         sessionStorage.removeItem('oai_cover_toast_on_return');
         sessionStorage.removeItem('oai_cover_toast_on_return_ts');
-      }catch(_e){}
-    }
-    function markCoverHistoryRearm(reason){
-      try{
-        var stamp = String(Date.now ? Date.now() : new Date().getTime());
-        sessionStorage.setItem('oai_force_cover_history_rearm', reason || 'my-faith-cover-return');
-        sessionStorage.setItem('oai_force_cover_history_rearm_ts', stamp);
       }catch(_e){}
     }
     function primeMyFaithCoverExitToast(reason){
@@ -239,7 +251,6 @@
           cover.style.pointerEvents = '';
           try{ cover.scrollTop = 0; }catch(_e){}
         }
-        markCoverHistoryRearm(reason || 'my-faith-cover-return');
         resetCoverBackAfterMyFaith(reason || 'my-faith-external-cover');
         clearGenericCoverToastFlag();
         clearMyFaithExternalLinkFlag();
@@ -249,22 +260,27 @@
     function closeModal(){
       var fromExternal = hasRecentMyFaithExternalLink();
       var pendingCoverToast = hasPendingCoverToastOnReturn();
-      var needsExternalCoverToast = !!(fromExternal || pendingCoverToast);
+      var reason = (fromExternal || pendingCoverToast) ? 'my-faith-external-cover' : 'my-faith-close';
       cancelMyFaithPendingEdit();
       modal.classList.remove('show','keyboard-open','return-settling');
       modal.setAttribute('aria-hidden','true');
       try{ document.body.classList.remove('modal-open'); }catch(_e){}
       try{ modal.style.removeProperty('--my-faith-vh'); modal.style.removeProperty('--my-faith-visible-vh'); }catch(_e){}
       myFaithStableHeight = 0;
-      primeMyFaithCoverExitToast(needsExternalCoverToast ? 'my-faith-external-cover' : 'my-faith-close-cover');
-      if(window.requestAnimationFrame){
-        window.requestAnimationFrame(function(){ primeMyFaithCoverExitToast(needsExternalCoverToast ? 'my-faith-external-cover-raf' : 'my-faith-close-cover-raf'); });
-      }
+      try{ clearMyFaithExternalLinkFlag(); }catch(_e){}
+      /*
+       * 나의 신앙생활은 커버 위 팝업 상태에서 외부 사이트/설정/뒤로가기 흐름이 섞이면
+       * 기존 history state가 root로 남아 첫 뒤로가기가 앱 밖으로 빠지는 경우가 있었다.
+       * 매일미사/성가/성경 흐름은 건드리지 않고, 나의 신앙생활을 닫는 순간만
+       * index.html로 fresh replace 하여 back-controller 초기 cover trap을 다시 세운다.
+       */
+      if(goFreshCoverAfterMyFaith(reason)) return;
+      primeMyFaithCoverExitToast(reason);
+      if(window.requestAnimationFrame) window.requestAnimationFrame(function(){ primeMyFaithCoverExitToast(reason + '-raf'); });
     }
     function openModal(opts){
       opts = opts || {};
       if(!opts.keepContent) renderHome();
-      markCoverHistoryRearm('my-faith-open');
       updateMyFaithViewport();
       modal.classList.add('show');
       modal.setAttribute('aria-hidden','false');
@@ -293,11 +309,8 @@
       try{
         sessionStorage.setItem(MYFAITH_EXTERNAL_FLAG, '1');
         sessionStorage.setItem(MYFAITH_EXTERNAL_TS, String(Date.now ? Date.now() : new Date().getTime()));
-        var stamp = String(Date.now ? Date.now() : new Date().getTime());
         sessionStorage.setItem('oai_cover_toast_on_return', 'my-faith-external-return-cover');
-        sessionStorage.setItem('oai_cover_toast_on_return_ts', stamp);
-        sessionStorage.setItem('oai_force_cover_history_rearm', 'my-faith-external-return-cover');
-        sessionStorage.setItem('oai_force_cover_history_rearm_ts', stamp);
+        sessionStorage.setItem('oai_cover_toast_on_return_ts', String(Date.now ? Date.now() : new Date().getTime()));
       }catch(_e){}
       try{ if(typeof window.oaiPrepareCoverToastOnReturn === 'function') window.oaiPrepareCoverToastOnReturn('my-faith-external-return-cover'); }catch(_e){}
       try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(_e){}
