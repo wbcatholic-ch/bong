@@ -2413,8 +2413,13 @@ function _openFaithPortalFromMassQuick(kind, opts){
   };
   try{
     var modal=document.getElementById('mass-quick-modal');
-    if(modal && modal.classList && modal.classList.contains('show') && typeof _hideMassQuickMenuOnly === 'function'){
-      _hideMassQuickMenuOnly(run, {deferHideUntilAfter:true});
+    if(modal && modal.classList && modal.classList.contains('show')){
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden','true');
+      try{ delete modal.dataset.returnSource; }catch(_e){}
+      try{ document.querySelectorAll('#mass-quick-modal .app-pressing').forEach(function(el){ el.classList.remove('app-pressing'); }); }catch(_e){}
+      if(window.requestAnimationFrame) window.requestAnimationFrame(run);
+      else setTimeout(run, 0);
       return;
     }
   }catch(e){ console.warn('[가톨릭길동무]', e); }
@@ -4153,17 +4158,22 @@ function _showBackToast(){
   t.style.cssText='position:fixed;top:50%;left:50%;bottom:auto;transform:translate(-50%,-50%);background:rgba(14,21,53,.94);color:#fff;padding:12px 24px;border-radius:24px;font-size:14px;font-weight:800;z-index:99999;white-space:nowrap;pointer-events:none;box-shadow:0 14px 36px rgba(0,0,0,.32);';
   document.body.appendChild(t);
   try{ if(window.oaiBackDiag) window.oaiBackDiag('app-showBackToast-first-toast'); }catch(_e){}
+  var coverExitToastMs = 2500;
   try{
     if(sessionStorage.getItem('oai_cover_exit_hard_after_first_toast') === '1'){
       sessionStorage.removeItem('oai_cover_exit_hard_after_first_toast');
       sessionStorage.setItem('oai_cover_exit_hard_on_next_back', '1');
+    }
+    if(sessionStorage.getItem('oai_cover_exit_long_window_once') === '1'){
+      sessionStorage.removeItem('oai_cover_exit_long_window_once');
+      coverExitToastMs = 10000;
     }
   }catch(e){ console.warn('[가톨릭길동무]', e); }
   _exitTimer=setTimeout(function(){
     _exitReady=false;
     _clearCoverExitArmed();
     if(t.parentNode)t.remove();
-  },2500);
+  },coverExitToastMs);
   return false; // 첫 번째 뒤로가기: 토스트만 표시
 }
 
@@ -8104,8 +8114,12 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
       if (typeof openPrayerBook === 'function') openPrayerBook({fromMassQuick:true, instant:true});
       else alert('기도문 기능이 연결되지 않았습니다.');
     };
-    if (typeof _hideMassQuickMenuOnly === 'function') _hideMassQuickMenuOnly(openPrayerFromQuick, {deferHideUntilAfter:true});
-    else openPrayerFromQuick();
+    try{
+      var mq=document.getElementById('mass-quick-modal');
+      if(mq){ mq.classList.remove('show'); mq.setAttribute('aria-hidden','true'); }
+    }catch(e){ console.warn('[가톨릭길동무]', e); }
+    if(window.requestAnimationFrame) window.requestAnimationFrame(openPrayerFromQuick);
+    else setTimeout(openPrayerFromQuick, 0);
   });
   on('mass-quick-hymn', 'click', function(e) {
     if(e){ e.preventDefault(); e.stopPropagation(); }
