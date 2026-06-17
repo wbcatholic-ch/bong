@@ -5970,7 +5970,8 @@ html.oai-map-search-keyboard-lock #sheet-region.open{
   transform:none!important;
 }
 
-/* V6-136: 나의순례현황 버튼 가시성 확대 */
+
+/* V6-137: 나의순례현황 버튼 가시성 확대 */
 .shrine-visit-floating-list-btn{
   min-width:138px!important;
   height:48px!important;
