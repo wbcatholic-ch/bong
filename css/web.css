@@ -146,9 +146,3 @@ html.oai-font-global .web-card-name{font-size:calc(17px * var(--app-inner-font-s
 
 html.oai-font-global .web-card-desc{font-size:calc(15px * var(--app-inner-font-scale,1))!important}
 
-
-
-/* V6-132: 가톨릭 주요 웹사이트 - 본당 홈페이지 탭 */
-#web-view .web-cat-btn.on[data-cat-color="본당 홈페이지"] { background: #1d6a39; }
-.web-cat-btn[data-web-cat="본당 홈페이지"] { order: 0; color: #1d6a39; border-color: rgba(29,106,57,.35); background: #eef7f2; }
-.web-cat-btn[data-web-cat="본당 홈페이지"].on { background: #1d6a39; color: var(--v4-surface-white); border-color: #1d6a39; box-shadow: 0 4px 14px rgba(29,106,57,.25); }
