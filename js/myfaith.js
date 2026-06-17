@@ -215,14 +215,20 @@
     }
     function closeModal(){
       var fromExternal = hasRecentMyFaithExternalLink();
+      var pendingCoverToast = hasPendingCoverToastOnReturn();
       cancelMyFaithPendingEdit();
       modal.classList.remove('show','keyboard-open','return-settling');
       modal.setAttribute('aria-hidden','true');
       try{ document.body.classList.remove('modal-open'); }catch(_e){}
       try{ modal.style.removeProperty('--my-faith-vh'); modal.style.removeProperty('--my-faith-visible-vh'); }catch(_e){}
       myFaithStableHeight = 0;
-      resetCoverBackAfterMyFaith(fromExternal ? 'my-faith-external-close' : 'my-faith-close');
-      if(fromExternal) stabilizeCoverAfterMyFaithExternal('my-faith-external-close');
+      resetCoverBackAfterMyFaith((fromExternal || pendingCoverToast) ? 'my-faith-external-close' : 'my-faith-close');
+      if(fromExternal || pendingCoverToast){
+        try{ if(typeof window.oaiActivateCoverToastOnReturn === 'function') window.oaiActivateCoverToastOnReturn('my-faith-external-close'); }catch(_e){}
+        try{ if(typeof window.oaiCheckCoverToastOnReturn === 'function') window.oaiCheckCoverToastOnReturn(); }catch(_e){}
+        setTimeout(function(){ try{ if(typeof window.oaiCheckCoverToastOnReturn === 'function') window.oaiCheckCoverToastOnReturn(); }catch(_e){} }, 120);
+        if(fromExternal) stabilizeCoverAfterMyFaithExternal('my-faith-external-close');
+      }
     }
     function openModal(opts){
       opts = opts || {};
@@ -255,7 +261,10 @@
       try{
         sessionStorage.setItem(MYFAITH_EXTERNAL_FLAG, '1');
         sessionStorage.setItem(MYFAITH_EXTERNAL_TS, String(Date.now ? Date.now() : new Date().getTime()));
+        sessionStorage.setItem('oai_cover_toast_on_return', 'my-faith-external-return-cover');
+        sessionStorage.setItem('oai_cover_toast_on_return_ts', String(Date.now ? Date.now() : new Date().getTime()));
       }catch(_e){}
+      try{ if(typeof window.oaiPrepareCoverToastOnReturn === 'function') window.oaiPrepareCoverToastOnReturn('my-faith-external-return-cover'); }catch(_e){}
       try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(_e){}
       try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(_e){}
       try{
@@ -275,6 +284,15 @@
           clearMyFaithExternalLinkFlag();
           return false;
         }
+        return true;
+      }catch(_e){ return false; }
+    }
+    function hasPendingCoverToastOnReturn(){
+      try{
+        var reason = sessionStorage.getItem('oai_cover_toast_on_return') || '';
+        if(!reason) return false;
+        var ts = parseInt(sessionStorage.getItem('oai_cover_toast_on_return_ts') || '0', 10) || 0;
+        if(ts && Date.now && Date.now() - ts > 10 * 60 * 1000) return false;
         return true;
       }catch(_e){ return false; }
     }
