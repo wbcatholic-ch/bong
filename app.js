@@ -479,7 +479,6 @@ document.addEventListener('click', function(e){
       if(!inMyFaithExternal && a.closest && a.closest('#my-diocese-modal')) inMyFaithExternal = true;
       if(inMyFaithExternal){
         if(typeof window.oaiMarkMyFaithExternalLink === 'function') window.oaiMarkMyFaithExternalLink();
-        if(typeof window.markExternalReturnStabilize === 'function') window.markExternalReturnStabilize('my-faith-external');
       }
     }catch(_e){}
     if(typeof a.onclick === 'function') return;
@@ -4188,7 +4187,19 @@ function attemptAppExit(){
 
   try{ window.open('', '_self'); window.close(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   try{ document.documentElement.classList.add('app-exiting'); }catch(e){ console.warn("[가톨릭길동무]", e); }
-  setTimeout(function(){ try{ history.back(); }catch(_e){} }, 40);
+  var backSteps = 1;
+  try{
+    backSteps = parseInt(sessionStorage.getItem('oai_app_exit_back_steps') || '1', 10) || 1;
+    sessionStorage.removeItem('oai_app_exit_back_steps');
+    if(backSteps < 1) backSteps = 1;
+    if(backSteps > 4) backSteps = 4;
+  }catch(_e){ backSteps = 1; }
+  setTimeout(function(){
+    try{
+      if(backSteps > 1) history.go(-backSteps);
+      else history.back();
+    }catch(_e){}
+  }, 40);
 }
 function closeExitDlg(){
   _exitReady=false;

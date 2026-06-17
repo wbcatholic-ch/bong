@@ -180,6 +180,21 @@
       try{ if(typeof window.webRenderList === 'function') window.webRenderList(); }catch(_e){}
       try{ if(typeof window.prRefreshVisibleCats === 'function') window.prRefreshVisibleCats(); }catch(_e){}
     }
+    var myFaithExternalSettleUntil = 0;
+    function nowMs(){ return Date.now ? Date.now() : new Date().getTime(); }
+    function markMyFaithExternalSettling(ms){
+      try{
+        myFaithExternalSettleUntil = nowMs() + (ms || 1800);
+        if(modal && modal.classList) modal.classList.add('return-settling');
+        clearTimeout(window.__oaiMyFaithExternalSettleTimer);
+        window.__oaiMyFaithExternalSettleTimer = setTimeout(function(){
+          try{ if(nowMs() >= myFaithExternalSettleUntil && modal && modal.classList) modal.classList.remove('return-settling'); }catch(_e){}
+        }, ms || 1800);
+      }catch(e){ console.warn('[가톨릭길동무]', e); }
+    }
+    function isMyFaithExternalSettling(){
+      try{ return !!(myFaithExternalSettleUntil && nowMs() < myFaithExternalSettleUntil); }catch(_e){ return false; }
+    }
     function updateMyFaithViewport(){
       try{
         var vv = window.visualViewport || null;
@@ -192,6 +207,10 @@
         if(!myFaithStableHeight) myFaithStableHeight = stableCandidateH || visibleH || 0;
         var active = document.activeElement || null;
         var focusedInput = !!(active && modal.contains(active) && /^(INPUT|TEXTAREA|SELECT)$/i.test(active.tagName || ''));
+        if(isMyFaithExternalSettling() && !focusedInput){
+          modal.classList.add('return-settling');
+          return;
+        }
         var keyboardLikely = focusedInput || !!(myFaithStableHeight && visibleH && visibleH < myFaithStableHeight - 120) || !!(vv && Math.round(vv.offsetTop || 0) > 0);
         var modalH = myFaithStableHeight || stableCandidateH || visibleH || 0;
         if(modalH > 0) modal.style.setProperty('--my-faith-vh', modalH + 'px');
@@ -222,15 +241,16 @@
         sessionStorage.setItem('oai_cover_toast_on_return_ts', String(Date.now ? Date.now() : new Date().getTime()));
         sessionStorage.setItem('oai_cover_exit_hard_after_first_toast', '1');
         sessionStorage.setItem('oai_cover_exit_long_window_once', '1');
+        sessionStorage.setItem('oai_app_exit_back_steps', '3');
       }catch(_e){}
       try{
         var url = new URL('index.html', location.href);
         url.searchParams.set('oai_cover_return', reason);
-        url.searchParams.set('v', 'V6-157-QUICK-BANNER-DIRECT-MYFAITH-EXIT-CHECK');
+        url.searchParams.set('v', 'V6-158-MYFAITH-EXIT-STEPS-EXTERNAL-STABLE-CHECK');
         location.replace(url.href);
         return true;
       }catch(e){
-        try{ location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason) + '&v=V6-157-QUICK-BANNER-DIRECT-MYFAITH-EXIT-CHECK'); return true; }catch(_e){}
+        try{ location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason) + '&v=V6-158-MYFAITH-EXIT-STEPS-EXTERNAL-STABLE-CHECK'); return true; }catch(_e){}
       }
       return false;
     }
@@ -315,6 +335,7 @@
         sessionStorage.setItem('oai_cover_toast_on_return_ts', String(Date.now ? Date.now() : new Date().getTime()));
       }catch(_e){}
       try{ if(typeof window.oaiPrepareCoverToastOnReturn === 'function') window.oaiPrepareCoverToastOnReturn('my-faith-external-return-cover'); }catch(_e){}
+      try{ markMyFaithExternalSettling(2200); }catch(_e){}
       try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(_e){}
       try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(_e){}
       try{
@@ -366,7 +387,6 @@
           return;
         }
       }catch(_e){}
-      try{ if(typeof window.markExternalReturnStabilize === 'function') window.markExternalReturnStabilize('my-faith-external'); }catch(_e){}
       setTimeout(function(){ try{ location.assign(url); }catch(e){ try{ location.href = url; }catch(_e){} } }, 70);
     }
     function bindMyFaithClick(el, fn){
@@ -498,10 +518,9 @@
         a.setAttribute('data-myfaith-external-link','1');
         a.onclick=function(){
           markMyFaithExternalLink();
-          try{ if(typeof window.markExternalReturnStabilize === 'function') window.markExternalReturnStabilize('my-faith-external'); }catch(_e){}
           return true;
         };
-        a.addEventListener('click', function(){ markMyFaithExternalLink(); try{ if(typeof window.markExternalReturnStabilize === 'function') window.markExternalReturnStabilize('my-faith-external'); }catch(_e){} }, true);
+        a.addEventListener('click', function(){ markMyFaithExternalLink(); }, true);
         return a;
       }
       function listSection(t,c){ var sec=document.createElement('section'); sec.className='my-faith-section my-faith-list-section '+(c||''); var h=document.createElement('h3'); h.textContent=t; sec.appendChild(h); return sec; }
@@ -641,9 +660,9 @@
     }
     if(window.visualViewport){ window.visualViewport.addEventListener('resize', function(){ if(modal.classList.contains('show')) updateMyFaithViewport(); }, {passive:true}); }
     window.addEventListener('resize', function(){ if(modal.classList.contains('show')) updateMyFaithViewport(); }, {passive:true});
-    window.addEventListener('pageshow', function(){ if(modal.classList.contains('show')) updateMyFaithViewport(); stabilizeCoverAfterMyFaithExternal('my-faith-pageshow'); }, true);
-    document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'visible'){ if(modal.classList.contains('show')) updateMyFaithViewport(); stabilizeCoverAfterMyFaithExternal('my-faith-visible'); } }, true);
-    window.addEventListener('focus', function(){ if(modal.classList.contains('show')) updateMyFaithViewport(); stabilizeCoverAfterMyFaithExternal('my-faith-focus'); }, true);
+    window.addEventListener('pageshow', function(){ if(hasRecentMyFaithExternalLink()) markMyFaithExternalSettling(2200); if(modal.classList.contains('show') && !isMyFaithExternalSettling()) updateMyFaithViewport(); stabilizeCoverAfterMyFaithExternal('my-faith-pageshow'); }, true);
+    document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'visible'){ if(hasRecentMyFaithExternalLink()) markMyFaithExternalSettling(2200); if(modal.classList.contains('show') && !isMyFaithExternalSettling()) updateMyFaithViewport(); stabilizeCoverAfterMyFaithExternal('my-faith-visible'); } }, true);
+    window.addEventListener('focus', function(){ if(hasRecentMyFaithExternalLink()) markMyFaithExternalSettling(2200); if(modal.classList.contains('show') && !isMyFaithExternalSettling()) updateMyFaithViewport(); stabilizeCoverAfterMyFaithExternal('my-faith-focus'); }, true);
 
     bindSetupBannerVisibilityWatch();
     updateButton();

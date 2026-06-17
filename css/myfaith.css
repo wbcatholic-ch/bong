@@ -301,3 +301,10 @@
 .my-faith-edit-status-row.is-static {
   grid-template-columns: minmax(0, 1fr) !important;
 }
+
+.my-diocese-modal.return-settling,
+.my-diocese-modal.return-settling * {
+  transition: none !important;
+  animation: none !important;
+  scroll-behavior: auto !important;
+}
