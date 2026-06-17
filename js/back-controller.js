@@ -394,12 +394,29 @@
     callGTC();
   }, false);
 
+  function takeForcedCoverHistoryReason(){
+    try{
+      var reason = sessionStorage.getItem('oai_force_cover_history_rearm') || '';
+      if(!reason) return '';
+      var ts = parseInt(sessionStorage.getItem('oai_force_cover_history_rearm_ts') || '0', 10) || 0;
+      if(ts && now() - ts > 10 * 60 * 1000){
+        sessionStorage.removeItem('oai_force_cover_history_rearm');
+        sessionStorage.removeItem('oai_force_cover_history_rearm_ts');
+        return '';
+      }
+      sessionStorage.removeItem('oai_force_cover_history_rearm');
+      sessionStorage.removeItem('oai_force_cover_history_rearm_ts');
+      return reason || 'cover-return-force';
+    }catch(e){ return ''; }
+  }
+
   function settleCoverHistoryTrap(reason){
     try{
       if(appActive()) return;
+      var forcedReason = takeForcedCoverHistoryReason();
       var st = history.state;
-      if(st && st._p === 1 && st.oai_cover_trap) return;
-      armCoverBackTrap(reason || 'cover-settle', {force:true});
+      if(!forcedReason && st && st._p === 1 && st.oai_cover_trap) return;
+      armCoverBackTrap(forcedReason || reason || 'cover-settle', {force:true});
     }catch(e){ console.warn('[가톨릭길동무]', e); }
   }
 

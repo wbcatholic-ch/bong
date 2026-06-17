@@ -219,6 +219,13 @@
         sessionStorage.removeItem('oai_cover_toast_on_return_ts');
       }catch(_e){}
     }
+    function markCoverHistoryRearm(reason){
+      try{
+        var stamp = String(Date.now ? Date.now() : new Date().getTime());
+        sessionStorage.setItem('oai_force_cover_history_rearm', reason || 'my-faith-cover-return');
+        sessionStorage.setItem('oai_force_cover_history_rearm_ts', stamp);
+      }catch(_e){}
+    }
     function primeMyFaithCoverExitToast(reason){
       try{
         if(modal && modal.classList && modal.classList.contains('show')) return false;
@@ -232,6 +239,7 @@
           cover.style.pointerEvents = '';
           try{ cover.scrollTop = 0; }catch(_e){}
         }
+        markCoverHistoryRearm(reason || 'my-faith-cover-return');
         resetCoverBackAfterMyFaith(reason || 'my-faith-external-cover');
         clearGenericCoverToastFlag();
         clearMyFaithExternalLinkFlag();
@@ -248,18 +256,15 @@
       try{ document.body.classList.remove('modal-open'); }catch(_e){}
       try{ modal.style.removeProperty('--my-faith-vh'); modal.style.removeProperty('--my-faith-visible-vh'); }catch(_e){}
       myFaithStableHeight = 0;
-      if(needsExternalCoverToast){
-        primeMyFaithCoverExitToast('my-faith-external-cover');
-        if(window.requestAnimationFrame){
-          window.requestAnimationFrame(function(){ primeMyFaithCoverExitToast('my-faith-external-cover-raf'); });
-        }
-      }else{
-        resetCoverBackAfterMyFaith('my-faith-close');
+      primeMyFaithCoverExitToast(needsExternalCoverToast ? 'my-faith-external-cover' : 'my-faith-close-cover');
+      if(window.requestAnimationFrame){
+        window.requestAnimationFrame(function(){ primeMyFaithCoverExitToast(needsExternalCoverToast ? 'my-faith-external-cover-raf' : 'my-faith-close-cover-raf'); });
       }
     }
     function openModal(opts){
       opts = opts || {};
       if(!opts.keepContent) renderHome();
+      markCoverHistoryRearm('my-faith-open');
       updateMyFaithViewport();
       modal.classList.add('show');
       modal.setAttribute('aria-hidden','false');
@@ -288,8 +293,11 @@
       try{
         sessionStorage.setItem(MYFAITH_EXTERNAL_FLAG, '1');
         sessionStorage.setItem(MYFAITH_EXTERNAL_TS, String(Date.now ? Date.now() : new Date().getTime()));
+        var stamp = String(Date.now ? Date.now() : new Date().getTime());
         sessionStorage.setItem('oai_cover_toast_on_return', 'my-faith-external-return-cover');
-        sessionStorage.setItem('oai_cover_toast_on_return_ts', String(Date.now ? Date.now() : new Date().getTime()));
+        sessionStorage.setItem('oai_cover_toast_on_return_ts', stamp);
+        sessionStorage.setItem('oai_force_cover_history_rearm', 'my-faith-external-return-cover');
+        sessionStorage.setItem('oai_force_cover_history_rearm_ts', stamp);
       }catch(_e){}
       try{ if(typeof window.oaiPrepareCoverToastOnReturn === 'function') window.oaiPrepareCoverToastOnReturn('my-faith-external-return-cover'); }catch(_e){}
       try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(_e){}
