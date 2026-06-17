@@ -220,15 +220,16 @@
         sessionStorage.setItem('oai_myfaith_return_cover_ts', String(Date.now ? Date.now() : new Date().getTime()));
         sessionStorage.setItem('oai_cover_toast_on_return', reason);
         sessionStorage.setItem('oai_cover_toast_on_return_ts', String(Date.now ? Date.now() : new Date().getTime()));
+        sessionStorage.setItem('oai_cover_exit_hard_after_first_toast', '1');
       }catch(_e){}
       try{
         var url = new URL('index.html', location.href);
         url.searchParams.set('oai_cover_return', reason);
-        url.searchParams.set('v', 'V6-155-RESTORE-MYFAITH-QNA-BACK-CHECK');
+        url.searchParams.set('v', 'V6-156-MYFAITH-SECOND-BACK-MASS-FIRST-CHECK');
         location.replace(url.href);
         return true;
       }catch(e){
-        try{ location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason) + '&v=V6-155-RESTORE-MYFAITH-QNA-BACK-CHECK'); return true; }catch(_e){}
+        try{ location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason) + '&v=V6-156-MYFAITH-SECOND-BACK-MASS-FIRST-CHECK'); return true; }catch(_e){}
       }
       return false;
     }

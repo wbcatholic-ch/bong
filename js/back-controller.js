@@ -394,47 +394,13 @@
     callGTC();
   }, false);
 
-  function takeForcedCoverHistoryReason(){
-    try{
-      var reason = sessionStorage.getItem('oai_force_cover_history_rearm') || '';
-      if(!reason) return '';
-      var ts = parseInt(sessionStorage.getItem('oai_force_cover_history_rearm_ts') || '0', 10) || 0;
-      if(ts && now() - ts > 10 * 60 * 1000){
-        sessionStorage.removeItem('oai_force_cover_history_rearm');
-        sessionStorage.removeItem('oai_force_cover_history_rearm_ts');
-        return '';
-      }
-      sessionStorage.removeItem('oai_force_cover_history_rearm');
-      sessionStorage.removeItem('oai_force_cover_history_rearm_ts');
-      return reason || 'cover-return-force';
-    }catch(e){ return ''; }
-  }
-
-  function settleCoverHistoryTrap(reason){
-    try{
-      if(appActive()) return;
-      var forcedReason = takeForcedCoverHistoryReason();
-      var st = history.state;
-      if(!forcedReason && st && st._p === 1 && st.oai_cover_trap) return;
-      armCoverBackTrap(forcedReason || reason || 'cover-settle', {force:true});
-    }catch(e){ console.warn('[가톨릭길동무]', e); }
-  }
-
   window.addEventListener('pageshow', function(){
     try{
       var st = history.state;
-      if(!appActive()){
-        settleCoverHistoryTrap('pageshow-cover');
-      }else if(!(st && st._p === 1 && st.oai_app_trap)){
-        history.replaceState({_p:0, oai_app_root:'pageshow-app'}, '', _href);
-        history.pushState({_p:1, oai_app_trap:'pageshow-app'}, '', _href);
-      }
+      if(st && st._p === 1) return;  // 트랩 유지 중이면 스킵
+      if(!appActive()) armCoverBackTrap('pageshow-cover');
+      else { history.replaceState({_p:0}, '', _href); history.pushState({_p:1}, '', _href); }
     }catch(e){ console.warn("[가톨릭길동무]", e); }
-  }, true);
-
-  window.addEventListener('focus', function(){ settleCoverHistoryTrap('focus-cover'); }, true);
-  document.addEventListener('visibilitychange', function(){
-    if(document.visibilityState === 'visible') settleCoverHistoryTrap('visible-cover');
   }, true);
 
 })();
