@@ -1,4 +1,4 @@
- 
+
 'use strict';
 
 function hideCoverAndRun(callback) {
@@ -1817,7 +1817,13 @@ try{
   if(!window.__OAI_SHRINE_VISIT_POPSTATE_BOUND__){
     window.__OAI_SHRINE_VISIT_POPSTATE_BOUND__=true;
     window.addEventListener('popstate', function(e){
-      if(typeof _isShrineVisitDetailOpen==='function' && _isShrineVisitDetailOpen()){
+      if(_isShrineVisitModalOpen()){
+        if(e){ try{ e.preventDefault(); e.stopImmediatePropagation(); }catch(_e){} }
+        _closeShrineVisitModal({fromPopstate:true});
+      }else if(window.__OAI_SHRINE_VISIT_MODAL_CLOSING_BY_CODE__){
+        if(e){ try{ e.preventDefault(); e.stopImmediatePropagation(); }catch(_e){} }
+        window.__OAI_SHRINE_VISIT_MODAL_CLOSING_BY_CODE__=false;
+      }else if(typeof _isShrineVisitDetailOpen==='function' && _isShrineVisitDetailOpen()){
         if(e){ try{ e.preventDefault(); e.stopImmediatePropagation(); }catch(_e){} }
         _closeShrineVisitDetail({fromPopstate:true});
       }else if(window.__OAI_SHRINE_VISIT_DETAIL_CLOSING_BY_CODE__){
@@ -1829,12 +1835,6 @@ try{
       }else if(window.__OAI_SHRINE_VISIT_CARDS_CLOSING_BY_CODE__){
         if(e){ try{ e.preventDefault(); e.stopImmediatePropagation(); }catch(_e){} }
         window.__OAI_SHRINE_VISIT_CARDS_CLOSING_BY_CODE__=false;
-      }else if(_isShrineVisitModalOpen()){
-        if(e){ try{ e.preventDefault(); e.stopImmediatePropagation(); }catch(_e){} }
-        _closeShrineVisitModal({fromPopstate:true});
-      }else if(window.__OAI_SHRINE_VISIT_MODAL_CLOSING_BY_CODE__){
-        if(e){ try{ e.preventDefault(); e.stopImmediatePropagation(); }catch(_e){} }
-        window.__OAI_SHRINE_VISIT_MODAL_CLOSING_BY_CODE__=false;
       }
     }, true);
   }
