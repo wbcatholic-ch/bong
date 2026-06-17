@@ -51,8 +51,8 @@
 
 .my-diocese-modal.show,
 .my-diocese-modal.show .my-diocese-panel {
-  height: var(--my-faith-visible-vh, var(--my-faith-vh, 100dvh)) !important;
-  max-height: var(--my-faith-visible-vh, var(--my-faith-vh, 100dvh)) !important;
+  height: var(--my-faith-vh, 100dvh) !important;
+  max-height: var(--my-faith-vh, 100dvh) !important;
   min-height: 0 !important;
 }
 .my-diocese-modal.show #my-diocese-list.my-faith-body {

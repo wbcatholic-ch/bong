@@ -186,13 +186,14 @@
         var layoutH = Math.round(document.documentElement.clientHeight || window.innerHeight || 0);
         var innerH = Math.round(window.innerHeight || 0);
         var visibleH = Math.round((vv && vv.height) || innerH || layoutH || 0);
-        var candidateH = Math.max(layoutH || 0, innerH || 0, visibleH || 0);
-        if(candidateH && candidateH > myFaithStableHeight) myFaithStableHeight = candidateH;
-        if(!myFaithStableHeight) myFaithStableHeight = candidateH || visibleH || 0;
+        var stableCandidateH = Math.max(layoutH || 0, innerH || 0);
+        if(!stableCandidateH && visibleH) stableCandidateH = visibleH;
+        if(stableCandidateH && stableCandidateH > myFaithStableHeight) myFaithStableHeight = stableCandidateH;
+        if(!myFaithStableHeight) myFaithStableHeight = stableCandidateH || visibleH || 0;
         var active = document.activeElement || null;
         var focusedInput = !!(active && modal.contains(active) && /^(INPUT|TEXTAREA|SELECT)$/i.test(active.tagName || ''));
         var keyboardLikely = focusedInput || !!(myFaithStableHeight && visibleH && visibleH < myFaithStableHeight - 120) || !!(vv && Math.round(vv.offsetTop || 0) > 0);
-        var modalH = visibleH || candidateH || myFaithStableHeight || 0;
+        var modalH = myFaithStableHeight || stableCandidateH || visibleH || 0;
         if(modalH > 0) modal.style.setProperty('--my-faith-vh', modalH + 'px');
         if(visibleH > 0) modal.style.setProperty('--my-faith-visible-vh', visibleH + 'px');
         modal.classList.toggle('keyboard-open', keyboardLikely);
