@@ -8,7 +8,7 @@
 
   var _href = location.href.split('#')[0];
 
-  window.__OAI_BACK_DIAG_ON__ = true;
+  window.__OAI_BACK_DIAG_ON__ = false;
   function diagState(){
     try{
       var st = history.state || null;
@@ -31,7 +31,7 @@
       }
       var now = new Date();
       var time = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
-      el.textContent = 'V6-142-DIAG ' + time + ' | ' + window.__OAI_BACK_DIAG_LAST__ + ' | ' + diagState();
+      el.textContent = 'V6-143-COVER-TRAP-CHECK ' + time + ' | ' + window.__OAI_BACK_DIAG_LAST__ + ' | ' + diagState();
     }catch(e){}
   }
   try{ window.oaiBackDiag = backDiag; }catch(_e){}
@@ -63,7 +63,9 @@
       sessionStorage.removeItem('oai_refresh_history_compact_reason');
     }catch(_e){}
     if(refreshReason){
-      history.replaceState({_p:1, oai_cover_trap: refreshReason}, '', _href);
+      // 긴 새로고침 뒤에도 첫 Back이 앱 밖으로 빠지지 않도록
+      // replace-only가 아니라 root+trap 한 쌍으로 다시 세운다.
+      armCoverBackTrap(refreshReason, {force:true});
     }else{
       armCoverBackTrap('init', {force:true});
     }
