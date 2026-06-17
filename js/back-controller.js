@@ -385,7 +385,9 @@
     }
     if(!appActive()){
       if(consumeSuppressedCoverBackToast()) return;
-      if(typeof window._showBackToast==='function') window._showBackToast();
+      var exiting = false;
+      if(typeof window._showBackToast==='function') exiting = window._showBackToast() === true;
+      if(!exiting){ armCoverBackTrap('cover-toast-hardware', {force:true}); }
       return;
     }
     if(closeModuleInnerLayer()) return;
