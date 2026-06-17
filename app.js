@@ -10,6 +10,8 @@ function hideCoverAndRun(callback) {
     window.__OAI_PRAYER_COVER_NEEDS_FIRST_TOAST__ = false;
     sessionStorage.removeItem('oai_prayer_cover_needs_first_toast');
   }catch(e){ console.warn("[가톨릭길동무]", e); }
+  try{ if(typeof _resetCoverExitReady === 'function') _resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+  try{ if(typeof _clearCoverExitArmed === 'function') _clearCoverExitArmed(); }catch(e){ console.warn('[가톨릭길동무]', e); }
   window._noAutoNearby = false;
   var cv = document.getElementById('cover');
   if (cv) cv.style.display = 'none';
@@ -1893,7 +1895,7 @@ function _setMassQuickReturn(on){
       var stamp = String(Date.now());
       sessionStorage.setItem('oai_mass_quick_return','1');
       sessionStorage.setItem('oai_mass_quick_return_ts', stamp);
-      /* V6-131: 매일미사/성가/성경 배너 복귀 상태는 장기 보존하지 않고 세션 안에서만 유지한다. */
+      /* V6-132: 매일미사/성가/성경 배너 복귀 상태는 장기 보존하지 않고 세션 안에서만 유지한다. */
       try{ localStorage.removeItem('oai_mass_quick_return'); localStorage.removeItem('oai_mass_quick_return_ts'); }catch(_e){}
     }else{
       sessionStorage.removeItem('oai_mass_quick_return');
@@ -2000,6 +2002,7 @@ function _resetCoverExitReady(){
     if(bt) bt.remove();
     const toast = document.getElementById('oai-cover-exit-toast');
     if(toast) toast.classList.remove('show');
+    try{ if(typeof _clearCoverExitArmed === 'function') _clearCoverExitArmed(); }catch(_e){}
   }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
 function _clearCoverExitArmed(){
@@ -2893,7 +2896,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V6-131';
+    frame.src='diocese.html?v=V6-132';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -2960,7 +2963,7 @@ function dioceseLoaded(){
   var loading=document.getElementById('diocese-loading');
   if(loading) loading.style.display='none';
 }
-/* V6-131: 성지 외부 링크는 웹사이트 카테고리와 같은 보호창 이동 흐름으로 통일하고 옛 core return 저장 함수는 제거 */
+/* V6-132: 성지 외부 링크는 웹사이트 카테고리와 같은 보호창 이동 흐름으로 통일하고 옛 core return 저장 함수는 제거 */
 function normalizeCatholicExternalUrl(url){
   url = String(url || '').trim();
   if(!url) return '';
@@ -2998,14 +3001,14 @@ function _isShrineDetailGuideUrl(url){
 function _getShrineHomepageUrl(item){
   var hp = item && item.hp ? normalizeCatholicExternalUrl(item.hp) : '';
   if(!hp) return '';
-  /* V6-131: 신규 성지는 성지추가.xlsx의 '홈페이지' 열을 그대로 홈페이지 버튼에 연결한다. */
+  /* V6-132: 신규 성지는 성지추가.xlsx의 '홈페이지' 열을 그대로 홈페이지 버튼에 연결한다. */
   if(item && item.isNew) return hp;
   if(_isShrineDetailGuideUrl(hp)) return '';
   return hp;
 }
 function _getShrineGuideUrl(item){
   if(!item) return '';
-  /* V6-131: 성지추가.xlsx의 '주교회의 성지안내/성지 상세' URL을 우선 사용한다. */
+  /* V6-132: 성지추가.xlsx의 '주교회의 성지안내/성지 상세' URL을 우선 사용한다. */
   if(item.guideUrl) return normalizeCatholicExternalUrl(item.guideUrl);
   if(item.seq) return _SU + item.seq;
   var hp = item.hp ? normalizeCatholicExternalUrl(item.hp) : '';
@@ -3029,7 +3032,7 @@ function openCatholicExternalPreserveApp(url, kind){
   }catch(e){ console.warn("[가톨릭길동무]", e); }
   try{ if(typeof _resetCoverExitReady==='function') _resetCoverExitReady(); }catch(e){ console.warn("[가톨릭길동무]", e); }
   try{ if(typeof _clearCoverExitArmed==='function') _clearCoverExitArmed(); }catch(e){ console.warn("[가톨릭길동무]", e); }
-  /* V6-131: 성지·성당·피정 외부 웹사이트도 웹사이트 카테고리와 같은 보호창 이동 흐름으로 통일한다. */
+  /* V6-132: 성지·성당·피정 외부 웹사이트도 웹사이트 카테고리와 같은 보호창 이동 흐름으로 통일한다. */
   try{
     if(typeof oaiSmoothNavigate === 'function'){
       oaiSmoothNavigate(url, kind || 'external-site');
@@ -3046,7 +3049,7 @@ function openShrineExternalLikeFaithPortal(url, extra){
   url = prepareExternalUrl(url);
   if(!url) return;
   extra = extra || {};
-  /* V6-131: 성지 상세/홈페이지 외부 링크는 웹사이트 카테고리와 같은 보호창 이동 흐름을 사용한다. */
+  /* V6-132: 성지 상세/홈페이지 외부 링크는 웹사이트 카테고리와 같은 보호창 이동 흐름을 사용한다. */
   openCatholicExternalPreserveApp(url, extra.source || 'shrine-external');
 }
 function openCoreExternalUrl(url, extra){
@@ -3180,7 +3183,7 @@ window.addEventListener('pageshow', function(ev){
   }catch(ex){}
   setTimeout(function(){ restoreDioceseExternalState({persisted: !!(ev && ev.persisted)}); }, 20);
 }, true);
-/* V6-131: 동작 없는 빈 포커스 리스너와 빈 지도 진입 훅 제거 */
+/* V6-132: 동작 없는 빈 포커스 리스너와 빈 지도 진입 훅 제거 */
 function clearRouteNoFocus(){
   try{
     if(_mode==='shrine'){
@@ -3198,7 +3201,7 @@ function clearRouteNoFocus(){
     var guide=document.getElementById('route-guide'); if(guide) guide.classList.remove('on');
   }catch(e){ console.warn("[가톨릭길동무]", e); }
 }
-/* V6-131: 현재 성지 외부 링크는 웹사이트 카테고리와 같은 보호창 이동 방식이므로 옛 core external return 복원 로직은 제거하고,
+/* V6-132: 현재 성지 외부 링크는 웹사이트 카테고리와 같은 보호창 이동 방식이므로 옛 core external return 복원 로직은 제거하고,
    pageshow 시 지도 DOM이 비어 있는 경우에만 기존 지도 재로딩 보호 흐름을 유지한다. */
 window.addEventListener('pageshow', function(e){
   setTimeout(()=>{
@@ -3251,7 +3254,7 @@ const _PARISH_DIOCESE_ASSETS={
 };
 const _PARISH_DIOCESE_LOAD_STATE={};
 const _PARISH_DIOCESE_LOAD_PROMISES={};
-const _PARISH_ASSET_VERSION='V6-131';
+const _PARISH_ASSET_VERSION='V6-132';
 function _getParishDioceseAsset(code){
   return _PARISH_DIOCESE_ASSETS[code] || null;
 }
@@ -3414,7 +3417,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-131';
+const _PRAYER_ASSET_VERSION='V6-132';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -3475,7 +3478,7 @@ try{ window.ensurePrayerModuleLoaded=ensurePrayerModuleLoaded; }catch(e){ consol
 let _RT_RAW = [];
 let _retreatRawLoaded = false;
 let _retreatDataLoadPromise = null;
-const _RETREAT_ASSET_VERSION='V6-131';
+const _RETREAT_ASSET_VERSION='V6-132';
 
 let RETREATS = [];
 function _buildRetreatList(raw){
@@ -3770,7 +3773,7 @@ const _TY={'A':'성지','B':'순례지','C':'순교 사적지'};
 
 let _shrineRawLoaded = false;
 let _shrineDataLoadPromise = null;
-const _SHRINE_ASSET_VERSION='V6-131';
+const _SHRINE_ASSET_VERSION='V6-132';
 let SHRINES = [];
 let JUKRIMGUL_IDX = -1;
 let PARK_DAESIK_IDX = -1;
@@ -4244,6 +4247,8 @@ function oaiPreopenNearbySheetForCategory(){
 }
 
 function startApp(mode){
+  try{ if(typeof _resetCoverExitReady === 'function') _resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+  try{ if(typeof _clearCoverExitArmed === 'function') _clearCoverExitArmed(); }catch(e){ console.warn('[가톨릭길동무]', e); }
   if(mode==='shrine' && (!_shrineRawLoaded || !SHRINES.length)){
     _mode='shrine';
     try{
