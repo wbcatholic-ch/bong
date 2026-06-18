@@ -1239,7 +1239,7 @@ function _closeShrineVisitCardsModal(opts){
     try{
       window.__OAI_SHRINE_VISIT_CARDS_HISTORY__=false;
       window.__OAI_SHRINE_VISIT_CARDS_CLOSING_BY_CODE__=true;
-      history.back();
+      if(window.OAI_BACK&&typeof window.OAI_BACK.arm==='function') window.OAI_BACK.arm('legacy-history-back-disabled',{force:true});
       setTimeout(function(){ window.__OAI_SHRINE_VISIT_CARDS_CLOSING_BY_CODE__=false; }, 450);
     }catch(e){ console.warn('[가톨릭길동무]', e); }
   }else if(opts.fromPopstate){
@@ -1427,7 +1427,7 @@ function _closeShrineVisitDetail(opts){
     try{
       window.__OAI_SHRINE_VISIT_DETAIL_HISTORY__=false;
       window.__OAI_SHRINE_VISIT_DETAIL_CLOSING_BY_CODE__=true;
-      history.back();
+      if(window.OAI_BACK&&typeof window.OAI_BACK.arm==='function') window.OAI_BACK.arm('legacy-history-back-disabled',{force:true});
       setTimeout(function(){ window.__OAI_SHRINE_VISIT_DETAIL_CLOSING_BY_CODE__=false; }, 450);
     }catch(e){ console.warn('[가톨릭길동무]', e); }
   }else if(opts.fromPopstate){
@@ -1794,7 +1794,7 @@ function _closeShrineVisitModal(opts){
     try{
       window.__OAI_SHRINE_VISIT_MODAL_HISTORY__=false;
       window.__OAI_SHRINE_VISIT_MODAL_CLOSING_BY_CODE__=true;
-      history.back();
+      if(window.OAI_BACK&&typeof window.OAI_BACK.arm==='function') window.OAI_BACK.arm('legacy-history-back-disabled',{force:true});
       setTimeout(function(){ window.__OAI_SHRINE_VISIT_MODAL_CLOSING_BY_CODE__=false; }, 450);
     }catch(e){ console.warn('[가톨릭길동무]', e); }
   }else if(opts.fromPopstate){
@@ -1805,6 +1805,7 @@ try{
   if(!window.__OAI_SHRINE_VISIT_POPSTATE_BOUND__){
     window.__OAI_SHRINE_VISIT_POPSTATE_BOUND__=true;
     window.addEventListener('popstate', function(e){
+      return;
       if(_isShrineVisitModalOpen()){
         if(e){ try{ e.preventDefault(); e.stopImmediatePropagation(); }catch(_e){} }
         _closeShrineVisitModal({fromPopstate:true});
@@ -2109,7 +2110,7 @@ function _hideMassQuickMenuOnly(afterHidden, opts){
     if(st && st.oai_mass_quick){
       window.__OAI_MQ_STATE_POPPING__ = Date.now() + 1200;
       window.__OAI_AFTER_MQ_STATE_POP__ = done;
-      history.back();
+      if(window.OAI_BACK&&typeof window.OAI_BACK.arm==='function') window.OAI_BACK.arm('legacy-history-back-disabled',{force:true});
       setTimeout(function(){
         try{
           if(window.__OAI_AFTER_MQ_STATE_POP__ === done){
@@ -4132,8 +4133,7 @@ function attemptAppExit(){
   }catch(_e){ backSteps = 1; }
   setTimeout(function(){
     try{
-      if(backSteps > 1) history.go(-backSteps);
-      else history.back();
+      if(window.OAI_BACK&&typeof window.OAI_BACK.arm==='function') window.OAI_BACK.arm('legacy-app-exit-disabled',{force:true});
     }catch(_e){}
   }, 40);
 }

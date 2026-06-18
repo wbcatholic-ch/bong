@@ -227,8 +227,7 @@
           window._oaiArmCoverBackTrap(reason || 'my-faith-close', {force:true});
         }else{
           var href = location.href.split('#')[0];
-          history.replaceState({_p:0, oai_cover_root:reason||'my-faith-root'}, '', href);
-          history.pushState({_p:1, oai_cover_trap:reason||'my-faith-trap'}, '', href);
+          if(window.OAI_BACK&&typeof window.OAI_BACK.arm==='function') window.OAI_BACK.arm(reason||'my-faith-root',{force:true});
         }
       }catch(e){ console.warn('[가톨릭길동무]', e); }
     }

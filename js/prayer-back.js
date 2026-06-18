@@ -98,8 +98,7 @@ function ensureCoverTrapAfterPrayer(reason){
     else if(typeof window._ensureCoverBackTrap === 'function') window._ensureCoverBackTrap(reason || 'prayer-cover-reset');
     else {
       var href = location.href.split('#')[0];
-      history.replaceState({_p:0, oai_cover_root:reason||'prayer-cover-reset'}, '', href);
-      history.pushState({_p:1, oai_cover_trap:reason||'prayer-cover-reset'}, '', href);
+      if(window.OAI_BACK&&typeof window.OAI_BACK.arm==='function') window.OAI_BACK.arm(reason||'prayer-cover-reset',{force:true});
     }
   }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
@@ -176,7 +175,7 @@ function prayerListToPopupOrCover(reason){
       mq.classList.add('show');
       mq.setAttribute('aria-hidden','false');
     }
-    try{ history.pushState({_p:1, oai_mass_quick:1, oai_from_prayer:1}, '', location.href.split('#')[0]); }catch(_e){}
+    try{ if(window.OAI_BACK&&typeof window.OAI_BACK.arm==='function') window.OAI_BACK.arm('prayer-return-popup',{force:true}); }catch(_e){}
     return true;
   }catch(e){ console.warn('[가톨릭길동무]', e); return true; }
 }
