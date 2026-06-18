@@ -3,7 +3,7 @@
 (function(){
   if(window.__APP_FONT_SCALE_GUARD__) return;
   window.__APP_FONT_SCALE_GUARD__=true;
-  var QA_URL="qa-firebase.html?v=V8-1-4-STEP1-PLAIN-COVER-ONLY-CHECK";
+  var QA_URL="qa-firebase.html?v=V8-1-5-STEP2-MENU-BACK-CHECK";
   var FONT_KEY='prayer_font_size';
   var BASE=16;
   var FONT_SIZES=[13,14,15,16,17,18,19,20,21,22,24,26,28,30];
@@ -148,7 +148,13 @@
     try{ configureQna(); }catch(e){ console.warn('[가톨릭길동무]', e); }
     try{
       document.activeElement && document.activeElement.blur && document.activeElement.blur();
-      markCoverToastOnReturn('qna-return-cover');
+      var fromMenu = false;
+      try{ fromMenu = sessionStorage.getItem('gdm_menu_page_origin') === 'qna'; }catch(_e){}
+      if(fromMenu){
+        try{ sessionStorage.removeItem('oai_cover_toast_on_return'); sessionStorage.removeItem('oai_cover_toast_on_return_ts'); }catch(_e){}
+      }else{
+        markCoverToastOnReturn('qna-return-cover');
+      }
       if(typeof window.oaiHoldStabilityVeil === 'function') window.oaiHoldStabilityVeil('qna-open', 220);
     }catch(e){ console.warn('[가톨릭길동무]', e); }
     setTimeout(function(){ location.href=QA_URL; }, 10);

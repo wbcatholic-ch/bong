@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-4-STEP1-PLAIN-COVER-ONLY-CHECK';
-const ASSET_VERSION = 'V8-1-4-STEP1-PLAIN-COVER-ONLY-CHECK';
+const CACHE_VERSION = 'catholic-way-V8-1-5-STEP2-MENU-BACK-CHECK';
+const ASSET_VERSION = 'V8-1-5-STEP2-MENU-BACK-CHECK';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }
@@ -24,8 +24,6 @@ const APP_SHELL = [
   withVersion('./js/app-state-guards.js'),
   withVersion('./web.js'),
   withVersion('./js/route-web-guards.js'),
-  withVersion('./js/prayer-back.js'),
-  withVersion('./js/back-controller.js'),
   withVersion('./sw-update.js'),
   withVersion('./manifest.json'),
   withVersion('./icon-192x192.png'),
