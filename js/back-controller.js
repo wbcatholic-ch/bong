@@ -31,7 +31,7 @@
       }
       var now = new Date();
       var time = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
-      el.textContent = 'V8-1-11-MENU-CATEGORY-OLDMODE-CHECK ' + time + ' | ' + window.__OAI_BACK_DIAG_LAST__ + ' | ' + diagState();
+      el.textContent = 'V8-1-12-QNA-COVER-REARM-CHECK ' + time + ' | ' + window.__OAI_BACK_DIAG_LAST__ + ' | ' + diagState();
     }catch(e){}
   }
   try{ window.oaiBackDiag = backDiag; }catch(_e){}
