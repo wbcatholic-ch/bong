@@ -8106,7 +8106,7 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
   on('pr-sm-btn-2',   'click', function() { withPrayerModule(function(){ if(typeof window.prAdjustFont==='function') window.prAdjustFont(-1); }); });
   on('pr-lg-btn-2',   'click', function() { withPrayerModule(function(){ if(typeof window.prAdjustFont==='function') window.prAdjustFont(1); }); });
   on('pr-detail-star','click', function(e) { var ev=e; withPrayerModule(function(){ if(typeof window.prToggleDetailFav==='function') window.prToggleDetailFav(ev); }); });
-  on('pr-back-btn',   'click', function() { try{ history.go(-1); }catch(e){ withPrayerModule(function(){ if(typeof window.prCloseDetail==='function') window.prCloseDetail(); }); } });
+  on('pr-back-btn',   'click', function() { withPrayerModule(function(){ if(typeof window.prCloseDetail==='function') window.prCloseDetail(); else if(typeof window.closePrayerView==='function') window.closePrayerView(); }); });
 
   on('cover-sm-btn',  'click', function(e) { e.stopPropagation(); adjustAppFont(-1); });
   on('cover-lg-btn',  'click', function(e) { e.stopPropagation(); adjustAppFont(1); });
@@ -8526,4 +8526,25 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
       if(t===document || t===window || (t && t.closest && t.closest('#list-body,#nearby-body,#region-body,#sm-results,.sheet-body,.sm-inner'))) blurActive();
     }catch(_e){ blurActive(); }
   }, true);
+})();
+
+
+/* V6-163 확인용: 모든 기존 back/history trap 함수를 비활성화한다. 화면 닫기는 X 버튼/닫기 버튼만 사용한다. */
+(function(){
+  try{
+    window.__OAI_NO_APP_BACK_MODE__ = true;
+    window.__OAI_FULL_BACK_CTRL_ACTIVE__ = false;
+    window._oaiArmCoverBackTrap = function(){};
+    window.__oaiArmEarlyCoverBackGuard = function(){};
+    if(typeof _ensureCoverBackTrap === 'function') _ensureCoverBackTrap = function(){};
+    if(typeof _resetCoverBackTrap === 'function') _resetCoverBackTrap = function(){};
+    if(typeof _ensureAppBackTrap === 'function') _ensureAppBackTrap = function(){};
+    if(typeof _resetAppBackTrap === 'function') _resetAppBackTrap = function(){};
+    if(typeof _pushCoverOverlayBackTrap === 'function') _pushCoverOverlayBackTrap = function(){};
+    if(typeof _armMassQuickHistoryTrap === 'function') _armMassQuickHistoryTrap = function(){};
+    if(typeof _pushShrineVisitCardsHistory === 'function') _pushShrineVisitCardsHistory = function(){};
+    if(typeof _pushShrineVisitDetailHistory === 'function') _pushShrineVisitDetailHistory = function(){};
+    if(typeof _pushShrineVisitModalHistory === 'function') _pushShrineVisitModalHistory = function(){};
+    if(typeof _forceNextCoverBackToast === 'function') _forceNextCoverBackToast = function(){};
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
 })();

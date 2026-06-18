@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V6-160-MYFAITH-EXIT-QUICK-BANNER-CHECK';
-const ASSET_VERSION = 'V6-160-MYFAITH-EXIT-QUICK-BANNER-CHECK';
+const CACHE_VERSION = 'catholic-way-V6-163-NO-BACK-X-ONLY-CHECK';
+const ASSET_VERSION = 'V6-163-NO-BACK-X-ONLY-CHECK';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }
