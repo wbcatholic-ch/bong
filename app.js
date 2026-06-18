@@ -2354,6 +2354,16 @@ function _returnToMassQuickMenu(source){
   _clearMassQuickReturnForReload();
   _clearPrayerQuickReturn();
   try{ if(typeof _clearFaithReturnTarget === 'function') _clearFaithReturnTarget(); }catch(_e){}
+  /*
+   * V6-160 확인용: 매일미사/성가/성경에서 빠른 배너로 되돌아온 경우,
+   * 배너를 다시 열기 전에 먼저 커버 전용 root+trap을 한 번 정리한다.
+   * 그래야 배너 뒤로가기 1회 = 배너 닫힘, 다음 뒤로가기 = 커버 안내문구 흐름이 된다.
+   * goToCover() 자체에는 trap을 넣지 않는다.
+   */
+  try{
+    if(typeof _resetCoverBackTrap === 'function') _resetCoverBackTrap('mass-quick-return-cover-before-open');
+    else if(typeof _ensureCoverBackTrap === 'function') _ensureCoverBackTrap('mass-quick-return-cover-before-open');
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
   var open = function(){
     try{ openMassQuickMenu({keepReturn:true}); }
     catch(e){ console.warn('[가톨릭길동무]', e); }

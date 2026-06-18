@@ -233,24 +233,38 @@
       }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
     function goFreshCoverAfterMyFaith(reason){
+      /*
+       * V6-160 확인용: V6-155~159의 fresh location.replace 방식은
+       * 안내문구는 살렸지만, 실제 종료 단계에서 이전 문서 history가 남아
+       * 안내문구 후 뒤로가기를 두 번 더 눌러야 하는 경우가 있었다.
+       * 그래서 나의 신앙생활은 현재 문서 안에서 커버를 보이고,
+       * 커버 전용 root+trap만 다시 세운다.
+       */
       try{
         reason = reason || 'my-faith-close';
         sessionStorage.setItem('oai_myfaith_return_cover_reason', reason);
         sessionStorage.setItem('oai_myfaith_return_cover_ts', String(Date.now ? Date.now() : new Date().getTime()));
-        sessionStorage.setItem('oai_cover_toast_on_return', reason);
-        sessionStorage.setItem('oai_cover_toast_on_return_ts', String(Date.now ? Date.now() : new Date().getTime()));
         sessionStorage.setItem('oai_cover_exit_hard_after_first_toast', '1');
         sessionStorage.setItem('oai_cover_exit_long_window_once', '1');
-        sessionStorage.setItem('oai_app_exit_back_steps', '3');
+        sessionStorage.removeItem('oai_app_exit_back_steps');
       }catch(_e){}
       try{
-        var url = new URL('index.html', location.href);
-        url.searchParams.set('oai_cover_return', reason);
-        url.searchParams.set('v', 'V6-159-FIRST-ENTRY-COVER-SMOOTH-CHECK');
-        location.replace(url.href);
+        var root = document.documentElement;
+        var cover = document.getElementById('cover');
+        if(root) root.classList.remove('app-active','parish-mode','retreat-mode');
+        if(typeof window.oaiSetMainMapLayerHidden === 'function') window.oaiSetMainMapLayerHidden(false);
+        if(cover){
+          cover.style.display = '';
+          cover.style.opacity = '';
+          cover.style.pointerEvents = '';
+          try{ cover.scrollTop = 0; }catch(_e){}
+        }
+        resetCoverBackAfterMyFaith(reason);
+        clearGenericCoverToastFlag();
+        clearMyFaithExternalLinkFlag();
         return true;
       }catch(e){
-        try{ location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason) + '&v=V6-159-FIRST-ENTRY-COVER-SMOOTH-CHECK'); return true; }catch(_e){}
+        console.warn('[가톨릭길동무]', e);
       }
       return false;
     }
