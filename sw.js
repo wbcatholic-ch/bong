@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-BACK-ALL-DELETED-X-ONLY-CHECK';
-const ASSET_VERSION = 'V8-1-BACK-ALL-DELETED-X-ONLY-CHECK';
+const CACHE_VERSION = 'catholic-way-V8-1-1-BACK-STRICT-DELETED-X-ONLY-CHECK';
+const ASSET_VERSION = 'V8-1-1-BACK-STRICT-DELETED-X-ONLY-CHECK';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }
