@@ -4413,6 +4413,10 @@ function goToCover(){
       setTimeout(function(){ window.oaiSettleCoverSize('cover-return-late'); }, 180);
     }
   }catch(e){ console.warn('[가톨릭길동무]', e); }
+  try{
+    if(window.OAI_BACK && typeof window.OAI_BACK.enterCover === 'function') window.OAI_BACK.enterCover('app-goToCover-cover-visible');
+    else if(typeof window.oaiArmBackBlocker === 'function') window.oaiArmBackBlocker('app-goToCover-cover-visible', true);
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
   try{ if(window.oaiBackDiag) window.oaiBackDiag('app-goToCover-end'); }catch(_e){}
 }
 
