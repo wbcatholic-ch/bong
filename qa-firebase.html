@@ -942,11 +942,11 @@ function oaiReturnToAppCover(reason){
   try{
     var url = new URL('index.html', location.href);
     url.searchParams.set('oai_cover_return', reason || 'qna-return-cover');
-    url.searchParams.set('v', 'V8-0-1-NO-BACK-EARLY-CENTRAL-CHECK');
+    url.searchParams.set('v', 'V8-1-BACK-ALL-DELETED-X-ONLY-CHECK');
     location.replace(url.href);
     return;
   }catch(e){
-    location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason || 'qna-return-cover') + '&v=V8-0-1-NO-BACK-EARLY-CENTRAL-CHECK');
+    location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason || 'qna-return-cover') + '&v=V8-1-BACK-ALL-DELETED-X-ONLY-CHECK');
   }
 }
 function handleQaBack(){
@@ -994,7 +994,7 @@ if (QA_PRIVATE_MODE) {
 <script id="oai-cache-lifecycle-V6-146">
 (function(){
   'use strict';
-  var APP_VERSION = 'V8-0-1-NO-BACK-EARLY-CENTRAL-CHECK';
+  var APP_VERSION = 'V8-1-BACK-ALL-DELETED-X-ONLY-CHECK';
   if('serviceWorker' in navigator){
     try{ navigator.serviceWorker.register('./sw.js?v=' + encodeURIComponent(APP_VERSION)).then(function(reg){try{reg.update();}catch(e){}}).catch(function(){}); }catch(e){}
   }

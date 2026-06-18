@@ -1239,7 +1239,7 @@ function _closeShrineVisitCardsModal(opts){
     try{
       window.__OAI_SHRINE_VISIT_CARDS_HISTORY__=false;
       window.__OAI_SHRINE_VISIT_CARDS_CLOSING_BY_CODE__=true;
-      if(window.OAI_BACK&&typeof window.OAI_BACK.arm==='function') window.OAI_BACK.arm('legacy-history-back-disabled',{force:true});
+      void 0; /* V8-1: legacy history.back 삭제 */
       setTimeout(function(){ window.__OAI_SHRINE_VISIT_CARDS_CLOSING_BY_CODE__=false; }, 450);
     }catch(e){ console.warn('[가톨릭길동무]', e); }
   }else if(opts.fromPopstate){
@@ -1427,7 +1427,7 @@ function _closeShrineVisitDetail(opts){
     try{
       window.__OAI_SHRINE_VISIT_DETAIL_HISTORY__=false;
       window.__OAI_SHRINE_VISIT_DETAIL_CLOSING_BY_CODE__=true;
-      if(window.OAI_BACK&&typeof window.OAI_BACK.arm==='function') window.OAI_BACK.arm('legacy-history-back-disabled',{force:true});
+      void 0; /* V8-1: legacy history.back 삭제 */
       setTimeout(function(){ window.__OAI_SHRINE_VISIT_DETAIL_CLOSING_BY_CODE__=false; }, 450);
     }catch(e){ console.warn('[가톨릭길동무]', e); }
   }else if(opts.fromPopstate){
@@ -1794,40 +1794,15 @@ function _closeShrineVisitModal(opts){
     try{
       window.__OAI_SHRINE_VISIT_MODAL_HISTORY__=false;
       window.__OAI_SHRINE_VISIT_MODAL_CLOSING_BY_CODE__=true;
-      if(window.OAI_BACK&&typeof window.OAI_BACK.arm==='function') window.OAI_BACK.arm('legacy-history-back-disabled',{force:true});
+      void 0; /* V8-1: legacy history.back 삭제 */
       setTimeout(function(){ window.__OAI_SHRINE_VISIT_MODAL_CLOSING_BY_CODE__=false; }, 450);
     }catch(e){ console.warn('[가톨릭길동무]', e); }
   }else if(opts.fromPopstate){
     window.__OAI_SHRINE_VISIT_MODAL_HISTORY__=false;
   }
 }
-try{
-  if(!window.__OAI_SHRINE_VISIT_POPSTATE_BOUND__){
-    window.__OAI_SHRINE_VISIT_POPSTATE_BOUND__=true;
-    window.addEventListener('popstate', function(e){
-      return;
-      if(_isShrineVisitModalOpen()){
-        if(e){ try{ e.preventDefault(); e.stopImmediatePropagation(); }catch(_e){} }
-        _closeShrineVisitModal({fromPopstate:true});
-      }else if(window.__OAI_SHRINE_VISIT_MODAL_CLOSING_BY_CODE__){
-        if(e){ try{ e.preventDefault(); e.stopImmediatePropagation(); }catch(_e){} }
-        window.__OAI_SHRINE_VISIT_MODAL_CLOSING_BY_CODE__=false;
-      }else if(typeof _isShrineVisitDetailOpen==='function' && _isShrineVisitDetailOpen()){
-        if(e){ try{ e.preventDefault(); e.stopImmediatePropagation(); }catch(_e){} }
-        _closeShrineVisitDetail({fromPopstate:true});
-      }else if(window.__OAI_SHRINE_VISIT_DETAIL_CLOSING_BY_CODE__){
-        if(e){ try{ e.preventDefault(); e.stopImmediatePropagation(); }catch(_e){} }
-        window.__OAI_SHRINE_VISIT_DETAIL_CLOSING_BY_CODE__=false;
-      }else if(typeof _isShrineVisitCardsModalOpen==='function' && _isShrineVisitCardsModalOpen()){
-        if(e){ try{ e.preventDefault(); e.stopImmediatePropagation(); }catch(_e){} }
-        _closeShrineVisitCardsModal({fromPopstate:true});
-      }else if(window.__OAI_SHRINE_VISIT_CARDS_CLOSING_BY_CODE__){
-        if(e){ try{ e.preventDefault(); e.stopImmediatePropagation(); }catch(_e){} }
-        window.__OAI_SHRINE_VISIT_CARDS_CLOSING_BY_CODE__=false;
-      }
-    }, true);
-  }
-}catch(e){ console.warn('[가톨릭길동무]', e); }
+/* V8-1: 기존 성지 순례기록 popstate 뒤로가기 처리 삭제 */
+
 
 function _renderShrineVisitModalList(item){
   const list=document.getElementById('shrine-visit-list');
@@ -2110,7 +2085,7 @@ function _hideMassQuickMenuOnly(afterHidden, opts){
     if(st && st.oai_mass_quick){
       window.__OAI_MQ_STATE_POPPING__ = Date.now() + 1200;
       window.__OAI_AFTER_MQ_STATE_POP__ = done;
-      if(window.OAI_BACK&&typeof window.OAI_BACK.arm==='function') window.OAI_BACK.arm('legacy-history-back-disabled',{force:true});
+      void 0; /* V8-1: legacy history.back 삭제 */
       setTimeout(function(){
         try{
           if(window.__OAI_AFTER_MQ_STATE_POP__ === done){
@@ -4133,7 +4108,7 @@ function attemptAppExit(){
   }catch(_e){ backSteps = 1; }
   setTimeout(function(){
     try{
-      if(window.OAI_BACK&&typeof window.OAI_BACK.arm==='function') window.OAI_BACK.arm('legacy-app-exit-disabled',{force:true});
+      void 0; /* V8-1: legacy app-exit history 삭제 */
     }catch(_e){}
   }, 40);
 }
