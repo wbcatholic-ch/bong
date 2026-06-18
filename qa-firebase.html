@@ -944,8 +944,8 @@ function oaiPrepareNoReturnEffectToApp(){
   }catch(e){}
 }
 function oaiReturnToAppCover(reason){
-  var fromMenu = false;
-  try{ fromMenu = oaiIsQnaFromMenu(); }catch(e){}
+  var fromMenu=false;
+  try{ fromMenu=oaiIsQnaFromMenu(); }catch(e){}
   try{ oaiPrepareNoReturnEffectToApp(); }catch(e){}
   try{
     if(fromMenu){
@@ -961,12 +961,12 @@ function oaiReturnToAppCover(reason){
     var url = new URL('index.html', location.href);
     if(fromMenu) url.searchParams.set('gdm_open_menu','1');
     else url.searchParams.set('oai_cover_return', reason || 'qna-return-cover');
-    url.searchParams.set('v', 'V8-1-5-STEP2-MENU-BACK-CHECK');
+    url.searchParams.set('v', 'V8-1-6-STEP2-MENU-BACK-RECHECK');
     location.replace(url.href);
     return;
   }catch(e){
-    if(fromMenu) location.replace('index.html?gdm_open_menu=1&v=V8-1-5-STEP2-MENU-BACK-CHECK');
-    else location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason || 'qna-return-cover') + '&v=V8-1-5-STEP2-MENU-BACK-CHECK');
+    if(fromMenu) location.replace('index.html?gdm_open_menu=1&v=V8-1-6-STEP2-MENU-BACK-RECHECK');
+    else location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason || 'qna-return-cover') + '&v=V8-1-6-STEP2-MENU-BACK-RECHECK');
   }
 }
 function handleQaBack(){
@@ -1014,7 +1014,7 @@ if (QA_PRIVATE_MODE) {
 <script id="oai-cache-lifecycle-V6-146">
 (function(){
   'use strict';
-  var APP_VERSION = 'V8-1-5-STEP2-MENU-BACK-CHECK';
+  var APP_VERSION = 'V8-1-6-STEP2-MENU-BACK-RECHECK';
   if('serviceWorker' in navigator){
     try{ navigator.serviceWorker.register('./sw.js?v=' + encodeURIComponent(APP_VERSION)).then(function(reg){try{reg.update();}catch(e){}}).catch(function(){}); }catch(e){}
   }

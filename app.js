@@ -8093,7 +8093,6 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
       modal.setAttribute('aria-hidden','false');
       try{ window.__GDM_COVER_MENU_OPEN__ = true; }catch(_e){}
       normalizeCoverMenuBackState(reason || 'cover-menu-open');
-      try{ if(typeof window.OAI_BACK === 'object' && window.OAI_BACK && typeof window.OAI_BACK.arm === 'function') window.OAI_BACK.arm(reason || 'cover-menu-open'); }catch(e){ console.warn('[가톨릭길동무]', e); }
       try{ if(typeof window._pushCoverOverlayBackTrap === 'function') window._pushCoverOverlayBackTrap('cover-menu', 'cover-menu-open'); }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
     function closeMenu(reason){
@@ -8101,7 +8100,6 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
       modal.setAttribute('aria-hidden','true');
       try{ window.__GDM_COVER_MENU_OPEN__ = false; }catch(_e){}
       normalizeCoverMenuBackState(reason || 'cover-menu-close');
-      try{ if(typeof window.OAI_BACK === 'object' && window.OAI_BACK && typeof window.OAI_BACK.arm === 'function') window.OAI_BACK.arm(reason || 'cover-menu-close'); }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
     function markMenuPageOrigin(kind){
       try{
@@ -8113,9 +8111,6 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
     }
     function markMenuGuideOrigin(){
       try{ window.__GDM_MENU_ITEM_ACTIVE = 'guide'; sessionStorage.setItem('gdm_menu_item_active','guide'); }catch(_e){ window.__GDM_MENU_ITEM_ACTIVE = 'guide'; }
-    }
-    function clearMenuGuideOrigin(){
-      try{ if(window.__GDM_MENU_ITEM_ACTIVE === 'guide') delete window.__GDM_MENU_ITEM_ACTIVE; sessionStorage.removeItem('gdm_menu_item_active'); }catch(_e){ window.__GDM_MENU_ITEM_ACTIVE=''; }
     }
     window.openCoverMenuPopup = openMenu;
     window.closeCoverMenuPopup = closeMenu;
@@ -8172,10 +8167,7 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
     });
     (function reopenMenuAfterMenuPageReturn(){
       function shouldOpen(){
-        try{
-          var qs=new URLSearchParams(location.search || '');
-          if(qs.get('gdm_open_menu') === '1') return true;
-        }catch(_e){}
+        try{ var qs=new URLSearchParams(location.search || ''); if(qs.get('gdm_open_menu') === '1') return true; }catch(_e){}
         try{ return !!sessionStorage.getItem('gdm_open_menu_once'); }catch(_e){ return false; }
       }
       function clearMarks(){
@@ -8187,7 +8179,7 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
         setTimeout(function(){
           try{ if(typeof goToCover === 'function') goToCover(); }catch(e){ console.warn('[가톨릭길동무]', e); }
           openMenu('menu-page-return');
-        },80);
+        },120);
       }
       run();
       window.addEventListener('pageshow', run, true);
