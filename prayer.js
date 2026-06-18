@@ -549,7 +549,6 @@ function prOpenDetail(prayer){
   detail.classList.add('show');
   try{
     if(typeof window._oaiPrayerPushDetailState === 'function') window._oaiPrayerPushDetailState('prayer-detail-open');
-    else if(typeof window._oaiArmPrayerBackTrap === 'function') window._oaiArmPrayerBackTrap('prayer-detail-open');
   }catch(e){
     console.warn('[가톨릭길동무]', e);
   }
@@ -599,7 +598,6 @@ window.prCloseDetail = function(opts){
   if(!(opts && opts.skipTrap)){
     try{
       if(typeof window._oaiPrayerReplaceListState === 'function') window._oaiPrayerReplaceListState('prayer-detail-button-to-list');
-      else if(typeof window._oaiArmPrayerBackTrap === 'function') window._oaiArmPrayerBackTrap('prayer-detail-button-to-list');
     }catch(e){
       console.warn('[가톨릭길동무]', e);
     }

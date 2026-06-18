@@ -4,7 +4,7 @@
   if(window.__APP_CACHE_LIFECYCLE_GUARD__) return;
   window.__APP_CACHE_LIFECYCLE_GUARD__ = true;
   var APP_VERSION = 'V2';
-  var SW_BUILD_VERSION = 'V8-1-13-CLEAN-UNNECESSARY-CHECK';
+  var SW_BUILD_VERSION = 'V8-1-15-NEW-BACK-CORE-CHECK';
   window.APP_VERSION = APP_VERSION;
 
   function now(){ return Date.now ? Date.now() : new Date().getTime(); }
@@ -61,7 +61,6 @@
     try{ if(typeof window.goToCover === 'function') window.goToCover(); }catch(e){ console.warn("[가톨릭길동무]", e); }
     try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(e){ console.warn("[가톨릭길동무]", e); }
     try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(e){ console.warn("[가톨릭길동무]", e); }
-    try{ if(typeof window._resetCoverBackTrap === 'function') window._resetCoverBackTrap('background-cover-reset'); }catch(e){ console.warn("[가톨릭길동무]", e); }
     try{ sessionStorage.setItem('oai_background_cover_reset_requested', String(now())); }catch(e){ console.warn("[가톨릭길동무]", e); }
     setTimeout(function(){ stableReload('background-cover-reset'); }, 220);
     return true;
