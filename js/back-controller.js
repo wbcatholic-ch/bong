@@ -201,6 +201,7 @@
     return false;
   }
   function handleBack(source){
+    try{ if(window.__CGD_BACK_SUPPRESS_UNTIL__ && (Date.now ? Date.now() : new Date().getTime()) < window.__CGD_BACK_SUPPRESS_UNTIL__){ arm('early-cover-suppressed'); return; } }catch(e){ warn(e); }
     if(handling) return;
     handling = true;
     try{
