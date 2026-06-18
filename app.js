@@ -2010,48 +2010,23 @@ function _isAppScreenActive(){
   try{ if(_isCoverScreenVisible()) return false; }catch(e){ console.warn('[가톨릭길동무]', e); }
   try{ return document.documentElement.classList.contains('app-active'); }catch(e){ return false; }
 }
-function _oaiBackTrapFallback(reason, force){
-  try{
-    var href = location.href.split('#')[0];
-    var st = history.state || null;
-    if(!force && st && st._p === 1 && (st.oai_cover_trap || st.oai_app_trap)) return;
-    history.replaceState({_p:0, oai_cover_root:reason || 'app-helper-root'}, '', href);
-    history.pushState({_p:1, oai_cover_trap:reason || 'app-helper-trap'}, '', href);
-  }catch(e){ console.warn('[가톨릭길동무]', e); }
-}
 function _ensureCoverBackTrap(reason){
-  try{
-    if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap(reason || 'ensure-cover');
-    else _oaiBackTrapFallback(reason || 'ensure-cover', false);
-  }catch(e){ console.warn('[가톨릭길동무]', e); }
+  return;
 }
 function _resetCoverBackTrap(reason){
-  try{
-    if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap(reason || 'reset-cover', {force:true});
-    else _oaiBackTrapFallback(reason || 'reset-cover', true);
-  }catch(e){ console.warn('[가톨릭길동무]', e); }
+  return;
 }
 function _ensureAppBackTrap(reason){
-  try{
-    if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap(reason || 'ensure-app');
-    else _oaiBackTrapFallback(reason || 'ensure-app', false);
-  }catch(e){ console.warn('[가톨릭길동무]', e); }
+  return;
 }
 function _resetAppBackTrap(reason){
-  try{
-    if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap(reason || 'reset-app', {force:true});
-    else _oaiBackTrapFallback(reason || 'reset-app', true);
-  }catch(e){ console.warn('[가톨릭길동무]', e); }
+  return;
 }
 function _pushCoverOverlayBackTrap(kind, reason){
-  try{
-    _resetCoverBackTrap(reason || kind || 'cover-overlay');
-  }catch(e){ console.warn('[가톨릭길동무]', e); }
+  return;
 }
 function _armMassQuickHistoryTrap(opts){
-  try{
-    _resetCoverBackTrap((opts && opts.reason) ? ('mass-quick-' + opts.reason) : 'mass-quick');
-  }catch(e){ console.warn('[가톨릭길동무]', e); }
+  return;
 }
 function _hideMassQuickMenuOnly(afterHidden, opts){
   const modal=document.getElementById('mass-quick-modal');
