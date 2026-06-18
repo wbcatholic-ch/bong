@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-13-3-PRAYER-FAV-DIOCESE-CHECK';
-const ASSET_VERSION = 'V8-1-13-3-PRAYER-FAV-DIOCESE-CHECK';
+const CACHE_VERSION = 'catholic-way-V8-1-13-4-DIOCESE-RETURN-REARM-CHECK';
+const ASSET_VERSION = 'V8-1-13-4-DIOCESE-RETURN-REARM-CHECK';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }
