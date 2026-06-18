@@ -3342,7 +3342,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V6-147-QNA-MYFAITH-COVER-TOAST-CHECK';
+const _PRAYER_ASSET_VERSION='V8-1-13-2-PRAYER-DETAIL-BACK-CHECK';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
