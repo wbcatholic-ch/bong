@@ -8,37 +8,11 @@
 
   var _href = location.href.split('#')[0];
 
-  window.__OAI_BACK_DIAG_ON__ = false;
-  function diagState(){
-    try{
-      var st = history.state || null;
-      var cv = false, aa = false;
-      try{ cv = coverVisible(); }catch(_e){}
-      try{ aa = appActive(); }catch(_e){}
-      return 'cv=' + (cv?'1':'0') + ' aa=' + (aa?'1':'0') + ' st=' + JSON.stringify(st).slice(0,160);
-    }catch(e){ return 'state-error'; }
-  }
-  function backDiag(tag, extra){
-    try{
-      window.__OAI_BACK_DIAG_LAST__ = String(tag||'') + (extra ? ' ' + String(extra) : '');
-      if(!window.__OAI_BACK_DIAG_ON__) return;
-      var el = document.getElementById('oai-back-diag');
-      if(!el){
-        el = document.createElement('div');
-        el.id = 'oai-back-diag';
-        el.style.cssText = 'position:fixed;left:6px;right:6px;bottom:calc(env(safe-area-inset-bottom,0px) + 6px);z-index:2147483646;background:rgba(0,0,0,.78);color:#fff;font-size:10px;line-height:1.35;padding:5px 7px;border-radius:8px;white-space:normal;word-break:break-all;pointer-events:none;font-family:monospace;';
-        document.body.appendChild(el);
-      }
-      var now = new Date();
-      var time = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
-      el.textContent = 'V8-1-12-QNA-COVER-REARM-CHECK ' + time + ' | ' + window.__OAI_BACK_DIAG_LAST__ + ' | ' + diagState();
-    }catch(e){}
-  }
-  try{ window.oaiBackDiag = backDiag; }catch(_e){}
+  /* 진단 표시 코드는 V8-1-13에서 제거했습니다. */
+
 
   function armCoverBackTrap(reason, opts){
     try{
-      backDiag('armCoverBackTrap', reason||'');
       opts = opts || {};
       var href = location.href.split('#')[0];
       _href = href;
@@ -68,7 +42,6 @@
       armCoverBackTrap('init', {force:true});
     }
   }catch(e){ console.warn("[가톨릭길동무]", e); }
-  try{ backDiag('init-after-arm'); }catch(_e){}
 
   function $b(id){ return document.getElementById(id); }
   function coverVisible(){
@@ -153,9 +126,6 @@
       }
       var mq = $b('mass-quick-modal');
       if(mq && mq.classList.contains('show') && typeof window.closeMassQuickMenu === 'function'){
-        var fromPrayer = false;
-        try{ fromPrayer = !!(mq.dataset && mq.dataset.returnSource === 'prayer'); }catch(e){}
-        try{ if(typeof window._isPrayerPopupReturnSource === 'function' && window._isPrayerPopupReturnSource()) fromPrayer = true; }catch(e){}
         window.closeMassQuickMenu();
       } else {
         document.querySelectorAll('.guide-modal.show').forEach(function(el){
@@ -311,11 +281,9 @@
   var _restoring = false;
 
   window.addEventListener('popstate', function(){
-    try{ backDiag('popstate-start'); }catch(_e){}
     if(window._appExiting) return;
 
     if(_restoring){
-      try{ backDiag('popstate-restoring'); }catch(_e){}
       _restoring = false;
       if(typeof window._oaiPrayerRunPendingCoverReset === 'function' && window._oaiPrayerRunPendingCoverReset()) return;
       if(typeof window._oaiPrayerRunPendingQuickPopup === 'function') window._oaiPrayerRunPendingQuickPopup();
@@ -384,7 +352,6 @@
     }
 
     if(!appActive()){
-      try{ backDiag('popstate-cover-branch'); }catch(_e){}
       if(consumeSuppressedCoverBackToast()) return;
       var exiting = false;
       if(typeof window._showBackToast==='function') exiting = window._showBackToast() === true;
@@ -392,20 +359,17 @@
       return;
     }
 
-    try{ backDiag('popstate-app-branch-before-go1'); }catch(_e){}
     _restoring = true;
     try{ history.go(1); }catch(e){ _restoring = false; console.warn("[가톨릭길동무]", e); }
 
     if(typeof window._oaiPrayerBackHandle === 'function' && window._oaiPrayerBackHandle('prayer-popstate')) return;
-    if(closeModuleInnerLayer()){ try{ backDiag('popstate-close-inner'); }catch(_e){} return; }
-    if(closeExtOrModule()){ try{ backDiag('popstate-close-ext-or-module'); }catch(_e){} return; }
-    if(closeLayer()){ try{ backDiag('popstate-close-layer'); }catch(_e){} return; }
+    if(closeModuleInnerLayer()){ return; }
+    if(closeExtOrModule()){ return; }
+    if(closeLayer()){ return; }
     callGTC();
-    try{ backDiag('popstate-callGTC'); }catch(_e){}
   }, false);
 
   document.addEventListener('backbutton', function(){
-    try{ backDiag('hardware-start'); }catch(_e){}
     if(typeof window._oaiPrayerBackHandle === 'function' && window._oaiPrayerBackHandle('prayer-hardware-back')) return;
     if(closeRefreshDialog()){ try{ armCoverBackTrap('refresh-dialog-hardware', {force:true}); }catch(e){} return; }
     if(isGuideModalOpen()){
@@ -420,20 +384,17 @@
       return;
     }
     if(!appActive()){
-      try{ backDiag('hardware-cover-branch'); }catch(_e){}
       if(consumeSuppressedCoverBackToast()) return;
       if(typeof window._showBackToast==='function') window._showBackToast();
       return;
     }
-    if(closeModuleInnerLayer()){ try{ backDiag('hardware-close-inner'); }catch(_e){} return; }
-    if(closeExtOrModule()){ try{ backDiag('hardware-close-ext-or-module'); }catch(_e){} return; }
-    if(closeLayer()){ try{ backDiag('hardware-close-layer'); }catch(_e){} return; }
+    if(closeModuleInnerLayer()){ return; }
+    if(closeExtOrModule()){ return; }
+    if(closeLayer()){ return; }
     callGTC();
-    try{ backDiag('hardware-callGTC'); }catch(_e){}
   }, false);
 
   window.addEventListener('pageshow', function(){
-    try{ backDiag('pageshow'); }catch(_e){}
     try{
       var st = history.state;
       if(st && st._p === 1) return;  // 트랩 유지 중이면 스킵
