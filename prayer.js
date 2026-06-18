@@ -211,18 +211,19 @@ window.prRenderList = function(){
   ul.innerHTML = '';
   const kw = prNorm(prG('prayer-search-inp')?.value||'');
   let data = [];
-  if(prCurCat === 'favorites'){
+  if(kw){
+    // V8-1-13-3: 즐겨찾기 탭에서도 검색어가 있으면 전체 표시 가능 기도문에서 검색한다.
+    PR_CATS.forEach(k=>{ if(k!=='favorites') data = data.concat(PR_DATA[k]||[]); });
+  } else if(prCurCat === 'favorites'){
     PR_CATS.forEach(k=>{ if(k!=='favorites') data = data.concat(PR_DATA[k]||[]); });
     data = data.filter(p=>prFavorites.includes(p.id));
-  } else if(kw){
-    PR_CATS.forEach(k=>{ if(k!=='favorites') data = data.concat(PR_DATA[k]||[]); });
   } else {
     data = PR_DATA[prCurCat] || [];
   }
   const filtered = kw ? data.filter(p=>prNorm(p.title).includes(kw)) : data;
   if(!filtered.length){
     ul.innerHTML = '<li><div class="pr-empty">'+
-      (prCurCat==='favorites'?'즐겨찾기한 기도문이 없습니다.':kw?'검색 결과가 없습니다.':'등록된 기도문이 없습니다.')+
+      (kw?'검색 결과가 없습니다.':prCurCat==='favorites'?'즐겨찾기한 기도문이 없습니다.':'등록된 기도문이 없습니다.')+
       '</div></li>';
     return;
   }
