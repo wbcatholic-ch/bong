@@ -5,7 +5,7 @@
   window.__BACK_CTRL__ = true;
   window.__OAI_FULL_BACK_CTRL_ACTIVE__ = true;
 
-  var stage = 'V8-0-NO-BACK-X-ONLY-CENTRAL-CHECK';
+  var stage = 'V8-0-1-NO-BACK-EARLY-CENTRAL-CHECK';
   var guardHash = '#oai-back-guard';
   var rearming = false;
   var state = {stage:stage, mode:'no-back', currentBase:'', currentLayer:'', currentContent:'', currentModal:''};
