@@ -222,6 +222,14 @@
       try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }
       try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(e){ console.warn('[가톨릭길동무]', e); }
       try{ if(typeof window._forceNextCoverBackToast === 'function') window._forceNextCoverBackToast(reason || 'my-faith-close'); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      try{
+        if(typeof window._oaiArmCoverBackTrap === 'function'){
+          window._oaiArmCoverBackTrap(reason || 'my-faith-close', {force:true});
+        }else{
+          var href = location.href.split('#')[0];
+          
+        }
+      }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
     function goFreshCoverAfterMyFaith(reason){
       /*
@@ -315,6 +323,7 @@
       try{
         if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
         if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
+        if(typeof window._pushCoverOverlayBackTrap === 'function') window._pushCoverOverlayBackTrap('my-faith', 'my-faith-open');
       }catch(e){ console.warn('[가톨릭길동무]', e); }
       setTimeout(updateMyFaithViewport, opts.fromExternal ? 180 : 80);
     }
@@ -343,6 +352,9 @@
       try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(_e){}
       try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(_e){}
       try{
+        if(modal && modal.classList.contains('show') && typeof window._pushCoverOverlayBackTrap === 'function'){
+          window._pushCoverOverlayBackTrap('my-faith-external', 'my-faith-external-link');
+        }
       }catch(_e){}
     }
     try{ window.oaiMarkMyFaithExternalLink = markMyFaithExternalLink; }catch(_e){}
