@@ -39,6 +39,49 @@
     try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(e){ warn(e); }
     try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(e){ warn(e); }
   }
+
+  var exitReadyUntil = 0;
+  var exitToastTimer = 0;
+  function clearExitToast(){
+    try{
+      clearTimeout(exitToastTimer);
+      var old = document.getElementById('cgd-exit-toast') || document.getElementById('_bt');
+      if(old && old.parentNode) old.parentNode.removeChild(old);
+    }catch(e){ warn(e); }
+  }
+  function attemptExit(){
+    try{ window._appExiting = true; }catch(e){ warn(e); }
+    clearExitToast();
+    exitReadyUntil = 0;
+    try{ if(navigator.app && typeof navigator.app.exitApp === 'function'){ navigator.app.exitApp(); return; } }catch(e){ warn(e); }
+    try{ window.open('', '_self'); window.close(); }catch(e){ warn(e); }
+    try{ document.documentElement.classList.add('app-exiting'); }catch(e){ warn(e); }
+    setTimeout(function(){ try{ history.back(); }catch(_e){} }, 30);
+  }
+  function showExitToast(){
+    var now = Date.now ? Date.now() : new Date().getTime();
+    if(exitReadyUntil && now < exitReadyUntil){ attemptExit(); return true; }
+    exitReadyUntil = now + 2500;
+    try{
+      if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
+      if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
+    }catch(e){ warn(e); }
+    function append(){
+      try{
+        clearExitToast();
+        var t = document.createElement('div');
+        t.id = 'cgd-exit-toast';
+        t.textContent = '한 번 더 누르면 앱이 종료됩니다';
+        t.style.cssText = 'position:fixed;top:50%;left:50%;bottom:auto;transform:translate(-50%,-50%);background:rgba(14,21,53,.94);color:#fff;padding:12px 24px;border-radius:24px;font-size:14px;font-weight:800;z-index:2147483600;white-space:nowrap;pointer-events:none;box-shadow:0 14px 36px rgba(0,0,0,.32);';
+        document.body.appendChild(t);
+        exitToastTimer = setTimeout(function(){ clearExitToast(); exitReadyUntil = 0; }, 2500);
+      }catch(e){ warn(e); }
+    }
+    if(document.body) append();
+    else document.addEventListener('DOMContentLoaded', append, {once:true});
+    return false;
+  }
+
   function arm(reason){
     try{
       href = location.href.split('#')[0];
@@ -172,8 +215,7 @@
         arm('app-active-cover');
         return;
       }
-      var exiting = false;
-      try{ if(typeof window._showBackToast === 'function') exiting = window._showBackToast() === true; }catch(e){ warn(e); }
+      var exiting = showExitToast();
       if(!exiting) arm('cover-toast');
     }finally{
       setTimeout(function(){ handling=false; }, 80);
