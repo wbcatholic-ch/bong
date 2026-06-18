@@ -5,20 +5,21 @@
   window.__BACK_CTRL__ = true;
   window.__OAI_FULL_BACK_CTRL_ACTIVE__ = true;
 
-  var state={stage:'V7-0-4-BACK-EVENT-DIAG-CHECK',currentBase:'cover',currentLayer:'',currentContent:'',currentModal:'',lastReason:''};
+  var state={stage:'V7-0-5-HASH-BACK-GUARD-DIAG-CHECK',currentBase:'cover',currentLayer:'',currentContent:'',currentModal:'',lastReason:''};
   var restoring=false;
+  var guardHash='#oai-back-guard';
 
   function diag(k){ try{ if(typeof window.oaiBackDiagInc === 'function') window.oaiBackDiagInc(k); }catch(_e){} }
-  function href(){ try{ return location.href.split('#')[0]; }catch(_e){ return location.href; } }
+  function baseHref(){ try{ return location.href.split('#')[0]; }catch(_e){ return location.href; } }
+  function guardHref(){ return baseHref()+guardHash; }
 
   function arm(reason, opts){
     try{
       diag('ARM');
       opts=opts||{};
-      var st=history.state||{};
-      if(!opts.force && st && st.oai_back_stage1===1) return true;
-      history.replaceState({oai_back_stage1_root:1,reason:reason||'stage1-root'},'',href());
-      history.pushState({oai_back_stage1:1,reason:reason||'stage1-guard'},'',href());
+      if(!opts.force && location.hash===guardHash) return true;
+      history.replaceState({oai_back_hash_root:1,reason:reason||'stage1-root'},'',baseHref());
+      history.pushState({oai_back_hash_guard:1,reason:reason||'stage1-guard'},'',guardHref());
       return true;
     }catch(e){ console.warn('[가톨릭길동무]', e); return true; }
   }
@@ -37,12 +38,11 @@
       diag('REC');
       if(restoring) return true;
       restoring=true;
-      try{ history.go(1); }catch(_e){}
       setTimeout(function(){
-        try{ arm((reason||'stage1')+'-rearm', {force:true}); }
+        try{ arm((reason||'stage1')+'-hash-rearm', {force:true}); }
         catch(e){ console.warn('[가톨릭길동무]', e); }
         restoring=false;
-      }, 60);
+      }, 30);
       return true;
     }catch(e){
       restoring=false;
@@ -79,14 +79,19 @@
     handleBack('popstate');
   }, true);
 
+  window.addEventListener('hashchange', function(e){
+    diag('HC');
+    handleBack('hashchange');
+  }, true);
+
   document.addEventListener('backbutton', function(e){
     diag('HW');
     try{ if(e&&e.preventDefault)e.preventDefault(); if(e&&e.stopImmediatePropagation)e.stopImmediatePropagation(); else if(e&&e.stopPropagation)e.stopPropagation(); }catch(_e){}
     handleBack('hardware-back');
   }, true);
 
-  window.addEventListener('pageshow', function(){ arm('pageshow', {force:true}); }, true);
-  window.addEventListener('focus', function(){ setTimeout(function(){ arm('focus', {force:true}); }, 0); }, true);
+  window.addEventListener('pageshow', function(){ arm('pageshow-hash', {force:true}); }, true);
+  window.addEventListener('focus', function(){ setTimeout(function(){ arm('focus-hash', {force:true}); }, 0); }, true);
   diag('CTRL');
-  enterCover('init-cover');
+  enterCover('init-cover-hash');
 })();

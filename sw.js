@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V7-0-4-BACK-EVENT-DIAG-CHECK';
-const ASSET_VERSION = 'V7-0-4-BACK-EVENT-DIAG-CHECK';
+const CACHE_VERSION = 'catholic-way-V7-0-5-HASH-BACK-GUARD-DIAG-CHECK';
+const ASSET_VERSION = 'V7-0-5-HASH-BACK-GUARD-DIAG-CHECK';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }
