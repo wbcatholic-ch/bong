@@ -92,6 +92,17 @@
       armed = true;
     }catch(e){ warn(e); }
   }
+
+  function rearmAfterAction(reason){
+    try{
+      if(typeof window.__cgdIsPlainCover === 'function' && window.__cgdIsPlainCover() && typeof window.__cgdArmEarlyCoverExit === 'function'){
+        window.__cgdArmEarlyCoverExit(reason || 'cover-rearm');
+        return;
+      }
+    }catch(e){ warn(e); }
+    arm(reason || 'after-action');
+  }
+
   function toCover(reason){
     try{ if(typeof window.goToCover === 'function') window.goToCover(); }catch(e){ warn(e); }
     try{ document.documentElement.classList.remove('app-active','parish-mode','retreat-mode'); }catch(e){ warn(e); }
@@ -201,23 +212,23 @@
     return false;
   }
   function handleBack(source){
-    try{ if(window.__CGD_BACK_SUPPRESS_UNTIL__ && (Date.now ? Date.now() : new Date().getTime()) < window.__CGD_BACK_SUPPRESS_UNTIL__){ arm('early-cover-suppressed'); return; } }catch(e){ warn(e); }
+    try{ if(window.__CGD_BACK_SUPPRESS_UNTIL__ && (Date.now ? Date.now() : new Date().getTime()) < window.__CGD_BACK_SUPPRESS_UNTIL__){ rearmAfterAction('early-cover-suppressed'); return; } }catch(e){ warn(e); }
     if(handling) return;
     handling = true;
     try{
-      if(closeRefreshDialog()){ arm('refresh-close'); return; }
-      if(closeTopGuideOrMenu()){ arm('modal-close'); return; }
-      if(closePrayer()){ arm('prayer-close'); return; }
-      if(closeMissa()){ arm('missa-close'); return; }
-      if(closeGeneralView()){ arm('general-close'); return; }
-      if(closeMapLayer()){ arm('map-layer-close'); return; }
+      if(closeRefreshDialog()){ rearmAfterAction('refresh-close'); return; }
+      if(closeTopGuideOrMenu()){ rearmAfterAction('modal-close'); return; }
+      if(closePrayer()){ rearmAfterAction('prayer-close'); return; }
+      if(closeMissa()){ rearmAfterAction('missa-close'); return; }
+      if(closeGeneralView()){ rearmAfterAction('general-close'); return; }
+      if(closeMapLayer()){ rearmAfterAction('map-layer-close'); return; }
       if(appActive()){
         toCover('app-active-cover');
-        arm('app-active-cover');
+        rearmAfterAction('app-active-cover');
         return;
       }
       var exiting = showExitToast();
-      if(!exiting) arm('cover-toast');
+      if(!exiting) rearmAfterAction('cover-toast');
     }finally{
       setTimeout(function(){ handling=false; }, 80);
     }
