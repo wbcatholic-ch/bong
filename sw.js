@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-2-STEP1-COVER-BACK-CHECK';
-const ASSET_VERSION = 'V8-1-2-STEP1-COVER-BACK-CHECK';
+const CACHE_VERSION = 'catholic-way-V8-1-3-STEP1-COVER-INLINE-CHECK';
+const ASSET_VERSION = 'V8-1-3-STEP1-COVER-INLINE-CHECK';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }
