@@ -1258,7 +1258,7 @@ function _ensureShrineVisitDetailView(){
   view.id='shrine-visit-detail-view';
   view.className='shrine-visit-detail-view';
   view.setAttribute('aria-hidden','true');
-  view.innerHTML='<div class="shrine-visit-detail-head"><button type="button" id="shrine-visit-detail-back" class="shrine-visit-detail-back" aria-label="뒤로">‹</button><div class="shrine-visit-detail-head-title">순례한 성지</div><button type="button" id="shrine-visit-detail-x" class="shrine-visit-detail-x" aria-label="닫기">×</button></div><div id="shrine-visit-detail-body" class="shrine-visit-detail-body"></div>';
+  view.innerHTML='<div class="shrine-visit-detail-head"><div class="shrine-visit-detail-head-title">순례한 성지</div><button type="button" id="shrine-visit-detail-x" class="shrine-visit-detail-x" aria-label="닫기">×</button></div><div id="shrine-visit-detail-body" class="shrine-visit-detail-body"></div>';
   document.body.appendChild(view);
   view.querySelectorAll('#shrine-visit-detail-back,#shrine-visit-detail-x').forEach(function(el){
     el.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); _closeShrineVisitDetail(); });

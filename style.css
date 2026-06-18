@@ -6071,3 +6071,54 @@ html.oai-font-global .shrine-visit-floating-list-btn{
   justify-content: center !important;
   line-height: 1 !important;
 }
+
+/* V6-161 확인용: 외부사이트에서 앱으로 복귀할 때는 첫 진입 십자가/로딩 십자가를 보이지 않게 한다. */
+html.oai-stability-veil[data-oai-stability-reason*="external"]::after,
+html.oai-stability-veil.oai-external-return-freeze::after,
+html.oai-external-return-freeze::after {
+  content:"" !important;
+  display:none !important;
+  opacity:0 !important;
+  animation:none !important;
+  background:transparent !important;
+  border:0 !important;
+}
+html.oai-external-return-freeze #cover > *,
+html.oai-stability-veil[data-oai-stability-reason*="external"] #cover > * {
+  transition:none !important;
+  animation:none !important;
+}
+
+/* V6-162 확인용: 앱 첫 진입에서 큰 십자가 다음에 보이던 작은 십자가는 표시하지 않는다. */
+html.oai-cover-booting::after,
+html.oai-cover-revealing::after {
+  content:"" !important;
+  display:none !important;
+  opacity:0 !important;
+  visibility:hidden !important;
+  animation:none !important;
+}
+
+
+/* V6-164 확인용: 앱 첫 시작 때 큰 십자가 이후 다시 보이던 작은 십자가를 모두 숨긴다. */
+html.oai-cover-booting::after,
+html.oai-cover-revealing::after,
+html.oai-stability-veil::after,
+html.oai-external-return-freeze::after {
+  content:"" !important;
+  display:none !important;
+  opacity:0 !important;
+  visibility:hidden !important;
+  animation:none !important;
+  border:0 !important;
+  background:transparent !important;
+}
+
+
+/* V6-165 확인용: 기존 뒤로가기 UI는 숨기고, 닫기는 X 버튼만 사용한다. */
+#shrine-visit-detail-back,
+.shrine-visit-detail-back {
+  display:none !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
