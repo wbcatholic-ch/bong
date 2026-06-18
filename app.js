@@ -2821,7 +2821,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V8-1-13-4-DIOCESE-RETURN-REARM-CHECK';
+    frame.src='diocese.html?v=V8-1-13-5-DIOCESE-BOOT-REARM-CHECK';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -3080,6 +3080,7 @@ function restoreDioceseExternalState(opts){
 
     function finish(){
       try{ root.classList.remove('oai-diocese-returning'); }catch(_e){}
+      try{ _primeDioceseBackAfterExternalReturn('diocese-external-finish-restore'); }catch(_e){}
       window.__OAI_DIOCESE_RESTORING__ = false;
     }
     function restoreInFrame(){
@@ -3102,6 +3103,8 @@ function restoreDioceseExternalState(opts){
 
     if(!alreadyOpen && typeof openDioceseView === 'function') openDioceseView({restore:true});
     if(!alreadyOpen && typeof oaiSetMainMapLayerHidden === 'function') oaiSetMainMapLayerHidden(true);
+    try{ _primeDioceseBackAfterExternalReturn('diocese-external-restore-start'); }catch(_e){}
+    setTimeout(function(){ try{ _primeDioceseBackAfterExternalReturn('diocese-external-restore-start-late'); }catch(_e){} }, 360);
     var tries=0;
     var timer=setInterval(function(){
       tries++;
@@ -3370,7 +3373,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V8-1-13-4-DIOCESE-RETURN-REARM-CHECK';
+const _PRAYER_ASSET_VERSION='V8-1-13-5-DIOCESE-BOOT-REARM-CHECK';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -8437,10 +8440,13 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
     setTimeout(function(){ rearmDioceseBack(reason + '-80'); }, 80);
     setTimeout(function(){ rearmDioceseBack(reason + '-320'); }, 320);
     setTimeout(function(){ rearmDioceseBack(reason + '-900'); }, 900);
+    setTimeout(function(){ rearmDioceseBack(reason + '-1600'); }, 1600);
   }
   window.addEventListener('pageshow', function(){ schedule('diocese-pageshow'); }, true);
   window.addEventListener('focus', function(){ schedule('diocese-focus'); }, true);
   document.addEventListener('visibilitychange', function(){
     if(document.visibilityState === 'visible') schedule('diocese-visible');
   }, true);
+  // V8-1-13-5: bfcache 복귀에서는 pageshow가 이 스크립트 등록 전에 지나갈 수 있어 즉시 한 번도 예약한다.
+  schedule('diocese-boot');
 })();
