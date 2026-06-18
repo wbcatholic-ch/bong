@@ -1837,9 +1837,39 @@ html.oai-cover-booting body { background: var(--cream, var(--v4-bg-cream)) !impo
 html.oai-cover-booting #cover {
   background-color: var(--cream, var(--v4-bg-cream)) !important;
 }
+html.oai-cover-booting::before,
+html.oai-cover-revealing::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 2147482500;
+  background: var(--cream, var(--v4-bg-cream));
+  pointer-events: none;
+  opacity: 1;
+}
+html.oai-cover-booting::after,
+html.oai-cover-revealing::after {
+  content: "✝";
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2147482501;
+  color: #d4aa6a;
+  font-size: 34px;
+  font-weight: 900;
+  line-height: 1;
+  pointer-events: none;
+  opacity: 1;
+}
+html.oai-cover-revealing::before,
+html.oai-cover-revealing::after {
+  opacity: 0;
+  transition: opacity .58s ease-out;
+}
 #cover > * {
   opacity: 1;
-  transition: opacity 1.5s ease-out;
+  transition: opacity .72s ease-out;
 }
 html.oai-cover-booting #cover, html.oai-cover-booting #cover * {
   animation: none;
@@ -1849,6 +1879,10 @@ html.oai-cover-booting #cover > * {
   opacity: 0;
   visibility: visible;
   transition: none;
+}
+html.oai-cover-revealing #cover > * {
+  opacity: 1;
+  transition: opacity .72s ease-out;
 }
 
 .cover-header {

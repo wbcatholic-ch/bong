@@ -246,11 +246,11 @@
       try{
         var url = new URL('index.html', location.href);
         url.searchParams.set('oai_cover_return', reason);
-        url.searchParams.set('v', 'V6-158-MYFAITH-EXIT-STEPS-EXTERNAL-STABLE-CHECK');
+        url.searchParams.set('v', 'V6-159-FIRST-ENTRY-COVER-SMOOTH-CHECK');
         location.replace(url.href);
         return true;
       }catch(e){
-        try{ location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason) + '&v=V6-158-MYFAITH-EXIT-STEPS-EXTERNAL-STABLE-CHECK'); return true; }catch(_e){}
+        try{ location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason) + '&v=V6-159-FIRST-ENTRY-COVER-SMOOTH-CHECK'); return true; }catch(_e){}
       }
       return false;
     }
