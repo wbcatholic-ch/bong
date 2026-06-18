@@ -51,7 +51,7 @@ html.oai-cover-first-reveal #cover > * {
     document.documentElement.classList.add('ios-device');
   }
   // iPhone/iPad에서만 iOS 전용 화면 보정을 적용한다.
-  // V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK: 키보드가 올라온 동안에는 화면 등급을 다시 바꾸지 않는다.
+  // V7-0-4-BACK-EVENT-DIAG-CHECK: 키보드가 올라온 동안에는 화면 등급을 다시 바꾸지 않는다.
   function applyAndroidScreenClass(){
     var root = document.documentElement;
     if(!root || !root.classList) return;
@@ -91,16 +91,49 @@ html.oai-cover-first-reveal #cover > * {
 })();
 </script>
 <script>
-/* V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK: 새 뒤로가기 1단계 bootstrap. 기존 카테고리별 back 기능은 쓰지 않고, OAI_BACK 중앙 controller에만 위임한다. */
+/* V7-0-4-BACK-EVENT-DIAG-CHECK: 새 뒤로가기 1단계 진단 bootstrap. 뒤로가기 이벤트가 실제 기기에서 JS까지 들어오는지 숫자로 확인한다. */
 (function(){
   'use strict';
   if(window.__OAI_BACK_STAGE1_BOOTSTRAP__) return;
   window.__OAI_BACK_STAGE1_BOOTSTRAP__ = true;
   window.__OAI_FULL_BACK_CTRL_ACTIVE__ = true;
   var restoring = false;
+  var diagKey = 'oai_back_diag_v704';
   function href(){ try{ return location.href.split('#')[0]; }catch(_e){ return location.href; } }
+  function readDiag(){
+    try{ return JSON.parse(localStorage.getItem(diagKey)||'{}')||{}; }catch(_e){ return {}; }
+  }
+  function writeDiag(d){ try{ localStorage.setItem(diagKey, JSON.stringify(d||{})); }catch(_e){} }
+  function incDiag(k){
+    try{
+      var d=readDiag();
+      d[k]=(parseInt(d[k]||0,10)||0)+1;
+      d.last=k;
+      d.t=(new Date()).toLocaleTimeString('ko-KR',{hour12:false});
+      writeDiag(d);
+      renderDiag();
+    }catch(_e){}
+  }
+  function renderDiag(){
+    try{
+      if(!document.body) return;
+      var d=readDiag();
+      var el=document.getElementById('oai-back-diag-badge');
+      if(!el){
+        el=document.createElement('div');
+        el.id='oai-back-diag-badge';
+        el.style.cssText='position:fixed;left:6px;top:calc(env(safe-area-inset-top,0px) + 6px);z-index:2147483646;background:rgba(31,42,68,.86);color:#fff;border-radius:8px;padding:5px 7px;font-size:10px;font-weight:800;line-height:1.25;letter-spacing:.1px;pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,.22);';
+        document.body.appendChild(el);
+      }
+      el.textContent='BACK DIAG A:'+((d.ARM||0))+' P:'+((d.POP||0))+' H:'+((d.HW||0))+' R:'+((d.REC||0))+' L:'+((d.LOAD||0))+' '+(d.last||'');
+    }catch(_e){}
+  }
+  window.oaiBackDiagInc=incDiag;
+  window.oaiBackDiagRender=renderDiag;
+  incDiag('LOAD');
   function arm(reason, force){
     try{
+      incDiag('ARM');
       if(window.OAI_BACK && typeof window.OAI_BACK.arm === 'function') return window.OAI_BACK.arm(reason || 'early', {force:!!force});
       var st = history.state || {};
       if(!force && st && st.oai_back_stage1 === 1) return;
@@ -110,6 +143,7 @@ html.oai-cover-first-reveal #cover > * {
   }
   function recover(reason){
     try{
+      incDiag('REC');
       if(window.OAI_BACK && typeof window.OAI_BACK.handleBack === 'function'){
         window.OAI_BACK.handleBack(reason || 'early');
         return;
@@ -123,18 +157,24 @@ html.oai-cover-first-reveal #cover > * {
       }, 60);
     }catch(_e){ restoring=false; try{ arm((reason||'early') + '-fallback', true); }catch(__e){} }
   }
-  function onBack(e){
+  function onPop(e){
+    incDiag('POP');
     try{ if(e && e.preventDefault) e.preventDefault(); if(e && e.stopImmediatePropagation) e.stopImmediatePropagation(); else if(e && e.stopPropagation) e.stopPropagation(); }catch(_e){}
-    recover('early-back');
+    recover('early-popstate');
+  }
+  function onHardware(e){
+    incDiag('HW');
+    try{ if(e && e.preventDefault) e.preventDefault(); if(e && e.stopImmediatePropagation) e.stopImmediatePropagation(); else if(e && e.stopPropagation) e.stopPropagation(); }catch(_e){}
+    recover('early-hardware');
   }
   window.__oaiArmEarlyCoverBackGuard = arm;
   window.oaiArmBackBlocker = arm;
-  window.addEventListener('popstate', onBack, true);
-  document.addEventListener('backbutton', onBack, true);
+  window.addEventListener('popstate', onPop, true);
+  document.addEventListener('backbutton', onHardware, true);
   arm('early-init', true);
-  document.addEventListener('DOMContentLoaded', function(){ arm('early-dom', true); }, {once:true});
-  window.addEventListener('pageshow', function(){ arm('early-pageshow', true); }, true);
-  window.addEventListener('focus', function(){ setTimeout(function(){ arm('early-focus', true); }, 0); }, true);
+  document.addEventListener('DOMContentLoaded', function(){ renderDiag(); arm('early-dom', true); }, {once:true});
+  window.addEventListener('pageshow', function(){ renderDiag(); arm('early-pageshow', true); }, true);
+  window.addEventListener('focus', function(){ setTimeout(function(){ renderDiag(); arm('early-focus', true); }, 0); }, true);
 })();
 </script>
 <script>
@@ -543,38 +583,38 @@ window.APP_CONFIG = {
 <meta name="application-name" content="가톨릭길동무">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#f5f0e8">
-<link rel="manifest" href="manifest.json?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK">
-<link rel="apple-touch-icon" sizes="180x180" href="icon-512x512.png?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK">
-<link rel="apple-touch-icon-precomposed" sizes="180x180" href="icon-512x512.png?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK">
+<link rel="manifest" href="manifest.json?v=V7-0-4-BACK-EVENT-DIAG-CHECK">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-512x512.png?v=V7-0-4-BACK-EVENT-DIAG-CHECK">
+<link rel="apple-touch-icon-precomposed" sizes="180x180" href="icon-512x512.png?v=V7-0-4-BACK-EVENT-DIAG-CHECK">
 <meta name="format-detection" content="telephone=no">
 <meta name="description" content="가톨릭길동무 - 가톨릭 신앙생활 종합 앱">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="가톨릭길동무">
 <meta property="og:title" content="가톨릭길동무">
 <meta property="og:description" content="성지 · 성당 · 기도문 · 순례길 · 가톨릭 웹사이트 안내">
-<meta property="og:image" content="icon-512x512.png?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK">
+<meta property="og:image" content="icon-512x512.png?v=V7-0-4-BACK-EVENT-DIAG-CHECK">
 <meta property="og:image:width" content="512">
 <meta property="og:image:height" content="512">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="가톨릭길동무">
 <meta name="twitter:description" content="성지 · 성당 · 기도문 · 순례길 · 가톨릭 웹사이트 안내">
-<meta name="twitter:image" content="icon-512x512.png?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK">
+<meta name="twitter:image" content="icon-512x512.png?v=V7-0-4-BACK-EVENT-DIAG-CHECK">
 <title>가톨릭길동무</title>
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192x192.png?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192x192.png?v=V7-0-4-BACK-EVENT-DIAG-CHECK">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style id="oai-initial-bg">html,body{margin:0;width:100%;height:100%;min-height:100%;background:#f5f0e8;overflow:hidden;color-scheme:light;}#cover{background:#f5f0e8;min-height:100%;}#app{background:#f8f6f2;display:none;}</style>
-<link rel="stylesheet" href="style.css?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK">
-<link rel="stylesheet" href="css/module-common.css?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK">
-<link rel="stylesheet" href="css/prayer.css?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK">
-<link rel="stylesheet" href="css/web.css?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK">
-<link rel="stylesheet" href="css/pilgrimage.css?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK">
-<link rel="stylesheet" href="css/overlays.css?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK">
-<link rel="stylesheet" href="css/cover-modals.css?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK">
-<link rel="stylesheet" href="css/myfaith.css?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK">
-<link rel="stylesheet" href="css/my-diocese.css?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK">
+<link rel="stylesheet" href="style.css?v=V7-0-4-BACK-EVENT-DIAG-CHECK">
+<link rel="stylesheet" href="css/module-common.css?v=V7-0-4-BACK-EVENT-DIAG-CHECK">
+<link rel="stylesheet" href="css/prayer.css?v=V7-0-4-BACK-EVENT-DIAG-CHECK">
+<link rel="stylesheet" href="css/web.css?v=V7-0-4-BACK-EVENT-DIAG-CHECK">
+<link rel="stylesheet" href="css/pilgrimage.css?v=V7-0-4-BACK-EVENT-DIAG-CHECK">
+<link rel="stylesheet" href="css/overlays.css?v=V7-0-4-BACK-EVENT-DIAG-CHECK">
+<link rel="stylesheet" href="css/cover-modals.css?v=V7-0-4-BACK-EVENT-DIAG-CHECK">
+<link rel="stylesheet" href="css/myfaith.css?v=V7-0-4-BACK-EVENT-DIAG-CHECK">
+<link rel="stylesheet" href="css/my-diocese.css?v=V7-0-4-BACK-EVENT-DIAG-CHECK">
 </head>
 <body>
 <div id="missa-view" role="dialog" aria-modal="true" aria-label="매일미사">
@@ -745,7 +785,7 @@ window.APP_CONFIG = {
 <div id="cover-bottom-note" aria-label="앱 안내문구">
   본 앱은 가톨릭 신자들의 신앙생활을 돕기 위해 만든 비공식 개인 앱입니다.<br>
   정보는 CBCK, 굿뉴스 및 각 교구 홈페이지를 참고했습니다.<br>
-  <span id="cover-version-label">V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK</span>
+  <span id="cover-version-label">V7-0-4-BACK-EVENT-DIAG-CHECK</span>
 </div>
 
 <div id="my-diocese-modal" class="my-diocese-modal" aria-hidden="true">
@@ -778,30 +818,30 @@ window.APP_CONFIG = {
         <div class="ios-safari-step">
           <b>1</b>
           <span>카카오톡 하단 버튼 4개 중 <strong>오른쪽 끝 버튼</strong>을 누르세요.</span>
-          <img data-src="ios-install-step1-kakao-bottom-buttons.png?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK" alt="카카오톡 오른쪽 아래 버튼 모양" width="945" height="248" loading="lazy" decoding="async">
+          <img data-src="ios-install-step1-kakao-bottom-buttons.png?v=V7-0-4-BACK-EVENT-DIAG-CHECK" alt="카카오톡 오른쪽 아래 버튼 모양" width="945" height="248" loading="lazy" decoding="async">
         </div>
         <div class="ios-safari-step">
           <b>2</b>
           <span>공유 화면에서 <strong>Safari로 열기</strong>를 누르세요.</span>
-          <img data-src="ios-install-step2-safari-open.png?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK" alt="Safari로 열기 버튼" width="880" height="755" loading="lazy" decoding="async" fetchpriority="low">
+          <img data-src="ios-install-step2-safari-open.png?v=V7-0-4-BACK-EVENT-DIAG-CHECK" alt="Safari로 열기 버튼" width="880" height="755" loading="lazy" decoding="async" fetchpriority="low">
         </div>
         <div class="ios-safari-step">
           <b>3</b>
           <span>Safari로 열린 뒤, 화면 <strong>오른쪽 아래 ··· 버튼</strong>을 누르세요.</span>
           <div class="ios-safari-shot ios-safari-shot-more">
-            <img data-src="KakaoTalk_20260514_134255658_04.jpg?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK" alt="Safari 오른쪽 아래 더보기 버튼" width="960" height="307" loading="lazy" decoding="async">
+            <img data-src="KakaoTalk_20260514_134255658_04.jpg?v=V7-0-4-BACK-EVENT-DIAG-CHECK" alt="Safari 오른쪽 아래 더보기 버튼" width="960" height="307" loading="lazy" decoding="async">
             <i class="ios-gold-highlight" aria-hidden="true"></i>
           </div>
         </div>
         <div class="ios-safari-step">
           <b>4</b>
           <span>열린 메뉴에서 <strong>공유</strong>를 누르세요.</span>
-          <img data-src="ios-install-step3-share-menu.png?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK" alt="Safari 공유 버튼" width="750" height="580" loading="lazy" decoding="async" fetchpriority="low">
+          <img data-src="ios-install-step3-share-menu.png?v=V7-0-4-BACK-EVENT-DIAG-CHECK" alt="Safari 공유 버튼" width="750" height="580" loading="lazy" decoding="async" fetchpriority="low">
         </div>
         <div class="ios-safari-step">
           <b>5</b>
           <span>목록을 아래로 내려 <strong>홈 화면에 추가</strong>를 누르세요.</span>
-          <img data-src="ios-install-step4-home-screen.png?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK" alt="홈 화면에 추가 버튼" width="865" height="750" loading="lazy" decoding="async" fetchpriority="low">
+          <img data-src="ios-install-step4-home-screen.png?v=V7-0-4-BACK-EVENT-DIAG-CHECK" alt="홈 화면에 추가 버튼" width="865" height="750" loading="lazy" decoding="async" fetchpriority="low">
         </div>
       </div>
     </div>
@@ -901,7 +941,7 @@ window.APP_CONFIG = {
         <span class="cover-menu-icon">📘</span>
         <span class="cover-menu-text">주요기능</span>
       </button>
-      <a id="cover-menu-privacy-link" class="cover-menu-item" href="privacy.html?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK">
+      <a id="cover-menu-privacy-link" class="cover-menu-item" href="privacy.html?v=V7-0-4-BACK-EVENT-DIAG-CHECK">
         <span class="cover-menu-icon">🛡</span>
         <span class="cover-menu-text">개인정보처리방침</span>
       </a>
@@ -913,9 +953,9 @@ window.APP_CONFIG = {
   </div>
 </div>
 
-<script src="js/myfaith.js?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK"></script>
-<script src="app.js?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK"></script>
-<script src="js/cover-common.js?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK"></script>
+<script src="js/myfaith.js?v=V7-0-4-BACK-EVENT-DIAG-CHECK"></script>
+<script src="app.js?v=V7-0-4-BACK-EVENT-DIAG-CHECK"></script>
+<script src="js/cover-common.js?v=V7-0-4-BACK-EVENT-DIAG-CHECK"></script>
 <div id="oai-category-entry-veil" aria-hidden="true"></div>
 <div id="app"><div id="tabbar"><button id="tab-btn-nearby" class="tab-btn" data-tab="nearby"><span class="tab-icon">📍</span><span id="tab-nearby-lbl">내주변</span></button><button id="tab-btn-list" class="tab-btn" data-tab="list"><span class="tab-icon">📋</span><span id="tab-list-lbl">목록</span></button><button id="tab-btn-region" class="tab-btn" data-tab="region"><span class="tab-icon">🔍</span>지역검색
     </button><button id="tab-btn-route" class="tab-btn" data-tab="route"><span class="tab-icon">🧭</span>길찾기
@@ -989,21 +1029,21 @@ window.APP_CONFIG = {
     </div>
   </div>
 </div>
-<script src="web.js?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK"></script>
+<script src="web.js?v=V7-0-4-BACK-EVENT-DIAG-CHECK"></script>
 
 <div id="qna-view" role="dialog" aria-modal="true" aria-label="문의·건의" class="module-view"><div class="module-bar qna"><div class="module-bar-main"><div class="module-bar-ico">✝</div><div class="module-bar-txt"><div class="module-bar-title">문의·건의</div><div class="module-bar-sub">질문, 오류, 수정요청을 남겨주세요</div></div></div><button id="qna-close-btn" class="module-close" aria-label="문의·건의 닫기">×</button></div><div class="qna-body"><div class="qna-tabs"><button id="qna-tab-write" class="qna-tab on" type="button">작성</button></div><div class="qna-list" id="qna-list"></div></div></div>
 
-<script src="js/touch-ux.js?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK"></script>
-<script src="js/prayer-ui.js?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK"></script>
-<script src="js/cover-refresh.js?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK"></script>
-<script src="js/app-state-guards.js?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK"></script>
+<script src="js/touch-ux.js?v=V7-0-4-BACK-EVENT-DIAG-CHECK"></script>
+<script src="js/prayer-ui.js?v=V7-0-4-BACK-EVENT-DIAG-CHECK"></script>
+<script src="js/cover-refresh.js?v=V7-0-4-BACK-EVENT-DIAG-CHECK"></script>
+<script src="js/app-state-guards.js?v=V7-0-4-BACK-EVENT-DIAG-CHECK"></script>
 
-<script src="js/route-web-guards.js?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK"></script>
-<script src="js/prayer-back.js?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK"></script>
+<script src="js/route-web-guards.js?v=V7-0-4-BACK-EVENT-DIAG-CHECK"></script>
+<script src="js/prayer-back.js?v=V7-0-4-BACK-EVENT-DIAG-CHECK"></script>
 
-<script src="js/back-controller.js?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK"></script>
+<script src="js/back-controller.js?v=V7-0-4-BACK-EVENT-DIAG-CHECK"></script>
 
-<script src="sw-update.js?v=V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK"></script>
+<script src="sw-update.js?v=V7-0-4-BACK-EVENT-DIAG-CHECK"></script>
 
 </body>
 </html>

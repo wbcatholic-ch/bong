@@ -5,13 +5,15 @@
   window.__BACK_CTRL__ = true;
   window.__OAI_FULL_BACK_CTRL_ACTIVE__ = true;
 
-  var state={stage:'V7-0-3-BACK-STAGE1-GO-FORWARD-REARM-CHECK',currentBase:'cover',currentLayer:'',currentContent:'',currentModal:'',lastReason:''};
+  var state={stage:'V7-0-4-BACK-EVENT-DIAG-CHECK',currentBase:'cover',currentLayer:'',currentContent:'',currentModal:'',lastReason:''};
   var restoring=false;
 
+  function diag(k){ try{ if(typeof window.oaiBackDiagInc === 'function') window.oaiBackDiagInc(k); }catch(_e){} }
   function href(){ try{ return location.href.split('#')[0]; }catch(_e){ return location.href; } }
 
   function arm(reason, opts){
     try{
+      diag('ARM');
       opts=opts||{};
       var st=history.state||{};
       if(!opts.force && st && st.oai_back_stage1===1) return true;
@@ -32,6 +34,7 @@
 
   function restoreGuard(reason){
     try{
+      diag('REC');
       if(restoring) return true;
       restoring=true;
       try{ history.go(1); }catch(_e){}
@@ -71,16 +74,19 @@
   window._oaiSuppressNextCoverBackToast=function(){};
 
   window.addEventListener('popstate', function(e){
+    diag('POP');
     try{ if(e&&e.preventDefault)e.preventDefault(); if(e&&e.stopImmediatePropagation)e.stopImmediatePropagation(); else if(e&&e.stopPropagation)e.stopPropagation(); }catch(_e){}
     handleBack('popstate');
   }, true);
 
   document.addEventListener('backbutton', function(e){
+    diag('HW');
     try{ if(e&&e.preventDefault)e.preventDefault(); if(e&&e.stopImmediatePropagation)e.stopImmediatePropagation(); else if(e&&e.stopPropagation)e.stopPropagation(); }catch(_e){}
     handleBack('hardware-back');
   }, true);
 
   window.addEventListener('pageshow', function(){ arm('pageshow', {force:true}); }, true);
   window.addEventListener('focus', function(){ setTimeout(function(){ arm('focus', {force:true}); }, 0); }, true);
+  diag('CTRL');
   enterCover('init-cover');
 })();
