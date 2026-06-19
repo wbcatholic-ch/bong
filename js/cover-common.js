@@ -3,7 +3,7 @@
 (function(){
   if(window.__APP_FONT_SCALE_GUARD__) return;
   window.__APP_FONT_SCALE_GUARD__=true;
-  var QA_URL="qa-firebase.html?v=V8-1-14-1-BACK-SYSTEM-CLEANUP-BASE18";
+  var QA_URL="qa-firebase.html?v=V8-1-14-2-STRUCTURE-ALIGN-BASE18";
   var FONT_KEY='prayer_font_size';
   var BASE=16;
   var FONT_SIZES=[13,14,15,16,17,18,19,20,21,22,24,26,28,30];
@@ -14,12 +14,8 @@
   function now(){ return Date.now ? Date.now() : new Date().getTime(); }
   function markCoverToastOnReturn(reason){
     try{
-      var r = reason || 'cover-return';
-      sessionStorage.setItem(COVER_RETURN_TOAST_KEY, r);
+      sessionStorage.setItem(COVER_RETURN_TOAST_KEY, reason || 'cover-return');
       sessionStorage.setItem(COVER_RETURN_TOAST_TS_KEY, String(now()));
-      sessionStorage.setItem('oai_return_to_cover_reason', r);
-      sessionStorage.setItem('oai_return_to_cover_ts', String(now()));
-      try{ if(typeof window.oaiMarkReturnToCover === 'function') window.oaiMarkReturnToCover(r); }catch(_e){}
     }catch(e){ console.warn('[가톨릭길동무]', e); }
   }
   function clearCoverToastOnReturn(){
@@ -45,9 +41,12 @@
   function activateCoverToastOnReturn(reason){
     try{
       if(!isCoverReadyForReturnToast()) return false;
+      if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
+      if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
       if(typeof window._clearHardCoverExitFlags === 'function') window._clearHardCoverExitFlags(reason || 'cover-return');
-      if(typeof window.oaiConsumeReturnToCover === 'function' && window.oaiConsumeReturnToCover(reason || 'cover-return')) return true;
-      if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap(reason || 'cover-return', {force:true});
+      if(typeof window._forceNextCoverBackToast === 'function') window._forceNextCoverBackToast(reason || 'cover-return');
+      if(typeof window._resetCoverBackTrap === 'function') window._resetCoverBackTrap(reason || 'cover-return');
+      else if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap(reason || 'cover-return', {force:true});
       return true;
     }catch(e){ console.warn('[가톨릭길동무]', e); return false; }
   }
@@ -141,22 +140,47 @@
   function setEmojiIcons(){var icons={'cc-1':'✝️','cc-2':'⛪','cc-3':'🙏','cc-4':'🌿','cc-5':'🥾','cc-6':'🌐','cc-7':'🧭'};Object.keys(icons).forEach(function(id){var btn=el(id);if(!btn)return;var wrap=btn.querySelector('.cover-icon-wrap');if(wrap)wrap.innerHTML='<span class="cover-emoji" aria-hidden="true">'+icons[id]+'</span>';});}
   function configureQna(){
     window.QNA_FORM_URL=QA_URL;
-    var q=el('qna-list');
-    if(q) q.innerHTML='';
+    var frame=el('qna-frame');
+    if(frame && !frame.getAttribute('data-src')) frame.setAttribute('data-src', QA_URL);
   }
-  window.qnaOpenFormUrl=function(){ if(typeof window.goQaFirebase==='function') window.goQaFirebase(); else location.href=QA_URL; };
   function wireQnaButton(){var btn=el('qna-cover-btn');if(btn)btn.onclick=function(ev){if(ev)ev.preventDefault();window.openQnaView();};}
+  function closeQnaFrameToCover(reason){
+    try{
+      var view=el('qna-view');
+      if(view) view.classList.remove('open');
+      var frame=el('qna-frame');
+      if(frame) frame.setAttribute('src','about:blank');
+      if(typeof window.goToCover === 'function') window.goToCover();
+      else {
+        document.documentElement.classList.remove('app-active');
+        var cover=el('cover'); if(cover){ cover.style.display=''; cover.style.opacity=''; cover.style.pointerEvents=''; }
+      }
+      if(typeof window.oaiSetMainMapLayerHidden === 'function') window.oaiSetMainMapLayerHidden(false);
+      if(typeof window._ensureCoverBackTrap === 'function') window._ensureCoverBackTrap(reason || 'qna-frame-close');
+    }catch(e){ console.warn('[가톨릭길동무]', e); }
+  }
   function goQnaWithLoading(){
     try{ configureQna(); }catch(e){ console.warn('[가톨릭길동무]', e); }
     try{
       document.activeElement && document.activeElement.blur && document.activeElement.blur();
-      markCoverToastOnReturn('qna-return-cover');
-      if(typeof window.oaiHoldStabilityVeil === 'function') window.oaiHoldStabilityVeil('qna-open', 220);
+      var view=el('qna-view');
+      var frame=el('qna-frame');
+      if(!view || !frame){ location.href=QA_URL; return; }
+      document.querySelectorAll('.module-view.open,#diocese-view.open,#missa-view.open,#prayer-view.open').forEach(function(v){ if(v!==view) v.classList.remove('open'); });
+      var cover=el('cover');
+      if(cover){ cover.style.opacity='0'; cover.style.display='none'; }
+      document.documentElement.classList.add('app-active');
+      if(typeof window.oaiSetMainMapLayerHidden === 'function') window.oaiSetMainMapLayerHidden(true);
+      if(typeof window._ensureAppBackTrap === 'function') window._ensureAppBackTrap('qna-frame-open');
+      var src=frame.getAttribute('data-src') || QA_URL;
+      if(frame.getAttribute('src') === 'about:blank' || !frame.getAttribute('src')) frame.setAttribute('src', src);
+      view.classList.add('open');
+      if(typeof window.oaiEnterView === 'function') window.oaiEnterView(view);
     }catch(e){ console.warn('[가톨릭길동무]', e); }
-    setTimeout(function(){ location.href=QA_URL; }, 10);
   }
   window.openQnaView=function(){ goQnaWithLoading(); };
   window.goQaFirebase=function(){ goQnaWithLoading(); };
+  window.closeQnaFrameToCover=function(reason){ closeQnaFrameToCover(reason); };
   window.qnaShowTab=function(){ configureQna(); };
   function boot(){ensureCoverControls();setEmojiIcons();configureQna();wireQnaButton();applyScale();scheduleCoverToastOnReturnCheck();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();window.addEventListener('load',function(){boot();setTimeout(boot,250);setTimeout(boot,900);},{once:true});window.addEventListener('pageshow',boot);

@@ -327,29 +327,22 @@
 }
 
 
-/* V8-1-14-1: 커버 메뉴와 미사 중 빠른 사용 버튼 테두리 중립화 */
-.cover-menu-item,
+/* V8-1-14-2-STRUCTURE-ALIGN-BASE18: 메뉴/미사 빠른사용 버튼 중립 테두리 유지 */
 #cover-menu-guide-btn,
-#cover-menu-privacy-link,
+#cover-menu-privacy-btn,
 #cover-menu-qna-btn,
-#cover #mass-quick-modal .mass-quick-btn,
-#cover #mass-quick-modal .mass-quick-primary,
 #cover #mass-quick-missa,
 #cover #mass-quick-prayer,
 #cover #mass-quick-hymn,
 #cover #mass-quick-bible {
-  background: #FFFFFF !important;
-  background-image: none !important;
-  border-color: #AEB8C5 !important;
+  background: #fffdf8 !important;
+  border: 1.7px solid #c9d0dc !important;
   color: #172033 !important;
 }
-.cover-menu-item,
-#cover #mass-quick-modal .mass-quick-btn,
-#cover #mass-quick-modal .mass-quick-primary {
-  border-width: 2.4px !important;
-}
-.cover-menu-text,
-#cover #mass-quick-modal .mass-quick-btn strong {
-  color: #172033 !important;
-  font-weight: 950 !important;
-}
+#cover-menu-guide-btn .cover-menu-text,
+#cover-menu-privacy-btn .cover-menu-text,
+#cover-menu-qna-btn .cover-menu-text,
+#cover #mass-quick-missa strong,
+#cover #mass-quick-prayer strong,
+#cover #mass-quick-hymn strong,
+#cover #mass-quick-bible strong { color: #172033 !important; }

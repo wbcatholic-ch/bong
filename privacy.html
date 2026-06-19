@@ -318,26 +318,22 @@ function oaiPreparePrivacyNoReturnEffectToApp(){
   }catch(e){}
 }
 function privacyCloseToApp(){
+  try{
+    if(window.parent && window.parent !== window && typeof window.parent.closePrivacyPolicyModal === 'function'){
+      window.parent.closePrivacyPolicyModal();
+      return;
+    }
+  }catch(_e){}
   if(oaiPrivacyReturning) return;
   oaiPrivacyReturning = true;
   oaiPreparePrivacyNoReturnEffectToApp();
   try{
-    var reason = 'privacy-return-cover';
-    sessionStorage.setItem('oai_return_to_cover_reason', reason);
-    sessionStorage.setItem('oai_return_to_cover_ts', String(Date.now ? Date.now() : new Date().getTime()));
-    sessionStorage.setItem('oai_cover_toast_on_return', reason);
-    sessionStorage.setItem('oai_cover_toast_on_return_ts', String(Date.now ? Date.now() : new Date().getTime()));
-    sessionStorage.removeItem('oai_cover_exit_hard_on_next_back');
-    sessionStorage.removeItem('oai_cover_exit_hard_after_first_toast');
-    sessionStorage.removeItem('oai_cover_exit_long_window_once');
-    var url = new URL('index.html', location.href);
-    url.searchParams.set('oai_cover_return', reason);
-    url.searchParams.set('v', 'V8-1-14-1-BACK-SYSTEM-CLEANUP-BASE18');
-    location.replace(url.href);
-    return;
-  }catch(e){
-    location.replace('index.html?oai_cover_return=privacy-return-cover&v=V8-1-14-1-BACK-SYSTEM-CLEANUP-BASE18');
-  }
+    if(window.history && window.history.length > 1){
+      window.history.back();
+      return;
+    }
+  }catch(e){}
+  window.location.href = 'index.html';
 }
 (function(){
   var closeTargets = document.querySelectorAll('[data-privacy-close], .privacy-close, #privacy-close-btn');

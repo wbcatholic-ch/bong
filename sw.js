@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-14-1-BACK-SYSTEM-CLEANUP-BASE18';
-const ASSET_VERSION = 'V8-1-14-1-BACK-SYSTEM-CLEANUP-BASE18';
+const CACHE_VERSION = 'catholic-way-V8-1-14-2-STRUCTURE-ALIGN-BASE18';
+const ASSET_VERSION = 'V8-1-14-2-STRUCTURE-ALIGN-BASE18';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }
