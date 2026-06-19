@@ -168,6 +168,11 @@
       }
       if(typeof window.resetGuideManualScroll === 'function') window.resetGuideManualScroll();
       if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
+      if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
+      if(typeof window._clearHardCoverExitFlags === 'function') window._clearHardCoverExitFlags('guide-modal-close');
+      if(typeof window._forceNextCoverBackToast === 'function') window._forceNextCoverBackToast('guide-modal-close');
+      if(typeof window._resetCoverBackTrap === 'function') window._resetCoverBackTrap('guide-modal-close');
+      else armCoverBackTrap('guide-modal-close', {force:true});
     }catch(e){ console.warn('[가톨릭길동무]', e); }
   }
 

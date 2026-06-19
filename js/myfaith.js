@@ -402,13 +402,18 @@
     }
     function stabilizeCoverAfterMyFaithExternal(reason){
       if(!hasRecentMyFaithExternalLink()) return;
-      reason = reason || 'my-faith-external-return';
+      reason = reason || 'my-faith-external-return-cover';
       clearHardCoverExitFlagsForMyFaith(reason);
       try{
-        if(modal && modal.classList && !modal.classList.contains('show')){
-          openModal({keepContent:false, fromExternal:true});
+        if(modal && modal.classList){
+          modal.classList.remove('show','keyboard-open','return-settling');
+          modal.setAttribute('aria-hidden','true');
         }
-        resetCoverBackAfterMyFaith(reason);
+        try{ document.body.classList.remove('modal-open'); }catch(_e){}
+        try{ modal.style.removeProperty('--my-faith-vh'); modal.style.removeProperty('--my-faith-visible-vh'); }catch(_e){}
+        myFaithStableHeight = 0;
+        if(goFreshCoverAfterMyFaith(reason)) return;
+        primeMyFaithCoverExitToast(reason);
       }catch(e){
         console.warn('[가톨릭길동무]', e);
         primeMyFaithCoverExitToast(reason);
