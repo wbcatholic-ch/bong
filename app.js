@@ -2018,22 +2018,41 @@ function _isAppScreenActive(){
   try{ return document.documentElement.classList.contains('app-active'); }catch(e){ return false; }
 }
 function _ensureCoverBackTrap(reason){
-  return;
+  try{
+    if(window._oaiArmCoverBackTrap){
+      window._oaiArmCoverBackTrap(reason || 'cover-ensure', {force:false});
+      return true;
+    }
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+  return false;
 }
 function _resetCoverBackTrap(reason){
-  return;
+  try{
+    if(window._oaiArmCoverBackTrap){
+      window._oaiArmCoverBackTrap(reason || 'cover-reset', {force:true});
+      return true;
+    }
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+  return false;
 }
 function _ensureAppBackTrap(reason){
-  return;
+  return false;
 }
 function _resetAppBackTrap(reason){
-  return;
+  return false;
 }
 function _pushCoverOverlayBackTrap(kind, reason){
-  return;
+  try{
+    if(window._oaiArmCoverBackTrap){
+      window._oaiArmCoverBackTrap(reason || kind || 'cover-overlay', {force:true});
+      return true;
+    }
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+  return false;
 }
 function _armMassQuickHistoryTrap(opts){
-  return;
+  try{ return _pushCoverOverlayBackTrap('mass-quick', 'mass-quick-open'); }catch(e){ console.warn('[가톨릭길동무]', e); }
+  return false;
 }
 function _hideMassQuickMenuOnly(afterHidden, opts){
   const modal=document.getElementById('mass-quick-modal');
@@ -2830,7 +2849,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V8-1-13-18-FAITH-BOTTOM-BANNER-COLORS';
+    frame.src='diocese.html?v=V8-1-13-19-MENU-MYFAITH-COVER-EXIT-FIX';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -3400,7 +3419,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V8-1-13-18-FAITH-BOTTOM-BANNER-COLORS';
+const _PRAYER_ASSET_VERSION='V8-1-13-19-MENU-MYFAITH-COVER-EXIT-FIX';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
