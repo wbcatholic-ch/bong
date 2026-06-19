@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  var VERSION = 'V8-1-14-11-MYFAITH-BACKCTRL-SPLIT';
+  var VERSION = 'V8-1-14-12-MYFAITH-INTERNAL-MODULE';
   var KEY = 'oai_back_diag_logs_v1';
   var MAX = 120;
   var panel = null;
