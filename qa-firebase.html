@@ -934,6 +934,12 @@ function oaiPrepareNoReturnEffectToApp(){
   }catch(e){}
 }
 function oaiReturnToAppCover(reason){
+  try{
+    if(window.parent && window.parent !== window && typeof window.parent.closeQnaFrameToCover === 'function'){
+      window.parent.closeQnaFrameToCover(reason || 'qna-embedded-close');
+      return;
+    }
+  }catch(_e){}
   try{ oaiPrepareNoReturnEffectToApp(); }catch(e){}
   try{
     sessionStorage.setItem('oai_cover_toast_on_return', reason || 'qna-return-cover');
@@ -942,11 +948,11 @@ function oaiReturnToAppCover(reason){
   try{
     var url = new URL('index.html', location.href);
     url.searchParams.set('oai_cover_return', reason || 'qna-return-cover');
-    url.searchParams.set('v', 'V8-1-13-18-FAITH-BOTTOM-BANNER-COLORS');
+    url.searchParams.set('v', 'V8-1-14-5-MYFAITH-CLEAN-GUIDE-MODAL');
     location.replace(url.href);
     return;
   }catch(e){
-    location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason || 'qna-return-cover') + '&v=V8-1-13-18-FAITH-BOTTOM-BANNER-COLORS');
+    location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason || 'qna-return-cover') + '&v=V8-1-14-5-MYFAITH-CLEAN-GUIDE-MODAL');
   }
 }
 function handleQaBack(){
@@ -994,7 +1000,7 @@ if (QA_PRIVATE_MODE) {
 <script id="oai-cache-lifecycle-V6-146">
 (function(){
   'use strict';
-  var APP_VERSION = 'V8-1-13-18-FAITH-BOTTOM-BANNER-COLORS';
+  var APP_VERSION = 'V8-1-14-5-MYFAITH-CLEAN-GUIDE-MODAL';
   if('serviceWorker' in navigator){
     try{ navigator.serviceWorker.register('./sw.js?v=' + encodeURIComponent(APP_VERSION)).then(function(reg){try{reg.update();}catch(e){}}).catch(function(){}); }catch(e){}
   }

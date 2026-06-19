@@ -1,0 +1,14 @@
+V8-1-14-5 수정
+
+기준: 실제 배포용 V8-1-14-2 zip.
+
+검증 기준:
+- index.html에 cover-menu-privacy-btn 존재
+- index.html에 qna-frame 존재
+- cover-menu-privacy-link 없음
+- 문의·건의 1-14-2 구조 유지
+
+수정:
+1. myfaith.js에서 goFreshCoverAfterMyFaith/primeMyFaithCoverExitToast 계열을 제거하고 closeModal을 guide-modal 방식으로 단순화.
+2. 나의 신앙생활 닫기/외부링크 이동 시 cover 표시 + cover trap + 종료문구 준비만 수행.
+3. location.replace/reload 미사용.

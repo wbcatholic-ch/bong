@@ -1,0 +1,25 @@
+V8-1-13-17-MYFAITH-MENU-COVER-RETURN
+
+기준 파일: V8-1-13-17-MYFAITH-MENU-COVER-RETURN
+
+수정 목적:
+- 커버 카테고리 박스 상단 라인 색을 연한 계열로 변경
+
+수정 파일:
+- style.css
+- index.html / sw.js / sw-update.js 등 버전 문자열 갱신
+
+수정 내용:
+- .cover-card::before 상단 라인 높이 3px → 4px
+- opacity .34 → .82로 조정하여 연한 색이 보이도록 강화
+- #cc-1 ~ #cc-7 색상 변경
+  1) 연분홍
+  2) 연파랑
+  3) 옅은 하늘색
+  4) 연초록
+  5) 연보라
+  6) 연회색
+  7) 연살구
+
+주의:
+- JS / 뒤로가기 / 외부복귀 / 기능 동작은 수정하지 않음

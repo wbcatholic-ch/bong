@@ -1,0 +1,27 @@
+V8-1-13-17-MYFAITH-MENU-COVER-RETURN
+기준 파일: V8-1-13-3_prayer_fav_diocese_check_full
+
+작업 방향
+- 13-4~13-7에서 추가했던 성지 순례현황/스탬프북 back stack, boundary guard, return-state 복원 코드를 폐기했습니다.
+- 이번 버전은 순례현황을 수정 대상에서 제외하고, 성지 기본 카테고리의 원래 back 흐름 복구만 목표로 합니다.
+- 패치식 덧붙임 없이 13-3의 공용 지도/탭/길찾기 뒤로가기 구조로 되돌렸습니다.
+
+복구 대상
+1. 성지 내주변 목록
+2. 성지 찾기 목록
+3. 성지 지역검색
+4. 성지 길찾기
+
+피정의집과 비교한 기준
+- 성지/피정의집은 같은 공용 지도, sheet, route, closeLayer, closeTab 흐름을 사용해야 합니다.
+- 내주변/목록/지역검색/길찾기는 순례현황 stack에 가로막히면 안 됩니다.
+- 이번 버전에는 _oaiHandleShrineReturnBack, _oaiHandleShrineBoundaryBack, 성지 return stack 코드를 넣지 않았습니다.
+
+수정/정리 내용
+- app.js: 13-3 기준으로 복원, 13-4~13-7 성지 back 관련 추가 코드 제거 상태
+- js/back-controller.js: 13-3 기준의 공용 closeLayer 흐름 유지
+- index.html / sw.js / sw-update.js / asset query string: V8-1-13-17-MYFAITH-MENU-COVER-RETURN로 갱신
+
+검증
+- 전체 JS node --check 통과
+- 실제 Android/PWA 기기 동작은 사용자 기기에서 확인 필요
