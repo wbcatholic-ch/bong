@@ -219,7 +219,7 @@
       }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
 
-    /* V8-1-14-9-HYMN-EXTERNAL-BROWSER: 나의 신앙생활 닫기 후 커버 첫 Back이 WebView 밖으로 바로 빠지는 경우를 막는 전용 1회 가드 */
+    /* V8-1-14-10-QNA-NOTICE-IN-TEXTAREA: 나의 신앙생활 닫기 후 커버 첫 Back이 WebView 밖으로 바로 빠지는 경우를 막는 전용 1회 가드 */
     var MYFAITH_COVER_GUARD_MS = 30000;
     function myFaithNow(){ try{ return Date.now ? Date.now() : new Date().getTime(); }catch(_e){ return new Date().getTime(); } }
     function isMyFaithCoverOnly(){
