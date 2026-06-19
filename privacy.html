@@ -330,11 +330,11 @@ function privacyCloseToApp(){
     sessionStorage.removeItem('oai_cover_exit_long_window_once');
     var url = new URL('index.html', location.href);
     url.searchParams.set('oai_cover_return', reason);
-    url.searchParams.set('v', 'V8-1-13-24-COVER-RETURN-CLEAN-REBUILD');
+    url.searchParams.set('v', 'V8-1-13-25-FROM-18-LOGIC-UNIFIED');
     location.replace(url.href);
     return;
   }catch(e){
-    location.replace('index.html?oai_cover_return=privacy-return-cover&v=V8-1-13-24-COVER-RETURN-CLEAN-REBUILD');
+    location.replace('index.html?oai_cover_return=privacy-return-cover&v=V8-1-13-25-FROM-18-LOGIC-UNIFIED');
   }
 }
 (function(){

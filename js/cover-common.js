@@ -3,7 +3,7 @@
 (function(){
   if(window.__APP_FONT_SCALE_GUARD__) return;
   window.__APP_FONT_SCALE_GUARD__=true;
-  var QA_URL="qa-firebase.html?v=V8-1-13-23-MENU-PRIVACY-QNA-EXIT";
+  var QA_URL="qa-firebase.html?v=V8-1-13-25-FROM-18-LOGIC-UNIFIED";
   var FONT_KEY='prayer_font_size';
   var BASE=16;
   var FONT_SIZES=[13,14,15,16,17,18,19,20,21,22,24,26,28,30];
@@ -44,7 +44,6 @@
       if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
       if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
       if(typeof window._clearHardCoverExitFlags === 'function') window._clearHardCoverExitFlags(reason || 'cover-return');
-      if(typeof window._forceNextCoverBackToast === 'function') window._forceNextCoverBackToast(reason || 'cover-return');
       if(typeof window._resetCoverBackTrap === 'function') window._resetCoverBackTrap(reason || 'cover-return');
       else if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap(reason || 'cover-return', {force:true});
       return true;
@@ -153,7 +152,6 @@
       if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
       if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
       if(typeof window._clearHardCoverExitFlags === 'function') window._clearHardCoverExitFlags('qna-open');
-      if(typeof window._forceNextCoverBackToast === 'function') window._forceNextCoverBackToast('qna-open');
       if(typeof window.oaiHoldStabilityVeil === 'function') window.oaiHoldStabilityVeil('qna-open', 220);
     }catch(e){ console.warn('[가톨릭길동무]', e); }
     setTimeout(function(){ location.href=QA_URL; }, 10);

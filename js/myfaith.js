@@ -219,17 +219,11 @@
       }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
     function resetCoverBackAfterMyFaith(reason){
-      reason = reason || 'my-faith-close';
-      try{
-        if(typeof window.oaiPrimeCoverExitPrompt === 'function' && window.oaiPrimeCoverExitPrompt(reason)) return;
-      }catch(e){ console.warn('[가톨릭길동무]', e); }
       try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }
       try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(e){ console.warn('[가톨릭길동무]', e); }
-      try{ if(typeof window._clearHardCoverExitFlags === 'function') window._clearHardCoverExitFlags(reason); }catch(e){ console.warn('[가톨릭길동무]', e); }
-      try{ if(typeof window._forceNextCoverBackToast === 'function') window._forceNextCoverBackToast(reason); }catch(e){ console.warn('[가톨릭길동무]', e); }
       try{
         if(typeof window._oaiArmCoverBackTrap === 'function'){
-          window._oaiArmCoverBackTrap(reason, {force:true});
+          window._oaiArmCoverBackTrap(reason || 'my-faith-close', {force:true});
         }
       }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
@@ -320,7 +314,7 @@
        * 나의 신앙생활은 커버 위 팝업 상태에서 외부 사이트/설정/뒤로가기 흐름이 섞이면
        * 기존 history state가 root로 남아 첫 뒤로가기가 앱 밖으로 빠지는 경우가 있었다.
        * 매일미사/성가/성경 흐름은 건드리지 않고, 나의 신앙생활을 닫는 순간만
-       * 현재 문서 안에서 커버를 보이고 커버 전용 trap만 다시 세운다.
+       * 가톨릭 웹사이트 외부링크 복귀처럼 현재 문서 안에서 커버 trap만 다시 세운다.
        */
       if(goFreshCoverAfterMyFaith(reason)) return;
       primeMyFaithCoverExitToast(reason);
@@ -368,7 +362,6 @@
       try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(_e){}
       try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(_e){}
       try{ if(typeof window._clearHardCoverExitFlags === 'function') window._clearHardCoverExitFlags('my-faith-external-link'); }catch(_e){}
-      try{ if(typeof window._forceNextCoverBackToast === 'function') window._forceNextCoverBackToast('my-faith-external-link'); }catch(_e){}
       try{
         if(modal && modal.classList.contains('show') && typeof window._pushCoverOverlayBackTrap === 'function'){
           window._pushCoverOverlayBackTrap('my-faith-external', 'my-faith-external-link');
