@@ -4,7 +4,7 @@
   if(window.__APP_CACHE_LIFECYCLE_GUARD__) return;
   window.__APP_CACHE_LIFECYCLE_GUARD__ = true;
   var APP_VERSION = 'V2';
-  var SW_BUILD_VERSION = 'V8-1-13-9-STAMPBOOK-EXTERNAL-RETURN-CHECK';
+  var SW_BUILD_VERSION = 'V8-1-13-9B-REPACK-STAMPBOOK-EXTERNAL-CHECK';
   window.APP_VERSION = APP_VERSION;
 
   function now(){ return Date.now ? Date.now() : new Date().getTime(); }
