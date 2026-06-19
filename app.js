@@ -1210,7 +1210,11 @@ function _isShrineVisitCardsModalOpen(){
   return !!(modal&&modal.classList.contains('show'));
 }
 function _pushShrineVisitCardsHistory(){
-  return;
+  try{
+    if(window.__OAI_SHRINE_VISIT_CARDS_HISTORY__) return;
+    history.pushState({_p:1,oai_shrine_visit_layer:'cards'},'',location.href);
+    window.__OAI_SHRINE_VISIT_CARDS_HISTORY__=true;
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
 function _rememberShrineVisitCardsReturnState(reason){
   try{
@@ -1348,7 +1352,11 @@ function _isShrineVisitDetailOpen(){
   return !!(view&&view.classList.contains('show'));
 }
 function _pushShrineVisitDetailHistory(){
-  return;
+  try{
+    if(window.__OAI_SHRINE_VISIT_DETAIL_HISTORY__) return;
+    history.pushState({_p:1,oai_shrine_visit_layer:'detail'},'',location.href);
+    window.__OAI_SHRINE_VISIT_DETAIL_HISTORY__=true;
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
 function _renderShrineVisitDetail(idx){
   const body=document.getElementById('shrine-visit-detail-body');
@@ -1915,7 +1923,11 @@ function _isShrineVisitModalOpen(){
   return !!(modal && modal.classList.contains('show'));
 }
 function _pushShrineVisitModalHistory(){
-  return;
+  try{
+    if(window.__OAI_SHRINE_VISIT_MODAL_HISTORY__) return;
+    history.pushState({_p:1,oai_shrine_visit_layer:'register'},'',location.href);
+    window.__OAI_SHRINE_VISIT_MODAL_HISTORY__=true;
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
 function _openShrineVisitModal(item){
   if(_mode!=='shrine'||!item) return;
@@ -2982,7 +2994,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V8-1-13-10-STAMPBOOK-BACK-REARM-CHECK';
+    frame.src='diocese.html?v=V8-1-13-11-STAMPBOOK-PUSHSTATE-CHECK';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -3522,7 +3534,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V8-1-13-10-STAMPBOOK-BACK-REARM-CHECK';
+const _PRAYER_ASSET_VERSION='V8-1-13-11-STAMPBOOK-PUSHSTATE-CHECK';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
