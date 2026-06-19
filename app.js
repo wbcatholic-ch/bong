@@ -2821,7 +2821,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V8-1-13-6-DIOCESE-HASH-REARM-CHECK';
+    frame.src='diocese.html?v=V8-1-13-7-DIOCESE-PRETRAP-CHECK';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -2849,9 +2849,6 @@ function closeDioceseView(){
   try{
     sessionStorage.removeItem(DIOCESE_RETURN_KEY);
     localStorage.removeItem(DIOCESE_RETURN_KEY);
-    sessionStorage.removeItem(DIOCESE_BACK_REARM_KEY);
-    localStorage.removeItem(DIOCESE_BACK_REARM_KEY);
-    window.__OAI_DIOCESE_RETURN_HASH_ARMED__ = false;
     window.__OAI_DIOCESE_EXTERNAL_LEAVING__ = false;
     window.__OAI_DIOCESE_RESTORING__ = false;
   }catch(e){ console.warn('[가톨릭길동무]', e); }
@@ -2985,7 +2982,16 @@ function openCoreExternalUrl(url, extra){
 }
 
 const DIOCESE_RETURN_KEY='catholic_diocese_external_return_v1';
-const DIOCESE_BACK_REARM_KEY='oai_diocese_external_back_rearm_needed_v1';
+function prepareDioceseExternalBackTrap(reason){
+  try{
+    var view=document.getElementById('diocese-view');
+    if(!(view && view.classList && view.classList.contains('open'))) return;
+    var href=location.href.split('#')[0];
+    history.replaceState({_p:0, oai_diocese_root: reason || 'diocese-external-root'}, '', href);
+    history.pushState({_p:1, oai_diocese_trap: reason || 'diocese-external-trap'}, '', href);
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+}
+try{ window.prepareDioceseExternalBackTrap = prepareDioceseExternalBackTrap; }catch(_e){}
 function openDioceseExternal(url, state){
   url = prepareExternalUrl(url);
   if(!url) return false;
@@ -2993,14 +2999,13 @@ function openDioceseExternal(url, state){
     var payload=JSON.stringify(state || {});
     sessionStorage.setItem(DIOCESE_RETURN_KEY, payload);
     localStorage.setItem(DIOCESE_RETURN_KEY, payload);
-    sessionStorage.setItem(DIOCESE_BACK_REARM_KEY, '1');
-    localStorage.setItem(DIOCESE_BACK_REARM_KEY, '1');
     window.__OAI_DIOCESE_EXTERNAL_LEAVING__ = true;
     var frame=document.getElementById('diocese-frame');
     if(frame && frame.contentWindow){
       try{ frame.contentWindow.__OAI_DIO_EXTERNAL_LEAVING__ = true; frame.contentWindow.__OAI_DIO_EXTERNAL_LEAVING_TS__ = Date.now ? Date.now() : new Date().getTime(); }catch(_e){}
     }
   }catch(e){ console.warn('[가톨릭길동무]', e); }
+  try{ prepareDioceseExternalBackTrap('diocese-external-parent'); }catch(_e){}
   if(typeof oaiOpenExternalSite === 'function'){
     return oaiOpenExternalSite(url, {kind:'diocese-external'});
   }
@@ -3013,43 +3018,7 @@ function openDioceseExternal(url, state){
 }
 window.openDioceseExternal = openDioceseExternal;
 
-function _primeDioceseBackAfterExternalReturn(reason){
-  try{
-    var view=document.getElementById('diocese-view');
-    if(!(view && view.classList && view.classList.contains('open'))) return;
-    var root=document.documentElement;
-    root.classList.add('app-active');
-    root.classList.remove('oai-diocese-returning');
-    var cover=document.getElementById('cover');
-    if(cover){ cover.style.display='none'; cover.style.opacity='0'; cover.style.pointerEvents='none'; }
-    if(typeof oaiSetMainMapLayerHidden==='function') oaiSetMainMapLayerHidden(true);
-    if(typeof _resetCoverExitReady==='function') _resetCoverExitReady();
-    if(typeof _clearCoverExitArmed==='function') _clearCoverExitArmed();
-    function hasExternalBackRearmNeed(){
-      try{ if(sessionStorage.getItem(DIOCESE_BACK_REARM_KEY)==='1') return true; }catch(_e){}
-      try{ if(localStorage.getItem(DIOCESE_BACK_REARM_KEY)==='1') return true; }catch(_e){}
-      try{ if(window.__OAI_DIOCESE_EXTERNAL_LEAVING__ || window.__OAI_DIOCESE_RESTORING__) return true; }catch(_e){}
-      return false;
-    }
-    function arm(){
-      try{
-        if(hasExternalBackRearmNeed()){
-          var base=location.href.split('#')[0];
-          if(location.hash !== '#oai-diocese-return'){
-            history.pushState({oai_diocese_return_trap:true, reason:reason || 'diocese-external-return'}, '', base + '#oai-diocese-return');
-          }
-          window.__OAI_DIOCESE_RETURN_HASH_ARMED__ = true;
-        }else if(typeof window._oaiArmCoverBackTrap === 'function'){
-          window._oaiArmCoverBackTrap(reason || 'diocese-external-return');
-        }
-      }catch(e){ console.warn('[가톨릭길동무]', e); }
-    }
-    arm();
-    setTimeout(arm, 80);
-    setTimeout(arm, 240);
-  }catch(e){ console.warn('[가톨릭길동무]', e); }
-}
-/* V8-1-13-3: 관구교구 외부페이지 복귀 후 카테고리 뒤로가기 재무장 */
+
 function _finishDioceseExternalReturn(frame){
   try{
     var w = frame && frame.contentWindow;
@@ -3062,7 +3031,6 @@ function _finishDioceseExternalReturn(frame){
   try{ sessionStorage.removeItem(DIOCESE_RETURN_KEY); localStorage.removeItem(DIOCESE_RETURN_KEY); }catch(_e){}
   window.__OAI_DIOCESE_EXTERNAL_LEAVING__ = false;
   window.__OAI_DIOCESE_RESTORING__ = false;
-  try{ _primeDioceseBackAfterExternalReturn('diocese-external-finish'); }catch(_e){}
 }
 function restoreDioceseExternalState(opts){
   opts = opts || {};
@@ -3098,7 +3066,6 @@ function restoreDioceseExternalState(opts){
 
     function finish(){
       try{ root.classList.remove('oai-diocese-returning'); }catch(_e){}
-      try{ _primeDioceseBackAfterExternalReturn('diocese-external-finish-restore'); }catch(_e){}
       window.__OAI_DIOCESE_RESTORING__ = false;
     }
     function restoreInFrame(){
@@ -3111,8 +3078,7 @@ function restoreDioceseExternalState(opts){
         }
         if(w && typeof w.restoreDioceseReturnState === 'function'){
           w.restoreDioceseReturnState(state || {});
-          try{ _primeDioceseBackAfterExternalReturn('diocese-external-restore'); }catch(_e){}
-          setTimeout(function(){ try{ _primeDioceseBackAfterExternalReturn('diocese-external-restore-late'); }catch(_e){} finish(); }, 120);
+          setTimeout(finish, 120);
           return true;
         }
       }catch(e){ console.warn('[가톨릭길동무]', e); }
@@ -3121,8 +3087,6 @@ function restoreDioceseExternalState(opts){
 
     if(!alreadyOpen && typeof openDioceseView === 'function') openDioceseView({restore:true});
     if(!alreadyOpen && typeof oaiSetMainMapLayerHidden === 'function') oaiSetMainMapLayerHidden(true);
-    try{ _primeDioceseBackAfterExternalReturn('diocese-external-restore-start'); }catch(_e){}
-    setTimeout(function(){ try{ _primeDioceseBackAfterExternalReturn('diocese-external-restore-start-late'); }catch(_e){} }, 360);
     var tries=0;
     var timer=setInterval(function(){
       tries++;
@@ -3391,7 +3355,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V8-1-13-6-DIOCESE-HASH-REARM-CHECK';
+const _PRAYER_ASSET_VERSION='V8-1-13-7-DIOCESE-PRETRAP-CHECK';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -8417,64 +8381,3 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
 
 
 
-
-
-/* V8-1-13-4: 관구교구 외부페이지 복귀를 pageshow/focus에서도 재무장
- * DIOCESE_RETURN_KEY가 소비되지 못하는 복귀 경로에서도,
- * 관구·교구 화면이 열려 있으면 뒤로가기 1회가 앱 종료가 아니라 관구·교구 닫기로 잡히게 한다.
- * 기존 back-controller 구조는 건드리지 않는다.
- */
-(function(){
-  'use strict';
-  if(window.__OAI_DIOCESE_PAGESHOW_REARM_V8134__) return;
-  window.__OAI_DIOCESE_PAGESHOW_REARM_V8134__ = true;
-
-  function isDioceseOpen(){
-    var view=document.getElementById('diocese-view');
-    return !!(view && view.classList && view.classList.contains('open'));
-  }
-  function rearmDioceseBack(reason){
-    try{
-      if(!isDioceseOpen()) return;
-      var root=document.documentElement;
-      root.classList.add('app-active');
-      root.classList.remove('oai-diocese-returning');
-      var cover=document.getElementById('cover');
-      if(cover){
-        cover.style.display='none';
-        cover.style.opacity='0';
-        cover.style.pointerEvents='none';
-      }
-      if(typeof oaiSetMainMapLayerHidden==='function') oaiSetMainMapLayerHidden(true);
-      if(typeof _resetCoverExitReady==='function') _resetCoverExitReady();
-      if(typeof _clearCoverExitArmed==='function') _clearCoverExitArmed();
-      if(typeof window._oaiArmCoverBackTrap === 'function'){
-        // force를 쓰지 않아 이미 trap이 있으면 중복 history를 만들지 않는다.
-        window._oaiArmCoverBackTrap(reason || 'diocese-return-rearm');
-      }
-    }catch(e){ console.warn('[가톨릭길동무]', e); }
-  }
-  function schedule(reason){
-    setTimeout(function(){ rearmDioceseBack(reason + '-80'); }, 80);
-    setTimeout(function(){ rearmDioceseBack(reason + '-320'); }, 320);
-    setTimeout(function(){ rearmDioceseBack(reason + '-900'); }, 900);
-    setTimeout(function(){ rearmDioceseBack(reason + '-1600'); }, 1600);
-  }
-  window.addEventListener('pageshow', function(){ schedule('diocese-pageshow'); }, true);
-  window.addEventListener('focus', function(){ schedule('diocese-focus'); }, true);
-  document.addEventListener('visibilitychange', function(){
-    if(document.visibilityState === 'visible') schedule('diocese-visible');
-  }, true);
-  window.addEventListener('hashchange', function(){
-    try{
-      if(!window.__OAI_DIOCESE_RETURN_HASH_ARMED__) return;
-      if(location.hash === '#oai-diocese-return') return;
-      if(!isDioceseOpen()) return;
-      window.__OAI_DIOCESE_RETURN_HASH_ARMED__ = false;
-      if(typeof window.closeDioceseView === 'function') window.closeDioceseView();
-      try{ if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap('diocese-hash-close-cover', {force:true}); }catch(_e){}
-    }catch(e){ console.warn('[가톨릭길동무]', e); }
-  }, true);
-  // V8-1-13-6: bfcache 복귀에서는 pageshow가 이 스크립트 등록 전에 지나갈 수 있어 즉시 한 번도 예약한다.
-  schedule('diocese-boot');
-})();
