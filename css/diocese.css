@@ -295,7 +295,7 @@ html.ios-device .cb{width:34px!important;height:34px!important;border-radius:10p
 .hd-icon::before{top:50%;width:3px;height:24px;transform:translate(-50%,-50%);}
 .hd-icon::after{top:42%;width:14px;height:3px;transform:translate(-50%,-50%);}
 
-/* V8-1-14-16-MYFAITH-BACK-RESET-GAP-TUNE: 관구·교구 지역검색 결과 카드 상단 테두리/여백 잘림 보정 */
+/* V8-1-14-17-MYFAITH-HARDWARE-BACK-FIRST: 관구·교구 지역검색 결과 카드 상단 테두리/여백 잘림 보정 */
 #search-view #sres{
   margin-top:16px !important;
   padding-top:10px !important;
@@ -317,7 +317,7 @@ html.ios-device .cb{width:34px!important;height:34px!important;border-radius:10p
   #search-view #sres{ margin-top:16px !important; padding-top:10px !important; }
 }
 
-/* V8-1-14-16-MYFAITH-BACK-RESET-GAP-TUNE: 관구·교구 지역검색 sticky 검색영역이 결과 카드 상단을 덮는 문제 보정 */
+/* V8-1-14-17-MYFAITH-HARDWARE-BACK-FIRST: 관구·교구 지역검색 sticky 검색영역이 결과 카드 상단을 덮는 문제 보정 */
 #search-view .ss{
   position:relative !important;
   top:auto !important;
@@ -351,7 +351,7 @@ html.ios-device #search-view #sres{
   padding-top:14px !important;
 }
 
-/* V8-1-14-16-MYFAITH-BACK-RESET-GAP-TUNE: 검색창은 움직이지 않고 결과 박스만 검색창 아래로 분리 */
+/* V8-1-14-17-MYFAITH-HARDWARE-BACK-FIRST: 검색창은 움직이지 않고 결과 박스만 검색창 아래로 분리 */
 #search-view .ss{
   position:relative !important;
   top:auto !important;
@@ -387,7 +387,7 @@ html.ios-device #search-view #sres{
   padding-top:30px !important;
 }
 
-/* V8-1-14-16-MYFAITH-BACK-RESET-GAP-TUNE: 검색 결과가 너무 아래로 내려간 문제 보정 */
+/* V8-1-14-17-MYFAITH-HARDWARE-BACK-FIRST: 검색 결과가 너무 아래로 내려간 문제 보정 */
 #search-view #sres{
   margin-top:0 !important;
   padding-top:12px !important;
