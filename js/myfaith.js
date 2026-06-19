@@ -219,7 +219,7 @@
       }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
 
-    /* V8-1-14-16-MYFAITH-BACK-RESET-GAP-TUNE: 나의 신앙생활 닫기 후 커버 첫 Back이 WebView 밖으로 바로 빠지는 경우를 막는 전용 1회 가드 */
+    /* V8-1-14-17-MYFAITH-HARDWARE-BACK-FIRST: 나의 신앙생활 닫기 후 커버 첫 Back이 WebView 밖으로 바로 빠지는 경우를 막는 전용 1회 가드 */
     var MYFAITH_COVER_GUARD_MS = 30000;
     function myFaithNow(){ try{ return Date.now ? Date.now() : new Date().getTime(); }catch(_e){ return new Date().getTime(); } }
     function isMyFaithCoverOnly(){
@@ -299,7 +299,7 @@
     window.addEventListener('hashchange', function(e){ handleMyFaithCoverBack(e, 'hashchange'); }, true);
 
 
-    /* V8-1-14-16-MYFAITH-BACK-RESET-GAP-TUNE: 1-14-14의 doExit 차단 게이트는 잘못된 방향이라 비활성화 */
+    /* V8-1-14-17-MYFAITH-HARDWARE-BACK-FIRST: 1-14-14의 doExit 차단 게이트는 잘못된 방향이라 비활성화 */
     function installMyFaithExitGate(){ return false; }
     function armMyFaithExitGate(reason){ return false; }
 

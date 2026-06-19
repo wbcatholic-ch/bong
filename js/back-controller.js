@@ -495,6 +495,11 @@
   document.addEventListener('backbutton', function(){
     if(typeof window._oaiPrayerBackHandle === 'function' && window._oaiPrayerBackHandle('prayer-hardware-back')) return;
     if(closeRefreshDialog()){ try{ armCoverBackTrap('refresh-dialog-hardware', {force:true}); }catch(e){} return; }
+    /* V8-1-14-17: 안드로이드/기기 Back에서는 나의신앙생활을 커버 Back보다 먼저 닫는다. */
+    if(isMyFaithModalOpen()){
+      closeMyFaithModalFromBack('my-faith-hardware-first');
+      return;
+    }
     if(isGuideModalOpen()){
       closeGuideModals();
       try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(e){}

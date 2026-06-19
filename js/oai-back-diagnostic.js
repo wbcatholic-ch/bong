@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  var VERSION = 'V8-1-14-16-MYFAITH-BACK-RESET-GAP-TUNE';
+  var VERSION = 'V8-1-14-17-MYFAITH-HARDWARE-BACK-FIRST';
   var KEY = 'oai_back_diag_logs_v1';
   var MAX = 120;
   var panel = null;
