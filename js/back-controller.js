@@ -72,6 +72,36 @@
     return false;
   }
 
+  function hasVisibleAppLayer(){
+    try{
+      var ids = ['diocese-view','missa-view','prayer-view','qna-view'];
+      for(var i=0;i<ids.length;i++){
+        var el = $b(ids[i]);
+        if(el && el.classList && el.classList.contains('open')) return true;
+      }
+      if(document.querySelector('.module-view.open')) return true;
+      if(document.querySelector('#info-card.open,#sheet-route.open,#route-choice-modal.open,#srch-modal.open,.sheet.open,.trail-sheet.open,#shrine-visit-modal.show,#shrine-auto-visit-modal.show,#shrine-visit-detail-view.show,#shrine-visit-cards-modal.show')) return true;
+      if(isGuideModalOpen()) return true;
+    }catch(e){ console.warn('[가톨릭길동무]', e); }
+    return false;
+  }
+
+  function isCoverOnlyVisible(){
+    try{ return coverVisible() && !hasVisibleAppLayer(); }catch(e){ return false; }
+  }
+
+  function stabilizeCoverFirstBack(reason){
+    try{
+      if(!isCoverOnlyVisible()) return false;
+      if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
+      if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
+      if(typeof window._clearHardCoverExitFlags === 'function') window._clearHardCoverExitFlags(reason || 'cover-return-stabilize');
+      if(typeof window._forceNextCoverBackToast === 'function') window._forceNextCoverBackToast(reason || 'cover-return-stabilize');
+      armCoverBackTrap(reason || 'cover-return-stabilize', {force:true});
+      return true;
+    }catch(e){ console.warn('[가톨릭길동무]', e); return false; }
+  }
+
   function appActive(){
     try{ if(hasOpenAppSurface()) return true; }catch(e){}
     try{ if(typeof window._isAppScreenActive === 'function') return window._isAppScreenActive(); }catch(e){}
@@ -428,11 +458,22 @@
 
   window.addEventListener('pageshow', function(){
     try{
+      if(stabilizeCoverFirstBack('pageshow-cover-return')) return;
       var st = history.state;
       if(st && st._p === 1) return;  // 트랩 유지 중이면 스킵
       if(!appActive()) armCoverBackTrap('pageshow-cover');
       else { history.replaceState({_p:0}, '', _href); history.pushState({_p:1}, '', _href); }
     }catch(e){ console.warn("[가톨릭길동무]", e); }
+  }, true);
+
+  window.addEventListener('focus', function(){
+    try{ setTimeout(function(){ stabilizeCoverFirstBack('focus-cover-return'); }, 40); }catch(e){ console.warn('[가톨릭길동무]', e); }
+  }, true);
+
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'visible'){
+      try{ setTimeout(function(){ stabilizeCoverFirstBack('visible-cover-return'); }, 60); }catch(e){ console.warn('[가톨릭길동무]', e); }
+    }
   }, true);
 
 })();
