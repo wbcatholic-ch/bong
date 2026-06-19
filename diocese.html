@@ -1986,6 +1986,8 @@ window.addEventListener('pageshow',function(){
         var payload = JSON.stringify(state || {});
         window.parent.sessionStorage.setItem('catholic_diocese_external_return_v1', payload);
         window.parent.localStorage.setItem('catholic_diocese_external_return_v1', payload);
+        window.parent.sessionStorage.setItem('oai_diocese_external_back_rearm_needed_v1', '1');
+        window.parent.localStorage.setItem('oai_diocese_external_back_rearm_needed_v1', '1');
         window.parent.__OAI_DIOCESE_EXTERNAL_LEAVING__ = true;
       }catch(e){}
       // V6-112: 관구·교구 외부 홈페이지도 부모 앱의 공통 외부사이트 이동 함수만 사용한다.

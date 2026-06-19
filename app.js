@@ -2821,7 +2821,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V8-1-13-5-DIOCESE-BOOT-REARM-CHECK';
+    frame.src='diocese.html?v=V8-1-13-6-DIOCESE-HASH-REARM-CHECK';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -2849,6 +2849,9 @@ function closeDioceseView(){
   try{
     sessionStorage.removeItem(DIOCESE_RETURN_KEY);
     localStorage.removeItem(DIOCESE_RETURN_KEY);
+    sessionStorage.removeItem(DIOCESE_BACK_REARM_KEY);
+    localStorage.removeItem(DIOCESE_BACK_REARM_KEY);
+    window.__OAI_DIOCESE_RETURN_HASH_ARMED__ = false;
     window.__OAI_DIOCESE_EXTERNAL_LEAVING__ = false;
     window.__OAI_DIOCESE_RESTORING__ = false;
   }catch(e){ console.warn('[가톨릭길동무]', e); }
@@ -2982,6 +2985,7 @@ function openCoreExternalUrl(url, extra){
 }
 
 const DIOCESE_RETURN_KEY='catholic_diocese_external_return_v1';
+const DIOCESE_BACK_REARM_KEY='oai_diocese_external_back_rearm_needed_v1';
 function openDioceseExternal(url, state){
   url = prepareExternalUrl(url);
   if(!url) return false;
@@ -2989,6 +2993,8 @@ function openDioceseExternal(url, state){
     var payload=JSON.stringify(state || {});
     sessionStorage.setItem(DIOCESE_RETURN_KEY, payload);
     localStorage.setItem(DIOCESE_RETURN_KEY, payload);
+    sessionStorage.setItem(DIOCESE_BACK_REARM_KEY, '1');
+    localStorage.setItem(DIOCESE_BACK_REARM_KEY, '1');
     window.__OAI_DIOCESE_EXTERNAL_LEAVING__ = true;
     var frame=document.getElementById('diocese-frame');
     if(frame && frame.contentWindow){
@@ -3019,10 +3025,22 @@ function _primeDioceseBackAfterExternalReturn(reason){
     if(typeof oaiSetMainMapLayerHidden==='function') oaiSetMainMapLayerHidden(true);
     if(typeof _resetCoverExitReady==='function') _resetCoverExitReady();
     if(typeof _clearCoverExitArmed==='function') _clearCoverExitArmed();
+    function hasExternalBackRearmNeed(){
+      try{ if(sessionStorage.getItem(DIOCESE_BACK_REARM_KEY)==='1') return true; }catch(_e){}
+      try{ if(localStorage.getItem(DIOCESE_BACK_REARM_KEY)==='1') return true; }catch(_e){}
+      try{ if(window.__OAI_DIOCESE_EXTERNAL_LEAVING__ || window.__OAI_DIOCESE_RESTORING__) return true; }catch(_e){}
+      return false;
+    }
     function arm(){
       try{
-        if(typeof window._oaiArmCoverBackTrap === 'function'){
-          window._oaiArmCoverBackTrap(reason || 'diocese-external-return', {force:true});
+        if(hasExternalBackRearmNeed()){
+          var base=location.href.split('#')[0];
+          if(location.hash !== '#oai-diocese-return'){
+            history.pushState({oai_diocese_return_trap:true, reason:reason || 'diocese-external-return'}, '', base + '#oai-diocese-return');
+          }
+          window.__OAI_DIOCESE_RETURN_HASH_ARMED__ = true;
+        }else if(typeof window._oaiArmCoverBackTrap === 'function'){
+          window._oaiArmCoverBackTrap(reason || 'diocese-external-return');
         }
       }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
@@ -3373,7 +3391,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V8-1-13-5-DIOCESE-BOOT-REARM-CHECK';
+const _PRAYER_ASSET_VERSION='V8-1-13-6-DIOCESE-HASH-REARM-CHECK';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -8447,6 +8465,16 @@ document.addEventListener('DOMContentLoaded', function bindEvents() {
   document.addEventListener('visibilitychange', function(){
     if(document.visibilityState === 'visible') schedule('diocese-visible');
   }, true);
-  // V8-1-13-5: bfcache 복귀에서는 pageshow가 이 스크립트 등록 전에 지나갈 수 있어 즉시 한 번도 예약한다.
+  window.addEventListener('hashchange', function(){
+    try{
+      if(!window.__OAI_DIOCESE_RETURN_HASH_ARMED__) return;
+      if(location.hash === '#oai-diocese-return') return;
+      if(!isDioceseOpen()) return;
+      window.__OAI_DIOCESE_RETURN_HASH_ARMED__ = false;
+      if(typeof window.closeDioceseView === 'function') window.closeDioceseView();
+      try{ if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap('diocese-hash-close-cover', {force:true}); }catch(_e){}
+    }catch(e){ console.warn('[가톨릭길동무]', e); }
+  }, true);
+  // V8-1-13-6: bfcache 복귀에서는 pageshow가 이 스크립트 등록 전에 지나갈 수 있어 즉시 한 번도 예약한다.
   schedule('diocese-boot');
 })();
