@@ -1982,7 +1982,6 @@ window.addEventListener('pageshow',function(){
       try{
         if(typeof window.parent.prepareExternalUrl === 'function') url = window.parent.prepareExternalUrl(url) || url;
       }catch(e){}
-      try{ if(typeof window.parent.prepareDioceseExternalBackTrap === 'function') window.parent.prepareDioceseExternalBackTrap('diocese-frame-external'); }catch(_e){}
       try{
         var payload = JSON.stringify(state || {});
         window.parent.sessionStorage.setItem('catholic_diocese_external_return_v1', payload);

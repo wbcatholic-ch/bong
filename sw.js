@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-13-11-STAMPBOOK-PUSHSTATE-CHECK';
-const ASSET_VERSION = 'V8-1-13-11-STAMPBOOK-PUSHSTATE-CHECK';
+const CACHE_VERSION = 'catholic-way-V8-1-13-12-SHRINE-LAYER-ORDER-CHECK';
+const ASSET_VERSION = 'V8-1-13-12-SHRINE-LAYER-ORDER-CHECK';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }
