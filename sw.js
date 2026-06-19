@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-14-15-MYFAITH-RESET-DIOCESE-GAP';
-const ASSET_VERSION = 'V8-1-14-15-MYFAITH-RESET-DIOCESE-GAP';
+const CACHE_VERSION = 'catholic-way-V8-1-14-16-MYFAITH-BACK-RESET-GAP-TUNE';
+const ASSET_VERSION = 'V8-1-14-16-MYFAITH-BACK-RESET-GAP-TUNE';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }
