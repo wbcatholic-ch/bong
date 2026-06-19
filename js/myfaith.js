@@ -219,7 +219,7 @@
       }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
 
-    /* V8-1-14-7-MYFAITH-GUARD-CROSS-BORDER: 나의 신앙생활 닫기 후 커버 첫 Back이 WebView 밖으로 바로 빠지는 경우를 막는 전용 1회 가드 */
+    /* V8-1-14-9-HYMN-EXTERNAL-BROWSER: 나의 신앙생활 닫기 후 커버 첫 Back이 WebView 밖으로 바로 빠지는 경우를 막는 전용 1회 가드 */
     var MYFAITH_COVER_GUARD_MS = 30000;
     function myFaithNow(){ try{ return Date.now ? Date.now() : new Date().getTime(); }catch(_e){ return new Date().getTime(); } }
     function isMyFaithCoverOnly(){
@@ -243,8 +243,10 @@
         window.__OAI_MYFAITH_COVER_GUARD_REASON__ = reason;
         try{ sessionStorage.setItem('oai_myfaith_cover_guard_reason', reason); }catch(_e){}
         var href = location.href.split('#')[0];
-        history.replaceState({_p:0, oai_cover_root:reason, oai_myfaith_root:true}, '', href);
-        history.pushState({_p:1, oai_cover_trap:reason, oai_myfaith_trap:true}, '', href);
+        var rootUrl = href + '#oai-myfaith-cover-root';
+        var trapUrl = href + '#oai-myfaith-cover-trap';
+        history.replaceState({_p:0, oai_cover_root:reason, oai_myfaith_root:true}, '', rootUrl);
+        history.pushState({_p:1, oai_cover_trap:reason, oai_myfaith_trap:true}, '', trapUrl);
         try{ if(typeof window.oaiBackDiagLog === 'function') window.oaiBackDiagLog('MYFAITH guard-arm', reason); }catch(_e){}
       }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
@@ -260,7 +262,8 @@
     function rearmMyFaithCoverGuardState(reason){
       try{
         var href = location.href.split('#')[0];
-        history.pushState({_p:1, oai_cover_trap:reason || 'my-faith-cover-toast', oai_myfaith_trap:true}, '', href);
+        var suffix = String(myFaithNow()).slice(-6);
+        history.pushState({_p:1, oai_cover_trap:reason || 'my-faith-cover-toast', oai_myfaith_trap:true}, '', href + '#oai-myfaith-cover-trap-' + suffix);
       }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
     function handleMyFaithCoverBack(e, src){
@@ -293,6 +296,7 @@
     }
     window.addEventListener('popstate', function(e){ handleMyFaithCoverBack(e, 'popstate'); }, true);
     document.addEventListener('backbutton', function(e){ handleMyFaithCoverBack(e, 'backbutton'); }, true);
+    window.addEventListener('hashchange', function(e){ handleMyFaithCoverBack(e, 'hashchange'); }, true);
 
     function resetCoverBackAfterMyFaith(reason){
       try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }

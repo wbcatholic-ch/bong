@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  var VERSION = 'V8-1-14-7-MYFAITH-GUARD-CROSS-BORDER';
+  var VERSION = 'V8-1-14-9-HYMN-EXTERNAL-BROWSER';
   var KEY = 'oai_back_diag_logs_v1';
   var MAX = 120;
   var panel = null;
