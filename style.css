@@ -2001,9 +2001,9 @@ html.oai-cover-revealing #cover > * {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 4px;
   background: var(--cover-card-point);
-  opacity: .34;
+  opacity: .82;
   border-radius: 0;
 }
 .cover-card::after {
@@ -2018,13 +2018,13 @@ html.oai-cover-revealing #cover > * {
   pointer-events: none;
 }
 
-#cc-1 { --cover-card-point: #c49a57; }
-#cc-2 { --cover-card-point: #3F4752; }
-#cc-3 { --cover-card-point: var(--v4-header-navy); }
-#cc-4 { --cover-card-point: var(--v4-retreat-green); }
-#cc-5 { --cover-card-point: #5c4a37; }
-#cc-6 { --cover-card-point: #2563EB; }
-#cc-7 { --cover-card-point: #1a3560; }
+#cc-1 { --cover-card-point: #F5A6B8; } /* 연분홍 */
+#cc-2 { --cover-card-point: #9CC9F5; } /* 연파랑 */
+#cc-3 { --cover-card-point: #B7D7FF; } /* 옅은 하늘색 */
+#cc-4 { --cover-card-point: #A9DDB7; } /* 연초록 */
+#cc-5 { --cover-card-point: #D7C4F2; } /* 연보라 */
+#cc-6 { --cover-card-point: #D3D7DE; } /* 연회색 */
+#cc-7 { --cover-card-point: #F1C2A6; } /* 연살구 */
 .cover-card .cover-icon-wrap,
 .cover-card .cover-name {
   position: relative;
