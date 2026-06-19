@@ -1481,6 +1481,90 @@ function _oaiHandleShrineVisitBack(reason){
 }
 try{ window._oaiHandleShrineVisitBack=_oaiHandleShrineVisitBack; }catch(_e){}
 
+const OAI_STAMPBOOK_EXTERNAL_RETURN_KEY='oai_stampbook_external_return_v1';
+function _rememberStampbookExternalReturn(extra){
+  try{
+    extra=extra||{};
+    const idx=parseInt(extra.infoIdx!=null?extra.infoIdx:window.__OAI_CURRENT_SHRINE_VISIT_DETAIL_IDX__,10);
+    const fromInfo=!!(window.__OAI_SHRINE_VISIT_INFO_FROM_CARDS__ && document.getElementById('info-card') && document.getElementById('info-card').classList.contains('open'));
+    const state={
+      idx:(idx>=0?idx:null),
+      view:fromInfo?'info':'detail',
+      source:extra.source||'',
+      tab:_shrineVisitCardsTab||'visited',
+      diocese:_shrineVisitCardsDiocese||'all',
+      t:Date.now?Date.now():(new Date()).getTime()
+    };
+    sessionStorage.setItem(OAI_STAMPBOOK_EXTERNAL_RETURN_KEY, JSON.stringify(state));
+    localStorage.setItem(OAI_STAMPBOOK_EXTERNAL_RETURN_KEY, JSON.stringify(state));
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+}
+function _clearStampbookExternalReturn(){
+  try{ sessionStorage.removeItem(OAI_STAMPBOOK_EXTERNAL_RETURN_KEY); localStorage.removeItem(OAI_STAMPBOOK_EXTERNAL_RETURN_KEY); }catch(_e){}
+}
+function _readStampbookExternalReturn(){
+  try{
+    const raw=sessionStorage.getItem(OAI_STAMPBOOK_EXTERNAL_RETURN_KEY)||localStorage.getItem(OAI_STAMPBOOK_EXTERNAL_RETURN_KEY);
+    if(!raw) return null;
+    const state=JSON.parse(raw);
+    const t=Number(state&&state.t||0);
+    const now=Date.now?Date.now():(new Date()).getTime();
+    if(t && now-t>10*60*1000){ _clearStampbookExternalReturn(); return null; }
+    return state||null;
+  }catch(e){ console.warn('[가톨릭길동무]', e); return null; }
+}
+function _activateShrineCategoryForStampbookReturn(reason){
+  try{
+    _mode='shrine';
+    _screen='map';
+    document.documentElement.classList.add('app-active');
+    document.documentElement.classList.remove('parish-mode','retreat-mode');
+    const cover=document.getElementById('cover');
+    if(cover){ cover.style.opacity='0'; cover.style.display='none'; }
+    document.querySelectorAll('.module-view.open,#prayer-view.open,#diocese-view.open,#missa-view.open').forEach(function(v){ v.classList.remove('open'); });
+    try{ if(typeof oaiSetMainMapLayerHidden==='function') oaiSetMainMapLayerHidden(false); }catch(_e){}
+    if((!_map || !document.getElementById('map') || !document.getElementById('map').children.length) && typeof _loadMap==='function'){
+      try{ _resetMapState(); _mapInited=true; window._noAutoNearby=true; _loadMap(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+    }
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+}
+function _restoreStampbookAfterExternal(reason){
+  const state=_readStampbookExternalReturn();
+  if(!state || window.__OAI_STAMPBOOK_RESTORING__) return false;
+  try{
+    window.__OAI_STAMPBOOK_RESTORING__=true;
+    _activateShrineCategoryForStampbookReturn(reason||'stampbook-external-return');
+    _shrineVisitCardsTab=state.tab||'visited';
+    _shrineVisitCardsDiocese=state.diocese||'all';
+    window.__OAI_SHRINE_VISIT_CARDS_RETURN_STATE__={tab:_shrineVisitCardsTab, diocese:_shrineVisitCardsDiocese, reason:'external-return', t:Date.now?Date.now():(new Date()).getTime()};
+    const idx=parseInt(state.idx,10);
+    if(idx>=0 && SHRINES[idx]){
+      if(state.view==='info'){
+        window.__OAI_SHRINE_VISIT_INFO_FROM_CARDS__=true;
+        window.__OAI_SHRINE_VISIT_INFO_RETURN_IDX__=idx;
+        _openShrineVisitDetailOnMap(idx);
+      }else{
+        _reopenShrineVisitCardsFromBack('external-return-detail-cards');
+        _openShrineVisitDetail(idx);
+      }
+    }else{
+      _reopenShrineVisitCardsFromBack('external-return-cards');
+    }
+    try{ if(typeof window._resetCoverExitReady==='function') window._resetCoverExitReady(); }catch(_e){}
+    try{ if(typeof window._clearCoverExitArmed==='function') window._clearCoverExitArmed(); }catch(_e){}
+    try{ if(typeof window._oaiArmCoverBackTrap==='function') window._oaiArmCoverBackTrap('stampbook-external-return', {force:true}); }catch(_e){}
+    _clearStampbookExternalReturn();
+    return true;
+  }catch(e){ console.warn('[가톨릭길동무]', e); return false; }
+  finally{ setTimeout(function(){ window.__OAI_STAMPBOOK_RESTORING__=false; }, 200); }
+}
+['pageshow','focus'].forEach(function(ev){
+  try{ window.addEventListener(ev, function(){ setTimeout(function(){ _restoreStampbookAfterExternal(ev); }, ev==='pageshow'?80:160); }, true); }catch(_e){}
+});
+document.addEventListener('visibilitychange', function(){
+  try{ if(document.visibilityState==='visible') setTimeout(function(){ _restoreStampbookAfterExternal('visibility'); }, 180); }catch(_e){}
+}, true);
+
 function _scrollShrineVisitDioceseTabIntoView(value, behavior){
   try{
     const wrap=document.getElementById('shrine-visit-cards-diocese');
@@ -2883,7 +2967,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V8-1-13-8-STAMPBOOK-BACK-CHECK';
+    frame.src='diocese.html?v=V8-1-13-9-STAMPBOOK-EXTERNAL-RETURN-CHECK';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -3040,6 +3124,12 @@ function openShrineExternalLikeFaithPortal(url, extra){
   openCatholicExternalPreserveApp(url, extra.source || 'shrine-external');
 }
 function openCoreExternalUrl(url, extra){
+  try{
+    extra=extra||{};
+    if(extra.fromStampBook || (window.__OAI_SHRINE_VISIT_INFO_FROM_CARDS__ && (extra.source==='homepage' || extra.source==='shrine-detail'))){
+      _rememberStampbookExternalReturn(extra);
+    }
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
   openShrineExternalLikeFaithPortal(url, extra);
 }
 
@@ -3417,7 +3507,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V8-1-13-8-STAMPBOOK-BACK-CHECK';
+const _PRAYER_ASSET_VERSION='V8-1-13-9-STAMPBOOK-EXTERNAL-RETURN-CHECK';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
