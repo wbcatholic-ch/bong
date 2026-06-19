@@ -215,6 +215,9 @@
 
   function closeLayer(){
     var el;
+    try{
+      if(typeof window._oaiHandleShrineVisitBack === 'function' && window._oaiHandleShrineVisitBack('closeLayer')) return true;
+    }catch(e){ console.warn('[가톨릭길동무]', e); }
     el = $b('exit-dlg');
     if(el && el.classList.contains('open')){ el.classList.remove('open'); return true; }
 
@@ -351,6 +354,10 @@
       return;
     }
 
+    try{
+      if(typeof window._oaiHandleShrineVisitBack === 'function' && window._oaiHandleShrineVisitBack('popstate-before-cover')) return;
+    }catch(e){ console.warn('[가톨릭길동무]', e); }
+
     if(!appActive()){
       if(consumeSuppressedCoverBackToast()) return;
       var exiting = false;
@@ -370,6 +377,9 @@
   }, false);
 
   document.addEventListener('backbutton', function(){
+    try{
+      if(typeof window._oaiHandleShrineVisitBack === 'function' && window._oaiHandleShrineVisitBack('hardware-back')) return;
+    }catch(e){ console.warn('[가톨릭길동무]', e); }
     if(typeof window._oaiPrayerBackHandle === 'function' && window._oaiPrayerBackHandle('prayer-hardware-back')) return;
     if(closeRefreshDialog()){ try{ armCoverBackTrap('refresh-dialog-hardware', {force:true}); }catch(e){} return; }
     if(isGuideModalOpen()){
