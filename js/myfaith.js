@@ -218,42 +218,56 @@
         modal.classList.toggle('keyboard-open', keyboardLikely);
       }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
+    function armMyFaithCoverBackTrap(reason){
+      try{
+        var href = location.href.split('#')[0];
+        reason = reason || 'my-faith-cover';
+        history.replaceState({_p:0, oai_cover_root:reason, oai_myfaith_root:true}, '', href);
+        history.pushState({_p:1, oai_cover_trap:reason, oai_myfaith_trap:true}, '', href);
+        return true;
+      }catch(e){ console.warn('[가톨릭길동무]', e); }
+      return false;
+    }
     function resetCoverBackAfterMyFaith(reason){
+      reason = reason || 'my-faith-close';
       try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }
       try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(e){ console.warn('[가톨릭길동무]', e); }
-      try{ if(typeof window._forceNextCoverBackToast === 'function') window._forceNextCoverBackToast(reason || 'my-faith-close'); }catch(e){ console.warn('[가톨릭길동무]', e); }
-      try{
-        if(typeof window._oaiArmCoverBackTrap === 'function'){
-          window._oaiArmCoverBackTrap(reason || 'my-faith-close', {force:true});
-        }else{
-          var href = location.href.split('#')[0];
-          
-        }
-      }catch(e){ console.warn('[가톨릭길동무]', e); }
+      try{ if(typeof window._clearHardCoverExitFlags === 'function') window._clearHardCoverExitFlags(reason); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      try{ if(typeof window._forceNextCoverBackToast === 'function') window._forceNextCoverBackToast(reason); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      armMyFaithCoverBackTrap(reason);
     }
     function goFreshCoverAfterMyFaith(reason){
       /*
-       * V8-1-13-21: 나의 신앙생활에서 커버로 돌아온 뒤 첫 Back이
-       * WebView 네이티브 종료로 빠지는 문제를 피하기 위해, 나의 신앙생활에 한해서만
-       * index.html로 replace 복귀한다. 19/20의 전역 back trap/로딩 십자가 수정은 사용하지 않는다.
+       * V6-160 확인용: V6-155~159의 fresh location.replace 방식은
+       * 안내문구는 살렸지만, 실제 종료 단계에서 이전 문서 history가 남아
+       * 안내문구 후 뒤로가기를 두 번 더 눌러야 하는 경우가 있었다.
+       * 그래서 나의 신앙생활은 현재 문서 안에서 커버를 보이고,
+       * 커버 전용 root+trap만 다시 세운다.
        */
       try{
         reason = reason || 'my-faith-close';
-        if(window.__oaiMyFaithCoverReplacing) return true;
-        window.__oaiMyFaithCoverReplacing = true;
         sessionStorage.setItem('oai_myfaith_return_cover_reason', reason);
         sessionStorage.setItem('oai_myfaith_return_cover_ts', String(Date.now ? Date.now() : new Date().getTime()));
-        sessionStorage.setItem('oai_cover_toast_on_return', reason);
-        sessionStorage.setItem('oai_cover_toast_on_return_ts', String(Date.now ? Date.now() : new Date().getTime()));
         sessionStorage.removeItem('oai_cover_exit_hard_on_next_back');
         sessionStorage.removeItem('oai_cover_exit_hard_after_first_toast');
         sessionStorage.removeItem('oai_cover_exit_long_window_once');
         sessionStorage.removeItem('oai_app_exit_back_steps');
         if(typeof window._clearHardCoverExitFlags === 'function') window._clearHardCoverExitFlags(reason);
-        var url = 'index.html?oai_cover_return=' + encodeURIComponent(reason) + '&v=V8-1-13-21-MYFAITH-COVER-EXIT-CROSS';
-        setTimeout(function(){
-          try{ location.replace(url); }catch(e){ try{ location.href = url; }catch(_e){} }
-        }, 20);
+      }catch(_e){}
+      try{
+        var root = document.documentElement;
+        var cover = document.getElementById('cover');
+        if(root) root.classList.remove('app-active','parish-mode','retreat-mode');
+        if(typeof window.oaiSetMainMapLayerHidden === 'function') window.oaiSetMainMapLayerHidden(false);
+        if(cover){
+          cover.style.display = '';
+          cover.style.opacity = '';
+          cover.style.pointerEvents = '';
+          try{ cover.scrollTop = 0; }catch(_e){}
+        }
+        resetCoverBackAfterMyFaith(reason);
+        clearGenericCoverToastFlag();
+        clearMyFaithExternalLinkFlag();
         return true;
       }catch(e){
         console.warn('[가톨릭길동무]', e);
@@ -325,7 +339,7 @@
       try{
         if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
         if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
-        if(typeof window._pushCoverOverlayBackTrap === 'function') window._pushCoverOverlayBackTrap('my-faith', 'my-faith-open');
+        armMyFaithCoverBackTrap('my-faith-open');
       }catch(e){ console.warn('[가톨릭길동무]', e); }
       setTimeout(updateMyFaithViewport, opts.fromExternal ? 180 : 80);
     }
@@ -358,11 +372,7 @@
       try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(_e){}
       try{ if(typeof window._clearHardCoverExitFlags === 'function') window._clearHardCoverExitFlags('my-faith-external-link'); }catch(_e){}
       try{ if(typeof window._forceNextCoverBackToast === 'function') window._forceNextCoverBackToast('my-faith-external-link'); }catch(_e){}
-      try{
-        if(modal && modal.classList.contains('show') && typeof window._pushCoverOverlayBackTrap === 'function'){
-          window._pushCoverOverlayBackTrap('my-faith-external', 'my-faith-external-link');
-        }
-      }catch(_e){}
+      try{ if(modal && modal.classList.contains('show')) armMyFaithCoverBackTrap('my-faith-external-link'); }catch(_e){}
     }
     try{ window.oaiMarkMyFaithExternalLink = markMyFaithExternalLink; }catch(_e){}
     function clearMyFaithExternalLinkFlag(){
