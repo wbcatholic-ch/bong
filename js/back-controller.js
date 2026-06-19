@@ -63,7 +63,7 @@
         if(el && el.classList && el.classList.contains('open')) return true;
       }
       if(document.querySelector('.module-view.open')) return true;
-      if(document.querySelector('#info-card.open,#sheet-route.open,#route-choice-modal.open,#srch-modal.open,.sheet.open,.trail-sheet.open')) return true;
+      if(document.querySelector('#info-card.open,#sheet-route.open,#route-choice-modal.open,#srch-modal.open,.sheet.open,.trail-sheet.open,#shrine-visit-modal.show,#shrine-auto-visit-modal.show,#shrine-visit-detail-view.show,#shrine-visit-cards-modal.show')) return true;
       try{ if(typeof _activeTab !== 'undefined' && _activeTab) return true; }catch(_e){}
       try{ if(typeof _routeMode !== 'undefined' && (_routeMode || _rS || _rE)) return true; }catch(_e){}
       var app = $b('app');
@@ -218,6 +218,35 @@
 
   function closeLayer(){
     var el;
+
+    el = $b('shrine-visit-modal');
+    if(el && el.classList && el.classList.contains('show')){
+      if(typeof window._closeShrineVisitModal === 'function') window._closeShrineVisitModal({fromBackController:true});
+      else { el.classList.remove('show'); el.setAttribute('aria-hidden','true'); }
+      return true;
+    }
+
+    el = $b('shrine-auto-visit-modal');
+    if(el && el.classList && el.classList.contains('show')){
+      if(typeof window._closeShrineAutoVisitModal === 'function') window._closeShrineAutoVisitModal({fromBackController:true});
+      else { el.classList.remove('show'); el.setAttribute('aria-hidden','true'); }
+      return true;
+    }
+
+    el = $b('shrine-visit-detail-view');
+    if(el && el.classList && el.classList.contains('show')){
+      if(typeof window._closeShrineVisitDetail === 'function') window._closeShrineVisitDetail({fromBackController:true});
+      else { el.classList.remove('show'); el.setAttribute('aria-hidden','true'); }
+      return true;
+    }
+
+    el = $b('shrine-visit-cards-modal');
+    if(el && el.classList && el.classList.contains('show')){
+      if(typeof window._closeShrineVisitCardsModal === 'function') window._closeShrineVisitCardsModal({fromBackController:true});
+      else { el.classList.remove('show'); el.setAttribute('aria-hidden','true'); }
+      return true;
+    }
+
     el = $b('exit-dlg');
     if(el && el.classList.contains('open')){ el.classList.remove('open'); return true; }
 

@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-13-9-GLOBAL-COVER-EXIT-RULE';
-const ASSET_VERSION = 'V8-1-13-9-GLOBAL-COVER-EXIT-RULE';
+const CACHE_VERSION = 'catholic-way-V8-1-13-10-COVER-TOAST-PILGRIM-LAYERS';
+const ASSET_VERSION = 'V8-1-13-10-COVER-TOAST-PILGRIM-LAYERS';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }

@@ -2828,7 +2828,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V8-1-13-9-GLOBAL-COVER-EXIT-RULE';
+    frame.src='diocese.html?v=V8-1-13-10-COVER-TOAST-PILGRIM-LAYERS';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -3395,7 +3395,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V8-1-13-9-GLOBAL-COVER-EXIT-RULE';
+const _PRAYER_ASSET_VERSION='V8-1-13-10-COVER-TOAST-PILGRIM-LAYERS';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
@@ -4358,6 +4358,8 @@ function goToCover(){
     _coverEl.scrollTop=0;
   }
   try{ if(typeof _resetCoverExitReady === 'function') _resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+  try{ if(typeof _clearCoverExitArmed === 'function') _clearCoverExitArmed(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+  try{ if(typeof _clearHardCoverExitFlags === 'function') _clearHardCoverExitFlags('go-to-cover'); }catch(e){ console.warn('[가톨릭길동무]', e); }
   try{
     if(typeof window.oaiSettleCoverSize === 'function'){
       window.oaiSettleCoverSize('cover-return');
