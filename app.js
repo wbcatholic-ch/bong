@@ -2018,41 +2018,22 @@ function _isAppScreenActive(){
   try{ return document.documentElement.classList.contains('app-active'); }catch(e){ return false; }
 }
 function _ensureCoverBackTrap(reason){
-  try{
-    if(window._oaiArmCoverBackTrap){
-      window._oaiArmCoverBackTrap(reason || 'cover-ensure', {force:false});
-      return true;
-    }
-  }catch(e){ console.warn('[가톨릭길동무]', e); }
-  return false;
+  return;
 }
 function _resetCoverBackTrap(reason){
-  try{
-    if(window._oaiArmCoverBackTrap){
-      window._oaiArmCoverBackTrap(reason || 'cover-reset', {force:true});
-      return true;
-    }
-  }catch(e){ console.warn('[가톨릭길동무]', e); }
-  return false;
+  return;
 }
 function _ensureAppBackTrap(reason){
-  return false;
+  return;
 }
 function _resetAppBackTrap(reason){
-  return false;
+  return;
 }
 function _pushCoverOverlayBackTrap(kind, reason){
-  try{
-    if(window._oaiArmCoverBackTrap){
-      window._oaiArmCoverBackTrap(reason || kind || 'cover-overlay', {force:true});
-      return true;
-    }
-  }catch(e){ console.warn('[가톨릭길동무]', e); }
-  return false;
+  return;
 }
 function _armMassQuickHistoryTrap(opts){
-  try{ return _pushCoverOverlayBackTrap('mass-quick', 'mass-quick-open'); }catch(e){ console.warn('[가톨릭길동무]', e); }
-  return false;
+  return;
 }
 function _hideMassQuickMenuOnly(afterHidden, opts){
   const modal=document.getElementById('mass-quick-modal');
@@ -2849,7 +2830,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V8-1-13-20-WEB-RETURN-RELOAD-CROSS';
+    frame.src='diocese.html?v=V8-1-13-21-MYFAITH-COVER-EXIT-CROSS';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -3419,7 +3400,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V8-1-13-20-WEB-RETURN-RELOAD-CROSS';
+const _PRAYER_ASSET_VERSION='V8-1-13-21-MYFAITH-COVER-EXIT-CROSS';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');

@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-13-20-WEB-RETURN-RELOAD-CROSS';
-const ASSET_VERSION = 'V8-1-13-20-WEB-RETURN-RELOAD-CROSS';
+const CACHE_VERSION = 'catholic-way-V8-1-13-21-MYFAITH-COVER-EXIT-CROSS';
+const ASSET_VERSION = 'V8-1-13-21-MYFAITH-COVER-EXIT-CROSS';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }

@@ -6134,7 +6134,7 @@ html.oai-external-return-freeze::after {
 }
 
 
-/* V8-1-13-20: 웹페이지 복귀/새로고침 보호막의 금색 로딩 십자가 복원 */
+/* V8-1-13-21: 웹페이지 복귀/새로고침 보호막의 금색 로딩 십자가 복원 */
 html.oai-stability-veil::after,
 html.oai-stability-veil[data-oai-stability-reason*="external"]::after,
 html.oai-stability-veil[data-oai-stability-reason*="refresh"]::after,
