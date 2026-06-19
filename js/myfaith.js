@@ -219,17 +219,20 @@
       }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
     function resetCoverBackAfterMyFaith(reason){
+      reason = reason || 'my-faith-close';
       try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }
       try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(e){ console.warn('[가톨릭길동무]', e); }
-      try{ if(typeof window._forceNextCoverBackToast === 'function') window._forceNextCoverBackToast(reason || 'my-faith-close'); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      try{ if(typeof window._clearHardCoverExitFlags === 'function') window._clearHardCoverExitFlags(reason); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      try{ if(typeof window._forceNextCoverBackToast === 'function') window._forceNextCoverBackToast(reason); }catch(e){ console.warn('[가톨릭길동무]', e); }
       try{
-        if(typeof window._oaiArmCoverBackTrap === 'function'){
-          window._oaiArmCoverBackTrap(reason || 'my-faith-close', {force:true});
-        }else{
-          var href = location.href.split('#')[0];
-          
-        }
+        if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap(reason, {force:true});
       }catch(e){ console.warn('[가톨릭길동무]', e); }
+    }
+    function scheduleCoverBackAfterMyFaith(reason){
+      try{ resetCoverBackAfterMyFaith(reason || 'my-faith-close'); }catch(_e){}
+      try{ if(window.requestAnimationFrame) window.requestAnimationFrame(function(){ resetCoverBackAfterMyFaith((reason || 'my-faith-close') + '-raf'); }); }catch(_e){}
+      try{ setTimeout(function(){ resetCoverBackAfterMyFaith((reason || 'my-faith-close') + '-late'); }, 120); }catch(_e){}
+      try{ setTimeout(function(){ resetCoverBackAfterMyFaith((reason || 'my-faith-close') + '-late2'); }, 360); }catch(_e){}
     }
     function goFreshCoverAfterMyFaith(reason){
       /*
@@ -260,7 +263,7 @@
           cover.style.pointerEvents = '';
           try{ cover.scrollTop = 0; }catch(_e){}
         }
-        resetCoverBackAfterMyFaith(reason);
+        scheduleCoverBackAfterMyFaith(reason);
         clearGenericCoverToastFlag();
         clearMyFaithExternalLinkFlag();
         return true;
@@ -416,6 +419,13 @@
         myFaithStableHeight = 0;
       }catch(_e){}
       try{ clearGenericCoverToastFlag(); clearMyFaithExternalLinkFlag(); }catch(_e){}
+      try{
+        var cover=document.getElementById('cover');
+        if(document.documentElement) document.documentElement.classList.remove('app-active','parish-mode','retreat-mode');
+        if(cover){ cover.style.display=''; cover.style.opacity=''; cover.style.pointerEvents=''; }
+        if(typeof window.oaiSetMainMapLayerHidden === 'function') window.oaiSetMainMapLayerHidden(false);
+      }catch(_e){}
+      scheduleCoverBackAfterMyFaith('my-faith-external-common');
       try{
         if(typeof window.oaiSmoothNavigate === 'function'){
           window.oaiSmoothNavigate(url, 'integrated-external');
