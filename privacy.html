@@ -318,12 +318,6 @@ function oaiPreparePrivacyNoReturnEffectToApp(){
   }catch(e){}
 }
 function privacyCloseToApp(){
-  try{
-    if(window.parent && window.parent !== window && typeof window.parent.closePrivacyPolicyModal === 'function'){
-      window.parent.closePrivacyPolicyModal();
-      return;
-    }
-  }catch(_e){}
   if(oaiPrivacyReturning) return;
   oaiPrivacyReturning = true;
   oaiPreparePrivacyNoReturnEffectToApp();
