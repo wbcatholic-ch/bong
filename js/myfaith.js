@@ -219,7 +219,7 @@
       }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
 
-    /* V8-1-14-10-QNA-NOTICE-IN-TEXTAREA: 나의 신앙생활 닫기 후 커버 첫 Back이 WebView 밖으로 바로 빠지는 경우를 막는 전용 1회 가드 */
+    /* V8-1-14-11-MYFAITH-BACKCTRL-SPLIT: 나의 신앙생활 닫기 후 커버 첫 Back이 WebView 밖으로 바로 빠지는 경우를 막는 전용 1회 가드 */
     var MYFAITH_COVER_GUARD_MS = 30000;
     function myFaithNow(){ try{ return Date.now ? Date.now() : new Date().getTime(); }catch(_e){ return new Date().getTime(); } }
     function isMyFaithCoverOnly(){
@@ -384,6 +384,15 @@
         return true;
       }catch(e){ console.warn('[가톨릭길동무]', e); return false; }
     }
+
+    function notifyMyFaithClosed(reason){
+      try{
+        window.dispatchEvent(new CustomEvent('oai:myfaith-closed', {detail:{reason: reason || 'my-faith-close'}}));
+      }catch(e){
+        try{ var ev=document.createEvent('CustomEvent'); ev.initCustomEvent('oai:myfaith-closed', false, false, {reason: reason || 'my-faith-close'}); window.dispatchEvent(ev); }catch(_e){}
+      }
+    }
+
     function closeModal(){
       var fromExternal = hasRecentMyFaithExternalLink();
       var pendingCoverToast = hasPendingCoverToastOnReturn();
@@ -401,9 +410,10 @@
        * 매일미사/성가/성경 흐름은 건드리지 않고, 나의 신앙생활을 닫는 순간만
        * index.html로 fresh replace 하여 back-controller 초기 cover trap을 다시 세운다.
        */
-      if(goFreshCoverAfterMyFaith(reason)) return;
+      if(goFreshCoverAfterMyFaith(reason)){ notifyMyFaithClosed(reason); return; }
       primeMyFaithCoverExitToast(reason);
       if(window.requestAnimationFrame) window.requestAnimationFrame(function(){ primeMyFaithCoverExitToast(reason + '-raf'); });
+      notifyMyFaithClosed(reason);
     }
     function openModal(opts){
       try{ clearMyFaithCoverExitGuard('open'); }catch(_e){}
@@ -477,7 +487,7 @@
         try{ document.body.classList.remove('modal-open'); }catch(_e){}
         try{ modal.style.removeProperty('--my-faith-vh'); modal.style.removeProperty('--my-faith-visible-vh'); }catch(_e){}
         myFaithStableHeight = 0;
-        if(goFreshCoverAfterMyFaith(reason)) return;
+        if(goFreshCoverAfterMyFaith(reason)){ notifyMyFaithClosed(reason); return; }
         primeMyFaithCoverExitToast(reason);
       }catch(e){
         console.warn('[가톨릭길동무]', e);
