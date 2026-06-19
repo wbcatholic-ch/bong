@@ -215,7 +215,6 @@
 
   function closeLayer(){
     var el;
-    try{ if(typeof window._oaiHandleShrineReturnBack==='function' && window._oaiHandleShrineReturnBack('closeLayer-priority')) return true; }catch(e){ console.warn('[가톨릭길동무]', e); }
     el = $b('exit-dlg');
     if(el && el.classList.contains('open')){ el.classList.remove('open'); return true; }
 
@@ -352,8 +351,6 @@
       return;
     }
 
-    try{ if(typeof window._oaiHandleShrineReturnBack==='function' && window._oaiHandleShrineReturnBack('popstate-return')) return; }catch(e){ console.warn('[가톨릭길동무]', e); }
-
     if(!appActive()){
       if(consumeSuppressedCoverBackToast()) return;
       var exiting = false;
@@ -386,7 +383,6 @@
       closeDioceseViewToCoverDirect('diocese-hardware-direct');
       return;
     }
-    try{ if(typeof window._oaiHandleShrineReturnBack==='function' && window._oaiHandleShrineReturnBack('hardware-return')) return; }catch(e){ console.warn('[가톨릭길동무]', e); }
     if(!appActive()){
       if(consumeSuppressedCoverBackToast()) return;
       if(typeof window._showBackToast==='function') window._showBackToast();
