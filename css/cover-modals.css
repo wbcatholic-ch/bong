@@ -231,7 +231,7 @@
 }
 
 
-/* V8-1-13-14: 1번 사진 하단 버튼 스타일을 메뉴/미사 빠른 사용 팝업에 적용 */
+/* V8-1-13-16: 버튼 바깥 패널은 유지하고, 버튼 내부는 흰색으로 정리 */
 .cover-menu-panel,
 #cover #mass-quick-modal .mass-quick-panel {
   background:
@@ -290,4 +290,38 @@
 .cover-menu-icon,
 #cover #mass-quick-modal .mass-quick-btn span {
   filter: saturate(1.06) contrast(1.03) !important;
+}
+
+/* V8-1-13-16: 메뉴/미사 빠른 사용 팝업 버튼 안쪽은 사진처럼 흰색으로 통일 */
+.cover-menu-item,
+#cover #mass-quick-modal .mass-quick-btn,
+#cover #mass-quick-modal .mass-quick-primary,
+#cover-menu-guide-btn,
+#cover-menu-privacy-link,
+#cover-menu-qna-btn,
+#cover #mass-quick-missa,
+#cover #mass-quick-prayer,
+#cover #mass-quick-hymn,
+#cover #mass-quick-bible {
+  background: #FFFFFF !important;
+  background-image: none !important;
+}
+.cover-menu-item,
+#cover #mass-quick-modal .mass-quick-btn,
+#cover #mass-quick-modal .mass-quick-primary {
+  border-width: 2.6px !important;
+  color: #172033 !important;
+}
+#cover-menu-guide-btn { border-color: #9CC9F5 !important; }
+#cover-menu-privacy-link { border-color: #D7C4F2 !important; }
+#cover-menu-qna-btn { border-color: #A9DDB7 !important; }
+#cover #mass-quick-missa,
+#cover #mass-quick-modal .mass-quick-primary { border-color: #D2A10D !important; }
+#cover #mass-quick-prayer { border-color: #26956E !important; }
+#cover #mass-quick-hymn { border-color: #C45284 !important; }
+#cover #mass-quick-bible { border-color: #5E7FA5 !important; }
+.cover-menu-text,
+#cover #mass-quick-modal .mass-quick-btn strong {
+  color: #172033 !important;
+  font-weight: 950 !important;
 }

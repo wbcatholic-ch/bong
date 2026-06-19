@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-13-15-COVER-CARD-LINE-COLORS';
-const ASSET_VERSION = 'V8-1-13-15-COVER-CARD-LINE-COLORS';
+const CACHE_VERSION = 'catholic-way-V8-1-13-16-MODAL-BUTTON-WHITE-INSIDE';
+const ASSET_VERSION = 'V8-1-13-16-MODAL-BUTTON-WHITE-INSIDE';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }
