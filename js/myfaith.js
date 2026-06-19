@@ -406,7 +406,7 @@
       clearHardCoverExitFlagsForMyFaith(reason);
       try{
         if(modal && modal.classList && !modal.classList.contains('show')){
-          openModal({keepContent:true, fromExternal:true});
+          openModal({keepContent:false, fromExternal:true});
         }
         resetCoverBackAfterMyFaith(reason);
       }catch(e){
@@ -550,15 +550,15 @@
         a.className='my-faith-row-btn'+(cls?(' '+cls):'');
         a.textContent=label || '열기';
         a.href=url;
-        a.target='_blank';
-        a.rel='noopener noreferrer external';
-        a.setAttribute('aria-label','외부 브라우저에서 열기');
+        a.rel='external';
+        a.setAttribute('aria-label','외부 사이트 열기');
         a.setAttribute('data-myfaith-external-link','1');
-        a.onclick=function(){
-          markMyFaithExternalLink();
-          return true;
+        a.onclick=function(e){
+          if(e && e.preventDefault) e.preventDefault();
+          if(e && e.stopPropagation) e.stopPropagation();
+          goExternal(url);
+          return false;
         };
-        a.addEventListener('click', function(){ markMyFaithExternalLink(); }, true);
         return a;
       }
       function listSection(t,c){ var sec=document.createElement('section'); sec.className='my-faith-section my-faith-list-section '+(c||''); var h=document.createElement('h3'); h.textContent=t; sec.appendChild(h); return sec; }
