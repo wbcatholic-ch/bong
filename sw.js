@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-13-17-MYFAITH-MENU-COVER-RETURN';
-const ASSET_VERSION = 'V8-1-13-17-MYFAITH-MENU-COVER-RETURN';
+const CACHE_VERSION = 'catholic-way-V8-1-13-18-FAITH-BOTTOM-BANNER-COLORS';
+const ASSET_VERSION = 'V8-1-13-18-FAITH-BOTTOM-BANNER-COLORS';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }

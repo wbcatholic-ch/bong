@@ -2830,7 +2830,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V8-1-13-17-MYFAITH-MENU-COVER-RETURN';
+    frame.src='diocese.html?v=V8-1-13-18-FAITH-BOTTOM-BANNER-COLORS';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -3400,7 +3400,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V8-1-13-17-MYFAITH-MENU-COVER-RETURN';
+const _PRAYER_ASSET_VERSION='V8-1-13-18-FAITH-BOTTOM-BANNER-COLORS';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
