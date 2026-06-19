@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  var VERSION = 'V8-1-14-19-MYFAITH-CLOSE-SEQUENCE';
+  var VERSION = 'V8-1-14-20-MYFAITH-QUIET-CLOSE';
   var KEY = 'oai_back_diag_logs_v1';
   var MAX = 120;
   var panel = null;

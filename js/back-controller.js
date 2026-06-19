@@ -8,7 +8,7 @@
 
   var _href = location.href.split('#')[0];
 
-  /* 진단 표시 코드는 V8-1-14-19-MYFAITH-CLOSE-SEQUENCE에서 제거했습니다. */
+  /* 진단 표시 코드는 V8-1-14-20-MYFAITH-QUIET-CLOSE에서 제거했습니다. */
 
 
   function armCoverBackTrap(reason, opts){
