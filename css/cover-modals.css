@@ -327,7 +327,7 @@
 }
 
 
-/* V8-1-14-15-MYFAITH-RESET-DIOCESE-GAP: 메뉴/미사 빠른사용 버튼 중립 테두리 유지 */
+/* V8-1-14-16-MYFAITH-BACK-RESET-GAP-TUNE: 메뉴/미사 빠른사용 버튼 중립 테두리 유지 */
 #cover-menu-guide-btn,
 #cover-menu-privacy-btn,
 #cover-menu-qna-btn,
@@ -347,7 +347,7 @@
 #cover #mass-quick-hymn strong,
 #cover #mass-quick-bible strong { color: #172033 !important; }
 
-/* V8-1-14-15-MYFAITH-RESET-DIOCESE-GAP: 매일미사 빠른버튼도 다른 버튼과 같은 중립 테두리로 강제 */
+/* V8-1-14-16-MYFAITH-BACK-RESET-GAP-TUNE: 매일미사 빠른버튼도 다른 버튼과 같은 중립 테두리로 강제 */
 #cover #mass-quick-modal #mass-quick-missa.mass-quick-btn,
 #cover #mass-quick-modal #mass-quick-missa.mass-quick-primary,
 #cover #mass-quick-modal #mass-quick-prayer.mass-quick-btn,
