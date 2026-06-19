@@ -121,18 +121,30 @@
   function stabilizeAfterMyFaithClose(reason){
     try{
       reason = reason || 'my-faith-close';
+      /*
+       * 나의신앙생활 안에서 Back을 누르면 이 함수가 실행된다.
+       * 이때 종료문구를 강제로 띄우면 커버에 도착한 뒤 다음 Back이 바로 종료로 이어진다.
+       * 따라서 여기서는 기존 종료문구/exit-ready 상태를 지우고, 커버 trap만 새로 세운다.
+       */
       if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
       if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
       if(typeof window._clearHardCoverExitFlags === 'function') window._clearHardCoverExitFlags(reason);
-      if(typeof window._forceNextCoverBackToast === 'function') window._forceNextCoverBackToast(reason);
-      armCoverBackTrap(reason, {force:true});
+      try{
+        sessionStorage.removeItem('oai_force_next_cover_back_toast_until');
+        sessionStorage.removeItem('oai_cover_exit_hard_on_next_back');
+        sessionStorage.removeItem('oai_cover_exit_hard_after_first_toast');
+        sessionStorage.removeItem('oai_cover_exit_long_window_once');
+      }catch(_e){}
+      try{ var bt=document.getElementById('_bt'); if(bt && bt.parentNode) bt.parentNode.removeChild(bt); }catch(_e){}
+      armCoverBackTrap(reason + '-fresh-cover', {force:true});
       setTimeout(function(){
         try{
           if(!isMyFaithModalOpen() && coverVisible() && !appActive()){
             if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
             if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
-            if(typeof window._forceNextCoverBackToast === 'function') window._forceNextCoverBackToast(reason + '-late');
-            armCoverBackTrap(reason + '-late', {force:true});
+            if(typeof window._clearHardCoverExitFlags === 'function') window._clearHardCoverExitFlags(reason + '-late');
+            try{ var bt=document.getElementById('_bt'); if(bt && bt.parentNode) bt.parentNode.removeChild(bt); }catch(_e){}
+            armCoverBackTrap(reason + '-late-fresh-cover', {force:true});
           }
         }catch(e){ console.warn('[가톨릭길동무]', e); }
       }, 120);
