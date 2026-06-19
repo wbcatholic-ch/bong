@@ -325,3 +325,31 @@
   color: #172033 !important;
   font-weight: 950 !important;
 }
+
+
+/* V8-1-13-23: 커버 메뉴와 미사 중 빠른 사용 버튼 테두리 중립화 */
+.cover-menu-item,
+#cover-menu-guide-btn,
+#cover-menu-privacy-link,
+#cover-menu-qna-btn,
+#cover #mass-quick-modal .mass-quick-btn,
+#cover #mass-quick-modal .mass-quick-primary,
+#cover #mass-quick-missa,
+#cover #mass-quick-prayer,
+#cover #mass-quick-hymn,
+#cover #mass-quick-bible {
+  background: #FFFFFF !important;
+  background-image: none !important;
+  border-color: #AEB8C5 !important;
+  color: #172033 !important;
+}
+.cover-menu-item,
+#cover #mass-quick-modal .mass-quick-btn,
+#cover #mass-quick-modal .mass-quick-primary {
+  border-width: 2.4px !important;
+}
+.cover-menu-text,
+#cover #mass-quick-modal .mass-quick-btn strong {
+  color: #172033 !important;
+  font-weight: 950 !important;
+}
