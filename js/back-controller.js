@@ -63,8 +63,11 @@
         if(el && el.classList && el.classList.contains('open')) return true;
       }
       if(document.querySelector('.module-view.open')) return true;
+      if(document.querySelector('#info-card.open,#sheet-route.open,#route-choice-modal.open,#srch-modal.open,.sheet.open,.trail-sheet.open')) return true;
+      try{ if(typeof _activeTab !== 'undefined' && _activeTab) return true; }catch(_e){}
+      try{ if(typeof _routeMode !== 'undefined' && (_routeMode || _rS || _rE)) return true; }catch(_e){}
       var app = $b('app');
-      if(app && document.documentElement.classList.contains('app-active') && !coverVisible()) return true;
+      if(app && document.documentElement.classList.contains('app-active')) return true;
     }catch(e){ console.warn('[가톨릭길동무]', e); }
     return false;
   }

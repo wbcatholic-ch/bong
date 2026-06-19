@@ -243,9 +243,11 @@
         reason = reason || 'my-faith-close';
         sessionStorage.setItem('oai_myfaith_return_cover_reason', reason);
         sessionStorage.setItem('oai_myfaith_return_cover_ts', String(Date.now ? Date.now() : new Date().getTime()));
-        sessionStorage.setItem('oai_cover_exit_hard_after_first_toast', '1');
-        sessionStorage.setItem('oai_cover_exit_long_window_once', '1');
+        sessionStorage.removeItem('oai_cover_exit_hard_on_next_back');
+        sessionStorage.removeItem('oai_cover_exit_hard_after_first_toast');
+        sessionStorage.removeItem('oai_cover_exit_long_window_once');
         sessionStorage.removeItem('oai_app_exit_back_steps');
+        if(typeof window._clearHardCoverExitFlags === 'function') window._clearHardCoverExitFlags(reason);
       }catch(_e){}
       try{
         var root = document.documentElement;
@@ -273,6 +275,14 @@
         sessionStorage.removeItem('oai_cover_toast_on_return_ts');
       }catch(_e){}
     }
+    function clearHardCoverExitFlagsForMyFaith(reason){
+      try{
+        sessionStorage.removeItem('oai_cover_exit_hard_on_next_back');
+        sessionStorage.removeItem('oai_cover_exit_hard_after_first_toast');
+        sessionStorage.removeItem('oai_cover_exit_long_window_once');
+        if(typeof window._clearHardCoverExitFlags === 'function') window._clearHardCoverExitFlags(reason || 'my-faith');
+      }catch(_e){}
+    }
     function primeMyFaithCoverExitToast(reason){
       try{
         if(modal && modal.classList && modal.classList.contains('show')) return false;
@@ -286,6 +296,7 @@
           cover.style.pointerEvents = '';
           try{ cover.scrollTop = 0; }catch(_e){}
         }
+        clearHardCoverExitFlagsForMyFaith(reason || 'my-faith-external-cover');
         resetCoverBackAfterMyFaith(reason || 'my-faith-external-cover');
         clearGenericCoverToastFlag();
         clearMyFaithExternalLinkFlag();
@@ -346,6 +357,9 @@
         sessionStorage.setItem(MYFAITH_EXTERNAL_TS, String(Date.now ? Date.now() : new Date().getTime()));
         sessionStorage.setItem('oai_cover_toast_on_return', 'my-faith-external-return-cover');
         sessionStorage.setItem('oai_cover_toast_on_return_ts', String(Date.now ? Date.now() : new Date().getTime()));
+        sessionStorage.removeItem('oai_cover_exit_hard_on_next_back');
+        sessionStorage.removeItem('oai_cover_exit_hard_after_first_toast');
+        sessionStorage.removeItem('oai_cover_exit_long_window_once');
       }catch(_e){}
       try{ if(typeof window.oaiPrepareCoverToastOnReturn === 'function') window.oaiPrepareCoverToastOnReturn('my-faith-external-return-cover'); }catch(_e){}
       try{ markMyFaithExternalSettling(2200); }catch(_e){}
@@ -382,12 +396,21 @@
       }catch(_e){ return false; }
     }
     function forceCoverTrapAfterMyFaithExternal(reason){
-      primeMyFaithCoverExitToast(reason || 'my-faith-external-cover');
+      stabilizeCoverAfterMyFaithExternal(reason || 'my-faith-external-cover');
     }
     function stabilizeCoverAfterMyFaithExternal(reason){
       if(!hasRecentMyFaithExternalLink()) return;
-      if(modal && modal.classList && modal.classList.contains('show')) return;
-      primeMyFaithCoverExitToast(reason || 'my-faith-external-cover');
+      reason = reason || 'my-faith-external-return';
+      clearHardCoverExitFlagsForMyFaith(reason);
+      try{
+        if(modal && modal.classList && !modal.classList.contains('show')){
+          openModal({keepContent:true, fromExternal:true});
+        }
+        resetCoverBackAfterMyFaith(reason);
+      }catch(e){
+        console.warn('[가톨릭길동무]', e);
+        primeMyFaithCoverExitToast(reason);
+      }
     }
     function goExternal(url){
       url = normalizeMyFaithExternalUrl(url);
