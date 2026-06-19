@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-14-7-MYFAITH-GUARD-CROSS-BORDER';
-const ASSET_VERSION = 'V8-1-14-7-MYFAITH-GUARD-CROSS-BORDER';
+const CACHE_VERSION = 'catholic-way-V8-1-14-9-HYMN-EXTERNAL-BROWSER';
+const ASSET_VERSION = 'V8-1-14-9-HYMN-EXTERNAL-BROWSER';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }

@@ -138,7 +138,7 @@
   html.qa-embedded #qna-cross-icon,
   html.qa-embedded #header-texts,
   html.qa-embedded #close-btn{ display:none !important; }
-  html.qa-embedded #write-btn{ display:flex !important; }
+  html.qa-embedded #write-btn{ display:none !important; }
 
   /* ── 뷰 전환 ── */
   .view { display: none; min-height: 0; padding: 0 0 80px; }
@@ -430,6 +430,10 @@
   .char-count {
     font-size: 13px !important;
   }
+
+
+  /* V8-1-14-8: embedded iframe에서는 글쓰기 플로팅 버튼도 숨김 */
+  html.qa-embedded #write-btn{ display:none !important; visibility:hidden !important; pointer-events:none !important; }
 
 </style>
 
@@ -973,11 +977,11 @@ function oaiReturnToAppCover(reason){
   try{
     var url = new URL('index.html', location.href);
     url.searchParams.set('oai_cover_return', reason || 'qna-return-cover');
-    url.searchParams.set('v', 'V8-1-14-7-MYFAITH-GUARD-CROSS-BORDER');
+    url.searchParams.set('v', 'V8-1-14-9-HYMN-EXTERNAL-BROWSER');
     location.replace(url.href);
     return;
   }catch(e){
-    location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason || 'qna-return-cover') + '&v=V8-1-14-7-MYFAITH-GUARD-CROSS-BORDER');
+    location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason || 'qna-return-cover') + '&v=V8-1-14-9-HYMN-EXTERNAL-BROWSER');
   }
 }
 function handleQaBack(){
@@ -1025,7 +1029,7 @@ if (QA_PRIVATE_MODE) {
 <script id="oai-cache-lifecycle-V6-146">
 (function(){
   'use strict';
-  var APP_VERSION = 'V8-1-14-7-MYFAITH-GUARD-CROSS-BORDER';
+  var APP_VERSION = 'V8-1-14-9-HYMN-EXTERNAL-BROWSER';
   if('serviceWorker' in navigator){
     try{ navigator.serviceWorker.register('./sw.js?v=' + encodeURIComponent(APP_VERSION)).then(function(reg){try{reg.update();}catch(e){}}).catch(function(){}); }catch(e){}
   }
