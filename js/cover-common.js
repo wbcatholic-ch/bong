@@ -3,7 +3,7 @@
 (function(){
   if(window.__APP_FONT_SCALE_GUARD__) return;
   window.__APP_FONT_SCALE_GUARD__=true;
-  var QA_URL="qa-firebase.html?v=V8-1-13-12-SHRINE-LAYER-ORDER-CHECK";
+  var QA_URL="qa-firebase.html?v=V8-1-13-3-PRAYER-FAV-DIOCESE-CHECK";
   var FONT_KEY='prayer_font_size';
   var BASE=16;
   var FONT_SIZES=[13,14,15,16,17,18,19,20,21,22,24,26,28,30];

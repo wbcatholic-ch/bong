@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-13-12-SHRINE-LAYER-ORDER-CHECK';
-const ASSET_VERSION = 'V8-1-13-12-SHRINE-LAYER-ORDER-CHECK';
+const CACHE_VERSION = 'catholic-way-V8-1-13-3-PRAYER-FAV-DIOCESE-CHECK';
+const ASSET_VERSION = 'V8-1-13-3-PRAYER-FAV-DIOCESE-CHECK';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }
