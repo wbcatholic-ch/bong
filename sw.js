@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-13-5-SHRINE-BACK-REARM';
-const ASSET_VERSION = 'V8-1-13-5-SHRINE-BACK-REARM';
+const CACHE_VERSION = 'catholic-way-V8-1-13-6-SHRINE-BOUNDARY-GUARD';
+const ASSET_VERSION = 'V8-1-13-6-SHRINE-BOUNDARY-GUARD';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }

@@ -353,6 +353,7 @@
     }
 
     try{ if(typeof window._oaiHandleShrineBack==='function' && window._oaiHandleShrineBack('popstate-before-cover')) return; }catch(e){ console.warn('[가톨릭길동무]', e); }
+    try{ if(typeof window._oaiHandleShrineBoundaryBack==='function' && window._oaiHandleShrineBoundaryBack('popstate-boundary')) return; }catch(e){ console.warn('[가톨릭길동무]', e); }
 
     if(!appActive()){
       if(consumeSuppressedCoverBackToast()) return;
@@ -387,6 +388,7 @@
       return;
     }
     try{ if(typeof window._oaiHandleShrineBack==='function' && window._oaiHandleShrineBack('hardware-back-priority')) return; }catch(e){ console.warn('[가톨릭길동무]', e); }
+    try{ if(typeof window._oaiHandleShrineBoundaryBack==='function' && window._oaiHandleShrineBoundaryBack('hardware-boundary')) return; }catch(e){ console.warn('[가톨릭길동무]', e); }
     if(!appActive()){
       if(consumeSuppressedCoverBackToast()) return;
       if(typeof window._showBackToast==='function') window._showBackToast();
