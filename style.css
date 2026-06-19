@@ -6134,7 +6134,7 @@ html.oai-external-return-freeze::after {
 }
 
 
-/* V8-1-14-6-BACK-DIAG-BASE14-2: 개인정보는 주요기능처럼 내부 모달, 문의·건의는 매일미사/성경처럼 내부 iframe */
+/* V8-1-14-7-MYFAITH-GUARD-CROSS-BORDER: 개인정보는 주요기능처럼 내부 모달, 문의·건의는 매일미사/성경처럼 내부 iframe */
 .privacy-policy-panel {
   width: min(94vw, 920px);
   height: min(86vh, 780px);
@@ -6161,3 +6161,44 @@ html.oai-external-return-freeze::after {
   background: #ede8e0;
 }
 #qna-view.open { display: flex; flex-direction: column; }
+
+/* V8-1-14-7-MYFAITH-GUARD-CROSS-BORDER: 외부복귀/새로고침 안정막의 금색 로딩 십자가 복원 */
+html.oai-stability-veil::after,
+html.oai-stability-veil[data-oai-stability-reason*="external"]::after,
+html.oai-stability-veil[data-oai-stability-reason*="refresh"]::after,
+html.oai-stability-veil[data-oai-stability-reason*="reload"]::after,
+html.oai-stability-veil[data-oai-stability-reason*="background"]::after,
+html.oai-stability-veil.oai-external-return-freeze::after,
+html.oai-external-return-freeze::after {
+  content:"✝" !important;
+  position:fixed !important;
+  left:50% !important;
+  top:50% !important;
+  width:34px !important;
+  height:34px !important;
+  margin:-17px 0 0 -17px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  color:#d4aa6a !important;
+  font-size:30px !important;
+  font-weight:900 !important;
+  line-height:1 !important;
+  z-index:2147483001 !important;
+  pointer-events:none !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  animation:oaiStabilitySpin 2.8s linear infinite !important;
+}
+html.oai-cover-booting::after,
+html.oai-cover-revealing::after,
+html.oai-first-entry-intro::after {
+  content:"" !important;
+  display:none !important;
+  opacity:0 !important;
+  visibility:hidden !important;
+  animation:none !important;
+}

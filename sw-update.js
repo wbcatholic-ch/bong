@@ -4,7 +4,7 @@
   if(window.__APP_CACHE_LIFECYCLE_GUARD__) return;
   window.__APP_CACHE_LIFECYCLE_GUARD__ = true;
   var APP_VERSION = 'V2';
-  var SW_BUILD_VERSION = 'V8-1-14-6-BACK-DIAG-BASE14-2';
+  var SW_BUILD_VERSION = 'V8-1-14-7-MYFAITH-GUARD-CROSS-BORDER';
   window.APP_VERSION = APP_VERSION;
 
   function now(){ return Date.now ? Date.now() : new Date().getTime(); }
