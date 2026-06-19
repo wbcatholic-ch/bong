@@ -295,7 +295,7 @@ html.ios-device .cb{width:34px!important;height:34px!important;border-radius:10p
 .hd-icon::before{top:50%;width:3px;height:24px;transform:translate(-50%,-50%);}
 .hd-icon::after{top:42%;width:14px;height:3px;transform:translate(-50%,-50%);}
 
-/* V8-1-14-14-MYFAITH-EXIT-GATE-DIOCESE-STICKY: 관구·교구 지역검색 결과 카드 상단 테두리/여백 잘림 보정 */
+/* V8-1-14-15-MYFAITH-RESET-DIOCESE-GAP: 관구·교구 지역검색 결과 카드 상단 테두리/여백 잘림 보정 */
 #search-view #sres{
   margin-top:16px !important;
   padding-top:10px !important;
@@ -317,7 +317,7 @@ html.ios-device .cb{width:34px!important;height:34px!important;border-radius:10p
   #search-view #sres{ margin-top:16px !important; padding-top:10px !important; }
 }
 
-/* V8-1-14-14-MYFAITH-EXIT-GATE-DIOCESE-STICKY: 관구·교구 지역검색 sticky 검색영역이 결과 카드 상단을 덮는 문제 보정 */
+/* V8-1-14-15-MYFAITH-RESET-DIOCESE-GAP: 관구·교구 지역검색 sticky 검색영역이 결과 카드 상단을 덮는 문제 보정 */
 #search-view .ss{
   position:relative !important;
   top:auto !important;
@@ -349,4 +349,40 @@ html.ios-device #search-view .ss{
 html.ios-device #search-view #sres{
   margin-top:18px !important;
   padding-top:14px !important;
+}
+
+/* V8-1-14-15-MYFAITH-RESET-DIOCESE-GAP: 검색창은 움직이지 않고 결과 박스만 검색창 아래로 분리 */
+#search-view .ss{
+  position:relative !important;
+  top:auto !important;
+  z-index:5 !important;
+  margin-left:-14px !important;
+  margin-right:-14px !important;
+  margin-top:0 !important;
+  margin-bottom:0 !important;
+  padding-left:14px !important;
+  padding-right:14px !important;
+  overflow:visible !important;
+}
+#search-view #sres{
+  position:relative !important;
+  z-index:1 !important;
+  margin-top:0 !important;
+  padding-top:28px !important;
+  overflow:visible !important;
+}
+#search-view .si-r:first-child{
+  margin-top:0 !important;
+}
+html.ios-device #search-view .ss{
+  position:relative !important;
+  top:auto !important;
+  margin-left:-16px !important;
+  margin-right:-16px !important;
+  margin-top:0 !important;
+  margin-bottom:0 !important;
+}
+html.ios-device #search-view #sres{
+  margin-top:0 !important;
+  padding-top:30px !important;
 }
