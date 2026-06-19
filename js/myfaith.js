@@ -219,7 +219,7 @@
       }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
 
-    /* V8-1-14-14-MYFAITH-EXIT-GATE-DIOCESE-STICKY: 나의 신앙생활 닫기 후 커버 첫 Back이 WebView 밖으로 바로 빠지는 경우를 막는 전용 1회 가드 */
+    /* V8-1-14-15-MYFAITH-RESET-DIOCESE-GAP: 나의 신앙생활 닫기 후 커버 첫 Back이 WebView 밖으로 바로 빠지는 경우를 막는 전용 1회 가드 */
     var MYFAITH_COVER_GUARD_MS = 30000;
     function myFaithNow(){ try{ return Date.now ? Date.now() : new Date().getTime(); }catch(_e){ return new Date().getTime(); } }
     function isMyFaithCoverOnly(){
@@ -299,68 +299,51 @@
     window.addEventListener('hashchange', function(e){ handleMyFaithCoverBack(e, 'hashchange'); }, true);
 
 
-    /* V8-1-14-14-MYFAITH-EXIT-GATE-DIOCESE-STICKY: 나의신앙생활 닫기 후 커버 Back이 바로 doExit로 빠지는 경우 1회 차단 */
-    function installMyFaithExitGate(){
-      try{
-        if(window.__OAI_MYFAITH_DOEXIT_GATE_INSTALLED__) return;
-        if(typeof window.doExit !== 'function') return;
-        var originalDoExit = window.doExit;
-        window.__OAI_MYFAITH_DOEXIT_GATE_INSTALLED__ = true;
-        window.doExit = function(){
-          try{
-            var until = Number(window.__OAI_MYFAITH_EXIT_GATE_UNTIL__ || 0);
-            var now = myFaithNow();
-            if(until && now < until && isMyFaithCoverOnly()){
-              if(!window.__OAI_MYFAITH_EXIT_GATE_READY__){
-                window.__OAI_MYFAITH_EXIT_GATE_READY__ = true;
-                try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(_e){}
-                try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(_e){}
-                var old=document.getElementById('_bt');
-                if(old && old.parentNode) old.parentNode.removeChild(old);
-                var t=document.createElement('div');
-                t.id='_bt';
-                t.textContent='한 번 더 누르면 앱이 종료됩니다';
-                t.style.cssText='position:fixed;top:50%;left:50%;bottom:auto;transform:translate(-50%,-50%);background:rgba(14,21,53,.94);color:#fff;padding:12px 24px;border-radius:24px;font-size:14px;font-weight:800;z-index:99999;white-space:nowrap;pointer-events:none;box-shadow:0 14px 36px rgba(0,0,0,.32);';
-                document.body.appendChild(t);
-                try{ if(typeof window.oaiBackDiagLog === 'function') window.oaiBackDiagLog('MYFAITH doExit-gate-toast'); }catch(_e){}
-                setTimeout(function(){
-                  try{ window.__OAI_MYFAITH_EXIT_GATE_READY__ = false; }catch(_e){}
-                  try{ var bt=document.getElementById('_bt'); if(bt&&bt.parentNode) bt.parentNode.removeChild(bt); }catch(_e){}
-                }, 2500);
-                return false;
-              }
-              window.__OAI_MYFAITH_EXIT_GATE_UNTIL__ = 0;
-              window.__OAI_MYFAITH_EXIT_GATE_READY__ = false;
-            }
-          }catch(e){ console.warn('[가톨릭길동무]', e); }
-          return originalDoExit.apply(this, arguments);
-        };
-      }catch(e){ console.warn('[가톨릭길동무]', e); }
-    }
-    function armMyFaithExitGate(reason){
-      try{
-        installMyFaithExitGate();
-        window.__OAI_MYFAITH_EXIT_GATE_UNTIL__ = myFaithNow() + 60000;
-        window.__OAI_MYFAITH_EXIT_GATE_READY__ = false;
-        try{ if(typeof window.oaiBackDiagLog === 'function') window.oaiBackDiagLog('MYFAITH doExit-gate-arm', reason || ''); }catch(_e){}
-      }catch(e){ console.warn('[가톨릭길동무]', e); }
-    }
+    /* V8-1-14-15-MYFAITH-RESET-DIOCESE-GAP: 1-14-14의 doExit 차단 게이트는 잘못된 방향이라 비활성화 */
+    function installMyFaithExitGate(){ return false; }
+    function armMyFaithExitGate(reason){ return false; }
 
-    function resetCoverBackAfterMyFaith(reason){
+    function clearMyFaithCoverToastAndExitState(reason){
       try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }
       try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(e){ console.warn('[가톨릭길동무]', e); }
-      try{ if(typeof window._forceNextCoverBackToast === 'function') window._forceNextCoverBackToast(reason || 'my-faith-close'); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      try{ if(typeof window._clearHardCoverExitFlags === 'function') window._clearHardCoverExitFlags(reason || 'my-faith-cover-reset'); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      try{
+        sessionStorage.removeItem('oai_force_next_cover_back_toast_until');
+        sessionStorage.removeItem('oai_cover_exit_hard_on_next_back');
+        sessionStorage.removeItem('oai_cover_exit_hard_after_first_toast');
+        sessionStorage.removeItem('oai_cover_exit_long_window_once');
+      }catch(_e){}
+      try{ var bt=document.getElementById('_bt'); if(bt && bt.parentNode) bt.parentNode.removeChild(bt); }catch(_e){}
+      try{ if(typeof window.oaiBackDiagLog === 'function') window.oaiBackDiagLog('MYFAITH cover-exit-state-reset', reason || ''); }catch(_e){}
+    }
+    function scheduleMyFaithCoverExitStateReset(reason){
+      try{
+        clearMyFaithCoverToastAndExitState(reason || 'my-faith-cover-reset-now');
+        setTimeout(function(){ clearMyFaithCoverToastAndExitState(reason || 'my-faith-cover-reset-80'); }, 80);
+        setTimeout(function(){ clearMyFaithCoverToastAndExitState(reason || 'my-faith-cover-reset-260'); }, 260);
+      }catch(e){ console.warn('[가톨릭길동무]', e); }
+    }
+    function resetCoverBackAfterMyFaith(reason){
+      reason = reason || 'my-faith-close';
+      /*
+       * 나의신앙생활 안에서 Back을 누르면 커버로 이동하면서 종료문구가 이미 한 번 뜬다.
+       * 그 상태를 그대로 두면 커버에서 다음 Back이 “두 번째 Back”으로 판단되어 바로 종료된다.
+       * 따라서 커버에 도착한 직후에는 문구/종료준비 상태만 초기화하고,
+       * 새 종료문구를 강제로 띄우지는 않는다.
+       */
+      scheduleMyFaithCoverExitStateReset(reason);
       try{
         if(typeof window._oaiArmCoverBackTrap === 'function'){
-          window._oaiArmCoverBackTrap(reason || 'my-faith-close', {force:true});
+          window._oaiArmCoverBackTrap(reason + '-fresh-cover', {force:true});
         }else{
           var href = location.href.split('#')[0];
-          
+          history.replaceState({_p:0, oai_cover_root:reason, oai_myfaith_reset:true}, '', href);
+          history.pushState({_p:1, oai_cover_trap:reason, oai_myfaith_reset_trap:true}, '', href + '#oai-myfaith-cover-ready');
         }
       }catch(e){ console.warn('[가톨릭길동무]', e); }
-      try{ armMyFaithCoverExitGuard(reason || 'my-faith-close'); }catch(e){ console.warn('[가톨릭길동무]', e); }
-      try{ armMyFaithExitGate(reason || 'my-faith-close'); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      try{ armMyFaithCoverExitGuard(reason + '-fresh'); }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
+
     function goFreshCoverAfterMyFaith(reason){
       /*
        * V6-160 확인용: V6-155~159의 fresh location.replace 방식은
@@ -481,8 +464,6 @@
     }
     window.isMyFaithLifeModalOpen = function(){ try{ return !!(modal && modal.classList.contains('show')); }catch(_e){ return false; } };
     window.closeMyFaithLifeModal = function(){ closeModal(); };
-    setTimeout(installMyFaithExitGate, 500);
-    setTimeout(installMyFaithExitGate, 1800);
     function normalizeMyFaithExternalUrl(url){
       url = String(url || '').trim();
       if(!url) return '';
