@@ -1,9 +1,0 @@
-V8-1-14-2 구조 정렬 수정
-
-기준: V8-1-13-18
-
-핵심 변경:
-1. 개인정보처리방침: privacy.html 상위 이동 제거, 주요기능처럼 index.html 내부 guide-modal 방식으로 표시.
-2. 문의·건의: qa-firebase.html 상위 이동 제거, 매일미사/성경처럼 index.html 내부 qna-view iframe으로 표시.
-3. 나의 신앙생활 외부링크: myfaith 전용 복귀/toast flag 제거, 가톨릭 웹사이트처럼 oaiSmoothNavigate(..., integrated-external) 공통 외부 이동 흐름 사용.
-4. 성지/순례현황/기도문/매일미사/성경 기능 본체는 수정하지 않음.
