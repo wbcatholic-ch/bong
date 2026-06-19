@@ -3,7 +3,7 @@
 (function(){
   if(window.__APP_FONT_SCALE_GUARD__) return;
   window.__APP_FONT_SCALE_GUARD__=true;
-  var QA_URL="qa-firebase.html?v=V8-1-13-10-COVER-TOAST-PILGRIM-LAYERS";
+  var QA_URL="qa-firebase.html?v=V8-1-13-11-EXTERNAL-RETURN-FIRST-TOAST";
   var FONT_KEY='prayer_font_size';
   var BASE=16;
   var FONT_SIZES=[13,14,15,16,17,18,19,20,21,22,24,26,28,30];
@@ -43,6 +43,7 @@
       if(!isCoverReadyForReturnToast()) return false;
       if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
       if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
+      if(typeof window._clearHardCoverExitFlags === 'function') window._clearHardCoverExitFlags(reason || 'cover-return');
       if(typeof window._forceNextCoverBackToast === 'function') window._forceNextCoverBackToast(reason || 'cover-return');
       if(typeof window._resetCoverBackTrap === 'function') window._resetCoverBackTrap(reason || 'cover-return');
       else if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap(reason || 'cover-return', {force:true});

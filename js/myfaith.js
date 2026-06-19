@@ -365,6 +365,8 @@
       try{ markMyFaithExternalSettling(2200); }catch(_e){}
       try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(_e){}
       try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(_e){}
+      try{ if(typeof window._clearHardCoverExitFlags === 'function') window._clearHardCoverExitFlags('my-faith-external-link'); }catch(_e){}
+      try{ if(typeof window._forceNextCoverBackToast === 'function') window._forceNextCoverBackToast('my-faith-external-link'); }catch(_e){}
       try{
         if(modal && modal.classList.contains('show') && typeof window._pushCoverOverlayBackTrap === 'function'){
           window._pushCoverOverlayBackTrap('my-faith-external', 'my-faith-external-link');
