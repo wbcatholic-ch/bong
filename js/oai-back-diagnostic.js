@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  var VERSION = 'V8-1-14-12-MYFAITH-INTERNAL-MODULE';
+  var VERSION = 'V8-1-14-13-MYFAITH-OPEN-RESTORE-DIOCESE-CARD';
   var KEY = 'oai_back_diag_logs_v1';
   var MAX = 120;
   var panel = null;
