@@ -1130,6 +1130,7 @@ function _ensureShrineVisitCardsModal(){
     if(!card) return;
     e.preventDefault(); e.stopPropagation(); if(e.stopImmediatePropagation) e.stopImmediatePropagation();
     const idx=parseInt(card.getAttribute('data-shrine-visit-card'),10);
+    _rememberShrineVisitCardsReturnState('card-detail-open');
     window.__OAI_SHRINE_VISIT_DETAIL_FROM_CARDS__=true;
     _openShrineVisitDetail(idx);
   }, true);
@@ -1211,6 +1212,30 @@ function _isShrineVisitCardsModalOpen(){
 function _pushShrineVisitCardsHistory(){
   return;
 }
+function _rememberShrineVisitCardsReturnState(reason){
+  try{
+    window.__OAI_SHRINE_VISIT_CARDS_RETURN_STATE__={
+      tab:_shrineVisitCardsTab||'visited',
+      diocese:_shrineVisitCardsDiocese||'all',
+      reason:reason||'stampbook',
+      t:Date.now?Date.now():(new Date()).getTime()
+    };
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+}
+function _reopenShrineVisitCardsFromBack(reason){
+  try{
+    try{ _mode='shrine'; }catch(_e){}
+    const st=window.__OAI_SHRINE_VISIT_CARDS_RETURN_STATE__||{};
+    const modal=_ensureShrineVisitCardsModal();
+    _shrineVisitCardsTab=st.tab||_shrineVisitCardsTab||'visited';
+    _shrineVisitCardsDiocese=st.diocese||_shrineVisitCardsDiocese||'all';
+    _renderShrineVisitCardsModal();
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden','false');
+    setTimeout(_resetShrineVisitCardsTopStable,0);
+    return true;
+  }catch(e){ console.warn('[가톨릭길동무]', e); return false; }
+}
 function _openShrineVisitCardsModal(){
   if(_mode!=='shrine') return;
   const modal=_ensureShrineVisitCardsModal();
@@ -1226,6 +1251,7 @@ function _openShrineVisitCardsModal(){
   }catch(_e){}
   modal.classList.add('show');
   modal.setAttribute('aria-hidden','false');
+  _rememberShrineVisitCardsReturnState('cards-open');
   _resetShrineVisitCardsTopStable();
   _pushShrineVisitCardsHistory();
 }
@@ -1354,6 +1380,11 @@ function _openShrineVisitDetailOnMap(idx){
   idx=parseInt(idx,10);
   if(!(idx>=0) || !SHRINES[idx]) return;
   const item=SHRINES[idx];
+  try{
+    _rememberShrineVisitCardsReturnState('detail-map-info-card');
+    window.__OAI_SHRINE_VISIT_INFO_FROM_CARDS__=true;
+    window.__OAI_SHRINE_VISIT_INFO_RETURN_IDX__=idx;
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
   try{ _closeShrineVisitDetail({fromPopstate:true}); }catch(e){ console.warn('[가톨릭길동무]', e); }
   try{ _closeShrineVisitCardsModal({fromPopstate:true}); }catch(e){ console.warn('[가톨릭길동무]', e); }
   try{ if(typeof _closeShrineVisitModal==='function') _closeShrineVisitModal({fromPopstate:true}); }catch(e){ console.warn('[가톨릭길동무]', e); }
@@ -1418,6 +1449,37 @@ function _closeShrineVisitDetail(opts){
   window.__OAI_SHRINE_VISIT_DETAIL_HISTORY__=false;
   window.__OAI_SHRINE_VISIT_DETAIL_CLOSING_BY_CODE__=false;
 }
+function _oaiHandleShrineVisitBack(reason){
+  try{
+    const reg=document.getElementById('shrine-visit-modal');
+    if(reg&&reg.classList.contains('show')){
+      _closeShrineVisitModal({fromPopstate:true});
+      return true;
+    }
+    const auto=document.getElementById('shrine-auto-visit-modal');
+    if(auto&&auto.classList.contains('show')){
+      _closeShrineAutoVisitModal();
+      return true;
+    }
+    if(_isShrineVisitDetailOpen()){
+      _closeShrineVisitDetail({fromPopstate:true});
+      return true;
+    }
+    const info=document.getElementById('info-card');
+    if(window.__OAI_SHRINE_VISIT_INFO_FROM_CARDS__ && info&&info.classList.contains('open')){
+      try{ closeInfoCard({keepMap:true}); }catch(e){ info.classList.remove('open'); console.warn('[가톨릭길동무]', e); }
+      window.__OAI_SHRINE_VISIT_INFO_FROM_CARDS__=false;
+      _reopenShrineVisitCardsFromBack('info-card-back');
+      return true;
+    }
+    if(_isShrineVisitCardsModalOpen()){
+      _closeShrineVisitCardsModal({fromPopstate:true});
+      return true;
+    }
+  }catch(e){ console.warn('[가톨릭길동무]', e); }
+  return false;
+}
+try{ window._oaiHandleShrineVisitBack=_oaiHandleShrineVisitBack; }catch(_e){}
 
 function _scrollShrineVisitDioceseTabIntoView(value, behavior){
   try{
@@ -2821,7 +2883,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V8-1-13-7-DIOCESE-PRETRAP-CHECK';
+    frame.src='diocese.html?v=V8-1-13-8-STAMPBOOK-BACK-CHECK';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -3355,7 +3417,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V8-1-13-7-DIOCESE-PRETRAP-CHECK';
+const _PRAYER_ASSET_VERSION='V8-1-13-8-STAMPBOOK-BACK-CHECK';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');

@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-13-7-DIOCESE-PRETRAP-CHECK';
-const ASSET_VERSION = 'V8-1-13-7-DIOCESE-PRETRAP-CHECK';
+const CACHE_VERSION = 'catholic-way-V8-1-13-8-STAMPBOOK-BACK-CHECK';
+const ASSET_VERSION = 'V8-1-13-8-STAMPBOOK-BACK-CHECK';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }
