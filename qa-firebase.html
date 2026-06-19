@@ -10,6 +10,19 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
+
+<script>
+/* V8-1-14-6: 문의·건의가 index.html iframe 안에서 열릴 때는 iframe 내부 헤더만 접고, 부모 qna-view 헤더/뒤로가기는 유지한다. */
+(function(){
+  try{
+    var sp = new URLSearchParams(location.search || '');
+    if(sp.get('embedded') === '1' || window.parent !== window){
+      document.documentElement.classList.add('qa-embedded');
+    }
+  }catch(_e){}
+})();
+</script>
+
 <style>
   /* ── 리셋 & 기본 ── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -114,6 +127,18 @@
     gap: 4px;
   }
   #write-btn:active { transform: scale(.97); }
+
+  /* V8-1-14-6: embedded iframe에서는 내부 헤더 중복만 제거. 부모 qna-view 헤더와 back 구조는 건드리지 않는다. */
+  html.qa-embedded { --qa-top-gap: 0px; }
+  html.qa-embedded #header{
+    height:0 !important; min-height:0 !important; padding:0 !important;
+    overflow:visible !important; background:transparent !important; box-shadow:none !important;
+    border:0 !important; flex:0 0 0 !important; display:block !important;
+  }
+  html.qa-embedded #qna-cross-icon,
+  html.qa-embedded #header-texts,
+  html.qa-embedded #close-btn{ display:none !important; }
+  html.qa-embedded #write-btn{ display:flex !important; }
 
   /* ── 뷰 전환 ── */
   .view { display: none; min-height: 0; padding: 0 0 80px; }
@@ -948,11 +973,11 @@ function oaiReturnToAppCover(reason){
   try{
     var url = new URL('index.html', location.href);
     url.searchParams.set('oai_cover_return', reason || 'qna-return-cover');
-    url.searchParams.set('v', 'V8-1-14-5-MYFAITH-CLEAN-GUIDE-MODAL');
+    url.searchParams.set('v', 'V8-1-14-6-BACK-DIAG-BASE14-2');
     location.replace(url.href);
     return;
   }catch(e){
-    location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason || 'qna-return-cover') + '&v=V8-1-14-5-MYFAITH-CLEAN-GUIDE-MODAL');
+    location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason || 'qna-return-cover') + '&v=V8-1-14-6-BACK-DIAG-BASE14-2');
   }
 }
 function handleQaBack(){
@@ -1000,7 +1025,7 @@ if (QA_PRIVATE_MODE) {
 <script id="oai-cache-lifecycle-V6-146">
 (function(){
   'use strict';
-  var APP_VERSION = 'V8-1-14-5-MYFAITH-CLEAN-GUIDE-MODAL';
+  var APP_VERSION = 'V8-1-14-6-BACK-DIAG-BASE14-2';
   if('serviceWorker' in navigator){
     try{ navigator.serviceWorker.register('./sw.js?v=' + encodeURIComponent(APP_VERSION)).then(function(reg){try{reg.update();}catch(e){}}).catch(function(){}); }catch(e){}
   }
