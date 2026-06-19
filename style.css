@@ -6134,7 +6134,7 @@ html.oai-external-return-freeze::after {
 }
 
 
-/* V8-1-14-19-MYFAITH-CLOSE-SEQUENCE: 개인정보는 주요기능처럼 내부 모달, 문의·건의는 매일미사/성경처럼 내부 iframe */
+/* V8-1-14-20-MYFAITH-QUIET-CLOSE: 개인정보는 주요기능처럼 내부 모달, 문의·건의는 매일미사/성경처럼 내부 iframe */
 .privacy-policy-panel {
   width: min(94vw, 920px);
   height: min(86vh, 780px);
@@ -6162,7 +6162,7 @@ html.oai-external-return-freeze::after {
 }
 #qna-view.open { display: flex; flex-direction: column; }
 
-/* V8-1-14-19-MYFAITH-CLOSE-SEQUENCE: 외부복귀/새로고침 안정막의 금색 로딩 십자가 복원 */
+/* V8-1-14-20-MYFAITH-QUIET-CLOSE: 외부복귀/새로고침 안정막의 금색 로딩 십자가 복원 */
 html.oai-stability-veil::after,
 html.oai-stability-veil[data-oai-stability-reason*="external"]::after,
 html.oai-stability-veil[data-oai-stability-reason*="refresh"]::after,
