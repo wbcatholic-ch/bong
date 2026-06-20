@@ -8,7 +8,7 @@
 
   var _href = location.href.split('#')[0];
 
-  /* 진단 표시 코드는 V8-1-14-26-MYFAITH-INTERNAL-BACK-FIX에서 제거했습니다. */
+  /* 진단 표시 코드는 V8-1-14-27-MYFAITH-COVER-TOAST-RESTORE에서 제거했습니다. */
 
 
   function armCoverBackTrap(reason, opts){
