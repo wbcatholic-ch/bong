@@ -8,7 +8,7 @@
   left:14px;
   right:14px;
   bottom:calc(env(safe-area-inset-bottom,0px) + 20px);
-  z-index:9300;
+  z-index:10090;
   display:none;
   justify-content:center;
   pointer-events:none;

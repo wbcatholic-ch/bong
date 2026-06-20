@@ -6,15 +6,14 @@
 (function(){
   'use strict';
   var ENABLED = window.OAI_SHRINE_UPDATE_BANNER_ENABLED !== false;
-  var HIDE_KEY = 'oai_shrine_update_banner_v2_hidden';
-  var SESSION_KEY = 'oai_shrine_update_banner_v2_session_shown';
+  var HIDE_KEY = 'oai_shrine_update_banner_v3_hidden';
+  var SESSION_KEY = 'oai_shrine_update_banner_v3_session_shown';
   function isInstalledRun(){
-    /* V8-1-14-55: 카카오/일반 브라우저에서는 표시하지 않고, 설치형 앱/PWA 또는 WebView 앱 실행에서만 표시한다. */
+    /* V8-1-14-56: 카카오/일반 브라우저는 제외하고, 설치형 PWA/WebView 앱에서만 표시한다. */
     var ua='';
     try{ ua=String(navigator.userAgent||'').toLowerCase(); }catch(_e){}
-    var isKakao=/kakaotalk|kakaostory|kakao/.test(ua);
-    if(isKakao) return false;
-    try{ if(window.matchMedia && (window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: fullscreen)').matches)) return true; }catch(_e){}
+    if(/kakaotalk|kakaostory|kakao/.test(ua)) return false;
+    try{ if(window.matchMedia && (window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: fullscreen)').matches || window.matchMedia('(display-mode: minimal-ui)').matches)) return true; }catch(_e){}
     try{ if(window.navigator && window.navigator.standalone) return true; }catch(_e){}
     try{ if(document.referrer && String(document.referrer).indexOf('android-app://')===0) return true; }catch(_e){}
     try{ if(/; wv\)|\bwv\b/.test(ua)) return true; }catch(_e){}
@@ -86,7 +85,12 @@
     markSession();
     setTimeout(function(){ el.classList.add('show'); },60);
   }
-  function boot(){ setTimeout(show,900); }
+  function boot(){
+    /* 앱 초기 로딩/캐시 복귀 타이밍 차이를 흡수하기 위해 여러 번 재확인한다. */
+    [700,1500,3000,6000].forEach(function(ms){ setTimeout(show,ms); });
+  }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
   else boot();
+  window.addEventListener('pageshow', function(){ setTimeout(show,900); });
+  window.addEventListener('focus', function(){ setTimeout(show,900); });
 })();
