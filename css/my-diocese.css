@@ -80,7 +80,7 @@
 
 
 
-/* V8-1-14-22-MYFAITH-INTERNAL-SCREEN: 나의신앙생활을 커버 위 팝업이 아니라 내부 화면처럼 표시 */
+/* V8-1-14-23-SHRINE-HP-MYFAITH-COVER-TOAST: 나의신앙생활을 커버 위 팝업이 아니라 내부 화면처럼 표시 */
 html.app-active .my-diocese-modal.show{
   z-index: 9000 !important;
 }
