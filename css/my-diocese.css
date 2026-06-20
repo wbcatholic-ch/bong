@@ -80,7 +80,7 @@
 
 
 
-/* V8-1-14-38-MYFAITH-DELAYED-REARM: 웹뷰 정상 구조처럼 커버 위 팝업으로 표시 */
+/* V8-1-14-39-BACK-DIAGNOSTIC: 웹뷰 정상 구조처럼 커버 위 팝업으로 표시 */
 html.app-active .my-diocese-modal.show{
   z-index: 9000 !important;
 }
@@ -89,7 +89,7 @@ html.app-active .my-diocese-modal.show .my-diocese-backdrop{
 }
 
 
-/* V8-1-14-38-MYFAITH-DELAYED-REARM: 외부복귀 때 cover를 숨기지 않도록 myfaith.js에서 보정 */
+/* V8-1-14-39-BACK-DIAGNOSTIC: 외부복귀 때 cover를 숨기지 않도록 myfaith.js에서 보정 */
 .my-diocese-modal.show{
   visibility: visible !important;
 }
