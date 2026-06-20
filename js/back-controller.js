@@ -8,7 +8,7 @@
 
   var _href = location.href.split('#')[0];
 
-  /* 진단 표시 코드는 V8-1-14-29-MYFAITH-RESTORE-THEN-CLOSE에서 제거했습니다. */
+  /* 진단 표시 코드는 V8-1-14-30-WEBVIEW-MYFAITH-FLOW-PORT에서 제거했습니다. */
 
 
   function armCoverBackTrap(reason, opts){
@@ -377,6 +377,18 @@
 
     if(_restoring){
       _restoring = false;
+      try{
+        var _mfCb = window.__OAI_AFTER_RESTORE_MY_FAITH_CB__;
+        var _mfUntil = Number(window.__OAI_AFTER_RESTORE_MY_FAITH_UNTIL__ || 0);
+        if(typeof _mfCb === 'function' && (!_mfUntil || Date.now() < _mfUntil)){
+          window.__OAI_AFTER_RESTORE_MY_FAITH_CB__ = null;
+          window.__OAI_AFTER_RESTORE_MY_FAITH_UNTIL__ = 0;
+          setTimeout(function(){ try{ _mfCb(); }catch(e){ console.warn('[가톨릭길동무]', e); } }, 0);
+          return;
+        }
+        window.__OAI_AFTER_RESTORE_MY_FAITH_CB__ = null;
+        window.__OAI_AFTER_RESTORE_MY_FAITH_UNTIL__ = 0;
+      }catch(e){ console.warn('[가톨릭길동무]', e); }
       if(typeof window._oaiPrayerRunPendingCoverReset === 'function' && window._oaiPrayerRunPendingCoverReset()) return;
       if(typeof window._oaiPrayerRunPendingQuickPopup === 'function') window._oaiPrayerRunPendingQuickPopup();
       try{
@@ -431,9 +443,29 @@
     }
 
     if(isMyFaithOpen()){
-      _restoring = true;
-      try{ history.go(1); }catch(e){ _restoring = false; console.warn('[가톨릭길동무]', e); }
-      closeMyFaithInternal('my-faith-popstate');
+      var myFaithCb = function(){
+        closeMyFaithInternal('my-faith-popstate');
+      };
+      try{
+        window.__OAI_AFTER_RESTORE_MY_FAITH_CB__ = myFaithCb;
+        window.__OAI_AFTER_RESTORE_MY_FAITH_UNTIL__ = Date.now() + 1800;
+        _restoring = true;
+        history.go(1);
+        setTimeout(function(){
+          try{
+            if(window.__OAI_AFTER_RESTORE_MY_FAITH_CB__ === myFaithCb){
+              _restoring = false;
+              window.__OAI_AFTER_RESTORE_MY_FAITH_CB__ = null;
+              window.__OAI_AFTER_RESTORE_MY_FAITH_UNTIL__ = 0;
+              myFaithCb();
+            }
+          }catch(e){ console.warn('[가톨릭길동무]', e); }
+        }, 160);
+      }catch(e){
+        _restoring = false;
+        console.warn('[가톨릭길동무]', e);
+        myFaithCb();
+      }
       return;
     }
 
