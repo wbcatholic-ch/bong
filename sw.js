@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-14-49-SHRINE-FILTER-FONT-FORCE';
-const ASSET_VERSION = 'V8-1-14-49-SHRINE-FILTER-FONT-FORCE';
+const CACHE_VERSION = 'catholic-way-V8-1-14-50-ROUTE-CHOICE-BUTTON-STRONGER';
+const ASSET_VERSION = 'V8-1-14-50-ROUTE-CHOICE-BUTTON-STRONGER';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }
