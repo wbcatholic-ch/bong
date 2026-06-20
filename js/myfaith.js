@@ -289,10 +289,25 @@
 
     function rebuildCoverHistoryAfterMyFaith(reason){
       try{
+        if(modal && modal.classList && modal.classList.contains('show')) return;
+        var cover = document.getElementById('cover');
+        if(cover){ cover.style.display=''; cover.style.opacity=''; cover.style.pointerEvents=''; }
+        try{ document.documentElement.classList.remove('app-active','parish-mode','retreat-mode'); }catch(_r){}
+        try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(_e){}
+        try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(_e){}
+        try{ if(typeof window._clearHardCoverExitFlags === 'function') window._clearHardCoverExitFlags(reason || 'my-faith-cover-pair'); }catch(_e){}
         var href = location.href.split('#')[0];
         history.replaceState({_p:0, oai_cover_root:reason || 'my-faith-cover-root'}, '', href);
         history.pushState({_p:1, oai_cover_trap:reason || 'my-faith-cover-trap'}, '', href);
       }catch(e){ console.warn('[가톨릭길동무]', e); }
+    }
+    function scheduleCoverHistoryAfterMyFaith(reason){
+      /* V8-1-14-38-MYFAITH-DELAYED-REARM: MyFaith는 popstate 안에서 닫히므로
+         즉시 pushState가 브라우저 Back 처리에 묻히는 경우가 있다.
+         커버가 실제로 다시 그려진 뒤 2번 더 root/trap pair를 세운다. */
+      rebuildCoverHistoryAfterMyFaith(reason || 'my-faith-close');
+      setTimeout(function(){ rebuildCoverHistoryAfterMyFaith((reason || 'my-faith-close') + '-late1'); }, 80);
+      setTimeout(function(){ rebuildCoverHistoryAfterMyFaith((reason || 'my-faith-close') + '-late2'); }, 240);
     }
     function finishMyFaithClose(reason){
       reason = reason || 'my-faith-close';
@@ -311,7 +326,7 @@
         if(typeof window._resetCoverBackTrap === 'function') window._resetCoverBackTrap(reason || 'my-faith-close');
         else if(typeof window._ensureCoverBackTrap === 'function') window._ensureCoverBackTrap(reason || 'my-faith-close');
         else if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap(reason || 'my-faith-close', {force:true});
-        rebuildCoverHistoryAfterMyFaith(reason || 'my-faith-close');
+        scheduleCoverHistoryAfterMyFaith(reason || 'my-faith-close');
       }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
     function closeModal(){
