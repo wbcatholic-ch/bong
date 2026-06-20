@@ -12,7 +12,7 @@
 
 
 <script>
-/* V8-1-14-26-MYFAITH-INTERNAL-BACK-FIX: 문의·건의가 index.html iframe 안에서 열릴 때는 iframe 내부 헤더만 접고, 부모 qna-view 헤더/뒤로가기는 유지한다. */
+/* V8-1-14-28-MYFAITH-GOTO-COVER-CLOSE: 문의·건의가 index.html iframe 안에서 열릴 때는 iframe 내부 헤더만 접고, 부모 qna-view 헤더/뒤로가기는 유지한다. */
 (function(){
   try{
     var sp = new URLSearchParams(location.search || '');
@@ -128,7 +128,7 @@
   }
   #write-btn:active { transform: scale(.97); }
 
-  /* V8-1-14-26-MYFAITH-INTERNAL-BACK-FIX: embedded iframe에서는 내부 헤더 중복만 제거. 부모 qna-view 헤더와 back 구조는 건드리지 않는다. */
+  /* V8-1-14-28-MYFAITH-GOTO-COVER-CLOSE: embedded iframe에서는 내부 헤더 중복만 제거. 부모 qna-view 헤더와 back 구조는 건드리지 않는다. */
   html.qa-embedded { --qa-top-gap: 0px; }
   html.qa-embedded #header{
     height:0 !important; min-height:0 !important; padding:0 !important;
@@ -432,11 +432,11 @@
   }
 
 
-  /* V8-1-14-26-MYFAITH-INTERNAL-BACK-FIX: embedded iframe에서는 글쓰기 플로팅 버튼도 숨김 */
+  /* V8-1-14-28-MYFAITH-GOTO-COVER-CLOSE: embedded iframe에서는 글쓰기 플로팅 버튼도 숨김 */
   html.qa-embedded #write-btn{ display:none !important; visibility:hidden !important; pointer-events:none !important; }
 
 
-  /* V8-1-14-26-MYFAITH-INTERNAL-BACK-FIX: 상단 개인정보 안내문을 내용 입력칸 placeholder로 이동하고, 내용 박스 테두리를 진하게 표시 */
+  /* V8-1-14-28-MYFAITH-GOTO-COVER-CLOSE: 상단 개인정보 안내문을 내용 입력칸 placeholder로 이동하고, 내용 박스 테두리를 진하게 표시 */
   #write-view .qa-private-guide{ display:none !important; }
   #f-content{
     border:2px solid #C8B79D !important;
@@ -991,11 +991,11 @@ function oaiReturnToAppCover(reason){
   try{
     var url = new URL('index.html', location.href);
     url.searchParams.set('oai_cover_return', reason || 'qna-return-cover');
-    url.searchParams.set('v', 'V8-1-14-26-MYFAITH-INTERNAL-BACK-FIX');
+    url.searchParams.set('v', 'V8-1-14-28-MYFAITH-GOTO-COVER-CLOSE');
     location.replace(url.href);
     return;
   }catch(e){
-    location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason || 'qna-return-cover') + '&v=V8-1-14-26-MYFAITH-INTERNAL-BACK-FIX');
+    location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason || 'qna-return-cover') + '&v=V8-1-14-28-MYFAITH-GOTO-COVER-CLOSE');
   }
 }
 function handleQaBack(){
@@ -1043,7 +1043,7 @@ if (QA_PRIVATE_MODE) {
 <script id="oai-cache-lifecycle-V6-146">
 (function(){
   'use strict';
-  var APP_VERSION = 'V8-1-14-26-MYFAITH-INTERNAL-BACK-FIX';
+  var APP_VERSION = 'V8-1-14-28-MYFAITH-GOTO-COVER-CLOSE';
   if('serviceWorker' in navigator){
     try{ navigator.serviceWorker.register('./sw.js?v=' + encodeURIComponent(APP_VERSION)).then(function(reg){try{reg.update();}catch(e){}}).catch(function(){}); }catch(e){}
   }
