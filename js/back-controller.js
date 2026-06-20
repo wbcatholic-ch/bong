@@ -8,7 +8,7 @@
 
   var _href = location.href.split('#')[0];
 
-  /* 진단 표시 코드는 V8-1-14-23-SHRINE-HP-MYFAITH-COVER-TOAST에서 제거했습니다. */
+  /* 진단 표시 코드는 V8-1-14-24-MYFAITH-DOM-OUTSIDE-COVER에서 제거했습니다. */
 
 
   function armCoverBackTrap(reason, opts){
