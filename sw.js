@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-14-46-TIMING-SEARCHBOX-ONLY';
-const ASSET_VERSION = 'V8-1-14-46-TIMING-SEARCHBOX-ONLY';
+const CACHE_VERSION = 'catholic-way-V8-1-14-47-SEARCHBOX-SCROLL-SMOOTH';
+const ASSET_VERSION = 'V8-1-14-47-SEARCHBOX-SCROLL-SMOOTH';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }

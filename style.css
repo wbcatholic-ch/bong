@@ -6202,3 +6202,29 @@ html.oai-first-entry-intro::after {
   visibility:hidden !important;
   animation:none !important;
 }
+
+/* V8-1-14-47: 성지 지도 상단 필터(전체/순례한 성지/미방문 성지) 글자와 높이 확대 */
+.shrine-visit-map-filter{
+  min-height:48px!important;
+  padding:7px!important;
+  gap:8px!important;
+}
+.shrine-visit-map-filter button,
+.shrine-visit-map-filter button[data-shrine-visit-filter="all"],
+.shrine-visit-map-filter button[data-shrine-visit-filter="visited"],
+.shrine-visit-map-filter button[data-shrine-visit-filter="unvisited"]{
+  min-height:36px!important;
+  height:36px!important;
+  padding:0 13px!important;
+  font-size:14px!important;
+  line-height:1.15!important;
+}
+@media (max-width:390px){
+  .shrine-visit-map-filter{min-height:44px!important;padding:6px!important;gap:6px!important;}
+  .shrine-visit-map-filter button,
+  .shrine-visit-map-filter button[data-shrine-visit-filter="all"],
+  .shrine-visit-map-filter button[data-shrine-visit-filter="visited"],
+  .shrine-visit-map-filter button[data-shrine-visit-filter="unvisited"]{
+    min-height:34px!important;height:34px!important;padding:0 10px!important;font-size:13px!important;
+  }
+}
