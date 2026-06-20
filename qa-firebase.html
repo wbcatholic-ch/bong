@@ -443,6 +443,15 @@
     background:#fffdf7 !important;
   }
   #f-content:focus{ border-color:#B28B57 !important; box-shadow:0 0 0 2px rgba(212,170,106,.16) !important; }
+  /* V8-1-14-45: 문의·건의 글쓰기 제목/내용 입력 박스 테두리를 더 선명하게 표시 */
+  #f-title, #f-content{
+    border:2.5px solid #B8A586 !important;
+    background:#fffdf7 !important;
+  }
+  #f-title:focus, #f-content:focus{
+    border-color:#B28B57 !important;
+    box-shadow:0 0 0 2px rgba(212,170,106,.16) !important;
+  }
   #f-content::placeholder{
     color:#A4AAB4 !important;
     opacity:1 !important;
@@ -991,11 +1000,11 @@ function oaiReturnToAppCover(reason){
   try{
     var url = new URL('index.html', location.href);
     url.searchParams.set('oai_cover_return', reason || 'qna-return-cover');
-    url.searchParams.set('v', 'V8-1-14-44-MYFAITH-NO-LEGACY-BACK');
+    url.searchParams.set('v', 'V8-1-14-45-SIMPLE-UI-TIMING');
     location.replace(url.href);
     return;
   }catch(e){
-    location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason || 'qna-return-cover') + '&v=V8-1-14-44-MYFAITH-NO-LEGACY-BACK');
+    location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason || 'qna-return-cover') + '&v=V8-1-14-45-SIMPLE-UI-TIMING');
   }
 }
 function handleQaBack(){
@@ -1043,7 +1052,7 @@ if (QA_PRIVATE_MODE) {
 <script id="oai-cache-lifecycle-V6-146">
 (function(){
   'use strict';
-  var APP_VERSION = 'V8-1-14-44-MYFAITH-NO-LEGACY-BACK';
+  var APP_VERSION = 'V8-1-14-45-SIMPLE-UI-TIMING';
   if('serviceWorker' in navigator){
     try{ navigator.serviceWorker.register('./sw.js?v=' + encodeURIComponent(APP_VERSION)).then(function(reg){try{reg.update();}catch(e){}}).catch(function(){}); }catch(e){}
   }

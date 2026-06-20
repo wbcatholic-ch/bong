@@ -3004,7 +3004,7 @@ html.oai-font-global .dd, html.oai-font-global .sg { font-size: calc(12px * var(
 
 html.oai-font-global #cover .cover-subtitle { font-size: 16px; }
 html.oai-font-global #cover .cover-name { font-size: calc(16px * var(--app-font-scale)); }
-html.oai-font-global #cover .cover-emoji { font-size: calc(40px * var(--app-font-scale)); background: transparent; box-shadow: none; }
+html.oai-font-global #cover .cover-emoji { font-size: var(--cover-emoji-size, 40px); background: transparent; box-shadow: none; }
 html.oai-font-global #prayer-bar-ttl, html.oai-font-global .module-bar-title { font-size: 20px; line-height: 1.24; }
 
 html.oai-font-global #region-body .nearby-item,
