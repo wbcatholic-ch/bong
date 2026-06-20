@@ -274,6 +274,39 @@
         if(typeof window._clearHardCoverExitFlags === 'function') window._clearHardCoverExitFlags(reason || 'my-faith');
       }catch(_e){}
     }
+
+    function clearOtherCategoryReturnStatesForMyFaith(){
+      try{
+        sessionStorage.removeItem('catholic_core_return_v1');
+        sessionStorage.removeItem('catholic_integrated_return_v2');
+        sessionStorage.removeItem('catholic_diocese_external_return_v1');
+        sessionStorage.removeItem('oai_external_return_token');
+        localStorage.removeItem('catholic_core_return_backup_v1');
+        localStorage.removeItem('catholic_diocese_external_return_v1');
+        localStorage.removeItem('oai_external_return_token');
+      }catch(_e){}
+    }
+    function forceFreshCoverHistoryPair(reason){
+      try{
+        var href = location.href.split('#')[0];
+        history.replaceState({_p:0, oai_cover_root:reason || 'my-faith-cover-root'}, '', href);
+        history.pushState({_p:1, oai_cover_trap:reason || 'my-faith-cover-trap'}, '', href);
+      }catch(e){
+        try{
+          if(typeof window._resetCoverBackTrap === 'function') window._resetCoverBackTrap(reason || 'my-faith-cover');
+          else if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap(reason || 'my-faith-cover', {force:true});
+        }catch(_e){}
+        console.warn('[가톨릭길동무]', e);
+      }
+    }
+    function pushMyFaithOverlayHistory(reason){
+      try{
+        var href = location.href.split('#')[0];
+        var st = history.state || null;
+        if(!st || !st._p || !st.oai_cover_trap) forceFreshCoverHistoryPair(reason || 'my-faith-open-cover');
+        history.pushState({_p:2, oai_myfaith_trap:reason || 'my-faith-open'}, '', href);
+      }catch(e){ console.warn('[가톨릭길동무]', e); }
+    }
     function finishMyFaithClose(reason){
       reason = reason || 'my-faith-close';
       cancelMyFaithPendingEdit();
@@ -287,11 +320,7 @@
       try{ clearHardCoverExitFlagsForMyFaith(reason); }catch(_e){}
       try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }
       try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(e){ console.warn('[가톨릭길동무]', e); }
-      try{
-        if(typeof window._resetCoverBackTrap === 'function') window._resetCoverBackTrap(reason);
-        else if(typeof window._ensureCoverBackTrap === 'function') window._ensureCoverBackTrap(reason);
-        else if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap(reason, {force:true});
-      }catch(e){ console.warn('[가톨릭길동무]', e); }
+      try{ forceFreshCoverHistoryPair(reason || 'my-faith-close'); }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
     function closeModal(){
       finishMyFaithClose('my-faith-close');
@@ -306,7 +335,8 @@
       try{
         if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
         if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
-        if(typeof window._pushCoverOverlayBackTrap === 'function') window._pushCoverOverlayBackTrap('my-faith', 'my-faith-open');
+        clearHardCoverExitFlagsForMyFaith('my-faith-open');
+        pushMyFaithOverlayHistory(opts.fromExternal ? 'my-faith-external-return' : 'my-faith-open');
       }catch(e){ console.warn('[가톨릭길동무]', e); }
       setTimeout(updateMyFaithViewport, opts.fromExternal ? 180 : 80);
     }
@@ -326,20 +356,31 @@
     var MYFAITH_EXTERNAL_TS = 'oai_myfaith_external_link_ts';
     function markMyFaithExternalLink(){
       try{
+        var ts = String(Date.now ? Date.now() : new Date().getTime());
+        clearOtherCategoryReturnStatesForMyFaith();
         sessionStorage.setItem(MYFAITH_EXTERNAL_FLAG, '1');
-        sessionStorage.setItem(MYFAITH_EXTERNAL_TS, String(Date.now ? Date.now() : new Date().getTime()));
+        sessionStorage.setItem(MYFAITH_EXTERNAL_TS, ts);
+        sessionStorage.setItem('oai_my_faith_external_open', '1');
+        sessionStorage.setItem('oai_my_faith_external_ts', ts);
+        try{ sessionStorage.setItem('oai_my_faith_scroll_top', String((document.scrollingElement || document.documentElement || document.body || {}).scrollTop || 0)); }catch(_se){}
       }catch(_e){}
       try{ markMyFaithExternalSettling(7000); }catch(_e){}
       return true;
     }
     try{ window.oaiMarkMyFaithExternalLink = markMyFaithExternalLink; }catch(_e){}
     function clearMyFaithExternalLinkFlag(){
-      try{ sessionStorage.removeItem(MYFAITH_EXTERNAL_FLAG); sessionStorage.removeItem(MYFAITH_EXTERNAL_TS); }catch(_e){}
+      try{
+        sessionStorage.removeItem(MYFAITH_EXTERNAL_FLAG);
+        sessionStorage.removeItem(MYFAITH_EXTERNAL_TS);
+        sessionStorage.removeItem('oai_my_faith_external_open');
+        sessionStorage.removeItem('oai_my_faith_external_ts');
+      }catch(_e){}
     }
     function hasRecentMyFaithExternalLink(){
       try{
-        if(sessionStorage.getItem(MYFAITH_EXTERNAL_FLAG) !== '1') return false;
-        var ts = parseInt(sessionStorage.getItem(MYFAITH_EXTERNAL_TS) || '0', 10) || 0;
+        var pending = sessionStorage.getItem(MYFAITH_EXTERNAL_FLAG) === '1' || sessionStorage.getItem('oai_my_faith_external_open') === '1';
+        if(!pending) return false;
+        var ts = parseInt(sessionStorage.getItem(MYFAITH_EXTERNAL_TS) || sessionStorage.getItem('oai_my_faith_external_ts') || '0', 10) || 0;
         if(ts && Date.now && Date.now() - ts > 10 * 60 * 1000){
           clearMyFaithExternalLinkFlag();
           return false;
@@ -363,18 +404,28 @@
       try{
         if(!hasRecentMyFaithExternalLink()) return false;
         reason = reason || 'my-faith-external-return';
-        enterMyFaithInternalScreen();
+        clearOtherCategoryReturnStatesForMyFaith();
+        try{
+          var cover = document.getElementById('cover');
+          if(cover){ cover.style.display=''; cover.style.opacity=''; cover.style.pointerEvents=''; }
+          document.documentElement.classList.remove('app-active','parish-mode','retreat-mode');
+        }catch(_ce){}
         openModal({keepContent:false, fromExternal:true});
         markMyFaithExternalSettling(900);
         try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(_e){}
         try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(_e){}
-        setTimeout(function(){ try{ clearMyFaithExternalLinkFlag(); }catch(_e){} }, 1200);
+        try{
+          var y = parseInt(sessionStorage.getItem('oai_my_faith_scroll_top') || '0', 10) || 0;
+          if(y) setTimeout(function(){ try{ (document.scrollingElement || document.documentElement || document.body).scrollTop = y; }catch(_y){} }, 80);
+        }catch(_y){}
+        setTimeout(function(){ try{ clearMyFaithExternalLinkFlag(); sessionStorage.removeItem('oai_my_faith_scroll_top'); }catch(_e){} }, 1200);
         return true;
       }catch(e){ console.warn('[가톨릭길동무]', e); return false; }
     }
     window.addEventListener('pageshow', function(){ setTimeout(function(){ restoreMyFaithAfterExternalReturn('pageshow'); }, 80); }, true);
     window.addEventListener('focus', function(){ setTimeout(function(){ restoreMyFaithAfterExternalReturn('focus'); }, 120); }, true);
     document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'visible') setTimeout(function(){ restoreMyFaithAfterExternalReturn('visible'); }, 120); }, true);
+    try{ window.oaiResumeMyFaithAfterExternal = function(){ return restoreMyFaithAfterExternalReturn('global-resume'); }; }catch(_e){}
 
     function goExternal(url){
       url = normalizeMyFaithExternalUrl(url);
@@ -382,6 +433,7 @@
       try{ document.activeElement && document.activeElement.blur && document.activeElement.blur(); }catch(_e){}
       try{
         markMyFaithExternalLink();
+        clearOtherCategoryReturnStatesForMyFaith();
         if(modal && modal.classList){
           modal.classList.add('show','return-settling');
           modal.setAttribute('aria-hidden','false');
