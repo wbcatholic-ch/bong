@@ -201,7 +201,7 @@
   function wfSave(){ try{ localStorage.setItem(WEB_FAV_KEY, JSON.stringify(webFavs)); }catch(e){ console.warn("[가톨릭길동무]", e); } }
   function wfHas(url){ return webFavs.includes(url); }
   function webDefaultCat(){
-    return webFavs && webFavs.length ? '⭐ 즐겨찾기' : '사제찾기';
+    return webFavs && webFavs.length ? '⭐ 즐겨찾기' : '교구';
   }
   function wfToggle(url){
     const hadFavs = !!(webFavs && webFavs.length);
@@ -224,6 +224,12 @@
   function getMyDioceseName(){
     try{ return (localStorage.getItem(MY_DIOCESE_KEY) || '').trim(); }catch(e){ return ''; }
   }
+  function normalizeDioceseName(name){
+    return String(name || '')
+      .replace(/^천주교\s*/, '')
+      .replace(/\s+/g, '')
+      .trim();
+  }
   function isMyDioceseWebItem(item, myName){
     if(!item || !myName) return false;
     var itemName = String(item.name || '').trim();
@@ -235,10 +241,16 @@
     }
     return false;
   }
+  function isMyDioceseTrailItem(item, myName){
+    if(!item || !myName) return false;
+    var my = normalizeDioceseName(myName);
+    var op = normalizeDioceseName(item.op);
+    return !!(my && op && op === my);
+  }
   function webCategoryRank(cat){
     var order = {
-      '사제찾기': 0,
-      '교구': 1,
+      '교구': 0,
+      '사제찾기': 1,
       '중앙기구': 2,
       '신앙 포털': 3,
       '미디어': 4,
@@ -269,6 +281,9 @@
   }
   function myDioceseBadgeHtml(){
     return '<span class="web-my-diocese-badge">나의 교구</span>';
+  }
+  function trailMyDioceseBadgeHtml(){
+    return '<span class="trail-my-diocese-badge">나의 교구</span>';
   }
   function webProvinceBadgeHtml(prov){
     if(!prov) return '';
@@ -329,6 +344,7 @@
   };
 
   function enterIntegratedView(id){
+    try{ if(typeof window.oaiClearMapInfoSelection === 'function') window.oaiClearMapInfoSelection('integrated-view:'+id); }catch(e){ console.warn('[가톨릭길동무]', e); }
     hideIntegratedViews();
     _screen = 'map';
     if(typeof window.oaiSetMainMapLayerHidden === 'function') window.oaiSetMainMapLayerHidden(true);
@@ -459,7 +475,7 @@
 
   function webOrderedCats(){
     const cats = [];
-    const priority = ['사제찾기', '교구', '중앙기구'];
+    const priority = ['교구', '사제찾기', '중앙기구'];
     if(webFavs && webFavs.length) cats.push('⭐ 즐겨찾기');
     priority.forEach(function(cat){
       if(!cats.includes(cat) && WEB_SITES.some(function(s){ return s.cat === cat; })) cats.push(cat);
@@ -471,7 +487,7 @@
   function rebuildWebCats(){
     const wrap = ig$('web-cats');
     if(!wrap) return;
-    if(!(webFavs && webFavs.length) && webState.curCat === '⭐ 즐겨찾기') webState.curCat = '사제찾기';
+    if(!(webFavs && webFavs.length) && webState.curCat === '⭐ 즐겨찾기') webState.curCat = '교구';
     webState.built = false;
     wrap.innerHTML = '';
     initWebModule();
@@ -492,7 +508,7 @@
       btn.className = 'web-cat-btn' + (c===webState.curCat ? ' on' : '');
       btn.id = 'web-cat_' + c;
       btn.dataset.webCat = c;
-      btn.dataset.catColor = c;
+      btn.dataset.catColor = c; // CSS 선택자용
       btn.setAttribute('aria-pressed', c===webState.curCat ? 'true' : 'false');
       const count = c==='⭐ 즐겨찾기' ? WEB_SITES.filter(s => wfHas(s.url)).length : WEB_SITES.filter(s => s.cat===c).length;
       btn.innerHTML = esc(webCatLabel(c)) + (c==='⭐ 즐겨찾기' ? '' : '<span class="cnt">' + count + '</span>');
@@ -785,19 +801,34 @@
     });
   }
 
+  function getTrailItemsForList(){
+    if(!Array.isArray(TRAIL_ITEMS) || TRAIL_ITEMS.length < 2) return TRAIL_ITEMS;
+    var myName = getMyDioceseName();
+    if(!myName) return TRAIL_ITEMS;
+    return TRAIL_ITEMS.slice().sort(function(a,b){
+      var aa = isMyDioceseTrailItem(a, myName) ? 0 : 1;
+      var bb = isMyDioceseTrailItem(b, myName) ? 0 : 1;
+      if(aa !== bb) return aa - bb;
+      return TRAIL_ITEMS.indexOf(a) - TRAIL_ITEMS.indexOf(b);
+    });
+  }
+
   function buildTrailList(){
     const wrap = ig$('trail-list');
     if(!wrap) return;
     wrap.innerHTML = '';
     const countEl = ig$('trail-count');
     if(countEl) countEl.textContent = TRAIL_ITEMS.length + '개';
-    TRAIL_ITEMS.forEach(function(d,i){
+    const myName = getMyDioceseName();
+    getTrailItemsForList().forEach(function(d){
       const card = document.createElement('div');
-      card.className = 'trail-card';
+      const isMyTrailCard = isMyDioceseTrailItem(d, myName);
+      card.className = 'trail-card' + (isMyTrailCard ? ' trail-my-diocese-card' : '');
       card.innerHTML = `
         <div class="trail-r1">
           <span class="trail-bdg ${d.t}">${esc(d.op)}</span>
           <span class="trail-reg">📍 ${esc(d.r)}</span>
+          ${isMyTrailCard ? trailMyDioceseBadgeHtml() : ''}
         </div>
         <div class="trail-r2">
           <div class="trail-ico ${d.t}">${esc(d.ico)}</div>
