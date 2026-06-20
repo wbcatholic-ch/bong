@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-14-52-CLEAN-SAFE-VERIFIED';
-const ASSET_VERSION = 'V8-1-14-52-CLEAN-SAFE-VERIFIED';
+const CACHE_VERSION = 'catholic-way-V8-1-14-53-SHRINE-UPDATE-BANNER';
+const ASSET_VERSION = 'V8-1-14-53-SHRINE-UPDATE-BANNER';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }
@@ -15,6 +15,7 @@ const APP_SHELL = [
   withVersion('./css/cover-modals.css'),
   withVersion('./css/myfaith.css'),
   withVersion('./css/my-diocese.css'),
+  withVersion('./css/shrine-update-banner.css'),
   withVersion('./js/myfaith.js'),
   withVersion('./app.js'),
   withVersion('./js/cover-common.js'),
@@ -25,6 +26,7 @@ const APP_SHELL = [
   withVersion('./web.js'),
   withVersion('./js/route-web-guards.js'),
   withVersion('./js/back-controller.js'),
+  withVersion('./js/shrine-update-banner.js'),
   withVersion('./sw-update.js'),
   withVersion('./manifest.json'),
   withVersion('./icon-192x192.png'),
@@ -58,7 +60,7 @@ function isVersionedAsset(request) {
   try {
     const url = new URL(request.url);
     return url.searchParams.has('v') ||
-      /parishes-[a-z-]+\.js|prayer-data\.js|prayer\.js|retreats\.js|shrines\.js|diocese\.html|diocese\.css|qa-firebase\.html|app\.js|style\.css|module-common\.css|prayer\.css|web\.css|pilgrimage\.css|overlays\.css|cover-modals\.css|myfaith\.css|my-diocese\.css|web\.js|touch-ux\.js|prayer-ui\.js|cover-refresh\.js|app-state-guards\.js|route-web-guards\.js|back-controller\.js|sw-update\.js/.test(url.pathname);
+      /parishes-[a-z-]+\.js|prayer-data\.js|prayer\.js|retreats\.js|shrines\.js|diocese\.html|diocese\.css|qa-firebase\.html|app\.js|style\.css|module-common\.css|prayer\.css|web\.css|pilgrimage\.css|overlays\.css|cover-modals\.css|myfaith\.css|my-diocese\.css|shrine-update-banner\.css|web\.js|touch-ux\.js|prayer-ui\.js|cover-refresh\.js|app-state-guards\.js|route-web-guards\.js|back-controller\.js|shrine-update-banner\.js|sw-update\.js/.test(url.pathname);
   } catch (e) { return false; }
 }
 async function networkFirst(request) {
