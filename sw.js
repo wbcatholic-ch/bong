@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-14-10-QNA-NOTICE-IN-TEXTAREA';
-const ASSET_VERSION = 'V8-1-14-10-QNA-NOTICE-IN-TEXTAREA';
+const CACHE_VERSION = 'catholic-way-V8-1-14-43-MYFAITH-AS-CATEGORY';
+const ASSET_VERSION = 'V8-1-14-43-MYFAITH-AS-CATEGORY';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }
