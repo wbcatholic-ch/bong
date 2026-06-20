@@ -285,14 +285,13 @@
       try{ clearMyFaithExternalLinkFlag(); }catch(_e){}
       try{ clearGenericCoverToastFlag(); }catch(_e){}
       try{ clearHardCoverExitFlagsForMyFaith(reason); }catch(_e){}
+      try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }
+      try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(e){ console.warn('[가톨릭길동무]', e); }
       try{
-        if(typeof window.goToCover === 'function'){
-          window.goToCover();
-          return;
-        }
+        if(typeof window._resetCoverBackTrap === 'function') window._resetCoverBackTrap(reason);
+        else if(typeof window._ensureCoverBackTrap === 'function') window._ensureCoverBackTrap(reason);
+        else if(typeof window._oaiArmCoverBackTrap === 'function') window._oaiArmCoverBackTrap(reason, {force:true});
       }catch(e){ console.warn('[가톨릭길동무]', e); }
-      leaveMyFaithInternalScreen();
-      resetCoverBackAfterMyFaith(reason);
     }
     function closeModal(){
       finishMyFaithClose('my-faith-close');
@@ -301,7 +300,6 @@
       opts = opts || {};
       if(!opts.keepContent) renderHome();
       updateMyFaithViewport();
-      enterMyFaithInternalScreen();
       modal.classList.add('show');
       modal.setAttribute('aria-hidden','false');
       try{ document.body.classList.add('modal-open'); }catch(_e){}
@@ -384,7 +382,6 @@
       try{ document.activeElement && document.activeElement.blur && document.activeElement.blur(); }catch(_e){}
       try{
         markMyFaithExternalLink();
-        enterMyFaithInternalScreen();
         if(modal && modal.classList){
           modal.classList.add('show','return-settling');
           modal.setAttribute('aria-hidden','false');
@@ -394,7 +391,7 @@
       try{ clearGenericCoverToastFlag(); }catch(_e){}
       try{
         if(typeof window.oaiSmoothNavigate === 'function'){
-          window.oaiSmoothNavigate(url, 'myfaith-external');
+          window.oaiSmoothNavigate(url, 'my-faith-life');
           return;
         }
       }catch(_e){}

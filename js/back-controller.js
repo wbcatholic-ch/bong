@@ -8,7 +8,7 @@
 
   var _href = location.href.split('#')[0];
 
-  /* 진단 표시 코드는 V8-1-14-30-WEBVIEW-MYFAITH-FLOW-PORT에서 제거했습니다. */
+  /* 진단 표시 코드는 V8-1-14-33-MYFAITH-MATCH-WEBVIEW에서 제거했습니다. */
 
 
   function armCoverBackTrap(reason, opts){
