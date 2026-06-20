@@ -212,7 +212,7 @@ window.prRenderList = function(){
   const kw = prNorm(prG('prayer-search-inp')?.value||'');
   let data = [];
   if(kw){
-    // V8-1-14-42-MYFAITH-CAPTURE-FIRST-TOAST: 즐겨찾기 탭에서도 검색어가 있으면 전체 표시 가능 기도문에서 검색한다.
+    // V8-1-13-3: 즐겨찾기 탭에서도 검색어가 있으면 전체 표시 가능 기도문에서 검색한다.
     PR_CATS.forEach(k=>{ if(k!=='favorites') data = data.concat(PR_DATA[k]||[]); });
   } else if(prCurCat === 'favorites'){
     PR_CATS.forEach(k=>{ if(k!=='favorites') data = data.concat(PR_DATA[k]||[]); });
@@ -614,7 +614,7 @@ window.prRefreshVisibleCats = function(){ prEnsureCurrentCat(); prBuildTabs(); p
 window.prCloseDetail = window.prCloseDetail;
 
 
-/* V8-1-14-42-MYFAITH-CAPTURE-FIRST-TOAST: prayer detail back handler
+/* V8-1-13-2: prayer detail back handler
  * 목적: 주요기도문 본문에서 뒤로가기를 누르면 커버가 아니라 목록으로 먼저 복귀한다.
  * back-controller 구조는 건드리지 않고, 누락되어 있던 prayer 전용 handler만 연결한다.
  */
