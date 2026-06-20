@@ -80,7 +80,7 @@
 
 
 
-/* V8-1-14-26-MYFAITH-INTERNAL-BACK-FIX: 나의신앙생활을 커버 위 팝업이 아니라 내부 화면처럼 표시 */
+/* V8-1-14-28-MYFAITH-GOTO-COVER-CLOSE: 나의신앙생활을 커버 위 팝업이 아니라 내부 화면처럼 표시 */
 html.app-active .my-diocese-modal.show{
   z-index: 9000 !important;
 }
@@ -89,7 +89,7 @@ html.app-active .my-diocese-modal.show .my-diocese-backdrop{
 }
 
 
-/* V8-1-14-26-MYFAITH-INTERNAL-BACK-FIX: #my-diocese-modal은 #cover 밖에 있으므로 cover display:none 영향을 받지 않는다. */
+/* V8-1-14-28-MYFAITH-GOTO-COVER-CLOSE: #my-diocese-modal은 #cover 밖에 있으므로 cover display:none 영향을 받지 않는다. */
 .my-diocese-modal.show{
   visibility: visible !important;
 }
