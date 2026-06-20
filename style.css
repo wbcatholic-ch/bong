@@ -6283,3 +6283,96 @@ html.oai-font-global #map-wrap #shrine-visit-map-filter > button[data-shrine-vis
     min-height:40px!important;height:40px!important;padding:0 12px!important;font-size:15px!important;
   }
 }
+
+
+/* V8-1-14-62-GOOGLE-INTRO-PHOTO: Google 배포용 첫 커버 인트로는 금색 십자가 대신 업로드된 십자가 사진을 사용한다. */
+@keyframes oaiGoogleIntroPhotoDesktop{
+  0%{opacity:.04; transform:translate(-50%,-49%) scale(.90); filter:contrast(1.005) saturate(1.01) drop-shadow(0 4px 12px rgba(80,54,18,.035));}
+  50%{opacity:1; transform:translate(-50%,-50%) scale(1); filter:contrast(1.015) saturate(1.02) drop-shadow(0 6px 16px rgba(80,54,18,.05));}
+  100%{opacity:1; transform:translate(-50%,-50%) scale(1); filter:contrast(1.015) saturate(1.02) drop-shadow(0 6px 16px rgba(80,54,18,.05));}
+}
+@keyframes oaiGoogleIntroPhotoMobile{
+  0%{opacity:.04; transform:scale(.90); filter:contrast(1.005) saturate(1.01);}
+  50%{opacity:1; transform:scale(1); filter:contrast(1.015) saturate(1.02);}
+  100%{opacity:1; transform:scale(1); filter:contrast(1.015) saturate(1.02);}
+}
+html.oai-cover-booting body,
+html.oai-cover-revealing body{
+  background:#fbf8f1 !important;
+}
+html.oai-cover-booting #cover,
+html.oai-cover-revealing #cover{
+  background-color:#fbf8f1 !important;
+}
+html.oai-cover-booting::before,
+html.oai-cover-revealing::before{
+  content:"" !important;
+  position:fixed !important;
+  inset:0 !important;
+  z-index:2147482500 !important;
+  background:#fbf8f1 !important;
+  pointer-events:none !important;
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+}
+html.oai-cover-booting::after,
+html.oai-cover-revealing::after{
+  content:"" !important;
+  position:fixed !important;
+  left:50% !important;
+  top:50% !important;
+  z-index:2147482501 !important;
+  width:min(84vw, 540px) !important;
+  height:min(84vh, 740px) !important;
+  transform:translate(-50%,-50%) scale(1) !important;
+  background-image:
+    linear-gradient(to right, #fbf8f1 0%, rgba(251,248,241,.96) 5%, rgba(251,248,241,.60) 13%, rgba(251,248,241,.16) 24%, rgba(251,248,241,0) 36%, rgba(251,248,241,0) 64%, rgba(251,248,241,.16) 76%, rgba(251,248,241,.60) 87%, rgba(251,248,241,.96) 95%, #fbf8f1 100%),
+    linear-gradient(to bottom, #fbf8f1 0%, rgba(251,248,241,.90) 6%, rgba(251,248,241,.36) 17%, rgba(251,248,241,0) 30%, rgba(251,248,241,0) 70%, rgba(251,248,241,.36) 83%, rgba(251,248,241,.90) 94%, #fbf8f1 100%),
+    radial-gradient(ellipse 96% 88% at 50% 48%, rgba(251,248,241,0) 50%, rgba(251,248,241,.08) 62%, rgba(251,248,241,.34) 76%, rgba(251,248,241,.76) 90%, rgba(251,248,241,1) 100%),
+    url("intro-cross-jesus.jpg?v=V8-1-14-62-GOOGLE-INTRO-PHOTO") !important;
+  background-position:center center, center center, center center, center center !important;
+  background-size:100% 100%, 100% 100%, 100% 100%, auto 106% !important;
+  background-repeat:no-repeat, no-repeat, no-repeat, no-repeat !important;
+  border-radius:38px !important;
+  background-color:#fbf8f1 !important;
+  box-shadow:
+    0 0 0 999px #fbf8f1,
+    0 8px 18px rgba(80,54,18,.05),
+    inset 0 0 72px rgba(251,248,241,.28),
+    inset 0 0 150px rgba(251,248,241,.18) !important;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, rgba(0,0,0,.35) 6%, rgba(0,0,0,.82) 15%, #000 28%, #000 72%, rgba(0,0,0,.82) 85%, rgba(0,0,0,.35) 94%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, rgba(0,0,0,.50) 5%, rgba(0,0,0,.90) 13%, #000 24%, #000 76%, rgba(0,0,0,.90) 87%, rgba(0,0,0,.50) 95%, transparent 100%) !important;
+  -webkit-mask-composite:source-in !important;
+  mask-image:
+    linear-gradient(to right, transparent 0%, rgba(0,0,0,.35) 6%, rgba(0,0,0,.82) 15%, #000 28%, #000 72%, rgba(0,0,0,.82) 85%, rgba(0,0,0,.35) 94%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, rgba(0,0,0,.50) 5%, rgba(0,0,0,.90) 13%, #000 24%, #000 76%, rgba(0,0,0,.90) 87%, rgba(0,0,0,.50) 95%, transparent 100%) !important;
+  mask-composite:intersect !important;
+  pointer-events:none !important;
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  animation:oaiGoogleIntroPhotoDesktop .72s cubic-bezier(.18,.76,.22,1) both !important;
+}
+html.oai-cover-revealing::before,
+html.oai-cover-revealing::after{
+  opacity:0 !important;
+  transition:opacity .58s ease-out !important;
+}
+@media (max-width: 540px) and (max-aspect-ratio: 3/4){
+  html.oai-cover-booting::after,
+  html.oai-cover-revealing::after{
+    left:0 !important;
+    top:0 !important;
+    width:100vw !important;
+    height:100vh !important;
+    transform:none !important;
+    border-radius:0 !important;
+    background-size:100% 100%, 100% 100%, 100% 100%, auto 108% !important;
+    -webkit-mask-image:none !important;
+    mask-image:none !important;
+    box-shadow:0 0 0 999px #fbf8f1 !important;
+    animation:oaiGoogleIntroPhotoMobile .72s cubic-bezier(.18,.76,.22,1) both !important;
+  }
+}

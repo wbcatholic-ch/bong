@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-14-61-COMPACT-SHORT-RATIO';
-const ASSET_VERSION = 'V8-1-14-61-COMPACT-SHORT-RATIO';
+const CACHE_VERSION = 'catholic-way-V8-1-14-62-GOOGLE-INTRO-PHOTO';
+const ASSET_VERSION = 'V8-1-14-62-GOOGLE-INTRO-PHOTO';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }
@@ -30,6 +30,7 @@ const APP_SHELL = [
   withVersion('./icon-192x192.png'),
   withVersion('./icon-512x512.png'),
   withVersion('./icon-512x512-maskable.png'),
+  withVersion('./intro-cross-jesus.jpg'),
 ];
 
 self.addEventListener('install', (event) => {
