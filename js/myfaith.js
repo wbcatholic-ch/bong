@@ -221,7 +221,7 @@
     function resetCoverBackAfterMyFaith(reason){
       try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(e){ console.warn('[가톨릭길동무]', e); }
       try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(e){ console.warn('[가톨릭길동무]', e); }
-      /* V8-1-14-22-MYFAITH-INTERNAL-SCREEN: 나의신앙생활 닫힘은 커버 종료문구를 띄우는 상황이 아니므로 강제 종료문구를 준비하지 않는다. */
+      /* V8-1-14-23-SHRINE-HP-MYFAITH-COVER-TOAST: 나의신앙생활 닫힘은 커버 종료문구를 띄우는 상황이 아니므로 강제 종료문구를 준비하지 않는다. */
       try{ if(typeof window._oaiSuppressNextCoverBackToast === 'function') window._oaiSuppressNextCoverBackToast(700, reason || 'my-faith-close'); }catch(e){ console.warn('[가톨릭길동무]', e); }
       try{ var oldToast=document.getElementById('_bt'); if(oldToast && oldToast.parentNode) oldToast.parentNode.removeChild(oldToast); }catch(_e){}
       try{
@@ -232,6 +232,12 @@
           
         }
       }catch(e){ console.warn('[가톨릭길동무]', e); }
+      /* V8-1-14-23: 닫힘 순간에는 문구를 띄우지 않고, 커버가 안정된 뒤 다음 커버 Back에서만 종료문구가 나오게 준비한다. */
+      setTimeout(function(){
+        try{ if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady(); }catch(_e){}
+        try{ if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed(); }catch(_e){}
+        try{ if(typeof window._forceNextCoverBackToast === 'function') window._forceNextCoverBackToast(reason || 'my-faith-cover-ready'); }catch(_e){}
+      }, 260);
     }
     function enterMyFaithInternalScreen(){
       try{
@@ -376,7 +382,7 @@
     var MYFAITH_EXTERNAL_FLAG = 'oai_myfaith_external_link_pending';
     var MYFAITH_EXTERNAL_TS = 'oai_myfaith_external_link_ts';
     function markMyFaithExternalLink(){
-      /* V8-1-14-22-MYFAITH-INTERNAL-SCREEN: 나의 신앙생활 외부링크는 가톨릭 웹사이트와 같은 공통 외부 이동 흐름을 사용한다.
+      /* V8-1-14-23-SHRINE-HP-MYFAITH-COVER-TOAST: 나의 신앙생활 외부링크는 가톨릭 웹사이트와 같은 공통 외부 이동 흐름을 사용한다.
          myfaith 전용 cover-toast/return flag는 더 이상 만들지 않는다. */
       return true;
     }
