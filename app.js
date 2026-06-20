@@ -606,7 +606,7 @@ function openFaithPortal(kind, opts){
   const info=_getFaithPortalInfo(kind);
   if(!info || kind==='prayer') return _goFaithPortal('prayer');
   if(kind==='hymn'){
-    /* V8-1-14-39-BACK-DIAGNOSTIC: 가톨릭성가는 다시 내부 iframe이 아니라 외부브라우저/외부페이지 흐름으로 연다. */
+    /* V8-1-14-40-BACK-DIAG-COMPACT: 가톨릭성가는 다시 내부 iframe이 아니라 외부브라우저/외부페이지 흐름으로 연다. */
     try{
       if(typeof _setFaithReturnTarget === 'function') _setFaithReturnTarget('massQuick');
       if(typeof _setMassQuickReturn === 'function') _setMassQuickReturn(true);
@@ -2650,7 +2650,7 @@ window.addEventListener('load', syncCoverUpdateVersionState, true);
     try{
       var frame=document.getElementById('privacy-policy-frame');
       if(frame){
-        var src=frame.getAttribute('data-src') || ('privacy.html?embedded=1&v=' + encodeURIComponent(window.APP_VERSION || 'V8-1-14-39-BACK-DIAGNOSTIC'));
+        var src=frame.getAttribute('data-src') || ('privacy.html?embedded=1&v=' + encodeURIComponent(window.APP_VERSION || 'V8-1-14-40-BACK-DIAG-COMPACT'));
         if(frame.getAttribute('src') === 'about:blank' || !frame.getAttribute('src')) frame.setAttribute('src', src);
       }
     }catch(e){ console.warn('[가톨릭길동무]', e); }
@@ -2904,7 +2904,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V8-1-14-39-BACK-DIAGNOSTIC';
+    frame.src='diocese.html?v=V8-1-14-40-BACK-DIAG-COMPACT';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -3122,7 +3122,7 @@ function _primeDioceseBackAfterExternalReturn(reason){
     setTimeout(arm, 240);
   }catch(e){ console.warn('[가톨릭길동무]', e); }
 }
-/* V8-1-14-39-BACK-DIAGNOSTIC: 관구교구 외부페이지 복귀 후 카테고리 뒤로가기 재무장 */
+/* V8-1-14-40-BACK-DIAG-COMPACT: 관구교구 외부페이지 복귀 후 카테고리 뒤로가기 재무장 */
 function _finishDioceseExternalReturn(frame){
   try{
     var w = frame && frame.contentWindow;
@@ -3474,7 +3474,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V8-1-14-39-BACK-DIAGNOSTIC';
+const _PRAYER_ASSET_VERSION='V8-1-14-40-BACK-DIAG-COMPACT';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
