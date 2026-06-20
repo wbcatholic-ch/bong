@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-14-22-MYFAITH-INTERNAL-SCREEN';
-const ASSET_VERSION = 'V8-1-14-22-MYFAITH-INTERNAL-SCREEN';
+const CACHE_VERSION = 'catholic-way-V8-1-14-23-SHRINE-HP-MYFAITH-COVER-TOAST';
+const ASSET_VERSION = 'V8-1-14-23-SHRINE-HP-MYFAITH-COVER-TOAST';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }
