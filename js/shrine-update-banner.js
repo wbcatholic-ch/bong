@@ -6,13 +6,12 @@
 (function(){
   'use strict';
   var ENABLED = window.OAI_SHRINE_UPDATE_BANNER_ENABLED !== false;
-  var HIDE_KEY = 'oai_shrine_update_banner_v1_hidden';
-  var SESSION_KEY = 'oai_shrine_update_banner_v1_session_shown';
+  var HIDE_KEY = 'oai_shrine_update_banner_v2_hidden';
+  var SESSION_KEY = 'oai_shrine_update_banner_v2_session_shown';
   function isInstalledRun(){
-    try{ if(window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) return true; }catch(_e){}
-    try{ if(window.navigator && window.navigator.standalone) return true; }catch(_e){}
-    try{ if(window.OAI_FORCE_SHRINE_UPDATE_BANNER === true) return true; }catch(_e){}
-    return false;
+    /* V8-1-14-54: 테스트와 배포 확인을 위해 첫 커버 화면에서는 설치 여부와 관계없이 표시한다.
+       공식 배포 전에는 index.html의 SHRINE_UPDATE_BANNER 블록과 이 파일을 삭제하면 된다. */
+    return true;
   }
   function isHidden(){ try{ return localStorage.getItem(HIDE_KEY)==='1'; }catch(_e){ return false; } }
   function hideForever(){ try{ localStorage.setItem(HIDE_KEY,'1'); }catch(_e){} hide(); }
