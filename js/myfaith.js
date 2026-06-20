@@ -302,7 +302,7 @@
       }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
     function scheduleCoverHistoryAfterMyFaith(reason){
-      /* V8-1-14-39-BACK-DIAGNOSTIC: MyFaith는 popstate 안에서 닫히므로
+      /* V8-1-14-40-BACK-DIAG-COMPACT: MyFaith는 popstate 안에서 닫히므로
          즉시 pushState가 브라우저 Back 처리에 묻히는 경우가 있다.
          커버가 실제로 다시 그려진 뒤 2번 더 root/trap pair를 세운다. */
       rebuildCoverHistoryAfterMyFaith(reason || 'my-faith-close');
