@@ -80,10 +80,16 @@
 
 
 
-/* V8-1-14-23-SHRINE-HP-MYFAITH-COVER-TOAST: 나의신앙생활을 커버 위 팝업이 아니라 내부 화면처럼 표시 */
+/* V8-1-14-24-MYFAITH-DOM-OUTSIDE-COVER: 나의신앙생활을 커버 위 팝업이 아니라 내부 화면처럼 표시 */
 html.app-active .my-diocese-modal.show{
   z-index: 9000 !important;
 }
 html.app-active .my-diocese-modal.show .my-diocese-backdrop{
   background: var(--v4-bg-ivory) !important;
+}
+
+
+/* V8-1-14-24-MYFAITH-DOM-OUTSIDE-COVER: #my-diocese-modal은 #cover 밖에 있으므로 cover display:none 영향을 받지 않는다. */
+.my-diocese-modal.show{
+  visibility: visible !important;
 }
