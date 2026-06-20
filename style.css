@@ -6254,3 +6254,28 @@ html.oai-font-global .shrine-visit-map-filter button[data-shrine-visit-filter="u
     min-height:34px!important;height:34px!important;padding:0 10px!important;font-size:13px!important;
   }
 }
+
+/* V8-1-14-49: 성지 지도 상단 필터 글자 크기 강제 확대 - ID 선택자로 최종 우선 적용 */
+#map-wrap #shrine-visit-map-filter,
+html.oai-font-global #map-wrap #shrine-visit-map-filter{
+  min-height:52px!important;
+  padding:8px!important;
+  gap:8px!important;
+}
+#map-wrap #shrine-visit-map-filter > button[data-shrine-visit-filter],
+html.oai-font-global #map-wrap #shrine-visit-map-filter > button[data-shrine-visit-filter]{
+  min-height:42px!important;
+  height:42px!important;
+  padding:0 16px!important;
+  font-size:16px!important;
+  font-weight:900!important;
+  line-height:1.1!important;
+}
+@media (max-width:390px){
+  #map-wrap #shrine-visit-map-filter,
+  html.oai-font-global #map-wrap #shrine-visit-map-filter{min-height:50px!important;padding:7px!important;gap:6px!important;}
+  #map-wrap #shrine-visit-map-filter > button[data-shrine-visit-filter],
+  html.oai-font-global #map-wrap #shrine-visit-map-filter > button[data-shrine-visit-filter]{
+    min-height:40px!important;height:40px!important;padding:0 12px!important;font-size:15px!important;
+  }
+}

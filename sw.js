@@ -1,5 +1,5 @@
-const CACHE_VERSION = 'catholic-way-V8-1-14-48-FILTER-FONT-DIOCESE-GAP';
-const ASSET_VERSION = 'V8-1-14-48-FILTER-FONT-DIOCESE-GAP';
+const CACHE_VERSION = 'catholic-way-V8-1-14-49-SHRINE-FILTER-FONT-FORCE';
+const ASSET_VERSION = 'V8-1-14-49-SHRINE-FILTER-FONT-FORCE';
 function withVersion(path) {
   return path + '?v=' + ASSET_VERSION;
 }
