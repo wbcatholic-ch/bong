@@ -143,7 +143,7 @@
     }catch(e){ console.warn('[가톨릭길동무]', e); return false; }
   }
   function isGuideModalOpen(){
-    try{ return !!document.querySelector('.guide-modal.show') || !!document.querySelector('.cover-menu-modal.show') || !!document.querySelector('.my-diocese-modal.show') || isRefreshDialogOpen(); }catch(e){ return false; }
+    try{ return !!document.querySelector('.guide-modal.show') || !!document.querySelector('.cover-menu-modal.show') || isRefreshDialogOpen(); }catch(e){ return false; }
   }
   function closeGuideModals(){
     try{
@@ -192,6 +192,13 @@
         diocese.classList.remove('open');
         callGTC();
       }
+      return true;
+    }
+
+    var myFaith = $b('my-diocese-modal');
+    if(myFaith && myFaith.classList && myFaith.classList.contains('open')){
+      if(typeof window.closeMyFaithLifeModal === 'function') window.closeMyFaithLifeModal();
+      else { myFaith.classList.remove('open','show'); callGTC(); }
       return true;
     }
 
