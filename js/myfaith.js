@@ -301,10 +301,19 @@
         history.pushState({_p:1, oai_cover_trap:reason || 'my-faith-cover-trap'}, '', href);
       }catch(e){ console.warn('[가톨릭길동무]', e); }
     }
+    function markNextCoverBackMustToastAfterMyFaith(reason){
+      try{
+        var until = (Date.now ? Date.now() : new Date().getTime()) + 12000;
+        window.__OAI_MYFAITH_FORCE_FIRST_COVER_TOAST_UNTIL__ = until;
+        window.__OAI_MYFAITH_FORCE_FIRST_COVER_TOAST_REASON__ = reason || 'my-faith-close';
+        sessionStorage.setItem('oai_myfaith_force_first_cover_toast_until', String(until));
+        sessionStorage.setItem('oai_myfaith_force_first_cover_toast_reason', reason || 'my-faith-close');
+      }catch(_e){}
+    }
     function scheduleCoverHistoryAfterMyFaith(reason){
-      /* V8-1-14-40-BACK-DIAG-COMPACT: MyFaith는 popstate 안에서 닫히므로
-         즉시 pushState가 브라우저 Back 처리에 묻히는 경우가 있다.
-         커버가 실제로 다시 그려진 뒤 2번 더 root/trap pair를 세운다. */
+      /* V8-1-14-42-MYFAITH-CAPTURE-FIRST-TOAST: MyFaith에서 커버로 온 직후
+         첫 커버 Back은 어떤 종료 플래그가 남아 있어도 반드시 안내문구로 처리한다. */
+      markNextCoverBackMustToastAfterMyFaith(reason || 'my-faith-close');
       rebuildCoverHistoryAfterMyFaith(reason || 'my-faith-close');
       setTimeout(function(){ rebuildCoverHistoryAfterMyFaith((reason || 'my-faith-close') + '-late1'); }, 80);
       setTimeout(function(){ rebuildCoverHistoryAfterMyFaith((reason || 'my-faith-close') + '-late2'); }, 240);

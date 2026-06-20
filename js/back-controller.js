@@ -8,7 +8,7 @@
 
   var _href = location.href.split('#')[0];
 
-  /* 진단 표시 코드는 V8-1-14-40-BACK-DIAG-COMPACT에서 제거했습니다. */
+  /* 진단 표시 코드는 V8-1-14-42-MYFAITH-CAPTURE-FIRST-TOAST에서 제거했습니다. */
 
 
   function armCoverBackTrap(reason, opts){
@@ -372,6 +372,44 @@
 
   var _restoring = false;
 
+  function myFaithForceToastActive(){
+    try{
+      var until = Number(window.__OAI_MYFAITH_FORCE_FIRST_COVER_TOAST_UNTIL__ || sessionStorage.getItem('oai_myfaith_force_first_cover_toast_until') || 0);
+      return !!(until && Date.now && Date.now() < until);
+    }catch(e){ return false; }
+  }
+
+  function handleMyFaithFirstCoverBack(reason, evt){
+    try{
+      if(!myFaithForceToastActive()) return false;
+      if(isMyFaithOpen()) return false;
+      if(!isCoverOnlyVisible()) return false;
+      if(typeof window._resetCoverExitReady === 'function') window._resetCoverExitReady();
+      if(typeof window._clearCoverExitArmed === 'function') window._clearCoverExitArmed();
+      if(typeof window._showBackToast === 'function') window._showBackToast();
+      else {
+        try{
+          var t=document.createElement('div');
+          t.id='_bt';
+          t.textContent='한 번 더 누르면 앱이 종료됩니다';
+          t.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(14,21,53,.94);color:#fff;padding:12px 24px;border-radius:24px;font-size:14px;font-weight:800;z-index:99999;white-space:nowrap;pointer-events:none;box-shadow:0 14px 36px rgba(0,0,0,.32);';
+          document.body.appendChild(t);
+          setTimeout(function(){ if(t && t.parentNode) t.parentNode.removeChild(t); }, 2500);
+        }catch(_e){}
+      }
+      armCoverBackTrap(reason || 'my-faith-first-cover-toast', {force:true});
+      if(evt){
+        try{ if(evt.preventDefault) evt.preventDefault(); }catch(_e){}
+        try{ if(evt.stopImmediatePropagation) evt.stopImmediatePropagation(); else if(evt.stopPropagation) evt.stopPropagation(); }catch(_e){}
+      }
+      return true;
+    }catch(e){ console.warn('[가톨릭길동무]', e); return false; }
+  }
+
+  window.addEventListener('popstate', function(evt){
+    handleMyFaithFirstCoverBack('my-faith-cover-pop-capture', evt);
+  }, true);
+
   window.addEventListener('popstate', function(){
     if(window._appExiting) return;
 
@@ -500,7 +538,8 @@
     callGTC();
   }, false);
 
-  document.addEventListener('backbutton', function(){
+  document.addEventListener('backbutton', function(evt){
+    if(handleMyFaithFirstCoverBack('my-faith-cover-hardware-capture', evt)) return;
     if(typeof window._oaiPrayerBackHandle === 'function' && window._oaiPrayerBackHandle('prayer-hardware-back')) return;
     if(closeRefreshDialog()){ try{ armCoverBackTrap('refresh-dialog-hardware', {force:true}); }catch(e){} return; }
     if(isMyFaithOpen()){
