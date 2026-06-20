@@ -8,7 +8,7 @@
 
   var _href = location.href.split('#')[0];
 
-  /* 진단 표시 코드는 V8-1-14-34-MYFAITH-HISTORY-PAIR에서 제거했습니다. */
+  /* 진단 표시 코드는 V8-1-14-35-MYFAITH-DIRECT-CLOSE에서 제거했습니다. */
 
 
   function armCoverBackTrap(reason, opts){
@@ -443,29 +443,10 @@
     }
 
     if(isMyFaithOpen()){
-      var myFaithCb = function(){
-        closeMyFaithInternal('my-faith-popstate');
-      };
-      try{
-        window.__OAI_AFTER_RESTORE_MY_FAITH_CB__ = myFaithCb;
-        window.__OAI_AFTER_RESTORE_MY_FAITH_UNTIL__ = Date.now() + 1800;
-        _restoring = true;
-        history.go(1);
-        setTimeout(function(){
-          try{
-            if(window.__OAI_AFTER_RESTORE_MY_FAITH_CB__ === myFaithCb){
-              _restoring = false;
-              window.__OAI_AFTER_RESTORE_MY_FAITH_CB__ = null;
-              window.__OAI_AFTER_RESTORE_MY_FAITH_UNTIL__ = 0;
-              myFaithCb();
-            }
-          }catch(e){ console.warn('[가톨릭길동무]', e); }
-        }, 160);
-      }catch(e){
-        _restoring = false;
-        console.warn('[가톨릭길동무]', e);
-        myFaithCb();
-      }
+      /* V8-1-14-35-MYFAITH-DIRECT-CLOSE: MyFaith는 모달 overlay history를 사용하므로
+         Back으로 overlay state가 빠진 순간 바로 닫고, 커버 history pair를 새로 만든다.
+         history.go(1) 복원 방식은 PWA에서 커버 첫 Back을 잃어버리는 원인이 되어 사용하지 않는다. */
+      closeMyFaithInternal('my-faith-popstate-direct');
       return;
     }
 
