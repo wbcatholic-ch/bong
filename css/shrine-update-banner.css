@@ -5,13 +5,17 @@
    3) js/shrine-update-banner.js 삭제 */
 #shrine-update-banner{
   position:fixed;
-  left:14px;
-  right:14px;
-  bottom:calc(env(safe-area-inset-bottom,0px) + 20px);
+  inset:0;
   z-index:10090;
   display:none;
+  align-items:center;
   justify-content:center;
-  pointer-events:none;
+  box-sizing:border-box;
+  padding:calc(env(safe-area-inset-top,0px) + 18px) 14px calc(env(safe-area-inset-bottom,0px) + 18px);
+  background:rgba(15,23,42,.18);
+  backdrop-filter:blur(5px);
+  -webkit-backdrop-filter:blur(5px);
+  pointer-events:auto;
 }
 #shrine-update-banner.show{display:flex;}
 #shrine-update-banner .shrine-update-card{
@@ -113,7 +117,7 @@
   border:1.5px solid #CBD5E1;
 }
 @media(max-width:390px){
-  #shrine-update-banner{left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);}
+  #shrine-update-banner{padding:calc(env(safe-area-inset-top,0px) + 14px) 10px calc(env(safe-area-inset-bottom,0px) + 14px);}
   #shrine-update-banner .shrine-update-title{font-size:16px;}
   #shrine-update-banner .shrine-update-body{font-size:13.5px;}
   #shrine-update-banner .shrine-update-actions button{font-size:13.5px;}
