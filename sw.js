@@ -1,36 +1,25 @@
-const CACHE_VERSION = 'catholic-way-V8-1-14-40-BACK-DIAG-COMPACT';
-const ASSET_VERSION = 'V8-1-14-40-BACK-DIAG-COMPACT';
-function withVersion(path) {
-  return path + '?v=' + ASSET_VERSION;
-}
+const CACHE_VERSION = 'catholic-way-WebView-Clean-128';
 const APP_SHELL = [
   './',
   './index.html',
-  withVersion('./style.css'),
-  withVersion('./css/module-common.css'),
-  withVersion('./css/prayer.css'),
-  withVersion('./css/web.css'),
-  withVersion('./css/pilgrimage.css'),
-  withVersion('./css/overlays.css'),
-  withVersion('./css/cover-modals.css'),
-  withVersion('./css/myfaith.css'),
-  withVersion('./css/my-diocese.css'),
-  withVersion('./js/myfaith.js'),
-  withVersion('./app.js'),
-  withVersion('./js/cover-common.js'),
-  withVersion('./js/touch-ux.js'),
-  withVersion('./js/prayer-ui.js'),
-  withVersion('./js/cover-refresh.js'),
-  withVersion('./js/app-state-guards.js'),
-  withVersion('./web.js'),
-  withVersion('./js/route-web-guards.js'),
-  withVersion('./js/back-controller.js'),
-  withVersion('./sw-update.js'),
-  withVersion('./manifest.json'),
-  withVersion('./icon-192x192.png'),
-  withVersion('./icon-512x512.png'),
-  withVersion('./icon-512x512-maskable.png'),
+  './constants.js?v=WebView-Clean-128',
+  './core.js?v=WebView-Clean-128',
+  './style.css?v=WebView-Clean-128',
+  './app.js?v=WebView-Clean-128',
+  './diocese-meta.js?v=WebView-Clean-128',
+  './diocese-search.js?v=WebView-Clean-128',
+  './diocese-data.js?v=WebView-Clean-128',
+  './diocese-ui.js?v=WebView-Clean-128',
+  './web.js?v=WebView-Clean-128',
+  './patches.js?v=WebView-Clean-128',
+  './sw-update.js?v=WebView-Clean-128',
+  './manifest.json?v=WebView-Clean-128',
+  './intro-cross-jesus.jpg?v=WebView-Clean-128',
+  './icon-192x192.png',
+  './icon-512x512.png',
+  './icon-512x512-maskable.png',
 ];
+
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -58,7 +47,7 @@ function isVersionedAsset(request) {
   try {
     const url = new URL(request.url);
     return url.searchParams.has('v') ||
-      /parishes-[a-z-]+\.js|prayer-data\.js|prayer\.js|retreats\.js|shrines\.js|diocese\.html|diocese\.css|qa-firebase\.html|app\.js|style\.css|module-common\.css|prayer\.css|web\.css|pilgrimage\.css|overlays\.css|cover-modals\.css|myfaith\.css|my-diocese\.css|web\.js|touch-ux\.js|prayer-ui\.js|cover-refresh\.js|app-state-guards\.js|route-web-guards\.js|back-controller\.js|sw-update\.js/.test(url.pathname);
+      /parishes(?:-[a-z-]+)?\.js|prayer\.js|retreats\.js|shrines\.js|diocese\.html|qa-firebase\.html|app\.js|style\.css|web\.js|patches\.js|sw-update\.js/.test(url.pathname);
   } catch (e) { return false; }
 }
 async function networkFirst(request) {
@@ -93,9 +82,7 @@ async function staleWhileRevalidate(request) {
       return fresh;
     })
     .catch(() => null);
-  if (cached) return cached;
-  const fresh = await freshPromise;
-  return fresh || new Response('Offline', { status: 503 });
+  return cached || freshPromise || fetch(request);
 }
 self.addEventListener('fetch', (event) => {
   const request = event.request;

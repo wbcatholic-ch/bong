@@ -10,22 +10,8 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
-
-<script>
-/* V8-1-14-40-BACK-DIAG-COMPACT: 문의·건의가 index.html iframe 안에서 열릴 때는 iframe 내부 헤더만 접고, 부모 qna-view 헤더/뒤로가기는 유지한다. */
-(function(){
-  try{
-    var sp = new URLSearchParams(location.search || '');
-    if(sp.get('embedded') === '1' || window.parent !== window){
-      document.documentElement.classList.add('qa-embedded');
-    }
-  }catch(_e){}
-})();
-</script>
-
 <style>
-  /* ── 리셋 & 기본 ── */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --blue:   #0e1535;
     --blue-l: #f0f2f8;
@@ -68,9 +54,7 @@
     display: flex;
     flex-direction: column;
   }
-
-  /* ── 헤더 ── */
-  #header {
+#header {
     width: 100%; max-width: none; box-sizing: border-box;
     background: var(--d); color: #fff;
     height: calc(var(--header-h,70px) + var(--qa-top-gap)); min-height: calc(var(--header-h,70px) + var(--qa-top-gap)); padding: var(--qa-top-gap) 16px 0;
@@ -127,21 +111,7 @@
     gap: 4px;
   }
   #write-btn:active { transform: scale(.97); }
-
-  /* V8-1-14-40-BACK-DIAG-COMPACT: embedded iframe에서는 내부 헤더 중복만 제거. 부모 qna-view 헤더와 back 구조는 건드리지 않는다. */
-  html.qa-embedded { --qa-top-gap: 0px; }
-  html.qa-embedded #header{
-    height:0 !important; min-height:0 !important; padding:0 !important;
-    overflow:visible !important; background:transparent !important; box-shadow:none !important;
-    border:0 !important; flex:0 0 0 !important; display:block !important;
-  }
-  html.qa-embedded #qna-cross-icon,
-  html.qa-embedded #header-texts,
-  html.qa-embedded #close-btn{ display:none !important; }
-  html.qa-embedded #write-btn{ display:none !important; }
-
-  /* ── 뷰 전환 ── */
-  .view { display: none; min-height: 0; padding: 0 0 80px; }
+.view { display: none; min-height: 0; padding: 0 0 80px; }
   .view.active {
     flex: 1 1 auto;
     min-height: 0;
@@ -157,9 +127,7 @@
     overflow: hidden;
     padding-bottom: 0;
   }
-
-  /* ── 필터 ── */
-  #filter-bar {
+#filter-bar {
     height: var(--tab-h); min-height: var(--tab-h); max-height: var(--tab-h);
     display: flex; align-items: center; gap: 6px; padding: 0 10px;
     background: var(--card);
@@ -186,9 +154,7 @@
   .filter-btn.active { background: var(--d); color: #fff; border-color: transparent; font-weight: 700; box-shadow: 0 2px 8px rgba(31,42,68,.28); }
   .filter-btn:active { transform: scale(.992); }
   .filter-btn.active,.filter-btn.active:active { transform: none!important; }
-
-  /* ── 게시글 목록 ── */
-  #post-list {
+#post-list {
     flex: 1 1 auto;
     min-height: 0;
     padding: 4px 14px calc(92px + env(safe-area-inset-bottom, 0px));
@@ -248,9 +214,7 @@
   .card-title { font-size: 16px; font-weight: 600; color: #1E293B; line-height: 1.45; margin-bottom: 5px; }
   .card-meta  { font-size: 16px; color: var(--gray-400); }
   .card-date  { margin-left: auto; font-size: 16px; color: var(--gray-400); }
-
-  /* 배지 공통 */
-  .badge {
+.badge {
     border-radius: 20px; padding: 3px 10px; font-size: 16px; font-weight: 700;
     display: inline-flex; align-items: center; gap: 3px;
   }
@@ -261,9 +225,7 @@
   .badge-lock  { background:#F3F4F6; color:#6B7280; border:1px solid #E5E7EB; font-weight:500; }
   .badge-done  { background:#F0FDF4; color:#166534; border:1px solid #BBF7D0; font-weight:600; }
   .badge-wait  { background:#FEF9C3; color:#92400E; border:1px solid #FDE68A; font-weight:500; }
-
-  /* ── 상세 ── */
-  #detail-view { padding: 16px; background:var(--bg); }
+#detail-view { padding: 16px; background:var(--bg); }
   .detail-head {
     background: #fffaf2; border:1px solid #e6dccb; border-radius: var(--radius);
     padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow);
@@ -275,8 +237,7 @@
     font-size: 16px; line-height: 1.85; color: #334155;
     margin-bottom: 12px; box-shadow: var(--shadow); white-space: pre-wrap; border:1px solid #e6dccb;
   }
-  /* ── 글쓰기 ── */
-  #write-view { padding: 16px; background:var(--bg); }
+#write-view { padding: 16px; background:var(--bg); }
   .field-group { margin-bottom: 18px; }
   .field-label { display: block; font-size: 16px; font-weight: 700; color: var(--gray-700); margin-bottom: 8px; }
   .cat-row { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -311,9 +272,7 @@
     line-height: 1.65;
     font-weight: 600;
   }
-
-  /* ── 버튼 ── */
-  .btn-primary {
+.btn-primary {
     width: 100%; background: var(--blue); color: #fff; border: none;
     border-radius: 12px; padding: 13px; font-size: 16px; font-weight: 700;
     cursor: pointer; font-family: inherit; transition: opacity .15s;
@@ -325,15 +284,11 @@
     cursor: pointer; font-family: inherit;
   }
   .btn-row { display: flex; gap: 8px; margin-top: 10px; }
-
-  /* ── 성공 화면 ── */
-  #success-view { padding: 60px 24px; text-align: center; display: none; }
+#success-view { padding: 60px 24px; text-align: center; display: none; }
   #success-view .icon { font-size: 52px; margin-bottom: 16px; }
   #success-view .ttl  { font-size: 16px; font-weight: 700; color: var(--blue); margin-bottom: 8px; }
   #success-view .sub  { font-size: 16px; color: var(--gray-500); line-height: 1.8; margin-bottom: 28px; }
-
-  /* ── 로딩 / 빈화면 ── */
-  .loading-box { text-align: center; padding: 60px 0; color: var(--gray-400); font-size: 16px; }
+.loading-box { text-align: center; padding: 60px 0; color: var(--gray-400); font-size: 16px; }
   .spinner {
     width: 34px; height: 34px; border: none; border-radius: 0;
     display: flex; align-items: center; justify-content: center;
@@ -342,9 +297,7 @@
   }
   .spinner::before { content: '✝'; font-size: 30px; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── 반응형 / safe-area ── */
-  html { min-height: 100%; }
+html { min-height: 100%; }
   body { overflow-x: hidden; }
   .view { padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
   #list-view.view { padding-bottom: 0; }
@@ -365,26 +318,24 @@
     textarea { min-height: 96px; }
   }
 
-  /* v1: 문의 헤더 십자가는 iOS/Android 모두 흰색 단색 CSS 십자가로 표시 */
+
   #qna-cross-icon{ position:relative; font-size:0!important; line-height:1!important; display:flex; align-items:center; justify-content:center; }
   #qna-cross-icon::before,
   #qna-cross-icon::after{ content:""; position:absolute; left:50%; background:#fff; border-radius:2px; display:block; }
   #qna-cross-icon::before{ top:50%; width:3px; height:24px; transform:translate(-50%,-50%); }
   #qna-cross-icon::after{ top:42%; width:14px; height:3px; transform:translate(-50%,-50%); }
 
-  /* V13 qna no return effect */
   html.returning-to-cover *,
   body.returning-to-cover * {
     transition: none !important;
     animation: none !important;
   }
 
-  /* V13: 문의/글쓰기 상단은 헤더의 상태바 여백만 사용하고 본문은 기본 여백으로 복귀 */
   #write-view{
     padding-top:16px!important;
   }
 
-  /* V13: 문의·건의 UI 미세 조정 */
+
   #write-btn {
     height: 40px !important;
     min-height: 40px !important;
@@ -431,29 +382,10 @@
     font-size: 13px !important;
   }
 
-
-  /* V8-1-14-40-BACK-DIAG-COMPACT: embedded iframe에서는 글쓰기 플로팅 버튼도 숨김 */
-  html.qa-embedded #write-btn{ display:none !important; visibility:hidden !important; pointer-events:none !important; }
-
-
-  /* V8-1-14-40-BACK-DIAG-COMPACT: 상단 개인정보 안내문을 내용 입력칸 placeholder로 이동하고, 내용 박스 테두리를 진하게 표시 */
-  #write-view .qa-private-guide{ display:none !important; }
-  #f-content{
-    border:2px solid #C8B79D !important;
-    background:#fffdf7 !important;
-  }
-  #f-content:focus{ border-color:#B28B57 !important; box-shadow:0 0 0 2px rgba(212,170,106,.16) !important; }
-  #f-content::placeholder{
-    color:#A4AAB4 !important;
-    opacity:1 !important;
-    line-height:1.75 !important;
-    font-weight:500 !important;
-  }
-
 </style>
 
+
 <style id="oai-touch-ux-standard-20260506">
-/* OAI 20260506: 공통 터치 UX 표준화 */
 .oai-touch-pressed{
   transform:scale(.965)!important;
   filter:brightness(.96)!important;
@@ -487,6 +419,7 @@
 </div>
 
 <div id="write-view" class="view active">
+  <div class="qa-private-guide">문의·건의는 앱 관리자 확인용으로만 저장되며, 다른 사용자에게 공개되지 않습니다.<br>이름, 전화번호, 주소 등 개인정보는 입력하지 말아 주세요.</div>
   <div class="field-group">
     <label class="field-label">분류</label>
     <div class="cat-row" id="cat-row"></div>
@@ -497,7 +430,7 @@
   </div>
   <div class="field-group">
     <label class="field-label">내용</label>
-    <textarea id="f-content" rows="6" placeholder="문의·건의는 앱 관리자 확인용으로만 저장되며, 다른 사용자에게 공개되지 않습니다.&#10;이름, 전화번호, 주소 등 개인정보는 입력하지 말아 주세요.&#10;&#10;문의 내용이나 건의사항을 자유롭게 적어주세요." maxlength="500"
+    <textarea id="f-content" rows="6" placeholder="문의 내용이나 건의사항을 자유롭게 적어주세요.&#10;다른 사용자에게 공개되지 않으며, 개인정보는 입력하지 마세요." maxlength="500"
       oninput="document.getElementById('char-cnt').textContent=this.value.length"></textarea>
     <div class="char-count"><span id="char-cnt">0</span> / 500</div>
   </div>
@@ -513,10 +446,9 @@
   <button class="btn-primary" onclick="handleQaBack()">확인</button>
 </div>
 
+
+
 <script>
-/* ══════════════════════════════════════════════
-   ★ 1. Firebase 설정 — 아래 값만 교체하면 됩니다
-   ══════════════════════════════════════════════ */
 const FIREBASE_CONFIG = {
   apiKey:            "AIzaSyCGUwhWXTgc09ghEtOcvinpQKrr577zAhM",
   authDomain:        "catholic-6c7d8.firebaseapp.com",
@@ -525,25 +457,17 @@ const FIREBASE_CONFIG = {
   messagingSenderId: "952327785327",
   appId:             "1:952327785327:web:1576bc6d678ba42f8a369a"
 };
-
-/* ══════════════════════════════════════════════ */
-
 firebase.initializeApp(FIREBASE_CONFIG);
 const db = firebase.firestore();
 const COL = db.collection("qa_posts");
 
-/* V2-82: 문의·건의는 비공개 접수 방식으로 운영한다. */
 const QA_PRIVATE_MODE = true;
 const QA_COOLDOWN_MS = 60 * 1000;
 const QA_DAILY_LIMIT = 3;
-
-/* ─── 상수 ─── */
 const CATEGORIES  = ["문의","수정제안","개선건의","칭찬"];
-const QA_LIST_LIMIT = 30; // V13: 처음 30개를 빠르게 표시하고, 더보기로 이전 글을 30개씩 추가한다.
+const QA_LIST_LIMIT = 30;
 const ANON_NAMES  = ["익명의 순례자","익명의 신자","익명의 교우"];
 const FILTERS     = ["전체", ...CATEGORIES];
-
-/* ─── 상태 ─── */
 let currentFilter  = "전체";
 let currentPost    = null;
 let selectedCat    = "문의";
@@ -592,8 +516,6 @@ function initFilterSwipe(){
     else moveFilterTab(-1);
   }, {passive:true});
 }
-
-/* ═══════════════════ 뷰 전환 ═══════════════════ */
 let qaHistoryReady = false;
 let suppressQaHistory = false;
 
@@ -666,8 +588,6 @@ function goWrite()  {
   }
 }
 function goDetail() { showView('detail-view-wrap', { historyMode:'push' }); }
-
-/* ═══════════════════ 필터 바 ═══════════════════ */
 function buildFilterBar() {
   const bar = document.getElementById('filter-bar');
   bar.innerHTML = '';
@@ -685,8 +605,6 @@ function buildFilterBar() {
     }catch(e){}
   });
 }
-
-/* ═══════════════════ 목록 렌더링 ═══════════════════ */
 window._cachedPosts = [];
 let qaLivePosts = [];
 let qaOlderPosts = [];
@@ -748,8 +666,6 @@ function renderList(posts) {
   }).join('') + moreControls;
   updatePostListScrollState();
 }
-
-/* ═══════════════════ 실시간 구독 + 더보기 ═══════════════════ */
 function subscribeList() {
   if (unsubscribe) unsubscribe();
   qaLivePosts = [];
@@ -811,8 +727,6 @@ async function loadMorePosts() {
     renderList(mergeLoadedPosts());
   }
 }
-
-/* ═══════════════════ 게시글 열기 ═══════════════════ */
 function openPost(id) {
   const post = window._cachedPosts.find(p => p.id === id);
   if (!post) return;
@@ -839,8 +753,6 @@ function showDetailView(post) {
 
   goDetail();
 }
-
-/* ═══════════════════ 글쓰기 ═══════════════════ */
 function buildCatRow() {
   const row = document.getElementById('cat-row');
   row.innerHTML = '';
@@ -870,6 +782,7 @@ if(titleInput){
     }
   });
 }
+
 
 function qaTodayKey(){
   const d = new Date();
@@ -949,21 +862,15 @@ async function submitPost() {
     errEl.textContent = '저장 실패: ' + e.message; errEl.style.display = 'block';
   }
 }
-
-/* ═══════════════════ 유틸 ═══════════════════ */
 function escHtml(str) {
   return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/"/g,'&quot;').replace(/\n/g,'<br>');
 }
-
-/* ═══════════════════ 뒤로가기 처리 ═══════════════════ */
 function oaiPrepareNoReturnEffectToApp(){
   try{
     sessionStorage.setItem('oai_internal_return_no_effect_once','1');
-    sessionStorage.setItem('oai_internal_return_no_effect_until', String((Date.now ? Date.now() : new Date().getTime()) + 1200));
+    sessionStorage.setItem('oai_internal_return_no_effect_until', String((Date.now ? Date.now() : new Date().getTime()) + 7000));
     sessionStorage.setItem('oai_internal_page_nav','qna');
-    sessionStorage.setItem('oai_cover_toast_on_return','qna-return-cover');
-    sessionStorage.setItem('oai_cover_toast_on_return_ts', String(Date.now ? Date.now() : new Date().getTime()));
     sessionStorage.removeItem('oai_external_nav_started_at');
     sessionStorage.removeItem('oai_external_nav_pagehide');
     sessionStorage.removeItem('oai_external_nav_kind');
@@ -976,32 +883,12 @@ function oaiPrepareNoReturnEffectToApp(){
     sessionStorage.removeItem('oai_refresh_veil_visible_until');
   }catch(e){}
 }
-function oaiReturnToAppCover(reason){
-  try{
-    if(window.parent && window.parent !== window && typeof window.parent.closeQnaFrameToCover === 'function'){
-      window.parent.closeQnaFrameToCover(reason || 'qna-embedded-close');
-      return;
-    }
-  }catch(_e){}
-  try{ oaiPrepareNoReturnEffectToApp(); }catch(e){}
-  try{
-    sessionStorage.setItem('oai_cover_toast_on_return', reason || 'qna-return-cover');
-    sessionStorage.setItem('oai_cover_toast_on_return_ts', String(Date.now ? Date.now() : new Date().getTime()));
-  }catch(e){}
-  try{
-    var url = new URL('index.html', location.href);
-    url.searchParams.set('oai_cover_return', reason || 'qna-return-cover');
-    url.searchParams.set('v', 'V8-1-14-40-BACK-DIAG-COMPACT');
-    location.replace(url.href);
-    return;
-  }catch(e){
-    location.replace('index.html?oai_cover_return=' + encodeURIComponent(reason || 'qna-return-cover') + '&v=V8-1-14-40-BACK-DIAG-COMPACT');
-  }
-}
 function handleQaBack(){
   if(QA_PRIVATE_MODE){
     try{ document.activeElement && document.activeElement.blur && document.activeElement.blur(); }catch(e){}
-    oaiReturnToAppCover('qna-return-cover');
+    oaiPrepareNoReturnEffectToApp();
+    if(document.referrer && document.referrer.indexOf(location.hostname)>=0){ history.back(); }
+    else { location.href='index.html'; }
     return;
   }
   var active = document.querySelector('.view.active');
@@ -1010,7 +897,12 @@ function handleQaBack(){
     return;
   }
   try{ document.activeElement && document.activeElement.blur && document.activeElement.blur(); }catch(e){}
-  oaiReturnToAppCover('qna-return-cover');
+  oaiPrepareNoReturnEffectToApp();
+  if(document.referrer && document.referrer.indexOf(location.hostname)>=0){
+    history.back();
+  } else {
+    location.href='index.html';
+  }
 }
 
 window.addEventListener('popstate', function(){
@@ -1025,8 +917,6 @@ window.addEventListener('popstate', function(){
 window.addEventListener('pagehide', function(){
   oaiPrepareNoReturnEffectToApp();
 }, true);
-
-/* ═══════════════════ 초기화 ═══════════════════ */
 buildFilterBar();
 buildCatRow();
 initFilterSwipe();
@@ -1040,15 +930,16 @@ if (QA_PRIVATE_MODE) {
 }
 </script>
 
-<script id="oai-cache-lifecycle-V6-146">
+<script id="oai-cache-lifecycle-WebView-Clean-128">
 (function(){
   'use strict';
-  var APP_VERSION = 'V8-1-14-40-BACK-DIAG-COMPACT';
+  var APP_VERSION = 'WebView-Clean-128';
   if('serviceWorker' in navigator){
     try{ navigator.serviceWorker.register('./sw.js?v=' + encodeURIComponent(APP_VERSION)).then(function(reg){try{reg.update();}catch(e){}}).catch(function(){}); }catch(e){}
   }
 })();
 </script>
+
 
 <script id="oai-touch-ux-keyboard-20260506">
 (function(){
