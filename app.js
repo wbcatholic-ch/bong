@@ -1059,30 +1059,12 @@ function _updateShrineVisitFloatingListButtonUI(){
   const activeAllowed=allowedTabs.indexOf(_activeTab)>=0;
   const nearbyOpen=(_activeTab==='nearby') || !!(document.getElementById('sheet-nearby')&&document.getElementById('sheet-nearby').classList.contains('open'));
   const nearbyLoading=nearbyOpen && _mode==='shrine' && window.__OAI_SHRINE_NEARBY_LOADING__ === true;
-  /* V8-1-14-45: 성지에서는 내주변 거리 계산 완료 전까지 나의순례현황 버튼을 보이지 않게 한다. */
+  /* V8-1-14-46: 성지에서는 내주변 거리 계산 완료 후에만 나의순례현황 버튼을 보이게 한다. */
   const nearbyReady=(_mode!=='shrine') || (!!window.__OAI_SHRINE_NEARBY_DISTANCE_DONE__ && !nearbyLoading);
   const mapOpen=(_screen==='map' && !sheetOpen);
   const show=(_mode==='shrine' && (sheetOpen||activeAllowed||mapOpen) && nearbyReady && !searchOpen && !keyboardOpen && !infoOpen && !routeOpen && !visitOpen);
-  /* V8-1-14-45: 성지 내주변 보호/거리계산 화면보다 나의순례현황 버튼이 먼저 보이지 않도록 첫 표시만 짧게 지연한다. */
-  if(!show){
-    delete btn.dataset.oaiShowAfter;
-    btn.classList.remove('show');
-  }else{
-    const now=Date.now();
-    let showAfter=parseInt(btn.dataset.oaiShowAfter||'0',10);
-    if(!btn.classList.contains('show') && (!showAfter || showAfter < now-2500)){
-      showAfter=now+650;
-      btn.dataset.oaiShowAfter=String(showAfter);
-      btn.classList.remove('show');
-      setTimeout(function(){ try{ _updateShrineVisitFloatingListButtonUI(); }catch(_e){} }, 690);
-    }else if(showAfter && now < showAfter){
-      btn.classList.remove('show');
-      setTimeout(function(){ try{ _updateShrineVisitFloatingListButtonUI(); }catch(_e){} }, Math.max(60, showAfter-now+40));
-    }else{
-      delete btn.dataset.oaiShowAfter;
-      btn.classList.add('show');
-    }
-  }
+  delete btn.dataset.oaiShowAfter;
+  btn.classList.toggle('show', !!show);
   btn.textContent='나의순례현황';
 }
 function _bindShrineVisitFloatingListButtonWatchers(){
@@ -2628,7 +2610,7 @@ window.addEventListener('load', syncCoverUpdateVersionState, true);
     try{
       var frame=document.getElementById('privacy-policy-frame');
       if(frame){
-        var src=frame.getAttribute('data-src') || ('privacy.html?embedded=1&v=' + encodeURIComponent(window.APP_VERSION || 'V8-1-14-45-SIMPLE-UI-TIMING'));
+        var src=frame.getAttribute('data-src') || ('privacy.html?embedded=1&v=' + encodeURIComponent(window.APP_VERSION || 'V8-1-14-46-TIMING-SEARCHBOX-ONLY'));
         if(frame.getAttribute('src') === 'about:blank' || !frame.getAttribute('src')) frame.setAttribute('src', src);
       }
     }catch(e){ console.warn('[가톨릭길동무]', e); }
@@ -2882,7 +2864,7 @@ function openDioceseView(opts){
       if(!restore) try{ frame.contentWindow && frame.contentWindow.resetDioceseFirstPage && frame.contentWindow.resetDioceseFirstPage(); }catch(e){ console.warn("[가톨릭길동무]", e); }
       if(typeof dioceseLoaded==='function') dioceseLoaded();
     };
-    frame.src='diocese.html?v=V8-1-14-45-SIMPLE-UI-TIMING';
+    frame.src='diocese.html?v=V8-1-14-46-TIMING-SEARCHBOX-ONLY';
     setTimeout(armDioceseOverlayBack, 0);
   }else{
     if(!restore){
@@ -3452,7 +3434,7 @@ function _ensureParishDataLoaded(){
 }
 _initParishDataFromGlobal();
 
-const _PRAYER_ASSET_VERSION='V8-1-14-45-SIMPLE-UI-TIMING';
+const _PRAYER_ASSET_VERSION='V8-1-14-46-TIMING-SEARCHBOX-ONLY';
 let _prayerModuleLoadPromise=null;
 function _isPrayerDataReady(){
   return !!(window.PRAYER_DATA && typeof window.PRAYER_DATA === 'object');
