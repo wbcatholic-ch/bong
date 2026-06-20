@@ -9,9 +9,17 @@
   var HIDE_KEY = 'oai_shrine_update_banner_v2_hidden';
   var SESSION_KEY = 'oai_shrine_update_banner_v2_session_shown';
   function isInstalledRun(){
-    /* V8-1-14-54: 테스트와 배포 확인을 위해 첫 커버 화면에서는 설치 여부와 관계없이 표시한다.
-       공식 배포 전에는 index.html의 SHRINE_UPDATE_BANNER 블록과 이 파일을 삭제하면 된다. */
-    return true;
+    /* V8-1-14-55: 카카오/일반 브라우저에서는 표시하지 않고, 설치형 앱/PWA 또는 WebView 앱 실행에서만 표시한다. */
+    var ua='';
+    try{ ua=String(navigator.userAgent||'').toLowerCase(); }catch(_e){}
+    var isKakao=/kakaotalk|kakaostory|kakao/.test(ua);
+    if(isKakao) return false;
+    try{ if(window.matchMedia && (window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: fullscreen)').matches)) return true; }catch(_e){}
+    try{ if(window.navigator && window.navigator.standalone) return true; }catch(_e){}
+    try{ if(document.referrer && String(document.referrer).indexOf('android-app://')===0) return true; }catch(_e){}
+    try{ if(/; wv\)|\bwv\b/.test(ua)) return true; }catch(_e){}
+    try{ if(window.OAI_FORCE_SHRINE_UPDATE_BANNER === true) return true; }catch(_e){}
+    return false;
   }
   function isHidden(){ try{ return localStorage.getItem(HIDE_KEY)==='1'; }catch(_e){ return false; } }
   function hideForever(){ try{ localStorage.setItem(HIDE_KEY,'1'); }catch(_e){} hide(); }
