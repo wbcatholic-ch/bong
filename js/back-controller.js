@@ -8,7 +8,7 @@
 
   var _href = location.href.split('#')[0];
 
-  /* 진단 표시 코드는 V8-1-14-28-MYFAITH-GOTO-COVER-CLOSE에서 제거했습니다. */
+  /* 진단 표시 코드는 V8-1-14-29-MYFAITH-RESTORE-THEN-CLOSE에서 제거했습니다. */
 
 
   function armCoverBackTrap(reason, opts){
@@ -431,6 +431,8 @@
     }
 
     if(isMyFaithOpen()){
+      _restoring = true;
+      try{ history.go(1); }catch(e){ _restoring = false; console.warn('[가톨릭길동무]', e); }
       closeMyFaithInternal('my-faith-popstate');
       return;
     }
