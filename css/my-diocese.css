@@ -78,18 +78,3 @@
 .my-diocese-option.selected { background:#f6ead5 !important; border-color:rgba(183,121,31,.48) !important; box-shadow:inset 0 0 0 1px rgba(183,121,31,.18), 0 6px 12px rgba(31,42,68,.07) !important; }
 .my-diocese-option.my-diocese-none { color:var(--v4-text-muted) !important; background:#f8fafc !important; border-style:dashed !important; }
 
-
-
-/* V8-1-14-42-MYFAITH-CAPTURE-FIRST-TOAST: 웹뷰 정상 구조처럼 커버 위 팝업으로 표시 */
-html.app-active .my-diocese-modal.show{
-  z-index: 9000 !important;
-}
-html.app-active .my-diocese-modal.show .my-diocese-backdrop{
-  background: var(--v4-bg-ivory) !important;
-}
-
-
-/* V8-1-14-42-MYFAITH-CAPTURE-FIRST-TOAST: 외부복귀 때 cover를 숨기지 않도록 myfaith.js에서 보정 */
-.my-diocese-modal.show{
-  visibility: visible !important;
-}
