@@ -14,7 +14,7 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
   <link rel="apple-touch-icon" href="icons/icon-512x512.png">
-  <link rel="stylesheet" href="css/route-nav.css?v=20260713-v101-guide">
+  <link rel="stylesheet" href="css/route-nav.css?v=20260713-v103-kakao-transit">
   <script>
     window.APP_CONFIG = {
       KAKAO_JS_KEY: '07f7989e29fdfb425fff924f36fb3ec0'
@@ -184,11 +184,27 @@
                 <h3 id="transit-title">대중교통 안내</h3>
               </div>
             </div>
-            <div class="transit-card">
+            <a class="transit-card transit-link" href="https://map.kakao.com/link/by/traffic/%EC%99%9C%EA%B4%80%EC%97%AD,35.99228223,128.39998470/%EA%B0%80%EC%8B%A4%EC%84%B1%EB%8B%B9,35.93648343,128.40542950" target="_blank" rel="noopener noreferrer" aria-label="카카오맵에서 왜관역에서 가실성당까지 대중교통 길찾기">
               <div class="transit-route"><strong>왜관역</strong><span>→</span><strong>가실성당</strong></div>
               <p>농어촌버스 <b>9번·20번·21번</b>을 이용할 수 있습니다.</p>
-              <small>운행 시간과 노선은 출발 전에 해당 교통정보에서 다시 확인해 주세요.</small>
-            </div>
+              <span class="transit-map-link">카카오맵에서 대중교통 길찾기 <b aria-hidden="true">›</b></span>
+            </a>
+            <a class="transit-card transit-link" href="https://map.kakao.com/link/by/traffic/%EC%99%9C%EA%B4%80%EC%97%AD,35.99228223,128.39998470/%EC%8B%A0%EB%82%98%EB%AC%B4%EA%B3%A8%EC%84%B1%EC%A7%80,35.96641063,128.46196989" target="_blank" rel="noopener noreferrer" aria-label="카카오맵에서 왜관역에서 신나무골성지까지 대중교통 길찾기">
+              <div class="transit-route"><strong>왜관역</strong><span>→</span><strong>신나무골성지</strong></div>
+              <p>버스 <b>250번·250-1번</b>을 이용할 수 있습니다.</p>
+              <span class="transit-map-link">카카오맵에서 대중교통 길찾기 <b aria-hidden="true">›</b></span>
+            </a>
+            <a class="transit-card transit-link" href="https://map.kakao.com/link/by/traffic/%EB%8F%99%EB%8C%80%EA%B5%AC%EC%97%AD,35.87919000,128.62831000/%EB%8F%99%EB%AA%85%EC%84%B1%EB%8B%B9,35.98169478,128.55727877" target="_blank" rel="noopener noreferrer" aria-label="카카오맵에서 동대구역에서 동명성당까지 대중교통 길찾기">
+              <div class="transit-route"><strong>동대구역</strong><span>→</span><strong>동명성당</strong></div>
+              <p>4코스 출발지까지의 대중교통 경로를 확인할 수 있습니다.</p>
+              <span class="transit-map-link">카카오맵에서 대중교통 길찾기 <b aria-hidden="true">›</b></span>
+            </a>
+            <a class="transit-card transit-link" href="https://map.kakao.com/link/by/traffic/%ED%95%9C%ED%8B%B0%EC%88%9C%EA%B5%90%EC%84%B1%EC%A7%80,36.01354145,128.62265810/%EB%8F%99%EB%8C%80%EA%B5%AC%EC%97%AD,35.87919000,128.62831000" target="_blank" rel="noopener noreferrer" aria-label="카카오맵에서 한티순교성지에서 동대구역까지 대중교통 길찾기">
+              <div class="transit-route"><strong>한티순교성지</strong><span>→</span><strong>동대구역</strong></div>
+              <p>순례를 마친 뒤 동대구역으로 돌아가는 대중교통 경로를 확인할 수 있습니다.</p>
+              <span class="transit-map-link">카카오맵에서 대중교통 길찾기 <b aria-hidden="true">›</b></span>
+            </a>
+            <small class="transit-notice">운행 시간과 노선은 출발 전에 카카오맵에서 다시 확인해 주세요.</small>
           </section>
         </div>
       </section>
@@ -279,8 +295,8 @@
     </div>
   </div>
 
-  <script src="routes/sacred-site-landmarks.js?v=20260713-v101-guide"></script>
-  <script src="routes/hanti-route-data-v1.js?v=20260713-v101-guide"></script>
-  <script src="js/route-nav.js?v=20260713-v101-guide"></script>
+  <script src="routes/sacred-site-landmarks.js?v=20260713-v103-kakao-transit"></script>
+  <script src="routes/hanti-route-data-v1.js?v=20260713-v103-kakao-transit"></script>
+  <script src="js/route-nav.js?v=20260713-v103-kakao-transit"></script>
 </body>
 </html>

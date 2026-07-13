@@ -1,12 +1,12 @@
-const CACHE_NAME = 'hanti-road-v101-guide-20260713';
+const CACHE_NAME = 'hanti-road-v103-kakao-transit-20260713';
 const CORE_ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './css/route-nav.css?v=20260713-v101-guide',
-  './js/route-nav.js?v=20260713-v101-guide',
-  './routes/sacred-site-landmarks.js?v=20260713-v101-guide',
-  './routes/hanti-route-data-v1.js?v=20260713-v101-guide',
+  './css/route-nav.css?v=20260713-v103-kakao-transit',
+  './js/route-nav.js?v=20260713-v103-kakao-transit',
+  './routes/sacred-site-landmarks.js?v=20260713-v103-kakao-transit',
+  './routes/hanti-route-data-v1.js?v=20260713-v103-kakao-transit',
   './icons/icon-192x192.png',
   './icons/icon-512x512.png',
   './icons/icon-512x512-maskable.png'
