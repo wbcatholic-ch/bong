@@ -72,6 +72,7 @@
 
   function resetInitialView() {
     if ($('cover-view')) $('cover-view').hidden = false;
+    if ($('guide-view')) $('guide-view').hidden = true;
     if ($('route-list-view')) $('route-list-view').hidden = true;
     if ($('map-view')) $('map-view').hidden = true;
     state.activeSection = 'cover';
@@ -84,6 +85,8 @@
 
   function setupButtons() {
     $('cover-navigation-btn')?.addEventListener('click', openNavigationMenu);
+    $('cover-guide-btn')?.addEventListener('click', openGuide);
+    $('guide-back-btn')?.addEventListener('click', showCover);
     $('cover-accommodation-btn')?.addEventListener('click', () => openExternalUrl(HANTI_ACCOMMODATION_URL));
     $('cover-homepage-btn')?.addEventListener('click', () => openExternalUrl(HANTI_HOMEPAGE_URL));
     $('national-close-btn')?.addEventListener('click', showCover);
@@ -200,6 +203,7 @@
   function showCover(options = {}) {
     stopLocationWatch();
     if ($('map-view')) $('map-view').hidden = true;
+    if ($('guide-view')) $('guide-view').hidden = true;
     if ($('route-list-view')) $('route-list-view').hidden = true;
     if ($('cover-view')) $('cover-view').hidden = false;
     state.activeSection = 'cover';
@@ -208,9 +212,22 @@
     }
   }
 
+  function openGuide(options = {}) {
+    if ($('cover-view')) $('cover-view').hidden = true;
+    if ($('route-list-view')) $('route-list-view').hidden = true;
+    if ($('map-view')) $('map-view').hidden = true;
+    if ($('guide-view')) $('guide-view').hidden = false;
+    state.activeSection = 'guide';
+    document.querySelector('.guide-scroll')?.scrollTo?.({ top: 0, behavior: 'auto' });
+    if (!options.fromHistory && history?.pushState) {
+      try { history.pushState({ hantiView: 'guide' }, '', location.href); } catch (_) {}
+    }
+  }
+
   function openNavigationMenu(options = {}) {
     renderRouteList();
     if ($('cover-view')) $('cover-view').hidden = true;
+    if ($('guide-view')) $('guide-view').hidden = true;
     if ($('map-view')) $('map-view').hidden = true;
     if ($('route-list-view')) $('route-list-view').hidden = false;
     state.activeSection = 'navigation';
@@ -1136,6 +1153,7 @@
     setStatusSheetMode(STATUS_SHEET_COMPACT);
 
     if ($('cover-view')) $('cover-view').hidden = true;
+    if ($('guide-view')) $('guide-view').hidden = true;
     $('route-list-view').hidden = true;
     $('map-view').hidden = false;
     activateMapHistory();

@@ -14,7 +14,7 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
   <link rel="apple-touch-icon" href="icons/icon-512x512.png">
-  <link rel="stylesheet" href="css/route-nav.css?v=20260713-v100-accommodation-link">
+  <link rel="stylesheet" href="css/route-nav.css?v=20260713-v101-guide">
   <script>
     window.APP_CONFIG = {
       KAKAO_JS_KEY: '07f7989e29fdfb425fff924f36fb3ec0'
@@ -43,8 +43,16 @@
               </span>
               <span class="cover-menu-arrow" aria-hidden="true">›</span>
             </button>
-            <button id="cover-accommodation-btn" class="cover-menu-card" type="button">
+            <button id="cover-guide-btn" class="cover-menu-card guide" type="button">
               <span class="cover-menu-number">2</span>
+              <span class="cover-menu-copy">
+                <strong>한티가는길 안내</strong>
+                <em>공식 코스 · 출발지 · 주소 · 교통편</em>
+              </span>
+              <span class="cover-menu-arrow" aria-hidden="true">›</span>
+            </button>
+            <button id="cover-accommodation-btn" class="cover-menu-card" type="button">
+              <span class="cover-menu-number">3</span>
               <span class="cover-menu-copy">
                 <strong>숙박</strong>
                 <em>소울스테이 예약 신청</em>
@@ -52,7 +60,7 @@
               <span class="cover-menu-external" aria-hidden="true">↗</span>
             </button>
             <button id="cover-homepage-btn" class="cover-menu-card" type="button">
-              <span class="cover-menu-number">3</span>
+              <span class="cover-menu-number">4</span>
               <span class="cover-menu-copy">
                 <strong>홈페이지</strong>
                 <em>한티가는길 공식 홈페이지</em>
@@ -62,6 +70,126 @@
           </nav>
 
           <footer class="cover-footer">한티가는길 순례 전용 앱 · 메뉴는 추후 추가할 수 있습니다.</footer>
+        </div>
+      </section>
+
+
+
+      <section id="guide-view" class="guide-view" aria-label="한티가는길 안내" hidden>
+        <header class="guide-header">
+          <button id="guide-back-btn" class="guide-back-btn" type="button" aria-label="커버로 돌아가기">‹</button>
+          <div>
+            <p>ROAD TO HANTI</p>
+            <h2>한티가는길 안내</h2>
+          </div>
+        </header>
+
+        <div class="guide-scroll">
+          <section class="guide-summary" aria-label="전체 거리">
+            <span>가실성당에서 한티순교성지까지</span>
+            <strong>총 45.6km</strong>
+            <p>5개의 길을 따라 걷는 한티가는길 공식 코스입니다.</p>
+          </section>
+
+          <section class="guide-section" aria-labelledby="official-course-title">
+            <div class="guide-section-title">
+              <span>01</span>
+              <div>
+                <p>OFFICIAL COURSE</p>
+                <h3 id="official-course-title">공식 코스 구간</h3>
+              </div>
+            </div>
+            <div class="course-guide-list">
+              <article class="course-guide-card">
+                <div class="course-guide-badge">1코스</div>
+                <div class="course-guide-body">
+                  <h4>돌아보는 길</h4>
+                  <p><strong>가실성당</strong><span aria-hidden="true">→</span><strong>신나무골성지</strong></p>
+                  <em>약 10.5km</em>
+                </div>
+              </article>
+              <article class="course-guide-card">
+                <div class="course-guide-badge">2코스</div>
+                <div class="course-guide-body">
+                  <h4>비우는 길</h4>
+                  <p><strong>신나무골성지</strong><span aria-hidden="true">→</span><strong>사지점공소·창평지</strong></p>
+                  <em>약 9.5km</em>
+                </div>
+              </article>
+              <article class="course-guide-card">
+                <div class="course-guide-badge">3코스</div>
+                <div class="course-guide-body">
+                  <h4>뉘우치는 길</h4>
+                  <p><strong>사지점공소·창평지</strong><span aria-hidden="true">→</span><strong>동명성당</strong></p>
+                  <em>약 9km</em>
+                </div>
+              </article>
+              <article class="course-guide-card">
+                <div class="course-guide-badge">4코스</div>
+                <div class="course-guide-body">
+                  <h4>용서의 길</h4>
+                  <p><strong>동명성당</strong><span aria-hidden="true">→</span><strong>가산산성 진남문</strong></p>
+                  <em>약 8.5km</em>
+                </div>
+              </article>
+              <article class="course-guide-card">
+                <div class="course-guide-badge">5코스</div>
+                <div class="course-guide-body">
+                  <h4>사랑의 길</h4>
+                  <p><strong>가산산성 진남문</strong><span aria-hidden="true">→</span><strong>한티순교성지</strong></p>
+                  <em>약 8.1km</em>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="guide-section" aria-labelledby="course-start-title">
+            <div class="guide-section-title">
+              <span>02</span>
+              <div>
+                <p>STARTING POINT</p>
+                <h3 id="course-start-title">코스별 출발지</h3>
+              </div>
+            </div>
+            <div class="start-point-list">
+              <article class="start-point-card">
+                <div class="start-point-head"><b>1코스 · 돌아보는 길</b><strong>가실성당</strong></div>
+                <address>경상북도 칠곡군 왜관읍 가실1길 1</address>
+              </article>
+              <article class="start-point-card">
+                <div class="start-point-head"><b>2코스 · 비우는 길</b><strong>신나무골성지</strong></div>
+                <address>경상북도 칠곡군 지천면 칠곡대로 2189-22</address>
+              </article>
+              <article class="start-point-card">
+                <div class="start-point-head"><b>3코스 · 뉘우치는 길</b><strong>사지점공소(창평지)</strong></div>
+                <address>경상북도 칠곡군 지천면 창평로 315-10</address>
+              </article>
+              <article class="start-point-card">
+                <div class="start-point-head"><b>4코스 · 용서의 길</b><strong>동명성당</strong></div>
+                <address>경상북도 칠곡군 동명면 한티로 15</address>
+              </article>
+              <article class="start-point-card">
+                <div class="start-point-head"><b>5코스 · 사랑의 길</b><strong>가산산성 진남문</strong></div>
+                <address>경상북도 칠곡군 동명면 남원리 629-1</address>
+                <p class="stamp-location"><span>스탬프</span> 진남문 주차장</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="guide-section transit-section" aria-labelledby="transit-title">
+            <div class="guide-section-title">
+              <span>03</span>
+              <div>
+                <p>PUBLIC TRANSPORT</p>
+                <h3 id="transit-title">대중교통 안내</h3>
+              </div>
+            </div>
+            <div class="transit-card">
+              <div class="transit-route"><strong>왜관역</strong><span>→</span><strong>가실성당</strong></div>
+              <p>농어촌버스 <b>9번·20번·21번</b>을 이용할 수 있습니다.</p>
+              <small>운행 시간과 노선은 출발 전에 해당 교통정보에서 다시 확인해 주세요.</small>
+            </div>
+          </section>
         </div>
       </section>
 
@@ -151,8 +279,8 @@
     </div>
   </div>
 
-  <script src="routes/sacred-site-landmarks.js?v=20260713-v100-accommodation-link"></script>
-  <script src="routes/hanti-route-data-v1.js?v=20260713-v100-accommodation-link"></script>
-  <script src="js/route-nav.js?v=20260713-v100-accommodation-link"></script>
+  <script src="routes/sacred-site-landmarks.js?v=20260713-v101-guide"></script>
+  <script src="routes/hanti-route-data-v1.js?v=20260713-v101-guide"></script>
+  <script src="js/route-nav.js?v=20260713-v101-guide"></script>
 </body>
 </html>
