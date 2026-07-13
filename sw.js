@@ -1,12 +1,12 @@
-const CACHE_NAME = 'hanti-road-v99-cover-20260713';
+const CACHE_NAME = 'hanti-road-v100-accommodation-20260713';
 const CORE_ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './css/route-nav.css?v=20260713-v99-hanti-cover',
-  './js/route-nav.js?v=20260713-v99-hanti-cover',
-  './routes/sacred-site-landmarks.js?v=20260713-v99-hanti-cover',
-  './routes/hanti-route-data-v1.js?v=20260713-v99-hanti-cover',
+  './css/route-nav.css?v=20260713-v100-accommodation-link',
+  './js/route-nav.js?v=20260713-v100-accommodation-link',
+  './routes/sacred-site-landmarks.js?v=20260713-v100-accommodation-link',
+  './routes/hanti-route-data-v1.js?v=20260713-v100-accommodation-link',
   './icons/icon-192x192.png',
   './icons/icon-512x512.png',
   './icons/icon-512x512-maskable.png'

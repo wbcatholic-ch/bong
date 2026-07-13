@@ -14,6 +14,7 @@
   const MAX_TRACK_POINTS = 5000;
   const SEOUL_FALLBACK = { lat: 37.56, lng: 126.98 };
 
+  const HANTI_ACCOMMODATION_URL = 'https://www.hantigil.or.kr/reservation/rsv_form';
   const HANTI_HOMEPAGE_URL = 'https://hantigil.or.kr/index';
 
   const state = {
@@ -72,7 +73,6 @@
   function resetInitialView() {
     if ($('cover-view')) $('cover-view').hidden = false;
     if ($('route-list-view')) $('route-list-view').hidden = true;
-    if ($('accommodation-view')) $('accommodation-view').hidden = true;
     if ($('map-view')) $('map-view').hidden = true;
     state.activeSection = 'cover';
   }
@@ -84,11 +84,9 @@
 
   function setupButtons() {
     $('cover-navigation-btn')?.addEventListener('click', openNavigationMenu);
-    $('cover-accommodation-btn')?.addEventListener('click', openAccommodation);
+    $('cover-accommodation-btn')?.addEventListener('click', () => openExternalUrl(HANTI_ACCOMMODATION_URL));
     $('cover-homepage-btn')?.addEventListener('click', () => openExternalUrl(HANTI_HOMEPAGE_URL));
     $('national-close-btn')?.addEventListener('click', showCover);
-    $('accommodation-close-btn')?.addEventListener('click', showCover);
-    $('accommodation-home-btn')?.addEventListener('click', showCover);
     $('back-to-list')?.addEventListener('click', handleBackToList);
     $('my-location-btn')?.addEventListener('click', locateOnce);
     $('initial-location-move')?.addEventListener('click', handleInitialLocationMove);
@@ -203,7 +201,6 @@
     stopLocationWatch();
     if ($('map-view')) $('map-view').hidden = true;
     if ($('route-list-view')) $('route-list-view').hidden = true;
-    if ($('accommodation-view')) $('accommodation-view').hidden = true;
     if ($('cover-view')) $('cover-view').hidden = false;
     state.activeSection = 'cover';
     if (!options.fromHistory && history?.replaceState) {
@@ -214,24 +211,12 @@
   function openNavigationMenu(options = {}) {
     renderRouteList();
     if ($('cover-view')) $('cover-view').hidden = true;
-    if ($('accommodation-view')) $('accommodation-view').hidden = true;
     if ($('map-view')) $('map-view').hidden = true;
     if ($('route-list-view')) $('route-list-view').hidden = false;
     state.activeSection = 'navigation';
     $('route-list-view')?.scrollTo?.({ top: 0, behavior: 'auto' });
     if (!options.fromHistory && history?.pushState) {
       try { history.pushState({ hantiView: 'navigation' }, '', location.href); } catch (_) {}
-    }
-  }
-
-  function openAccommodation(options = {}) {
-    if ($('cover-view')) $('cover-view').hidden = true;
-    if ($('route-list-view')) $('route-list-view').hidden = true;
-    if ($('map-view')) $('map-view').hidden = true;
-    if ($('accommodation-view')) $('accommodation-view').hidden = false;
-    state.activeSection = 'accommodation';
-    if (!options.fromHistory && history?.pushState) {
-      try { history.pushState({ hantiView: 'accommodation' }, '', location.href); } catch (_) {}
     }
   }
 
@@ -1151,7 +1136,6 @@
     setStatusSheetMode(STATUS_SHEET_COMPACT);
 
     if ($('cover-view')) $('cover-view').hidden = true;
-    if ($('accommodation-view')) $('accommodation-view').hidden = true;
     $('route-list-view').hidden = true;
     $('map-view').hidden = false;
     activateMapHistory();
@@ -1257,7 +1241,6 @@
     state.navigationModel = createEmptyNavigationModel();
     $('map-view').hidden = true;
     if ($('cover-view')) $('cover-view').hidden = true;
-    if ($('accommodation-view')) $('accommodation-view').hidden = true;
     $('route-list-view').hidden = false;
     state.activeSection = 'navigation';
     updateFollowButtons();
