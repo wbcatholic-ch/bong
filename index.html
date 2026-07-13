@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0B1D3B">
+  <meta name="color-scheme" content="light">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="한티가는길">
+  <meta name="application-name" content="한티가는길">
+  <meta name="description" content="한티가는길 전체·코스별 길안내와 순례 정보를 제공하는 독립 PWA">
+  <title>한티가는길</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
+  <link rel="apple-touch-icon" href="icons/icon-512x512.png">
+  <link rel="stylesheet" href="css/route-nav.css?v=20260713-v99-hanti-cover">
+  <script>
+    window.APP_CONFIG = {
+      KAKAO_JS_KEY: '07f7989e29fdfb425fff924f36fb3ec0'
+    };
+  </script>
+</head>
+<body>
+  <div id="app-shell">
+    <main class="main-layout">
+      <section id="cover-view" class="cover-view" aria-label="한티가는길 시작 화면">
+        <div class="cover-inner">
+          <header class="cover-brand">
+            <div class="cover-cross" aria-hidden="true">✝</div>
+            <p class="cover-eyebrow">ROAD TO HANTI</p>
+            <h1>한티가는길</h1>
+            <p class="cover-subtitle">가실성당에서 한티순교성지까지</p>
+            <div class="cover-route-line" aria-hidden="true"><span></span><i></i><span></span></div>
+          </header>
+
+          <nav class="cover-menu" aria-label="주요 메뉴">
+            <button id="cover-navigation-btn" class="cover-menu-card primary" type="button">
+              <span class="cover-menu-number">1</span>
+              <span class="cover-menu-copy">
+                <strong>길안내</strong>
+                <em>전체코스 · 1~5코스별 길안내</em>
+              </span>
+              <span class="cover-menu-arrow" aria-hidden="true">›</span>
+            </button>
+            <button id="cover-accommodation-btn" class="cover-menu-card" type="button">
+              <span class="cover-menu-number">2</span>
+              <span class="cover-menu-copy">
+                <strong>숙박</strong>
+                <em>순례 중 이용할 숙박 정보</em>
+              </span>
+              <span class="cover-menu-arrow" aria-hidden="true">›</span>
+            </button>
+            <button id="cover-homepage-btn" class="cover-menu-card" type="button">
+              <span class="cover-menu-number">3</span>
+              <span class="cover-menu-copy">
+                <strong>홈페이지</strong>
+                <em>한티가는길 공식 홈페이지</em>
+              </span>
+              <span class="cover-menu-external" aria-hidden="true">↗</span>
+            </button>
+          </nav>
+
+          <footer class="cover-footer">한티가는길 순례 전용 앱 · 메뉴는 추후 추가할 수 있습니다.</footer>
+        </div>
+      </section>
+
+      <section id="route-list-view" class="route-list-view detail-mode" aria-label="한티가는길 코스 선택" hidden>
+        <div class="hero-card national-hero" hidden>
+          <div class="national-logo" aria-hidden="true">✝</div>
+          <div class="national-hero-copy">
+            <h2 id="route-list-title"></h2>
+            <p id="route-list-desc"></p>
+          </div>
+          <button id="national-close-btn" class="national-close-btn" type="button" aria-label="커버로 돌아가기">×</button>
+        </div>
+        <div id="route-list" class="route-list national-card-list"></div>
+      </section>
+
+      <section id="accommodation-view" class="simple-view" aria-label="숙박 정보" hidden>
+        <header class="simple-view-head">
+          <div>
+            <span>한티가는길</span>
+            <h2>숙박</h2>
+          </div>
+          <button id="accommodation-close-btn" type="button" aria-label="커버로 돌아가기">×</button>
+        </header>
+        <div class="simple-view-body">
+          <div class="simple-view-icon" aria-hidden="true">⌂</div>
+          <h3>숙박 정보 준비 중</h3>
+          <p>한티가는길 주변 숙박 장소와 이용 정보를 이 화면에 추가할 예정입니다.</p>
+          <button id="accommodation-home-btn" type="button">커버로 돌아가기</button>
+        </div>
+      </section>
+
+      <section id="map-view" class="map-view" aria-label="한티가는길 지도" hidden>
+        <div class="map-head">
+          <button id="back-to-list" class="round-btn" type="button" aria-label="코스 선택으로 돌아가기">‹</button>
+          <div class="map-title-wrap">
+            <div id="map-title" class="map-title">한티가는길</div>
+            <div id="map-subtitle" class="map-subtitle">경로 준비 중</div>
+          </div>
+          <div id="map-distance" class="map-distance" hidden></div>
+        </div>
+
+        <div id="map-canvas" class="map-canvas">
+          <div id="map-layer" class="map-layer" aria-hidden="true"></div>
+          <div id="map-loading" class="map-loading">
+            <div class="loading-cross">✝</div>
+            <div>지도를 불러오는 중입니다</div>
+          </div>
+        </div>
+
+        <div class="map-floating-actions" aria-label="지도 조작">
+          <button id="my-location-btn" class="float-btn" type="button">📍<span>내위치</span></button>
+        </div>
+
+        <aside id="status-sheet" class="status-sheet" aria-live="polite" data-sheet-mode="compact">
+          <button id="sheet-handle" class="sheet-handle" type="button" aria-label="정보카드 올리기" aria-expanded="false">
+            <span class="sheet-grip" aria-hidden="true"></span>
+            <span id="sheet-handle-label" class="sheet-handle-label">정보 보기</span>
+          </button>
+          <div class="status-main-row">
+            <div>
+              <div id="status-label" class="status-label">위치 확인 전</div>
+              <div id="status-message" class="status-message">내 위치를 누르면 한티가는길과의 거리를 계산합니다.</div>
+            </div>
+            <div id="offroute-chip" class="offroute-chip neutral">대기</div>
+          </div>
+          <div class="metric-grid">
+            <div class="metric-card"><span>운동시간</span><strong id="exercise-time">00:00:00</strong></div>
+            <div class="metric-card"><span>운동거리</span><strong id="exercise-distance">0m</strong></div>
+            <div class="metric-card"><span>진행률</span><strong id="route-progress">—</strong></div>
+            <div class="metric-card"><span>다음 지점까지</span><strong id="next-distance">—</strong></div>
+          </div>
+          <div class="nav-control-row" aria-label="따라가기 조작">
+            <button id="end-follow-btn" class="nav-control-btn end" type="button" hidden>종료 <span aria-hidden="true">■</span></button>
+            <button id="direction-btn" class="nav-control-btn direction" type="button">↔ <span>역방향</span></button>
+            <button id="follow-btn" class="nav-control-btn start" type="button">시작 <span aria-hidden="true">▶</span></button>
+          </div>
+          <div id="flex-note" class="flex-note" hidden></div>
+        </aside>
+        <div id="initial-location-banner" class="initial-location-banner" role="dialog" aria-modal="true" aria-label="내 위치 이동 확인" hidden>
+          <div class="initial-location-copy">
+            <strong>내 위치로 이동하시겠습니까?</strong>
+            <span>현재 위치를 지도 중심에 표시합니다.</span>
+          </div>
+          <div class="initial-location-actions">
+            <button id="initial-location-skip" type="button" class="secondary">아니요</button>
+            <button id="initial-location-move" type="button">이동</button>
+          </div>
+        </div>
+        <div id="nav-exit-banner" class="nav-exit-banner" role="status" aria-live="polite" hidden></div>
+      </section>
+    </main>
+
+    <div id="chrome-open-panel" class="chrome-open-panel" hidden>
+      <div>
+        <strong>Chrome에서 테스트 권장</strong>
+        <p>위치 권한과 PWA 설치 테스트는 Chrome이 가장 안정적입니다.</p>
+      </div>
+      <div class="chrome-open-actions">
+        <button id="open-chrome-btn" type="button">Chrome으로 열기</button>
+        <button id="copy-link-btn" class="secondary" type="button">주소 복사</button>
+        <button id="close-chrome-panel" class="ghost" type="button" aria-label="Chrome 안내 닫기">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="routes/sacred-site-landmarks.js?v=20260713-v99-hanti-cover"></script>
+  <script src="routes/hanti-route-data-v1.js?v=20260713-v99-hanti-cover"></script>
+  <script src="js/route-nav.js?v=20260713-v99-hanti-cover"></script>
+</body>
+</html>
