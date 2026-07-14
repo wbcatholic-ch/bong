@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0B1D3B">
+  <meta name="theme-color" content="#2F66F5">
   <meta name="color-scheme" content="light">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,7 +14,7 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
   <link rel="apple-touch-icon" href="icons/icon-512x512.png">
-  <link rel="stylesheet" href="css/route-nav.css?v=20260713-v104-hanti-shrine">
+  <link rel="stylesheet" href="css/route-nav.css?v=20260713-v105-simple-blue">
   <script>
     window.APP_CONFIG = {
       KAKAO_JS_KEY: '07f7989e29fdfb425fff924f36fb3ec0'
@@ -27,49 +27,49 @@
       <section id="cover-view" class="cover-view" aria-label="한티가는길 시작 화면">
         <div class="cover-inner">
           <header class="cover-brand">
-            <div class="cover-cross" aria-hidden="true">✝</div>
-            <p class="cover-eyebrow">ROAD TO HANTI</p>
+            <div class="cover-logo-pill">
+              <span class="cover-logo-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M12 3v18M7.5 8.5h9"/></svg>
+              </span>
+              <span>ROAD TO HANTI</span>
+            </div>
             <h1>한티가는길</h1>
             <p class="cover-subtitle">가실성당에서 한티순교성지까지</p>
-            <div class="cover-route-line" aria-hidden="true"><span></span><i></i><span></span></div>
+            <div class="cover-distance-pill"><strong>45.6km</strong><span>5개 코스</span></div>
           </header>
 
           <nav class="cover-menu" aria-label="주요 메뉴">
             <button id="cover-navigation-btn" class="cover-menu-card primary" type="button">
-              <span class="cover-menu-number">1</span>
-              <span class="cover-menu-copy">
-                <strong>길안내</strong>
-                <em>전체코스 · 1~5코스별 길안내</em>
+              <span class="cover-menu-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M4 6.5 9 4l6 2.5L20 4v13.5L15 20l-6-2.5L4 20V6.5Z"/><path d="M9 4v13.5M15 6.5V20"/></svg>
               </span>
+              <span class="cover-menu-copy"><strong>길안내</strong><em>전체 · 코스별</em></span>
               <span class="cover-menu-arrow" aria-hidden="true">›</span>
             </button>
             <button id="cover-guide-btn" class="cover-menu-card guide" type="button">
-              <span class="cover-menu-number">2</span>
-              <span class="cover-menu-copy">
-                <strong>한티가는길 안내</strong>
-                <em>공식 코스 · 출발지 · 주소 · 교통편</em>
+              <span class="cover-menu-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 10.5v6M12 7.5h.01"/></svg>
               </span>
+              <span class="cover-menu-copy"><strong>한티가는길 안내</strong><em>코스 · 출발지 · 교통</em></span>
               <span class="cover-menu-arrow" aria-hidden="true">›</span>
             </button>
-            <button id="cover-accommodation-btn" class="cover-menu-card" type="button">
-              <span class="cover-menu-number">3</span>
-              <span class="cover-menu-copy">
-                <strong>숙박</strong>
-                <em>소울스테이 예약 신청</em>
+            <button id="cover-accommodation-btn" class="cover-menu-card compact" type="button">
+              <span class="cover-menu-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M4 18V8M4 14h16v4M7 11h4a3 3 0 0 1 3 3H7v-3Z"/><path d="M20 10v8"/></svg>
               </span>
+              <span class="cover-menu-copy"><strong>숙박</strong><em>예약</em></span>
               <span class="cover-menu-external" aria-hidden="true">↗</span>
             </button>
-            <button id="cover-homepage-btn" class="cover-menu-card" type="button">
-              <span class="cover-menu-number">4</span>
-              <span class="cover-menu-copy">
-                <strong>홈페이지</strong>
-                <em>한티가는길 공식 홈페이지</em>
+            <button id="cover-homepage-btn" class="cover-menu-card compact" type="button">
+              <span class="cover-menu-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.5 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.5-4-9s1.4-6.5 4-9Z"/></svg>
               </span>
+              <span class="cover-menu-copy"><strong>홈페이지</strong><em>공식 사이트</em></span>
               <span class="cover-menu-external" aria-hidden="true">↗</span>
             </button>
           </nav>
 
-          <footer class="cover-footer">한티가는길 순례 전용 앱 · 메뉴는 추후 추가할 수 있습니다.</footer>
+          <footer class="cover-footer">5개의 길을 따라 걷는 순례 여정</footer>
         </div>
       </section>
 
@@ -78,27 +78,18 @@
       <section id="guide-view" class="guide-view" aria-label="한티가는길 안내" hidden>
         <header class="guide-header">
           <button id="guide-back-btn" class="guide-back-btn" type="button" aria-label="커버로 돌아가기">‹</button>
-          <div>
-            <p>ROAD TO HANTI</p>
-            <h2>한티가는길 안내</h2>
-          </div>
+          <h2>한티가는길 안내</h2>
         </header>
 
         <div class="guide-scroll">
           <section class="guide-summary" aria-label="전체 거리">
-            <span>가실성당에서 한티순교성지까지</span>
-            <strong>총 45.6km</strong>
-            <p>5개의 길을 따라 걷는 한티가는길 공식 코스입니다.</p>
+            <span>가실성당 <b aria-hidden="true">→</b> 한티순교성지</span>
+            <strong>45.6km</strong>
+            <p>5개 코스</p>
           </section>
 
           <section class="guide-section" aria-labelledby="official-course-title">
-            <div class="guide-section-title">
-              <span>01</span>
-              <div>
-                <p>OFFICIAL COURSE</p>
-                <h3 id="official-course-title">공식 코스 구간</h3>
-              </div>
-            </div>
+            <div class="guide-section-title"><h3 id="official-course-title">공식 코스</h3></div>
             <div class="course-guide-list">
               <article class="course-guide-card">
                 <div class="course-guide-badge">1코스</div>
@@ -144,13 +135,7 @@
           </section>
 
           <section class="guide-section" aria-labelledby="course-start-title">
-            <div class="guide-section-title">
-              <span>02</span>
-              <div>
-                <p>STARTING POINT</p>
-                <h3 id="course-start-title">코스별 출발지</h3>
-              </div>
-            </div>
+            <div class="guide-section-title"><h3 id="course-start-title">코스별 출발지</h3></div>
             <div class="start-point-list">
               <article class="start-point-card">
                 <div class="start-point-head"><b>1코스 · 돌아보는 길</b><strong>가실성당</strong></div>
@@ -177,13 +162,7 @@
           </section>
 
           <section class="guide-section transit-section" aria-labelledby="transit-title">
-            <div class="guide-section-title">
-              <span>03</span>
-              <div>
-                <p>PUBLIC TRANSPORT</p>
-                <h3 id="transit-title">대중교통 안내</h3>
-              </div>
-            </div>
+            <div class="guide-section-title"><h3 id="transit-title">대중교통 안내</h3></div>
             <a class="transit-card transit-link" href="https://map.kakao.com/link/by/traffic/%EC%99%9C%EA%B4%80%EC%97%AD,35.99228223,128.39998470/%EA%B0%80%EC%8B%A4%EC%84%B1%EB%8B%B9,35.93648343,128.40542950" target="_blank" rel="noopener noreferrer" aria-label="카카오맵에서 왜관역에서 가실성당까지 대중교통 길찾기">
               <div class="transit-route"><strong>왜관역</strong><span>→</span><strong>가실성당</strong></div>
               <p>농어촌버스 <b>9번·20번·21번</b>을 이용할 수 있습니다.</p>
@@ -240,7 +219,10 @@
         </div>
 
         <div class="map-floating-actions" aria-label="지도 조작">
-          <button id="my-location-btn" class="float-btn" type="button">📍<span>내위치</span></button>
+          <button id="my-location-btn" class="float-btn" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+            <span>내위치</span>
+          </button>
         </div>
 
         <aside id="status-sheet" class="status-sheet" aria-live="polite" data-sheet-mode="compact">
@@ -295,8 +277,8 @@
     </div>
   </div>
 
-  <script src="routes/sacred-site-landmarks.js?v=20260713-v104-hanti-shrine"></script>
-  <script src="routes/hanti-route-data-v1.js?v=20260713-v104-hanti-shrine"></script>
-  <script src="js/route-nav.js?v=20260713-v104-hanti-shrine"></script>
+  <script src="routes/sacred-site-landmarks.js?v=20260713-v105-simple-blue"></script>
+  <script src="routes/hanti-route-data-v1.js?v=20260713-v105-simple-blue"></script>
+  <script src="js/route-nav.js?v=20260713-v105-simple-blue"></script>
 </body>
 </html>

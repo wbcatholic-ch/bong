@@ -248,7 +248,7 @@
 
   function buildHantiRouteGroup(route) {
     const courseOptions = Array.isArray(route.courses) ? route.courses.map((course) => ({
-      label: `${course.courseNo || ''}코스 ${course.name || ''}`.trim(),
+      label: `${course.courseNo || ''}코스 · ${course.name || ''}`.trim(),
       title: '',
       meta: [course.distanceLabel, course.durationLabel].filter(Boolean).join(' · '),
       introUrl: course.courseIntroUrl || '',
@@ -257,16 +257,16 @@
     return {
       kind: 'group',
       id: 'hanti-route-group',
-      icon: '🧭',
+      icon: '',
       title: route.name || '한티가는길',
       meta: '전체 코스 또는 1~5코스를 선택하세요.',
-      foot: `${route.courseSummaryLabel || '5개 코스'} · ${route.distanceLabel || ''}`,
+      foot: '',
       optionLayout: 'single',
       options: [
         {
-          label: '한티가는길 전체코스 보기',
+          label: '전체코스',
           title: '',
-          meta: [route.distanceLabel, route.durationLabel].filter(Boolean).join(' · '),
+          meta: `${route.distanceLabel || '45.6km'} · ${route.courseSummaryLabel || '5개 코스'}`,
           variant: 'full-route',
           route: createHantiFullRoute(route)
         },
@@ -629,18 +629,17 @@
     card.className = 'route-card route-group-card route-detail-card';
     card.innerHTML = `
       <div class="route-card-main route-detail-title-row">
-        ${group.logo ? `<div class="route-icon route-logo-icon"><img src="${escapeHtml(group.logo)}" alt=""></div>` : `<div class="route-icon">${escapeHtml(group.icon || '🧭')}</div>`}
+        <button type="button" class="route-detail-close-btn" aria-label="커버로 돌아가기">‹</button>
         <div class="route-copy">
           <div class="route-name-row">
             <h3 class="route-name">${escapeHtml(group.title || '순례길')}</h3>
           </div>
         </div>
-        <button type="button" class="route-detail-close-btn" aria-label="상세 닫기">×</button>
       </div>
       ${Array.isArray(group.detailLines) && group.detailLines.length ? `<ul class="trail-detail-lines">${group.detailLines.map((line) => `<li>${escapeHtml(line)}</li>`).join('')}</ul>` : ''}
       <div class="route-option-area"></div>
-      ${group.officialUrl ? `<div class="route-detail-actions"><button type="button" class="route-detail-link" data-url="${escapeHtml(group.officialUrl)}">공식 홈페이지 / 상세보기</button></div>` : ''}
-      <div class="route-foot route-group-foot"><span>${escapeHtml(group.foot || '')}</span></div>
+      ${group.officialUrl ? `<div class="route-detail-actions"><button type="button" class="route-detail-link" data-url="${escapeHtml(group.officialUrl)}">한티가는길 홈페이지</button></div>` : ''}
+      ${group.foot ? `<div class="route-foot route-group-foot"><span>${escapeHtml(group.foot)}</span></div>` : ''}
     `;
     const area = card.querySelector('.route-option-area');
     const renderOption = (option, parent) => {
